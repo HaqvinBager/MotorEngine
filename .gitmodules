@@ -1,0 +1,3 @@
+[submodule "submodule"]
+	path = submodule
+	url = https://github.com/Humbabah/Grupp-4-Spelprojekt-6.git
