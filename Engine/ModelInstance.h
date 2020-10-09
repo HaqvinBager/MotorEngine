@@ -1,6 +1,7 @@
 #pragma once
 #include "SimpleMath.h"
 #include "ModelMath.h"
+#include <array>
 
 class CModel;
 
