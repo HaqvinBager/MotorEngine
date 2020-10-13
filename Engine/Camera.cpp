@@ -3,7 +3,7 @@
 
 using namespace DirectX::SimpleMath;
 
-CCamera::CCamera()
+CCamera::CCamera() //gör rätt
 {
 }
 
