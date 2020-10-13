@@ -1,5 +1,5 @@
 #pragma once
-#include <Windows.h>
+#include "WinInclude.h"
 #include <Windowsx.h>
 #include <bitset>
 #include <memory>

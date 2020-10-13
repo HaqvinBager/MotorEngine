@@ -115,41 +115,53 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="AnimationComponent.h" />
     <ClInclude Include="AnimationController.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraFactory.h" />
+    <ClInclude Include="CapsuleColliderComponent.h" />
+    <ClInclude Include="Component.h" />
     <ClInclude Include="DirectXFramework.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="EngineException.h" />
     <ClInclude Include="EnvironmentLight.h" />
     <ClInclude Include="ForwardRenderer.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="LevelLoader.h" />
     <ClInclude Include="LightFactory.h" />
     <ClInclude Include="MathFunc.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="ModelComponent.h" />
     <ClInclude Include="ModelFactory.h" />
     <ClInclude Include="ModelInstance.h" />
     <ClInclude Include="ModelMath.h" />
+    <ClInclude Include="MouseTracker.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="WindowHandler.h" />
     <ClInclude Include="WinInclude.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="AnimationComponent.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraFactory.cpp" />
+    <ClCompile Include="CapsuleColliderComponent.cpp" />
+    <ClCompile Include="Component.cpp" />
     <ClCompile Include="DirectXFramework.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="EnvironmentLight.cpp" />
     <ClCompile Include="ForwardRenderer.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="LevelLoader.cpp" />
     <ClCompile Include="LightFactory.cpp" />
     <ClCompile Include="MathFunc.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="ModelComponent.cpp" />
     <ClCompile Include="ModelFactory.cpp" />
     <ClCompile Include="ModelInstance.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -158,6 +170,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="TransformComponent.cpp" />
     <ClCompile Include="WindowHandler.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -75,8 +75,10 @@ void CEngine::RenderFrame()
 	CEnvironmentLight* environmentLight = myScene->GetEnvironmentLight();
 	CCamera* mainCamera = myScene->GetMainCamera();
 	
+	std::vector<CGameObject*> gameObjectsToRender = myScene->CullGameObjects(mainCamera);
+
 	std::vector<CModelInstance*> modelsToRender = myScene->CullModels(mainCamera);
-	myForwardRenderer->Render(environmentLight, mainCamera, modelsToRender);
+	myForwardRenderer->Render(environmentLight, mainCamera, modelsToRender, gameObjectsToRender);
 }
 
 void CEngine::EndFrame()

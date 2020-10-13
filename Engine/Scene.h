@@ -4,6 +4,7 @@
 class CModelInstance;
 class CCamera;
 class CEnvironmentLight;
+class CGameObject;
 
 class CScene {
 
@@ -17,10 +18,13 @@ public:
 	CCamera* GetMainCamera();
 	CEnvironmentLight* GetEnvironmentLight();
 	std::vector<CModelInstance*> CullModels(CCamera* aMainCamera);
+	std::vector<CGameObject*> CullGameObjects(CCamera* aMainCamera);
 
 	bool AddInstance(CModelInstance* aModel);
 	bool AddInstance(CCamera* aCamera);
 	bool AddInstance(CEnvironmentLight* anEnvironmentLight);
+	bool AddInstance(CGameObject* aGameObject);
+
 
 	bool ClearInstances();
 private:
@@ -32,5 +36,6 @@ private:
 	std::vector<CCamera*> myCameras;
 	std::vector<CModelInstance*> myModelInstances;
 	std::vector<CEnvironmentLight*> myEnvironmentLights;
+	std::vector<CGameObject*> myGameObjects;
 	static CScene* ourInstance;
 };

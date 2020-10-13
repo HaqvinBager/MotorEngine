@@ -5,7 +5,7 @@
 
 class CModel;
 
-struct SAnimationBlend
+struct SModelInstanceAnimationBlend
 {
 	int myFirst = -1;
 	int mySecond = -1;
@@ -44,5 +44,5 @@ private:
 	DirectX::SimpleMath::Vector2 myUVOffset;
 	DirectX::SimpleMath::Vector3 myScale;
 	std::array<SlimMatrix44, 64> myBones { };
-	SAnimationBlend myBlend;
+	SModelInstanceAnimationBlend myBlend;
 };

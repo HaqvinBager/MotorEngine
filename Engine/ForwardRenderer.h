@@ -10,6 +10,7 @@ class CEngine;
 class CCamera;
 class CEnvironmentLight;
 class CPointLight;
+class CGameObject;
 
 class CForwardRenderer
 {
@@ -18,7 +19,7 @@ public:
 	~CForwardRenderer();
 
 	bool Init(CEngine& anEngine);
-	void Render(CEnvironmentLight* anEnvironmentLight, CCamera* aCamera, std::vector<CModelInstance*>& aModelList);
+	void Render(CEnvironmentLight* anEnvironmentLight, CCamera* aCamera, std::vector<CModelInstance*>& aModelList, std::vector<CGameObject*>& aGameObjectList);
 
 private:
 	struct SFrameBufferData

@@ -217,7 +217,7 @@ template<typename T>
 inline void Vector<T>::Resize(int aCapacity) {
 	assert(aCapacity > 0 && "Can't have a vector with no capacity!");
 	T* data = new T[aCapacity];
-	int size = std::min(aCapacity, mySize);
+	int size = min(aCapacity, mySize);
 	for (int i = 0; i < size; ++i) {
 		data[i] = std::move(myData[i]);
 	}

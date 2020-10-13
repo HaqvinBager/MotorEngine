@@ -51,6 +51,11 @@ std::vector<CModelInstance*> CScene::CullModels(CCamera* /*aMainCamera*/)
 	return myModelInstances;
 }
 
+std::vector<CGameObject*> CScene::CullGameObjects(CCamera* /*aMainCamera*/)
+{
+	return myGameObjects;
+}
+
 bool CScene::AddInstance(CModelInstance* aModel)
 {
 	myModelInstances.emplace_back(aModel);
@@ -66,6 +71,12 @@ bool CScene::AddInstance(CCamera* aCamera)
 bool CScene::AddInstance(CEnvironmentLight* anEnvironmentLight)
 {
 	myEnvironmentLights.emplace_back(anEnvironmentLight);
+	return true;
+}
+
+bool CScene::AddInstance(CGameObject* aGameObject)
+{
+	myGameObjects.emplace_back(aGameObject);
 	return true;
 }
 

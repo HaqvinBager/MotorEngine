@@ -6,6 +6,10 @@
 #include "Camera.h"
 #include "EnvironmentLight.h"
 #include "ModelMath.h"
+#include "GameObject.h"
+#include "ModelComponent.h"
+#include "AnimationComponent.h"
+#include "TransformComponent.h"
 
 namespace SM = DirectX::SimpleMath;
 
@@ -49,7 +53,7 @@ bool CForwardRenderer::Init(CEngine& anEngine) {
 	return true;
 }
 
-void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, CCamera* aCamera, std::vector<CModelInstance*>& aModelList) 
+void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, CCamera* aCamera, std::vector<CModelInstance*>& aModelList, std::vector<CGameObject*>& aGameObjectList)
 {
 	D3D11_MAPPED_SUBRESOURCE bufferData;
 	myFrameBufferData.myToCamera = aCamera->GetTransform().Invert();
@@ -67,6 +71,52 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, CCamera* aC
 	myContext->PSSetConstantBuffers(0, 1, &myFrameBuffer);
 	myContext->PSSetShaderResources(0, 1, anEnvironmentLight->GetCubeMap());
 	
+	// MODELCOMPONENT
+	for (CGameObject* gameobject : aGameObjectList)
+	{
+
+		CModel* model = gameobject->GetComponent<CModelComponent>()->GetMyModel()->GetModel();
+
+		CModel::SModelData modelData = model->GetModelData();
+
+		myObjectBufferData.myToWorld = gameobject->GetComponent<CTransformComponent>()->Transform();
+
+		D3D11_MAPPED_SUBRESOURCE PSbufferData;
+		ZeroMemory(&PSbufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
+		ENGINE_HR_MESSAGE(myContext->Map(myObjectBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &PSbufferData), "Object Buffer could not be mapped.");
+
+		CopyMemory(PSbufferData.pData, &myObjectBufferData, sizeof(SObjectBufferData));
+		myContext->Unmap(myObjectBuffer, 0);
+
+		memcpy(myBoneBufferData.myBones, gameobject->GetComponent<CAnimationComponent>()->GetBones().data(), sizeof(SlimMatrix44) * 64);
+
+		D3D11_MAPPED_SUBRESOURCE VSBufferData;
+		ZeroMemory(&VSBufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
+		ENGINE_HR_MESSAGE(myContext->Map(myBoneBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &VSBufferData), "Bone Buffer could not be mapped.");
+
+		CopyMemory(VSBufferData.pData, &myBoneBufferData, sizeof(SBoneBufferData));
+		myContext->Unmap(myBoneBuffer, 0);
+
+		myContext->IASetPrimitiveTopology(modelData.myPrimitiveTopology);
+		myContext->IASetInputLayout(modelData.myInputLayout);
+		myContext->IASetVertexBuffers(0, 1, &modelData.myVertexBuffer, &modelData.myStride, &modelData.myOffset);
+		myContext->IASetIndexBuffer(modelData.myIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+		myContext->VSSetConstantBuffers(1, 1, &myObjectBuffer);
+		myContext->VSSetConstantBuffers(2, 1, &myBoneBuffer);
+		myContext->VSSetShader(modelData.myVertexShader, nullptr, 0);
+
+		myContext->PSSetConstantBuffers(1, 1, &myObjectBuffer);
+		myContext->PSSetShaderResources(1, 3, &modelData.myTexture[0]);
+		myContext->PSSetSamplers(0, 1, &modelData.mySamplerState);
+		myContext->PSSetShader(modelData.myPixelShader, nullptr, 0);
+
+		myContext->DrawIndexed(modelData.myNumberOfIndicies, 0, 0);
+
+	}
+	// MODELCOMPONENT END
+
+
 	for (CModelInstance* instance : aModelList) {
 		CModel* model = instance->GetModel();
 		CModel::SModelData modelData = model->GetModelData();
