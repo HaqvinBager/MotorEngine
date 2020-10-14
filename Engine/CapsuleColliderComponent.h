@@ -9,8 +9,10 @@ namespace DirectX {
 
 class CCapsuleColliderComponent : public CComponent
 {
+	friend class CIntersectionManager;
+
 public:
-	CCapsuleColliderComponent(CGameObject& aParent) : CComponent(aParent) { }
+	CCapsuleColliderComponent(CGameObject& aParent, float aRadius, float aHeight);
 	~CCapsuleColliderComponent() override;
 
 	void Awake() override;
@@ -19,6 +21,7 @@ public:
 
 private:
 	float myRadius;
+	float myHeight;
 	DirectX::SimpleMath::Vector3 myBase;
 	DirectX::SimpleMath::Vector3 myTip;
 };
