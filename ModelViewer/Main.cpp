@@ -16,6 +16,8 @@
 
 #include <Animation.h>
 
+#include <fstream>
+
 using namespace CommonUtilities;
 namespace SM = DirectX::SimpleMath;
 
@@ -46,8 +48,10 @@ void CloseConsole()
 #pragma warning( pop )
 }
 
+
 void InitModels()
 {
+
 	CScene* scene = CScene::GetInstance();
 
 	CCamera* camera = CCameraFactory::GetInstance()->CreateCamera(65.0f, 5000.0f);
