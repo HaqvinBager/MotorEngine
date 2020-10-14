@@ -99,6 +99,6 @@ inline T* CGameObject::GetComponent() const
 			return dynamic_cast<T*>(myComponents[i]);
 		}
 	}
-	throw std::exception("Component is missing.");
-	//return nullptr;
+	//throw std::exception("Component is missing.");
+	return nullptr;
 }

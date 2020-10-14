@@ -5,7 +5,7 @@
 
 using namespace DirectX::SimpleMath;
 
-bool CIntersectionManager::CapsuleIntersection(const CCapsuleColliderComponent& aCapsuleA, const CCapsuleColliderComponent& aCapsuleB)
+bool CIntersectionManager::CapsuleIntersection(CCapsuleColliderComponent& aCapsuleA, CCapsuleColliderComponent& aCapsuleB)
 {
 	//Capsule A
 	Vector3 normalA = (aCapsuleA.myTip - aCapsuleA.myBase);
@@ -40,7 +40,7 @@ bool CIntersectionManager::CapsuleIntersection(const CCapsuleColliderComponent& 
 	}
 
 	Vector3 bestB = ClosestPointOnLineSegment(endOfBotCylinderB, endOfTopCylinderB, bestA);
-	Vector3 bestA = ClosestPointOnLineSegment(endOfBotCylinderA, endOfTopCylinderA, bestB);
+	bestA = ClosestPointOnLineSegment(endOfBotCylinderA, endOfTopCylinderA, bestB);
 
 	Vector3 aPenetrationNormal = bestA - bestB;
 	float aLength = aPenetrationNormal.Length();

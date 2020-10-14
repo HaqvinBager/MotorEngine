@@ -74,6 +74,12 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, CCamera* aC
 	// MODELCOMPONENT
 	for (CGameObject* gameobject : aGameObjectList)
 	{
+		//Added this if Check because not all GameObjects Must have a CModelComponent.
+		//Refactoring suggestion: Have CModelComponents be "created" in some kind of Factory.
+		//This factory will make sure to hold all CModelComponent Data in a Cache friendly array <3
+		//Big hype!
+		if (gameobject->GetComponent<CModelComponent>() == nullptr)
+			continue;
 
 		CModel* model = gameobject->GetComponent<CModelComponent>()->GetMyModel()->GetModel();
 

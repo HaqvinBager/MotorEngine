@@ -51,7 +51,7 @@ public:
 	const bool Enabled() const { return myEnabled; }
 
 	template<class T>
-	T& GetComponent() const;
+	T* GetComponent();
 
 	CGameObject& GetParent() const;
 
@@ -62,7 +62,7 @@ private:
 };
 
 template<class T>
-inline T& CComponent::GetComponent() const
+inline T* CComponent::GetComponent()
 {
 	return myParent.GetComponent<T>();
 }
