@@ -42,7 +42,18 @@ bool CIntersectionManager::CapsuleIntersection(const CCapsuleColliderComponent& 
 	Vector3 bestB = ClosestPointOnLineSegment(endOfBotCylinderB, endOfTopCylinderB, bestA);
 	Vector3 bestA = ClosestPointOnLineSegment(endOfBotCylinderA, endOfTopCylinderA, bestB);
 
-	return false;
+	Vector3 aPenetrationNormal = bestA - bestB;
+	float aLength = aPenetrationNormal.Length();
+	aPenetrationNormal.Normalize();
+	float aPenetrationDepth = aCapsuleA.myRadius + aCapsuleB.myRadius - aLength;
+	
+	if (aPenetrationDepth > 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+
 }
 
 Vector3 CIntersectionManager::ClosestPointOnLineSegment(Vector3 aA, Vector3 aB, Vector3 aPoint)

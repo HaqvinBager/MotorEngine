@@ -128,6 +128,7 @@
     <ClInclude Include="ForwardRenderer.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="IntersectionManager.h" />
     <ClInclude Include="LevelLoader.h" />
     <ClInclude Include="LightFactory.h" />
     <ClInclude Include="MathFunc.h" />
@@ -157,6 +158,7 @@
     <ClCompile Include="ForwardRenderer.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="IntersectionManager.cpp" />
     <ClCompile Include="LevelLoader.cpp" />
     <ClCompile Include="LightFactory.cpp" />
     <ClCompile Include="MathFunc.cpp" />
