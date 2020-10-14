@@ -8,12 +8,14 @@
 #include "CameraFactory.h"
 
 CLevelLoader::CLevelLoader()
-	: myUnityLoader(new CUnityLoader())
+	: myUnityLoader(nullptr)
+	, myScene(nullptr)
 {
 }
 
 bool CLevelLoader::Init()
 {
+	myUnityLoader = new CUnityLoader();
 	myScene = CScene::GetInstance();
 	return true;
 }
