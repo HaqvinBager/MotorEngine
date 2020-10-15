@@ -94,14 +94,19 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, CCamera* aC
 		CopyMemory(PSbufferData.pData, &myObjectBufferData, sizeof(SObjectBufferData));
 		myContext->Unmap(myObjectBuffer, 0);
 
-		memcpy(myBoneBufferData.myBones, gameobject->GetComponent<CAnimationComponent>()->GetBones().data(), sizeof(SlimMatrix44) * 64);
+		if (gameobject->GetComponent<CAnimationComponent>() != nullptr) {
+			memcpy(myBoneBufferData.myBones, gameobject->GetComponent<CAnimationComponent>()->GetBones().data(), sizeof(SlimMatrix44) * 64);
 
-		D3D11_MAPPED_SUBRESOURCE VSBufferData;
-		ZeroMemory(&VSBufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
-		ENGINE_HR_MESSAGE(myContext->Map(myBoneBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &VSBufferData), "Bone Buffer could not be mapped.");
+			D3D11_MAPPED_SUBRESOURCE VSBufferData;
+			ZeroMemory(&VSBufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
+			ENGINE_HR_MESSAGE(myContext->Map(myBoneBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &VSBufferData), "Bone Buffer could not be mapped.");
+			CopyMemory(VSBufferData.pData, &myBoneBufferData, sizeof(SBoneBufferData));
+			myContext->Unmap(myBoneBuffer, 0);
 
-		CopyMemory(VSBufferData.pData, &myBoneBufferData, sizeof(SBoneBufferData));
-		myContext->Unmap(myBoneBuffer, 0);
+			myContext->VSSetConstantBuffers(2, 1, &myBoneBuffer);
+		}
+
+
 
 		myContext->IASetPrimitiveTopology(modelData.myPrimitiveTopology);
 		myContext->IASetInputLayout(modelData.myInputLayout);
@@ -109,7 +114,6 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, CCamera* aC
 		myContext->IASetIndexBuffer(modelData.myIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 		myContext->VSSetConstantBuffers(1, 1, &myObjectBuffer);
-		myContext->VSSetConstantBuffers(2, 1, &myBoneBuffer);
 		myContext->VSSetShader(modelData.myVertexShader, nullptr, 0);
 
 		myContext->PSSetConstantBuffers(1, 1, &myObjectBuffer);
