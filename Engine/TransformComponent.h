@@ -19,7 +19,7 @@ public:
 	void Start() override;
 	void Update() override;
 
-	void Position(DirectX::SimpleMath::Vector3& aPosition);
+	void Position(DirectX::SimpleMath::Vector3 aPosition);
 	DirectX::SimpleMath::Vector3 Position() const;
 
 	void Rotation(DirectX::SimpleMath::Vector3& aRotation);

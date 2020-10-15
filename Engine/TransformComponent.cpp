@@ -26,7 +26,7 @@ void CTransformComponent::Update()
 {
 }
 
-void CTransformComponent::Position(DirectX::SimpleMath::Vector3& aPosition)
+void CTransformComponent::Position(DirectX::SimpleMath::Vector3 aPosition)
 {
 	myTransform.Translation(aPosition);
 }
