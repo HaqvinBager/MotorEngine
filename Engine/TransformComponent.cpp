@@ -5,9 +5,9 @@
 #define ENGINE_SCALE 0.01f
 using namespace DirectX::SimpleMath;
 
-CTransformComponent::CTransformComponent(CGameObject& aParent) : myScale(ENGINE_SCALE), CComponent(aParent)
+CTransformComponent::CTransformComponent(CGameObject& aParent, DirectX::SimpleMath::Vector3 aPosition) : myScale(ENGINE_SCALE), CComponent(aParent)
 {
-	
+	Position(aPosition);
 }
 
 CTransformComponent::~CTransformComponent()
@@ -26,7 +26,7 @@ void CTransformComponent::Update()
 {
 }
 
-void CTransformComponent::Position(DirectX::SimpleMath::Vector3& aPosition)
+void CTransformComponent::Position(DirectX::SimpleMath::Vector3 aPosition)
 {
 	myTransform.Translation(aPosition);
 }
@@ -36,7 +36,7 @@ DirectX::SimpleMath::Vector3 CTransformComponent::Position() const
 	return myTransform.Translation();
 }
 
-void CTransformComponent::Rotation(DirectX::SimpleMath::Vector3& aRotation)
+void CTransformComponent::Rotation(DirectX::SimpleMath::Vector3 aRotation)
 {
 	Vector3 tempTranslation = myTransform.Translation();
 
@@ -61,7 +61,7 @@ float CTransformComponent::Scale()
 	return myScale;
 }
 
-void CTransformComponent::Transform(DirectX::SimpleMath::Vector3& aPosition, DirectX::SimpleMath::Vector3& aRotation)
+void CTransformComponent::Transform(DirectX::SimpleMath::Vector3 aPosition, DirectX::SimpleMath::Vector3 aRotation)
 {
 	Rotation(aRotation);
 	Position(aPosition);
@@ -85,4 +85,16 @@ void CTransformComponent::Rotate(DirectX::SimpleMath::Vector3 aRotation)
 	Matrix tempRotation = Matrix::CreateFromYawPitchRoll(aRotation.y, aRotation.x, aRotation.z);
 	myTransform *= tempRotation;
 	myTransform.Translation(tempTranslation);
+
+
+	//Vector3 tempTranslation = myTransform.Translation();
+	//
+	//Matrix tempRotation = Matrix::CreateFromYawPitchRoll(
+	//	DirectX::XMConvertToRadians(aRotation.y),
+	//	DirectX::XMConvertToRadians(aRotation.x),
+	//	DirectX::XMConvertToRadians(aRotation.z)
+	//);
+	//
+	//myTransform = tempRotation;
+	//myTransform.Translation(tempTranslation);
 }

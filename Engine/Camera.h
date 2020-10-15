@@ -1,8 +1,10 @@
 #pragma once
 #include "SimpleMath.h"
+#include "TransformComponent.h"
 
 using namespace DirectX;
 
+class CTransformComponent;
 class CCamera
 {
 public:
@@ -16,6 +18,24 @@ public:
 	void SetRotation(DirectX::SimpleMath::Vector3 aPosition);
 	void Move(DirectX::SimpleMath::Vector3 aMovement);
 	void Rotate(DirectX::SimpleMath::Vector3 aRotation);
+
+	/// <summary>
+	/// Temporary for Showcase!
+	/// </summary>
+	void Update()
+	{
+		SetPosition(myTarget->Position() + myOffset);
+		SetRotation(myDirection);
+	}
+
+	/// <summary>
+	/// Temporary for Showcase!
+	/// </summary>
+	void SetTarget(CTransformComponent* aTarget, DirectX::SimpleMath::Vector3 aOffset, DirectX::SimpleMath::Vector3 aDirection) {
+		myTarget = aTarget;
+		myOffset = aOffset;
+		myDirection = aDirection;
+	}
 
 public:
 	DirectX::SimpleMath::Matrix GetTransform() { return myTransform; }
@@ -33,4 +53,13 @@ public:
 private:
 	DirectX::SimpleMath::Matrix myTransform;
 	DirectX::SimpleMath::Matrix myProjection;
+
+private:
+
+	/// <summary>
+	/// Temporary for Showcase!
+	/// </summary>
+	CTransformComponent* myTarget;
+	DirectX::SimpleMath::Vector3 myOffset;
+	DirectX::SimpleMath::Vector3 myDirection;
 };
