@@ -3,6 +3,9 @@
 #include "ModelInstance.h"
 #include "EnvironmentLight.h"
 #include "ModelInstance.h"
+#include "GameObject.h"
+#include "TransformComponent.h"
+#include "Camera.h"
 
 CScene* CScene::ourInstance = nullptr;
 
@@ -45,15 +48,36 @@ CEnvironmentLight* CScene::GetEnvironmentLight()
 	return myEnvironmentLights[0];
 }
 
-std::vector<CModelInstance*> CScene::CullModels(CCamera* /*aMainCamera*/)
+std::vector<CModelInstance*> CScene::CullModels(CCamera* aMainCamera)
 {
-
-	return myModelInstances;
+	using namespace DirectX::SimpleMath;
+	Vector3 cameraPosition = aMainCamera->GetTransform().Translation();
+	std::vector<CModelInstance*> culledModelInstances;
+	for (auto& gameObject : myModelInstances)
+	{
+		float distanceToCameraSquared = Vector3::DistanceSquared(gameObject->GetTransform().Translation(), cameraPosition);
+		if (distanceToCameraSquared < 500.0f)
+		{
+			culledModelInstances.emplace_back(gameObject);
+		}
+	}
+	return culledModelInstances;
 }
 
-std::vector<CGameObject*> CScene::CullGameObjects(CCamera* /*aMainCamera*/)
+std::vector<CGameObject*> CScene::CullGameObjects(CCamera* aMainCamera)
 {
-	return myGameObjects;
+	using namespace DirectX::SimpleMath;
+	Vector3 cameraPosition = aMainCamera->GetTransform().Translation();
+	std::vector<CGameObject*> culledGameObjects;
+	for (auto& gameObject : myGameObjects)
+	{
+		float distanceToCameraSquared = Vector3::DistanceSquared(gameObject->GetComponent<CTransformComponent>()->Position(), cameraPosition);
+		if (distanceToCameraSquared < 500.0f)
+		{
+			culledGameObjects.emplace_back(gameObject);
+		}
+	}
+	return culledGameObjects;
 }
 
 bool CScene::AddInstance(CModelInstance* aModel)

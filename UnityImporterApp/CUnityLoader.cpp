@@ -37,6 +37,7 @@ std::vector<ObjectData> CUnityLoader::LoadGameObjects(const std::string& aGameOb
 {
 	assert(aReadMode < EReadMode_MAX || aReadMode > -1);
 	assert(myModelPathsFetched);
+	//return LoadGameObjectsASCII(aGameObjectFile);
 	return myLoaderFunctions[static_cast<size_t>(aReadMode)](aGameObjectFile);
 }
 
