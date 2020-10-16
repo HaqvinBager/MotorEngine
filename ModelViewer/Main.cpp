@@ -16,7 +16,9 @@
 
 #include <Animation.h>
 
-#include <fstream>
+#include <filesystem>
+#include <iostream>
+#include <map>
 
 using namespace CommonUtilities;
 namespace SM = DirectX::SimpleMath;
@@ -49,36 +51,173 @@ void CloseConsole()
 }
 
 
-void InitModels()
+void CheckFolder(const std::string& aFolder)
 {
+	std::filesystem::path p(aFolder.c_str());
+	std::filesystem::directory_iterator start(p);
+	std::filesystem::directory_iterator end;
 
+	for (auto i = start; i != end; ++i)
+	{
+		std::string filePath = i->path().filename().string();
+		const size_t checkForDot = filePath.find(".");
+		if (checkForDot == std::string::npos)
+		{
+			std::cout << filePath << " is a folder" << std::endl;
+			continue;
+		}
+		std::cout << filePath << std::endl;
+	}
+}
+std::size_t number_of_files_in_directory(std::filesystem::path path)
+{//https://stackoverflow.com/questions/41304891/how-to-count-the-number-of-files-in-a-directory-using-standard/41305019
+	using std::filesystem::directory_iterator;
+	return std::distance(directory_iterator(path), directory_iterator{});
+}
+
+
+void LoadModels(const std::string& aFolderPath, std::vector<std::string>& aFilePaths)
+{
+	struct SFileInfo {
+
+		short mySize = 0;
+		std::string myFullPath;
+	};
+
+	std::filesystem::path p(aFolderPath);
+	{
+		std::filesystem::recursive_directory_iterator start(p);
+		std::filesystem::recursive_directory_iterator end;
+
+		std::map<std::string, SFileInfo> folders;
+		std::vector<std::string> prevFolders;
+
+		int depth = 0;
+
+		std::string folderPath			= aFolderPath;
+		std::map<std::string, short> foldersWithSize;
+
+		prevFolders.emplace_back(aFolderPath);
+
+		SFileInfo fileInfo;
+		fileInfo.mySize			= static_cast<short>( number_of_files_in_directory(start->path()));
+		fileInfo.myFullPath		= aFolderPath;
+
+		folders.emplace(prevFolders[depth], fileInfo);
+
+		for (auto i = start; i != end; ++i)
+		{
+			std::string filePath = i->path().filename().string();
+
+			if (i->is_directory())
+			{
+				++depth;
+				prevFolders.emplace_back(filePath);
+
+				folderPath.append("/" + filePath);
+
+				fileInfo.mySize		= static_cast<short>(number_of_files_in_directory(i->path()));
+				fileInfo.myFullPath = folderPath;
+
+				folders.emplace(filePath, fileInfo);
+				std::cout << "Found directory: " << filePath << std::endl << std::endl;
+			}
+			else
+			{
+				const size_t checkForDot = filePath.find(".");
+				std::string fileExtension = filePath.substr(checkForDot, ((4 + checkForDot) < filePath.length() ? 4 : filePath.length() - 1 ));
+				// todo filesystem::path has a function to check if it is a directory.
+				if (fileExtension == ".fbx")
+				{
+					aFilePaths.emplace_back(folders[prevFolders[depth]].myFullPath + "/" + filePath);
+					std::cout	<< "Found FBX: \n"
+								<< "aFilePaths.back() : " << aFilePaths.back() << std::endl;
+				}
+			}
+			
+			if (folders[prevFolders[depth]].mySize > -1)
+			{
+				folders[prevFolders[depth]].mySize -= 1;
+				if (folders[prevFolders[depth]].mySize == -1)
+				{
+					--depth;
+					prevFolders.pop_back();
+					
+					folderPath = folders[prevFolders[depth]].myFullPath;
+					
+					folders[prevFolders[depth]].mySize -= 1;
+					if (folders[prevFolders[depth]].mySize == -1)
+					{
+						--depth;
+						prevFolders.pop_back();
+
+						folderPath = folders[prevFolders[depth]].myFullPath;
+					}
+
+					/*std::cout << "FOLDER ENDS" << std::endl;
+
+					std::cout << "Changing to folder: " << folderPath << std::endl << std::endl;*/
+				}
+			}
+			
+			
+		}
+	}
+}
+
+CModelInstance* InitModels(const std::string& /*aModelPath*/)
+{
 	CScene* scene = CScene::GetInstance();
 
 	CCamera* camera = CCameraFactory::GetInstance()->CreateCamera(65.0f, 5000.0f);
-	camera->SetPosition({ 0,0,0 });
+	camera->SetPosition({ 0,0,-5.0f });
 	scene->AddInstance(camera);
 	scene->SetMainCamera(camera);
 
 	CLightFactory* lightFactory = CLightFactory::GetInstance();
 	CEnvironmentLight* environmentLight = lightFactory->CreateEnvironmentLight("Yokohama2.dds");
+	environmentLight->SetDirection(SM::Vector3(0, 0, 1));
+	environmentLight->SetColor(SM::Vector3(1.0f, 1.0f, 1.0f));
+	scene->AddInstance(environmentLight);
 
-	CModel* cubeModel = CModelFactory::GetInstance()->GetCube();
-	CModelInstance* cube = new CModelInstance();
-	cube->Init(cubeModel);
-	scene->AddInstance(cube);
+	//CModel* cubeModel = CModelFactory::GetInstance()->GetCube();
+	//CModelInstance* cube = new CModelInstance();
+	//cube->Init(cubeModel);
+	//scene->AddInstance(cube);
 
-	CModelInstance* model = CModelFactory::GetInstance()->CreateModel("Model/Chest/Particle_Chest.fbx", { 0.025f, 0.025f, 0.025f });
-	model->SetPosition({ 12.5f, 0.0f, 15.0f });
-	environmentLight->SetDirection(SM::Vector3(0, 1, -1));
-	environmentLight->SetColor(SM::Vector3(0.8f, 0.8f, 0.8f));
+	//CModelInstance* model = CModelFactory::GetInstance()->CreateModel(aModelPath, { 1.0f, 1.0f, 1.0f });
+	CModelInstance* model = CModelFactory::GetInstance()->CreateModel("Model/Chest/Particle_Chest.fbx", { 1.0f, 1.0f, 1.0f });
+	model->SetPosition({ 0.0f, 0.0f, .0f });
 
 	scene->AddInstance(model);
-	scene->AddInstance(environmentLight);
+
+	return model;
+	
 }
 
-void Update()
+void Update(std::vector<std::string>& aModelFilePathList, CModelInstance* aCurrentModelInstance, int& aCurrentModelPathIndex)
 {
+	if (Input::GetInstance()->IsKeyDown(VK_UP))
+	{
+		if (aCurrentModelPathIndex > 0)
+		{
+			--aCurrentModelPathIndex;
+			delete aCurrentModelInstance;
+			aCurrentModelInstance = nullptr;
+			aCurrentModelInstance = CModelFactory::GetInstance()->CreateModel(aModelFilePathList[aCurrentModelPathIndex], { 1.0f, 1.0f, 1.0f });
+		}
+	}
 
+	if (Input::GetInstance()->IsKeyDown(VK_DOWN))
+	{
+		if (aCurrentModelPathIndex < aModelFilePathList.size())
+		{
+			++aCurrentModelPathIndex;
+			delete aCurrentModelInstance;
+			aCurrentModelInstance = nullptr;
+			aCurrentModelInstance = CModelFactory::GetInstance()->CreateModel(aModelFilePathList[aCurrentModelPathIndex], { 1.0f, 1.0f, 1.0f });
+		}
+	}
 }
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nShowCmd)
@@ -102,8 +241,14 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	bool shouldRun = engine.Init(windowData);
 	if (!shouldRun)
 		return 1;
+
+	std::vector<std::string> filePaths;
+	CModelInstance* currentModel = nullptr;
+	LoadModels("Model", filePaths);
+	int currentModelPathIndex = 1;// 71 total
+	currentModel = InitModels(filePaths[currentModelPathIndex]);
+
 	
-	InitModels();
 
 	MSG windowMessage = { 0 };
 	while (shouldRun)
@@ -120,14 +265,56 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		}
 	
 		engine.BeginFrame();
-		Update();
+		Update(filePaths, currentModel,currentModelPathIndex);
 		engine.RenderFrame();
 		engine.EndFrame();
-		//Input::GetInstance()->update();
+		Input::GetInstance()->update();
 	}
 
 #ifdef USE_CONSOLE_COMMAND
 	CloseConsole();
 #endif
+
 	return 0;
 }
+
+/*
+	struct FileInfo
+		short mySize
+		string myFullPath
+
+	map<string, FileInfo> folders
+	vector<string> prevFolders
+	int depth = 0
+
+	prevFolders.emplace_back(aFolder)
+
+	fileInfo.mySize = start.DirectorySize
+	fileInfo.myFullPath = aFolder
+	folders.emplace(prevFolders[depth], fileInfo)
+
+	string folderPath = aFolder;
+	for(iterator)
+		string file = iterator.name
+		if(iterator is directory)
+			depth++
+			prevFolder.emplace_back(file)
+
+			folderPath.append(/ + file)
+
+			FileInfo.mySize = iterator.DirectorySize
+			FileInfo.myFullPath = folderPath
+			folders.emplace(file, FileInfo)
+
+		else
+			fileExtension = search for ., get substr from . to end of string
+			if(fileExtension == FBX)
+				save to modellist .emplace_back(folders[prevFolder[depth]].myFullPath + / + file)
+
+		if(folders[prevFolder[depth]].mySize > -1)
+			folders[prevFolder[depth]].mySize -= 1
+			if(folders[prevFolder[depth]].mySize == -1)
+				--depth
+				prevFolder.pop_back()
+				folderPath = prevFolder[depth]
+*/
