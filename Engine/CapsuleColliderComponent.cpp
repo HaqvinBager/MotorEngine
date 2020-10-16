@@ -1,12 +1,15 @@
 #include "stdafx.h"
 #include "CapsuleColliderComponent.h"
 #include "TransformComponent.h"
+#include "CollisionManager.h"
+#include <iostream>
 
 CCapsuleColliderComponent::CCapsuleColliderComponent(CGameObject& aParent, float aRadius, float aHeight) 
 	: CComponent(aParent)
 	, myRadius(aRadius)
 	, myHeight(aHeight) 
-{ 
+{
+	CCollisionManager::GetInstance()->RegisterCollider(this);
 }
 
 CCapsuleColliderComponent::~CCapsuleColliderComponent()
@@ -40,4 +43,9 @@ void CCapsuleColliderComponent::Update()
 	}
 	myBase.y -= myHeight / 2.0f;
 	myTip.y += myHeight / 2.0f;
+}
+
+void CCapsuleColliderComponent::Collided(CGameObject* /*aCollidedGameObject*/)
+{
+	
 }

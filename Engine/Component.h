@@ -34,7 +34,6 @@
 /// 
 
 #include "GameObject.h"
-
 class CComponent
 {
 public:
@@ -46,6 +45,8 @@ public:
 	virtual void Start() = 0;
 
 	virtual void Update() = 0;
+
+	virtual void Collided(CGameObject* aCollidedGameObject);
 
 	void Enabled(bool aEnabled) { myEnabled = aEnabled; }
 	const bool Enabled() const { return myEnabled; }

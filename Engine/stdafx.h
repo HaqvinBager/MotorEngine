@@ -7,6 +7,7 @@
 
 #include <codecvt>
 #include <cstdarg>
+#include <iostream>
 
 #include <SimpleMath.h>
 #include <fstream>

@@ -5,6 +5,7 @@
 #include <algorithm>
 
 #include "rapidjson/document.h"
+#include "rapidjson/rapidjson.h"
 #include <array>
 using namespace rapidjson;
 
@@ -103,6 +104,12 @@ std::vector<ObjectData> CUnityLoader::LoadGameObjectsASCII(const std::string& aG
 		object.myScaleX = results[i]["myScaleX"].GetDouble();
 		object.myScaleY = results[i]["myScaleY"].GetDouble();
 		object.myScaleZ = results[i]["myScaleZ"].GetDouble();
+
+		object.myColliderHeight = results[i]["myColliderData"]["myHeight"].GetDouble();
+		object.myColliderRadius = results[i]["myColliderData"]["myRadius"].GetDouble();
+
+
+
 
 		//object.myIntensity = results[i]["myIntensity"].GetDouble();
 		//object.myR = results[i]["myR"].GetDouble();

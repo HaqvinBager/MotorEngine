@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "TransformComponent.h"
 #include "Camera.h"
+#include "CollisionManager.h"
 
 CScene* CScene::ourInstance = nullptr;
 
@@ -18,12 +19,15 @@ CScene::CScene()
 {
 	ourInstance = this;
 	myMainCamera = nullptr;
+	myCollisionManager = new CCollisionManager();
 }
 
 CScene::~CScene()
 {
 	ourInstance = nullptr;
 	myMainCamera = nullptr;
+	delete myCollisionManager;
+	myCollisionManager = nullptr;
 }
 
 

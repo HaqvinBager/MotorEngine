@@ -26,12 +26,10 @@ void CModelComponent::Update()
 {
 }
 
+
 void CModelComponent::SetMyModel(CModel* aModel)
 {
 	myModelInstance->Init(aModel);
-
-	
-
 }
 
 CModelInstance* CModelComponent::GetMyModel() const

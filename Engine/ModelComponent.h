@@ -31,6 +31,7 @@ public:
 
 	void SetMyModel(CModel* aModel);
 
+
 	CModelInstance* GetMyModel() const;
 
 private:

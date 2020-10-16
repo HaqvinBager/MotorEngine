@@ -19,6 +19,9 @@ public:
 	float myScaleY;
 	float myScaleZ;
 
+	float myColliderRadius;
+	float myColliderHeight;
+
 	//float myIntensity;
 	//float myR;
 	//float myG;

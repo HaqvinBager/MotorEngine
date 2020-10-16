@@ -6,6 +6,8 @@
 #include "ModelInstance.h"
 #include "Camera.h"
 #include "CameraFactory.h"
+#include "CapsuleColliderComponent.h"
+#include "ModelComponent.h"
 
 CLevelLoader::CLevelLoader()
 	: myUnityLoader(nullptr)
@@ -27,15 +29,32 @@ void CLevelLoader::CreateLevel(const std::string& aPath)
 	myUnityLoader->LoadModels(aPath);
 
 	objectData = myUnityLoader->LoadGameObjects(aPath, EReadMode::EReadMode_ASCII);
-	for (auto object : objectData) {
-		if (object.myRelativePath.length() > 1)
+	//for (auto object : objectData) {
+	//	if (object.myRelativePath.length() > 1)
+	//	{
+	//		CModelInstance* model = CModelFactory::GetInstance()->CreateModel(object.myRelativePath);
+	//		model->SetTransform(DirectX::SimpleMath::Vector3(object.myPosX, object.myPosY, object.myPosZ), DirectX::SimpleMath::Vector3(object.myRotX, object.myRotY, object.myRotZ));
+	//		//model->SetScale(DirectX::SimpleMath::Vector3(object.myScaleX, object.myScaleY, object.myScaleZ));
+	//		//model->SetScale({ 10.0f, 10.0f, 10.0f});
+	//		myScene->AddInstance(model);
+	//	}
+	//}
+
+	for (auto object : objectData)
+	{
+		CGameObject* gameObject = new CGameObject();
+		CTransformComponent* transform = gameObject->AddComponent<CTransformComponent>(*gameObject);
+		transform->Scale(0.25f);
+		transform->Position({ object.myPosX, object.myPosY, object.myPosZ });
+		CModelComponent* model = gameObject->AddComponent<CModelComponent>(*gameObject);
+		model->SetMyModel(CModelFactory::GetInstance()->GetModelPBR("Assets/3D/Character/Boss/CH_NPC_Boss_01_19G4_1_19.fbx"));
+
+		if (object.myColliderHeight > 0.0f)
 		{
-			CModelInstance* model = CModelFactory::GetInstance()->CreateModel(object.myRelativePath);
-			model->SetTransform(DirectX::SimpleMath::Vector3(object.myPosX, object.myPosY, object.myPosZ), DirectX::SimpleMath::Vector3(object.myRotX, object.myRotY, object.myRotZ));
-			//model->SetScale(DirectX::SimpleMath::Vector3(object.myScaleX, object.myScaleY, object.myScaleZ));
-			//model->SetScale({ 10.0f, 10.0f, 10.0f});
-			myScene->AddInstance(model);
+			gameObject->AddComponent<CCapsuleColliderComponent>(*gameObject, object.myColliderRadius, object.myColliderHeight);
 		}
+
+		myScene->AddInstance(gameObject);
 	}
 //	myScene->SetMainCamera(camera);
 //	myScene->AddInstance(camera);

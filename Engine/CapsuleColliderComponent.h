@@ -18,6 +18,7 @@ public:
 	void Awake() override;
 	void Start() override;
 	void Update()override;
+	void Collided(CGameObject* aCollidedGameObject) override;
 
 private:
 	float myRadius;

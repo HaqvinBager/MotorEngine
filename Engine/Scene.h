@@ -5,6 +5,7 @@ class CModelInstance;
 class CCamera;
 class CEnvironmentLight;
 class CGameObject;
+class CCollisionManager;
 
 class CScene {
 
@@ -37,5 +38,6 @@ private:
 	std::vector<CModelInstance*> myModelInstances;
 	std::vector<CEnvironmentLight*> myEnvironmentLights;
 	std::vector<CGameObject*> myGameObjects;
+	CCollisionManager* myCollisionManager;
 	static CScene* ourInstance;
 };

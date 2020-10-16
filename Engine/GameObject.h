@@ -51,6 +51,9 @@ public:
 
 	void Update();
 
+	void Collided(CGameObject& aCollidedGameObject);
+
+
 	template< class T, typename... Args >
 	T* AddComponent(Args&&... aParams);
 
