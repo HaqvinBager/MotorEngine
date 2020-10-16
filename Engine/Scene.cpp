@@ -56,7 +56,7 @@ std::vector<CModelInstance*> CScene::CullModels(CCamera* aMainCamera)
 	for (auto& gameObject : myModelInstances)
 	{
 		float distanceToCameraSquared = Vector3::DistanceSquared(gameObject->GetTransform().Translation(), cameraPosition);
-		if (distanceToCameraSquared < 500.0f)
+		if (distanceToCameraSquared < 1500.0f)
 		{
 			culledModelInstances.emplace_back(gameObject);
 		}
@@ -72,7 +72,7 @@ std::vector<CGameObject*> CScene::CullGameObjects(CCamera* aMainCamera)
 	for (auto& gameObject : myGameObjects)
 	{
 		float distanceToCameraSquared = Vector3::DistanceSquared(gameObject->GetComponent<CTransformComponent>()->Position(), cameraPosition);
-		if (distanceToCameraSquared < 500.0f)
+		if (distanceToCameraSquared < 1500.0f)
 		{
 			culledGameObjects.emplace_back(gameObject);
 		}
