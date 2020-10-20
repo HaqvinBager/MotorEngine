@@ -34,6 +34,14 @@ public:
 
 public:
 	CModel* GetModel() { return myModel; }
+	// Temp
+	CModel* SetModel(CModel* aModel)
+	{
+		CModel* oldModel = myModel;
+		myModel = aModel;
+		return oldModel;
+	}
+	// !Temp
 	DirectX::SimpleMath::Matrix GetTransform() { return myTransform; };
 	DirectX::SimpleMath::Vector2 GetUVOffset() { return myUVOffset; };
 	void SetUVOffset(DirectX::SimpleMath::Vector2 aUVOffset) { myUVOffset = aUVOffset; };
