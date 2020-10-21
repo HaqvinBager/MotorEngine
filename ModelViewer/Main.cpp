@@ -60,7 +60,7 @@ void LoadModelPaths(const std::string& aStartFolderPath, std::vector<std::string
 {
 	struct SFileInfo// Used for directories.
 	{
-		short mySize = 0;//rename to myNumItems
+		short myNumItems = 0;//rename to myNumItems
 		std::string myFullPath;
 	};
 
@@ -96,7 +96,7 @@ void LoadModelPaths(const std::string& aStartFolderPath, std::vector<std::string
 	prevFolders.emplace_back(aStartFolderPath);
 
 	SFileInfo fileInfo;
-	fileInfo.mySize			= static_cast<short>( number_of_files_in_directory(start->path()));
+	fileInfo.myNumItems		= static_cast<short>( number_of_files_in_directory(start->path()));
 	fileInfo.myFullPath		= aStartFolderPath;
 
 	folders.emplace(prevFolders[depth], fileInfo);
@@ -112,7 +112,7 @@ void LoadModelPaths(const std::string& aStartFolderPath, std::vector<std::string
 
 			folderPath.append("/" + filePath);
 
-			fileInfo.mySize		= static_cast<short>(number_of_files_in_directory(i->path()));
+			fileInfo.myNumItems	= static_cast<short>(number_of_files_in_directory(i->path()));
 			fileInfo.myFullPath = folderPath;
 
 			folders.emplace(filePath, fileInfo);
@@ -130,18 +130,18 @@ void LoadModelPaths(const std::string& aStartFolderPath, std::vector<std::string
 			}
 		}
 		
-		if (folders[prevFolders[depth]].mySize > -1)
+		if (folders[prevFolders[depth]].myNumItems > -1)
 		{
-			folders[prevFolders[depth]].mySize -= 1;
-			if (folders[prevFolders[depth]].mySize == -1)
+			folders[prevFolders[depth]].myNumItems -= 1;
+			if (folders[prevFolders[depth]].myNumItems == -1)
 			{
 				--depth;
 				prevFolders.pop_back();
 				
 				folderPath = folders[prevFolders[depth]].myFullPath;
 				
-				folders[prevFolders[depth]].mySize -= 1;
-				if (folders[prevFolders[depth]].mySize == -1)
+				folders[prevFolders[depth]].myNumItems -= 1;
+				if (folders[prevFolders[depth]].myNumItems == -1)
 				{
 					--depth;
 					prevFolders.pop_back();
