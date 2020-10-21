@@ -24,6 +24,9 @@ public:
 	void RenderFrame();
 	void EndFrame();
 	CWindowHandler* GetWindowHandler();
+
+
+
 private:
 	
 	CWindowHandler* myWindowHandler;

@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "WindowHandler.h"
 #include "Input.h"
 

@@ -24,14 +24,15 @@ public:
 	/// </summary>
 	void Update()
 	{
-		SetPosition(myTarget->Position() + myOffset);
-		SetRotation(myDirection);
+		//SetPosition(myTarget->Position() + myOffset);
+		//SetRotation(myDirection);
 	}
 
 	/// <summary>
 	/// Temporary for Showcase!
 	/// </summary>
-	void SetTarget(CTransformComponent* aTarget, DirectX::SimpleMath::Vector3 aOffset, DirectX::SimpleMath::Vector3 aDirection) {
+	void SetTarget(CTransformComponent* aTarget, DirectX::SimpleMath::Vector3 aOffset, DirectX::SimpleMath::Vector3 aDirection)
+	{
 		myTarget = aTarget;
 		myOffset = aOffset;
 		myDirection = aDirection;
@@ -48,6 +49,14 @@ public:
 		position.z = myTransform.Translation().z;
 		position.w = 1.0f;
 		return position;
+	}
+
+	DirectX::SimpleMath::Matrix GetView()
+	{
+		SimpleMath::Vector3 eye = myTransform.Forward();
+		SimpleMath::Vector3 at = myTransform.Invert().Translation();
+		SimpleMath::Vector3 up = myTransform.Up();// DirectX::SimpleMath::Vector3::Up;
+		return DirectX::XMMatrixLookAtLH(eye, at, up);
 	}
 
 private:
