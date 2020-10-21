@@ -105,11 +105,14 @@ std::vector<ObjectData> CUnityLoader::LoadGameObjectsASCII(const std::string& aG
 		object.myScaleY = results[i]["myScaleY"].GetDouble();
 		object.myScaleZ = results[i]["myScaleZ"].GetDouble();
 
-		object.myColliderHeight = results[i]["myColliderData"]["myHeight"].GetDouble();
-		object.myColliderRadius = results[i]["myColliderData"]["myRadius"].GetDouble();
+		if (results[i].HasMember("myColliderData"))
+		{
+			if(results[i]["myColliderData"].HasMember("myHeight"))
+				object.myColliderHeight = results[i]["myColliderData"]["myHeight"].GetDouble();
 
-
-
+			if(results[i]["myColliderData"].HasMember("myRadius"))
+				object.myColliderRadius = results[i]["myColliderData"]["myRadius"].GetDouble();
+		}
 
 		//object.myIntensity = results[i]["myIntensity"].GetDouble();
 		//object.myR = results[i]["myR"].GetDouble();
