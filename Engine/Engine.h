@@ -4,12 +4,12 @@
 
 class CWindowHandler;
 class CDirextXFramework;
-class CForwardRenderer;
 class CTimer;
 class CModelFactory;
 class CCameraFactory;
 class CLightFactory;
 class CScene;
+class CRenderManager;
 
 class CEngine
 {
@@ -32,6 +32,7 @@ private:
 	CWindowHandler* myWindowHandler;
 	CDirectXFramework* myFramework;
 	CForwardRenderer* myForwardRenderer;
+	CRenderManager* myRenderManager;
 	CScene* myScene;
 	CTimer* myTimer;
 

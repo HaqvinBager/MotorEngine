@@ -25,10 +25,9 @@ CDirectXFramework::~CDirectXFramework()
 	}
 }
 
-void CDirectXFramework::BeginFrame(std::array<float, 4> aClearColor)
-{
-	myContext->ClearRenderTargetView(myBackBuffer.Get(), &aClearColor[0]);
-	myContext->ClearDepthStencilView(myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+void CDirectXFramework::BeginFrame(std::array<float, 4> /*aClearColor*/) {
+	/*myContext->ClearRenderTargetView(myBackBuffer.Get(), &aClearColor[0]);
+	myContext->ClearDepthStencilView(myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);*/
 }
 
 void CDirectXFramework::EndFrame()
@@ -42,9 +41,6 @@ bool CDirectXFramework::Init(CWindowHandler* aWindowHandler)
 	{
 		return false;
 	}
-
-	HRESULT result;
-
 
 	DXGI_SWAP_CHAIN_DESC swapchainDesc = {};
 	swapchainDesc.BufferCount = 1;
@@ -67,38 +63,38 @@ bool CDirectXFramework::Init(CWindowHandler* aWindowHandler)
 		nullptr,
 		&myContext), "Failed to created Device and Swap Chain.");
 
-	ID3D11Texture2D* backbufferTexture;
-	ENGINE_HR_MESSAGE(mySwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backbufferTexture), "Failed to Get Buffer");
-	ENGINE_HR_MESSAGE(myDevice->CreateRenderTargetView(backbufferTexture, nullptr, &myBackBuffer), "Failed to create RendertargetView");
-	ENGINE_HR_MESSAGE(backbufferTexture->Release(), "Failed to release backbuffer");
-
-	ID3D11Texture2D* depthBufferTexture;
-	D3D11_TEXTURE2D_DESC depthBufferDescription = { 0 };
-	depthBufferDescription.Width = static_cast<unsigned int>(aWindowHandler->GetWidth());
-	depthBufferDescription.Height = static_cast<unsigned int>(aWindowHandler->GetHeight());
-	depthBufferDescription.ArraySize = 1;
-	depthBufferDescription.Format = DXGI_FORMAT_D32_FLOAT;
-	depthBufferDescription.SampleDesc.Count = 1;
-	depthBufferDescription.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-
-	result = myDevice->CreateTexture2D(&depthBufferDescription, nullptr, &depthBufferTexture);
-	if (FAILED(result))
-		return false;
-
-	result = myDevice->CreateDepthStencilView(depthBufferTexture, nullptr, &myDepthBuffer);
-	if (FAILED(result))
-		return false;
-
-	myContext->OMSetRenderTargets(1, myBackBuffer.GetAddressOf(), myDepthBuffer.Get());
-	D3D11_VIEWPORT viewport = { 0 };
-
-	viewport.TopLeftX = 0.0f;
-	viewport.TopLeftY = 0.0f;
-	viewport.Width = static_cast<float>(aWindowHandler->GetWidth());
-	viewport.Height = static_cast<float>(aWindowHandler->GetHeight());
-	viewport.MinDepth = 0.0f;
-	viewport.MaxDepth = 1.0f;
-	myContext->RSSetViewports(1, &viewport);
+	//ID3D11Texture2D* backbufferTexture;
+	//ENGINE_HR_MESSAGE(mySwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backbufferTexture), "Failed to Get Buffer");
+	//ENGINE_HR_MESSAGE(myDevice->CreateRenderTargetView(backbufferTexture, nullptr, &myBackBuffer), "Failed to create RendertargetView");
+	//ENGINE_HR_MESSAGE(backbufferTexture->Release(), "Failed to release backbuffer");
+	//
+	//ID3D11Texture2D* depthBufferTexture;
+	//D3D11_TEXTURE2D_DESC depthBufferDescription = { 0 };
+	//depthBufferDescription.Width = static_cast<unsigned int>(aWindowHandler->GetWidth());
+	//depthBufferDescription.Height = static_cast<unsigned int>(aWindowHandler->GetHeight());
+	//depthBufferDescription.ArraySize = 1;
+	//depthBufferDescription.Format = DXGI_FORMAT_D32_FLOAT;
+	//depthBufferDescription.SampleDesc.Count = 1;
+	//depthBufferDescription.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	//
+	//result = myDevice->CreateTexture2D(&depthBufferDescription, nullptr, &depthBufferTexture);
+	//if (FAILED(result))
+	//	return false;
+	//
+	//result = myDevice->CreateDepthStencilView(depthBufferTexture, nullptr, &myDepthBuffer);
+	//if (FAILED(result))
+	//	return false;
+	//
+	//myContext->OMSetRenderTargets(1, myBackBuffer.GetAddressOf(), myDepthBuffer.Get());
+	//D3D11_VIEWPORT viewport = { 0 };
+	//
+	//viewport.TopLeftX = 0.0f;
+	//viewport.TopLeftY = 0.0f;
+	//viewport.Width = static_cast<float>(aWindowHandler->GetWidth());
+	//viewport.Height = static_cast<float>(aWindowHandler->GetHeight());
+	//viewport.MinDepth = 0.0f;
+	//viewport.MaxDepth = 1.0f;
+	//myContext->RSSetViewports(1, &viewport);
 
 	return true;
 }
@@ -123,4 +119,10 @@ ID3D11Device* CDirectXFramework::GetDevice() const {
 
 ID3D11DeviceContext* CDirectXFramework::GetContext() const {
 	return myContext.Get();
+}
+
+ID3D11Texture2D* CDirectXFramework::GetBackbufferTexture() const {
+	ID3D11Texture2D* backbufferTexture;
+	ENGINE_HR_MESSAGE(mySwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backbufferTexture), "Failed to Get Buffer");
+	return backbufferTexture;
 }

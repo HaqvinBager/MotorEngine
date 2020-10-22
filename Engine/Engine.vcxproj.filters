@@ -31,6 +31,9 @@
     <Filter Include="Source Files\Animation">
       <UniqueIdentifier>{28233e19-cdbb-40ad-adef-973c4d081055}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader Files\Fullscreen">
+      <UniqueIdentifier>{711b76d9-bd21-422d-b3e6-fa89ef658563}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -129,6 +132,18 @@
     <ClInclude Include="PointLight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FullscreenRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FullscreenTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FullscreenTextureFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -212,6 +227,18 @@
     <ClCompile Include="PointLight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FullscreenRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FullscreenTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FullscreenTextureFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="CubePixelShader.hlsl">
@@ -232,6 +259,24 @@
     <FxCompile Include="AnimatedVertexShader.hlsl">
       <Filter>Shader Files\HLSL</Filter>
     </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_Bloom.hlsl">
+      <Filter>Shader Files\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_Copy.hlsl">
+      <Filter>Shader Files\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_GaussianBlurHorizontal.hlsl">
+      <Filter>Shader Files\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_GaussianBlurVertical.hlsl">
+      <Filter>Shader Files\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_Luminance.hlsl">
+      <Filter>Shader Files\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenVertexShader.hlsl">
+      <Filter>Shader Files\Fullscreen</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="CubeShaderStructs.hlsli">
@@ -251,6 +296,9 @@
     </None>
     <None Include="SamplingFunctions.hlsli">
       <Filter>Shader Files\Helpers</Filter>
+    </None>
+    <None Include="FullscreenShaderStructs.hlsli">
+      <Filter>Shader Files\Fullscreen</Filter>
     </None>
   </ItemGroup>
 </Project>
