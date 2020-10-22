@@ -325,6 +325,9 @@
     <FxCompile Include="ParticleVertexShader.hlsl">
       <Filter>Shader Files\Particle</Filter>
     </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_Vignette.hlsl">
+      <Filter>Shader Files\Fullscreen</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="CubeShaderStructs.hlsli">

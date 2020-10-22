@@ -11,12 +11,9 @@
 #include "CameraFactory.h"
 #include "EnvironmentLight.h"
 #include "LightFactory.h"
-<<<<<<< HEAD
 #include "RenderManager.h"
 #include "ParticleFactory.h"
 #include <rapidjson\document.h>
-=======
->>>>>>> b0a5259a7dcfd9c9e648b43aaf8762185428aa75
 #include <string>
 
 #pragma comment(lib, "d3d11.lib")

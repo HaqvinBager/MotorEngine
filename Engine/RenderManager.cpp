@@ -52,6 +52,7 @@ bool CRenderManager::Init(CDirectXFramework* aFramework, CWindowHandler* aWindow
 	myQuaterSizeTexture = myFullscreenTextureFactory.CreateTexture({ (float)aWindowHandler->GetWidth() / 4.0f, (float)aWindowHandler->GetHeight() / 4.0f }, DXGI_FORMAT_R8G8B8A8_UNORM);
 	myBlurTexture1 = myFullscreenTextureFactory.CreateTexture({ (float)aWindowHandler->GetWidth(), (float)aWindowHandler->GetHeight() }, DXGI_FORMAT_R8G8B8A8_UNORM);
 	myBlurTexture2 = myFullscreenTextureFactory.CreateTexture({ (float)aWindowHandler->GetWidth(), (float)aWindowHandler->GetHeight() }, DXGI_FORMAT_R8G8B8A8_UNORM);
+	myVignetteTexture = myFullscreenTextureFactory.CreateTexture({ (float)aWindowHandler->GetWidth(), (float)aWindowHandler->GetHeight() }, DXGI_FORMAT_R8G8B8A8_UNORM);
 
 	return true;
 }
@@ -127,8 +128,12 @@ void CRenderManager::Render()
 	myQuaterSizeTexture.SetAsResourceOnSlot(0);
 	myFullscreenRenderer.Render(CFullscreenRenderer::FullscreenShader::FULLSCREENSHADER_COPY);
 
-	myBackbuffer.SetAsActiveTarget();
+	myVignetteTexture.SetAsActiveTarget();
 	myIntermediateTexture.SetAsResourceOnSlot(0);
+	myFullscreenRenderer.Render(CFullscreenRenderer::FullscreenShader::FULLSCREENSHADER_VIGNETTE);
+
+	myBackbuffer.SetAsActiveTarget();
+	myVignetteTexture.SetAsResourceOnSlot(0);
 	myHalfSizeTexture.SetAsResourceOnSlot(1);
 	myFullscreenRenderer.Render(CFullscreenRenderer::FullscreenShader::FULLSCREENSHADER_BLOOM);
 }

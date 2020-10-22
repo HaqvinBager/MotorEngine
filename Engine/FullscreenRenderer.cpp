@@ -33,14 +33,15 @@ bool CFullscreenRenderer::Init(CDirectXFramework* aFramework) {
 	vsFile.close();
 	myVertexShader = vertexShader;
 
-	std::array<std::string, FullscreenShader::FULLSCREENSHADER_COUNT> filepaths;
-	filepaths[FullscreenShader::FULLSCREENSHADER_COPY] = "FullscreenPixelShader_Copy.cso";
-	filepaths[FullscreenShader::FULLSCREENSHADER_LUMINANCE] = "FullscreenPixelShader_Luminance.cso";
-	filepaths[FullscreenShader::FULLSCREENSHADER_GAUSSIANHORIZONTAL] = "FullscreenPixelShader_GaussianBlurHorizontal.cso";
-	filepaths[FullscreenShader::FULLSCREENSHADER_GAUSSIANVERTICAL] = "FullscreenPixelShader_GaussianBlurVertical.cso";
-	filepaths[FullscreenShader::FULLSCREENSHADER_BLOOM] = "FullscreenPixelShader_Bloom.cso";
+	std::array<std::string, static_cast<size_t>(FullscreenShader::FULLSCREENSHADER_COUNT)> filepaths;
+	filepaths[static_cast<size_t>(FullscreenShader::FULLSCREENSHADER_COPY)] = "FullscreenPixelShader_Copy.cso";
+	filepaths[static_cast<size_t>(FullscreenShader::FULLSCREENSHADER_LUMINANCE)] = "FullscreenPixelShader_Luminance.cso";
+	filepaths[static_cast<size_t>(FullscreenShader::FULLSCREENSHADER_GAUSSIANHORIZONTAL)] = "FullscreenPixelShader_GaussianBlurHorizontal.cso";
+	filepaths[static_cast<size_t>(FullscreenShader::FULLSCREENSHADER_GAUSSIANVERTICAL)] = "FullscreenPixelShader_GaussianBlurVertical.cso";
+	filepaths[static_cast<size_t>(FullscreenShader::FULLSCREENSHADER_BLOOM)] = "FullscreenPixelShader_Bloom.cso";
+	filepaths[static_cast<size_t>(FullscreenShader::FULLSCREENSHADER_VIGNETTE)] = "FullscreenPixelShader_Vignette.cso";
 
-	for (UINT i = 0; i < FullscreenShader::FULLSCREENSHADER_COUNT; i++) {
+	for (UINT i = 0; i < static_cast<size_t>(FullscreenShader::FULLSCREENSHADER_COUNT); i++) {
 		std::ifstream psFile;
 		psFile.open(filepaths[i], std::ios::binary);
 		std::string psData = { std::istreambuf_iterator<char>(psFile), std::istreambuf_iterator<char>() };
@@ -53,17 +54,28 @@ bool CFullscreenRenderer::Init(CDirectXFramework* aFramework) {
 		myPixelShaders[i] = pixelShader;
 	}
 
+	//Start Sampler
+	ID3D11SamplerState* sampler;
+	D3D11_SAMPLER_DESC samplerDesc = {};
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	ENGINE_HR_MESSAGE(device->CreateSamplerState(&samplerDesc, &sampler), "Sampler could not be created.");
+	mySampler = sampler;
+	//End Sampler
+
 	return true;
 }
 
-void CFullscreenRenderer::Render(FullscreenShader aEffect) {
-	myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+void CFullscreenRenderer::Render(FullscreenShader anEffect) {
+	myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	myContext->IASetInputLayout(nullptr);
 	myContext->IASetVertexBuffers(0, 0, nullptr, nullptr, nullptr);
 	myContext->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
 
 	myContext->VSSetShader(myVertexShader, nullptr, 0);
-	myContext->PSSetShader(myPixelShaders[aEffect], nullptr, 0);
+	myContext->PSSetShader(myPixelShaders[static_cast<size_t>(anEffect)], nullptr, 0);
 
 	myContext->Draw(3, 0);
 

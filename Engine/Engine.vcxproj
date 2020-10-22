@@ -48,11 +48,7 @@
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <IntDir>$(ProjectDir)..\..\..\Temp\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\..\..\Lib\</OutDir>
-<<<<<<< HEAD
     <IncludePath>$(IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\..\DirectXTK\Inc\;$(ProjectDir)..\ModelLoader\;$(ProjectDir)..\UnityImporterApp\;$(ProjectDir)..\Includes\</IncludePath>
-=======
-    <IncludePath>$(IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\..\DirectXTK\Inc\;$(ProjectDir)..\ModelLoader\;$(ProjectDir)..\UnityImporterApp\</IncludePath>
->>>>>>> b0a5259a7dcfd9c9e648b43aaf8762185428aa75
     <LibraryPath>$(SolutionDir)../../../Lib/;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -249,6 +245,12 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_Vignette.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="FullscreenVertexShader.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>

@@ -34,5 +34,6 @@ private:
 	CFullscreenTexture myQuaterSizeTexture;
 	CFullscreenTexture myBlurTexture1;
 	CFullscreenTexture myBlurTexture2;
+	CFullscreenTexture myVignetteTexture;
 };
 
