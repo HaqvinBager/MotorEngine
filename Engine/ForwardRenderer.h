@@ -22,6 +22,19 @@ public:
 	void Render(CEnvironmentLight* anEnvironmentLight, std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> aModelPointLightList, CCamera* aCamera, std::vector<CModelInstance*>& aModelList, std::vector<CGameObject*>& aGameObjectList);
 
 private:
+	template<class T>
+	void BindBuffer(ID3D11Buffer* aBuffer, T& someBufferData, std::string aBufferType)
+	{
+		D3D11_MAPPED_SUBRESOURCE bufferData;
+		ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
+		std::string errorMessage = aBufferType + " could not be bound.";
+		ENGINE_HR_MESSAGE(myContext->Map(aBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData), errorMessage.c_str());
+
+		memcpy(bufferData.pData, &someBufferData, sizeof(T));
+		myContext->Unmap(aBuffer, 0);
+	}
+
+private:
 	struct SFrameBufferData
 	{
 		DirectX::SimpleMath::Matrix myToCamera;

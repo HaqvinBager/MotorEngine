@@ -56,18 +56,14 @@ bool CForwardRenderer::Init(CDirectXFramework* aFramework) {
 
 void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> aModelPointLightList, CCamera* aCamera, std::vector<CModelInstance*>& aModelList, std::vector<CGameObject*>& aGameObjectList)
 {
-	D3D11_MAPPED_SUBRESOURCE bufferData;
 	myFrameBufferData.myToCamera = aCamera->GetTransform().Invert();
 	myFrameBufferData.myToProjection = aCamera->GetProjection();
 	myFrameBufferData.myCameraPosition = aCamera->GetPosition();
 	myFrameBufferData.myDirectionalLightDirection = anEnvironmentLight->GetDirection();
 	myFrameBufferData.myDirectionalLightColor = anEnvironmentLight->GetColor();
 
-	ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
-	ENGINE_HR_MESSAGE(myContext->Map(myFrameBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData), "Frame Buffer could not be mapped.");
+	BindBuffer(myFrameBuffer, myFrameBufferData, "Frame Buffer");
 
-	memcpy(bufferData.pData, &myFrameBufferData, sizeof(SFrameBufferData));
-	myContext->Unmap(myFrameBuffer, 0);
 	myContext->VSSetConstantBuffers(0, 1, &myFrameBuffer);
 	myContext->PSSetConstantBuffers(0, 1, &myFrameBuffer);
 	myContext->PSSetShaderResources(0, 1, anEnvironmentLight->GetCubeMap());
@@ -88,26 +84,15 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector
 
 		myObjectBufferData.myToWorld = gameobject->GetComponent<CTransformComponent>()->Transform();
 
-		D3D11_MAPPED_SUBRESOURCE PSbufferData;
-		ZeroMemory(&PSbufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
-		ENGINE_HR_MESSAGE(myContext->Map(myObjectBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &PSbufferData), "Object Buffer could not be mapped.");
-
-		CopyMemory(PSbufferData.pData, &myObjectBufferData, sizeof(SObjectBufferData));
-		myContext->Unmap(myObjectBuffer, 0);
+		BindBuffer(myObjectBuffer, myObjectBufferData, "Object Buffer");
 
 		if (gameobject->GetComponent<CAnimationComponent>() != nullptr) {
 			memcpy(myBoneBufferData.myBones, gameobject->GetComponent<CAnimationComponent>()->GetBones().data(), sizeof(SlimMatrix44) * 64);
 
-			D3D11_MAPPED_SUBRESOURCE VSBufferData;
-			ZeroMemory(&VSBufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
-			ENGINE_HR_MESSAGE(myContext->Map(myBoneBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &VSBufferData), "Bone Buffer could not be mapped.");
-			CopyMemory(VSBufferData.pData, &myBoneBufferData, sizeof(SBoneBufferData));
-			myContext->Unmap(myBoneBuffer, 0);
+			BindBuffer(myBoneBuffer, myBoneBufferData, "Bone Buffer");
 
 			myContext->VSSetConstantBuffers(2, 1, &myBoneBuffer);
 		}
-
-
 
 		myContext->IASetPrimitiveTopology(modelData.myPrimitiveTopology);
 		myContext->IASetInputLayout(modelData.myInputLayout);
@@ -144,21 +129,11 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector
 
 		++modelIndex;
 
-		D3D11_MAPPED_SUBRESOURCE PSbufferData;
-		ZeroMemory(&PSbufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
-		ENGINE_HR_MESSAGE(myContext->Map(myObjectBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &PSbufferData), "Object Buffer could not be mapped.");
-
-		CopyMemory(PSbufferData.pData, &myObjectBufferData, sizeof(SObjectBufferData));
-		myContext->Unmap(myObjectBuffer, 0);
+		BindBuffer(myObjectBuffer, myObjectBufferData, "Object Buffer");
 
 		memcpy(myBoneBufferData.myBones, instance->GetBones().data(), sizeof(SlimMatrix44) * 64);
 
-		D3D11_MAPPED_SUBRESOURCE VSBufferData;
-		ZeroMemory(&VSBufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
-		ENGINE_HR_MESSAGE(myContext->Map(myBoneBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &VSBufferData), "Bone Buffer could not be mapped.");
-
-		CopyMemory(VSBufferData.pData, &myBoneBufferData, sizeof(SBoneBufferData));
-		myContext->Unmap(myBoneBuffer, 0);
+		BindBuffer(myBoneBuffer, myBoneBufferData, "Bone Buffer");
 
 		myContext->IASetPrimitiveTopology(modelData.myPrimitiveTopology);
 		myContext->IASetInputLayout(modelData.myInputLayout);
