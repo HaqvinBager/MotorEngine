@@ -126,6 +126,9 @@
     <ClInclude Include="CollisionManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -204,6 +207,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CollisionManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -19,7 +19,7 @@ public:
 	~CForwardRenderer();
 
 	bool Init(CEngine& anEngine);
-	void Render(CEnvironmentLight* anEnvironmentLight, CCamera* aCamera, std::vector<CModelInstance*>& aModelList, std::vector<CGameObject*>& aGameObjectList);
+	void Render(CEnvironmentLight* anEnvironmentLight, std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> aModelPointLightList, CCamera* aCamera, std::vector<CModelInstance*>& aModelList, std::vector<CGameObject*>& aGameObjectList);
 
 private:
 	struct SFrameBufferData
@@ -35,7 +35,15 @@ private:
 
 	struct SObjectBufferData
 	{
-		DirectX::SimpleMath::Matrix myToWorld; //4 bytes * 16 (64 bytes)		
+		DirectX::SimpleMath::Matrix myToWorld; //4 bytes * 16 (64 bytes)
+
+		struct SPointLightBufferData {
+			DirectX::SimpleMath::Vector4 myPositionAndIntensity;
+			DirectX::SimpleMath::Vector4 myColorAndRange;
+		} myPointLights[8];
+
+		unsigned int myNumberOfUsedPointLights;
+		unsigned int myPadding[3];
 	} myObjectBufferData;
 
 	static_assert((sizeof(SObjectBufferData) % 16) == 0, "CB size not padded correctly");

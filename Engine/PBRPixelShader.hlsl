@@ -8,8 +8,8 @@ float3 EvaluatePointLight(float3 albedoColor, float3 specularColor, float3 norma
     float3 toLight = lightPos.xyz - pixelPos.xyz;
     float lightDistance = length(toLight);
     toLight = normalize(toLight);
-    float NdL = saturate(dot(normal, toLight));   //OLD
-    //float NdL = abs(dot(normal, toLight));        //New
+    float NdL = saturate(dot(normal, toLight));
+    
     float lambert = NdL;
     float NdV = saturate(dot(normal, toEye));
     float3 h = normalize(toLight + toEye);
@@ -49,12 +49,19 @@ PixelOutPut main(VertexToPixel input)
     float3 ambience = EvaluateAmbience(environmentTexture, normal, input.myNormal.xyz, toEye, perceptualroughness, metalness, albedo, ambientocclusion, diffusecolor, specularcolor);
     float3 directionallight = EvaluateDirectionalLight(diffusecolor, specularcolor, normal, perceptualroughness, directionalLightColor.xyz, toDirectionalLight.xyz, toEye.xyz);
  
+    float3 pointLights = 0;
+    for (unsigned int index = 0; index < myNumberOfUsedPointLights; index++)
+    {
+        PointLight currentLight = myPointLights[index];
+        pointLights += EvaluatePointLight(diffusecolor, specularcolor, normal, perceptualroughness, currentLight.myColorAndRange.rgb, currentLight.myPositionAndIntensity.w, currentLight.myColorAndRange.a, currentLight.myPositionAndIntensity.xyz, toEye, input.myWorldPosition.xyz);
+    }
+    
     float3 emissive = albedo * emissivedata;
     
     ambience *= 0.1f;
     directionallight *= 0.0f;
    
-    float3 radiance = ambience + directionallight +  emissive;
+    float3 radiance = ambience + directionallight + pointLights +  emissive;
    
     output.myColor.rgb = LinearToGamma(radiance);
     output.myColor.a = 1.0f;

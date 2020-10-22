@@ -1,0 +1,19 @@
+{ 
+  "Scroll Speed 1 X": 0.32,
+  "Scroll Speed 1 Y": 0.2,
+  "Scroll Speed 2 X": 0.0,
+  "Scroll Speed 2 Y": -0.5,
+  "Scroll Speed 3 X": -0.31,
+  "Scroll Speed 3 Y": 0.0,
+  "Scroll Speed 4 X": 0.0,
+  "Scroll Speed 4 Y": 0.0,
+  "UV Scale 1": 1.2,
+  "UV Scale 2": 0.3,
+  "UV Scale 3": 0.7,
+  "UV Scale 4": 1.0,
+  "Opacity Strength": 0.2,
+  "Texture 1": "VFXCloud.dds",
+  "Texture 2": "VFXCloud.dds",
+  "Texture 3": "VFXCloud.dds",
+  "Texture Mask": "MaskWithoutAlpha.dds"
+}

@@ -139,6 +139,7 @@
     <ClInclude Include="ModelInstance.h" />
     <ClInclude Include="ModelMath.h" />
     <ClInclude Include="MouseTracker.h" />
+    <ClInclude Include="PointLight.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Timer.h" />
@@ -168,6 +169,7 @@
     <ClCompile Include="ModelComponent.cpp" />
     <ClCompile Include="ModelFactory.cpp" />
     <ClCompile Include="ModelInstance.cpp" />
+    <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

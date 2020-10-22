@@ -1,0 +1,500 @@
+{
+    "dataList": [
+        {
+            "myName": "Main Camera",
+            "myRotX": 0.0,
+            "myRotY": 0.0,
+            "myRotZ": 0.0,
+            "myPosX": 0.0,
+            "myPosY": 1.0,
+            "myPosZ": -10.0,
+            "myScaleX": 1.0,
+            "myScaleY": 1.0,
+            "myScaleZ": 1.0,
+            "myPath": "",
+            "myCharacterData": {
+                "myName": "",
+                "myHealth": 0.0,
+                "myDamage": 0.0,
+                "myMoveSpeed": 0.0,
+                "myAttackSpeed": 0.0,
+                "myCastSpeed": 0.0
+            },
+            "myColliderData": {
+                "myColliderType": "",
+                "myCenterX": 0.0,
+                "myCenterY": 0.0,
+                "myCenterZ": 0.0,
+                "myRadius": 0.0,
+                "mySizeX": 0.0,
+                "mySizeY": 0.0,
+                "mySizeZ": 0.0
+            }
+        },
+        {
+            "myName": "TEST_crate_fbx2014-2015",
+            "myRotX": 0.0,
+            "myRotY": 0.0,
+            "myRotZ": 0.0,
+            "myPosX": 0.0,
+            "myPosY": 0.0,
+            "myPosZ": 0.0,
+            "myScaleX": 1.0,
+            "myScaleY": 1.0,
+            "myScaleZ": 1.0,
+            "myPath": "Assets/3D/Environment/TEST_crate_fbx2014-2015.fbx",
+            "myCharacterData": {
+                "myName": "",
+                "myHealth": 0.0,
+                "myDamage": 0.0,
+                "myMoveSpeed": 0.0,
+                "myAttackSpeed": 0.0,
+                "myCastSpeed": 0.0
+            },
+            "myColliderData": {
+                "myColliderType": "",
+                "myCenterX": 0.0,
+                "myCenterY": 0.0,
+                "myCenterZ": 0.0,
+                "myRadius": 0.0,
+                "mySizeX": 0.0,
+                "mySizeY": 0.0,
+                "mySizeZ": 0.0
+            }
+        },
+        {
+            "myName": "Directional Light",
+            "myRotX": 50.0,
+            "myRotY": 330.0,
+            "myRotZ": 0.0,
+            "myPosX": 0.0,
+            "myPosY": 3.0,
+            "myPosZ": 0.0,
+            "myScaleX": 1.0,
+            "myScaleY": 1.0,
+            "myScaleZ": 1.0,
+            "myPath": "",
+            "myCharacterData": {
+                "myName": "",
+                "myHealth": 0.0,
+                "myDamage": 0.0,
+                "myMoveSpeed": 0.0,
+                "myAttackSpeed": 0.0,
+                "myCastSpeed": 0.0
+            },
+            "myColliderData": {
+                "myColliderType": "",
+                "myCenterX": 0.0,
+                "myCenterY": 0.0,
+                "myCenterZ": 0.0,
+                "myRadius": 0.0,
+                "mySizeX": 0.0,
+                "mySizeY": 0.0,
+                "mySizeZ": 0.0
+            }
+        },
+        {
+            "myName": "TEST_crate_fbx2014-2015 (1)",
+            "myRotX": 0.0,
+            "myRotY": 0.0,
+            "myRotZ": 0.0,
+            "myPosX": 1.059999942779541,
+            "myPosY": 0.0,
+            "myPosZ": 0.0,
+            "myScaleX": 1.0,
+            "myScaleY": 1.0,
+            "myScaleZ": 1.0,
+            "myPath": "Assets/3D/Environment/TEST_crate_fbx2014-2015.fbx",
+            "myCharacterData": {
+                "myName": "",
+                "myHealth": 0.0,
+                "myDamage": 0.0,
+                "myMoveSpeed": 0.0,
+                "myAttackSpeed": 0.0,
+                "myCastSpeed": 0.0
+            },
+            "myColliderData": {
+                "myColliderType": "",
+                "myCenterX": 0.0,
+                "myCenterY": 0.0,
+                "myCenterZ": 0.0,
+                "myRadius": 0.0,
+                "mySizeX": 0.0,
+                "mySizeY": 0.0,
+                "mySizeZ": 0.0
+            }
+        },
+        {
+            "myName": "TEST_crate_fbx2014-2015 (2)",
+            "myRotX": 0.0,
+            "myRotY": 0.0,
+            "myRotZ": 0.0,
+            "myPosX": 2.140000104904175,
+            "myPosY": 0.4099999964237213,
+            "myPosZ": 0.0,
+            "myScaleX": 1.0,
+            "myScaleY": 1.0,
+            "myScaleZ": 1.0,
+            "myPath": "Assets/3D/Environment/TEST_crate_fbx2014-2015.fbx",
+            "myCharacterData": {
+                "myName": "",
+                "myHealth": 0.0,
+                "myDamage": 0.0,
+                "myMoveSpeed": 0.0,
+                "myAttackSpeed": 0.0,
+                "myCastSpeed": 0.0
+            },
+            "myColliderData": {
+                "myColliderType": "",
+                "myCenterX": 0.0,
+                "myCenterY": 0.0,
+                "myCenterZ": 0.0,
+                "myRadius": 0.0,
+                "mySizeX": 0.0,
+                "mySizeY": 0.0,
+                "mySizeZ": 0.0
+            }
+        },
+        {
+            "myName": "TEST_crate_fbx2014-2015 (3)",
+            "myRotX": 0.0,
+            "myRotY": 0.0,
+            "myRotZ": 0.0,
+            "myPosX": 3.2100000381469728,
+            "myPosY": 1.100000023841858,
+            "myPosZ": 0.0,
+            "myScaleX": 1.0,
+            "myScaleY": 1.0,
+            "myScaleZ": 1.0,
+            "myPath": "Assets/3D/Environment/TEST_crate_fbx2014-2015.fbx",
+            "myCharacterData": {
+                "myName": "",
+                "myHealth": 0.0,
+                "myDamage": 0.0,
+                "myMoveSpeed": 0.0,
+                "myAttackSpeed": 0.0,
+                "myCastSpeed": 0.0
+            },
+            "myColliderData": {
+                "myColliderType": "",
+                "myCenterX": 0.0,
+                "myCenterY": 0.0,
+                "myCenterZ": 0.0,
+                "myRadius": 0.0,
+                "mySizeX": 0.0,
+                "mySizeY": 0.0,
+                "mySizeZ": 0.0
+            }
+        },
+        {
+            "myName": "TEST_crate_fbx2014-2015 (4)",
+            "myRotX": 0.0,
+            "myRotY": 0.0,
+            "myRotZ": 0.0,
+            "myPosX": 4.389999866485596,
+            "myPosY": 1.9800000190734864,
+            "myPosZ": 0.0,
+            "myScaleX": 1.0,
+            "myScaleY": 1.0,
+            "myScaleZ": 1.0,
+            "myPath": "Assets/3D/Environment/TEST_crate_fbx2014-2015.fbx",
+            "myCharacterData": {
+                "myName": "",
+                "myHealth": 0.0,
+                "myDamage": 0.0,
+                "myMoveSpeed": 0.0,
+                "myAttackSpeed": 0.0,
+                "myCastSpeed": 0.0
+            },
+            "myColliderData": {
+                "myColliderType": "",
+                "myCenterX": 0.0,
+                "myCenterY": 0.0,
+                "myCenterZ": 0.0,
+                "myRadius": 0.0,
+                "mySizeX": 0.0,
+                "mySizeY": 0.0,
+                "mySizeZ": 0.0
+            }
+        },
+        {
+            "myName": "TEST_crate_fbx2014-2015 (5)",
+            "myRotX": 0.0,
+            "myRotY": 0.0,
+            "myRotZ": 0.0,
+            "myPosX": 5.53000020980835,
+            "myPosY": 2.75,
+            "myPosZ": 0.0,
+            "myScaleX": 1.0,
+            "myScaleY": 1.0,
+            "myScaleZ": 1.0,
+            "myPath": "Assets/3D/Environment/TEST_crate_fbx2014-2015.fbx",
+            "myCharacterData": {
+                "myName": "",
+                "myHealth": 0.0,
+                "myDamage": 0.0,
+                "myMoveSpeed": 0.0,
+                "myAttackSpeed": 0.0,
+                "myCastSpeed": 0.0
+            },
+            "myColliderData": {
+                "myColliderType": "",
+                "myCenterX": 0.0,
+                "myCenterY": 0.0,
+                "myCenterZ": 0.0,
+                "myRadius": 0.0,
+                "mySizeX": 0.0,
+                "mySizeY": 0.0,
+                "mySizeZ": 0.0
+            }
+        },
+        {
+            "myName": "TEST_crate_fbx2014-2015 (6)",
+            "myRotX": 0.0,
+            "myRotY": 0.0,
+            "myRotZ": 0.0,
+            "myPosX": -3.3499999046325685,
+            "myPosY": 2.75,
+            "myPosZ": 0.0,
+            "myScaleX": 1.0,
+            "myScaleY": 1.0,
+            "myScaleZ": 1.0,
+            "myPath": "Assets/3D/Environment/TEST_crate_fbx2014-2015.fbx",
+            "myCharacterData": {
+                "myName": "",
+                "myHealth": 0.0,
+                "myDamage": 0.0,
+                "myMoveSpeed": 0.0,
+                "myAttackSpeed": 0.0,
+                "myCastSpeed": 0.0
+            },
+            "myColliderData": {
+                "myColliderType": "",
+                "myCenterX": 0.0,
+                "myCenterY": 0.0,
+                "myCenterZ": 0.0,
+                "myRadius": 0.0,
+                "mySizeX": 0.0,
+                "mySizeY": 0.0,
+                "mySizeZ": 0.0
+            }
+        },
+        {
+            "myName": "TEST_crate_fbx2014-2015 (7)",
+            "myRotX": 0.0,
+            "myRotY": 0.0,
+            "myRotZ": 0.0,
+            "myPosX": -2.569999933242798,
+            "myPosY": 1.9800000190734864,
+            "myPosZ": 0.0,
+            "myScaleX": 1.0,
+            "myScaleY": 1.0,
+            "myScaleZ": 1.0,
+            "myPath": "Assets/3D/Environment/TEST_crate_fbx2014-2015.fbx",
+            "myCharacterData": {
+                "myName": "",
+                "myHealth": 0.0,
+                "myDamage": 0.0,
+                "myMoveSpeed": 0.0,
+                "myAttackSpeed": 0.0,
+                "myCastSpeed": 0.0
+            },
+            "myColliderData": {
+                "myColliderType": "",
+                "myCenterX": 0.0,
+                "myCenterY": 0.0,
+                "myCenterZ": 0.0,
+                "myRadius": 0.0,
+                "mySizeX": 0.0,
+                "mySizeY": 0.0,
+                "mySizeZ": 0.0
+            }
+        },
+        {
+            "myName": "TEST_crate_fbx2014-2015 (8)",
+            "myRotX": 0.0,
+            "myRotY": 0.0,
+            "myRotZ": 0.0,
+            "myPosX": -1.7599999904632569,
+            "myPosY": 1.100000023841858,
+            "myPosZ": 0.0,
+            "myScaleX": 1.0,
+            "myScaleY": 1.0,
+            "myScaleZ": 1.0,
+            "myPath": "Assets/3D/Environment/TEST_crate_fbx2014-2015.fbx",
+            "myCharacterData": {
+                "myName": "",
+                "myHealth": 0.0,
+                "myDamage": 0.0,
+                "myMoveSpeed": 0.0,
+                "myAttackSpeed": 0.0,
+                "myCastSpeed": 0.0
+            },
+            "myColliderData": {
+                "myColliderType": "",
+                "myCenterX": 0.0,
+                "myCenterY": 0.0,
+                "myCenterZ": 0.0,
+                "myRadius": 0.0,
+                "mySizeX": 0.0,
+                "mySizeY": 0.0,
+                "mySizeZ": 0.0
+            }
+        },
+        {
+            "myName": "TEST_crate_fbx2014-2015 (9)",
+            "myRotX": 0.0,
+            "myRotY": 0.0,
+            "myRotZ": 0.0,
+            "myPosX": -0.8299999833106995,
+            "myPosY": 0.4099999964237213,
+            "myPosZ": 0.0,
+            "myScaleX": 1.0,
+            "myScaleY": 1.0,
+            "myScaleZ": 1.0,
+            "myPath": "Assets/3D/Environment/TEST_crate_fbx2014-2015.fbx",
+            "myCharacterData": {
+                "myName": "",
+                "myHealth": 0.0,
+                "myDamage": 0.0,
+                "myMoveSpeed": 0.0,
+                "myAttackSpeed": 0.0,
+                "myCastSpeed": 0.0
+            },
+            "myColliderData": {
+                "myColliderType": "",
+                "myCenterX": 0.0,
+                "myCenterY": 0.0,
+                "myCenterZ": 0.0,
+                "myRadius": 0.0,
+                "mySizeX": 0.0,
+                "mySizeY": 0.0,
+                "mySizeZ": 0.0
+            }
+        },
+        {
+            "myName": "TEST_crate_fbx2014-2015 (10)",
+            "myRotX": 0.0,
+            "myRotY": 0.0,
+            "myRotZ": 0.0,
+            "myPosX": 1.25,
+            "myPosY": 2.75,
+            "myPosZ": 0.0,
+            "myScaleX": 1.0,
+            "myScaleY": 1.0,
+            "myScaleZ": 1.0,
+            "myPath": "Assets/3D/Environment/TEST_crate_fbx2014-2015.fbx",
+            "myCharacterData": {
+                "myName": "",
+                "myHealth": 0.0,
+                "myDamage": 0.0,
+                "myMoveSpeed": 0.0,
+                "myAttackSpeed": 0.0,
+                "myCastSpeed": 0.0
+            },
+            "myColliderData": {
+                "myColliderType": "",
+                "myCenterX": 0.0,
+                "myCenterY": 0.0,
+                "myCenterZ": 0.0,
+                "myRadius": 0.0,
+                "mySizeX": 0.0,
+                "mySizeY": 0.0,
+                "mySizeZ": 0.0
+            }
+        },
+        {
+            "myName": "TEST_crate_fbx2014-2015 (11)",
+            "myRotX": 0.0,
+            "myRotY": 0.0,
+            "myRotZ": 0.0,
+            "myPosX": -0.8100000023841858,
+            "myPosY": 2.75,
+            "myPosZ": 0.0,
+            "myScaleX": 1.0,
+            "myScaleY": 1.0,
+            "myScaleZ": 1.0,
+            "myPath": "Assets/3D/Environment/TEST_crate_fbx2014-2015.fbx",
+            "myCharacterData": {
+                "myName": "",
+                "myHealth": 0.0,
+                "myDamage": 0.0,
+                "myMoveSpeed": 0.0,
+                "myAttackSpeed": 0.0,
+                "myCastSpeed": 0.0
+            },
+            "myColliderData": {
+                "myColliderType": "",
+                "myCenterX": 0.0,
+                "myCenterY": 0.0,
+                "myCenterZ": 0.0,
+                "myRadius": 0.0,
+                "mySizeX": 0.0,
+                "mySizeY": 0.0,
+                "mySizeZ": 0.0
+            }
+        },
+        {
+            "myName": "TEST_crate_fbx2014-2015 (12)",
+            "myRotX": 0.0,
+            "myRotY": 0.0,
+            "myRotZ": 0.0,
+            "myPosX": -0.8100000023841858,
+            "myPosY": 3.619999885559082,
+            "myPosZ": 0.0,
+            "myScaleX": 1.0,
+            "myScaleY": 1.0,
+            "myScaleZ": 1.0,
+            "myPath": "Assets/3D/Environment/TEST_crate_fbx2014-2015.fbx",
+            "myCharacterData": {
+                "myName": "",
+                "myHealth": 0.0,
+                "myDamage": 0.0,
+                "myMoveSpeed": 0.0,
+                "myAttackSpeed": 0.0,
+                "myCastSpeed": 0.0
+            },
+            "myColliderData": {
+                "myColliderType": "",
+                "myCenterX": 0.0,
+                "myCenterY": 0.0,
+                "myCenterZ": 0.0,
+                "myRadius": 0.0,
+                "mySizeX": 0.0,
+                "mySizeY": 0.0,
+                "mySizeZ": 0.0
+            }
+        },
+        {
+            "myName": "TEST_crate_fbx2014-2015 (13)",
+            "myRotX": 0.0,
+            "myRotY": 0.0,
+            "myRotZ": 0.0,
+            "myPosX": 1.2799999713897706,
+            "myPosY": 3.619999885559082,
+            "myPosZ": 0.0,
+            "myScaleX": 1.0,
+            "myScaleY": 1.0,
+            "myScaleZ": 1.0,
+            "myPath": "Assets/3D/Environment/TEST_crate_fbx2014-2015.fbx",
+            "myCharacterData": {
+                "myName": "",
+                "myHealth": 0.0,
+                "myDamage": 0.0,
+                "myMoveSpeed": 0.0,
+                "myAttackSpeed": 0.0,
+                "myCastSpeed": 0.0
+            },
+            "myColliderData": {
+                "myColliderType": "",
+                "myCenterX": 0.0,
+                "myCenterY": 0.0,
+                "myCenterZ": 0.0,
+                "myRadius": 0.0,
+                "mySizeX": 0.0,
+                "mySizeY": 0.0,
+                "mySizeZ": 0.0
+            }
+        }
+    ]
+}

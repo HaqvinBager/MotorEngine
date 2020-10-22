@@ -17,6 +17,14 @@ cbuffer FrameBuffer : register(b0)
 cbuffer ObjectBuffer : register(b1)
 {
     float4x4 toWorld;
+    struct PointLight
+    {
+        float4 myPositionAndIntensity;
+        float4 myColorAndRange;
+    }myPointLights[8];
+    
+    unsigned int myNumberOfUsedPointLights;
+    unsigned int myPadding[3];
 };
 
 cbuffer BoneBuffer : register(b2)

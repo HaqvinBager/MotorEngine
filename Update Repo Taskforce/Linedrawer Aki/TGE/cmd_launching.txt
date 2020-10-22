@@ -1,0 +1,24 @@
+Alternative 1 USING CMD
+cd - c direcectory
+cd (+ ex paste) C:\Users\Gonza\Documents\TGA\HT20VT21\Engine\TGE\Bin
+and then run the exe
+
+example:
+Microsoft Windows [Version 10.0.18363.1082]
+(c) 2019 Microsoft Corporation. Med ensamrätt.
+
+C:\Users\Gonza>cd
+C:\Users\Gonza
+
+C:\Users\Gonza>cd C:\Users\Gonza\Documents\TGA\HT20VT21\Engine\TGE\Bin
+
+C:\Users\Gonza\Documents\TGA\HT20VT21\Engine\TGE\Bin>Launcher_Debug.exe
+->launched
+C:\Users\Gonza\Documents\TGA\HT20VT21\Engine\TGE\Bin>
+
+Alternative 2 USING SHORTCUT
+Create shortcut of exe
+Right clock shortcut
+Under Shortcut tab change Target to "%path%\exe_file_name.exe (+command line args)"
+example: 
+C:\Users\Gonza\Documents\TGA\HT20VT21\Engine\TGE\Bin\Launcher_Debug.exe -fl - e -r

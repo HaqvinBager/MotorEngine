@@ -2,6 +2,7 @@
 
 class CEnvironmentLight;
 class CEngine;
+class CPointLight;
 
 class CLightFactory
 {
@@ -10,6 +11,7 @@ public:
 	static CLightFactory* GetInstance();
 	bool Init(CEngine& anEngine);
 	CEnvironmentLight* CreateEnvironmentLight(std::string aCubeMapPath);
+	CPointLight* CreatePointLight();
 private:
 	CEngine* myEngine;
 
