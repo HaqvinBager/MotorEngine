@@ -7,6 +7,7 @@
 #include "TransformComponent.h"
 #include "Camera.h"
 #include "CollisionManager.h"
+#include "PointLight.h"
 
 CScene* CScene::ourInstance = nullptr;
 
@@ -84,6 +85,23 @@ std::vector<CGameObject*> CScene::CullGameObjects(CCamera* aMainCamera)
 	return culledGameObjects;
 }
 
+std::pair<unsigned int, std::array<CPointLight*, 8>> CScene::CullLights(CModelInstance* aModelInstance) {
+	std::pair<unsigned int, std::array<CPointLight*, 8>> pointLightPair;
+	UINT counter = 0;
+
+	for (UINT i = 0; i < myPointLights.size() && counter < 8; ++i) {
+		float distanceSquared = DirectX::SimpleMath::Vector3::DistanceSquared(myPointLights[i]->GetPosition(), aModelInstance->GetTransform().Translation());
+		float range = myPointLights[i]->GetRange();
+		if (distanceSquared < (range * range)) {
+			pointLightPair.second[counter] = myPointLights[i];
+			++counter;
+		}
+	}
+
+	pointLightPair.first = counter;
+	return pointLightPair;
+}
+
 bool CScene::AddInstance(CModelInstance* aModel)
 {
 	myModelInstances.emplace_back(aModel);
@@ -99,6 +117,11 @@ bool CScene::AddInstance(CCamera* aCamera)
 bool CScene::AddInstance(CEnvironmentLight* anEnvironmentLight)
 {
 	myEnvironmentLights.emplace_back(anEnvironmentLight);
+	return true;
+}
+
+bool CScene::AddInstance(CPointLight* aPointLight) {
+	myPointLights.emplace_back(aPointLight);
 	return true;
 }
 

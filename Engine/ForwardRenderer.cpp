@@ -10,6 +10,7 @@
 #include "ModelComponent.h"
 #include "AnimationComponent.h"
 #include "TransformComponent.h"
+#include "PointLight.h"
 
 namespace SM = DirectX::SimpleMath;
 
@@ -53,7 +54,7 @@ bool CForwardRenderer::Init(CEngine& anEngine) {
 	return true;
 }
 
-void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, CCamera* aCamera, std::vector<CModelInstance*>& aModelList, std::vector<CGameObject*>& aGameObjectList)
+void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> aModelPointLightList, CCamera* aCamera, std::vector<CModelInstance*>& aModelList, std::vector<CGameObject*>& aGameObjectList)
 {
 	D3D11_MAPPED_SUBRESOURCE bufferData;
 	myFrameBufferData.myToCamera = aCamera->GetTransform().Invert();
@@ -126,12 +127,22 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, CCamera* aC
 	}
 	// MODELCOMPONENT END
 
-
+	int modelIndex = 0;
 	for (CModelInstance* instance : aModelList) {
 		CModel* model = instance->GetModel();
 		CModel::SModelData modelData = model->GetModelData();
 
 		myObjectBufferData.myToWorld = instance->GetTransform();
+
+		for (unsigned int i = 0; i < aModelPointLightList[modelIndex].first; ++i) {
+			SM::Vector3 position = aModelPointLightList[modelIndex].second[i]->GetPosition();
+			SM::Vector3 color = aModelPointLightList[modelIndex].second[i]->GetColor();
+			myObjectBufferData.myPointLights[i].myPositionAndIntensity = { position.x, position.y, position.z, aModelPointLightList[modelIndex].second[i]->GetIntensity() };
+			myObjectBufferData.myPointLights[i].myColorAndRange = { color.x, color.y, color.z, aModelPointLightList[modelIndex].second[i]->GetRange() };
+		}
+		myObjectBufferData.myNumberOfUsedPointLights = aModelPointLightList[modelIndex].first;
+
+		++modelIndex;
 
 		D3D11_MAPPED_SUBRESOURCE PSbufferData;
 		ZeroMemory(&PSbufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));

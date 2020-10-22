@@ -3,6 +3,7 @@
 #include <DDSTextureLoader.h>
 #include "Engine.h"
 #include "EnvironmentLight.h"
+#include "PointLight.h"
 
 CLightFactory* CLightFactory::ourInstance = nullptr;
 CLightFactory* CLightFactory::GetInstance()
@@ -23,6 +24,15 @@ CEnvironmentLight* CLightFactory::CreateEnvironmentLight(std::string aCubeMapPat
     }
     
     return light;
+}
+
+CPointLight* CLightFactory::CreatePointLight() {
+    CPointLight* pointLight = new CPointLight();
+    if (!pointLight->Init()) {
+        return nullptr;
+    }
+
+    return pointLight;
 }
 
 CLightFactory::CLightFactory()

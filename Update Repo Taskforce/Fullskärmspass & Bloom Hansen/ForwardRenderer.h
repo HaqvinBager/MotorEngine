@@ -39,7 +39,7 @@ private:
 		} myPointLights[8];
 
 		unsigned int myNumberOfUsedPointLights;
-		unsigned int myTrash[3];
+		unsigned int myPadding[3];
 	} myObjectBufferData;
 
 	ID3D11DeviceContext* myContext;

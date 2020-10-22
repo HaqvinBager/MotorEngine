@@ -78,7 +78,13 @@ void CEngine::RenderFrame()
 	std::vector<CGameObject*> gameObjectsToRender = myScene->CullGameObjects(mainCamera);
 
 	std::vector<CModelInstance*> modelsToRender = myScene->CullModels(mainCamera);
-	myForwardRenderer->Render(environmentLight, mainCamera, modelsToRender, gameObjectsToRender);
+
+	std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> modelPointLights;
+	for (CModelInstance* instance : modelsToRender) {
+		modelPointLights.push_back(myScene->CullLights(instance));
+	}
+
+	myForwardRenderer->Render(environmentLight, modelPointLights, mainCamera, modelsToRender, gameObjectsToRender);
 }
 
 void CEngine::EndFrame()
