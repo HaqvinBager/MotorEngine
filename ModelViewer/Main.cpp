@@ -187,8 +187,58 @@ bool CheckForIncorrectModelNumber(const size_t& aLoadModelNumber, const size_t& 
 	return (aLoadModelNumber > 0 && aLoadModelNumber < aMax);
 }
 
+/// 22/10
+/// We are going to:
+/// Rotate the model around x axis, y axis, z axis
+/// Move the model on x axis, y axis, z axis
+/// Reset transformations.
+
 void Update(std::vector<std::string>& aModelFilePathList, CModelInstance* aCurrentModelInstance)
 {
+	// Rotation functions
+	float rotationSpeed = 1.0f;
+	float dt = CTimer::Dt();
+	// X axis
+	if (Input::GetInstance()->IsKeyDown('E'))
+	{
+		aCurrentModelInstance->Rotate({ rotationSpeed * dt,0.0f,0.0f });
+	}
+
+	// Y axis
+	if (Input::GetInstance()->IsKeyDown('R'))
+	{
+		aCurrentModelInstance->Rotate({ 0.0f, rotationSpeed * dt,0.0f });
+	}
+
+	// Z axis
+	if (Input::GetInstance()->IsKeyDown('T'))
+	{
+		aCurrentModelInstance->Rotate({ 0.0f,0.0f,rotationSpeed * dt });
+	}
+	// ! Rotation Functions 
+
+	// Zoom/ move functions
+	float moveSpeed = 50.0f;
+	// X axis
+	if (Input::GetInstance()->IsKeyDown('D'))
+	{
+		aCurrentModelInstance->Move({ moveSpeed * dt, 0.0f, 0.0f });
+	}
+
+	// Y axis
+	if (Input::GetInstance()->IsKeyDown(VK_SPACE))
+	{
+		aCurrentModelInstance->Move({ 0.0f, moveSpeed * dt, 0.0f });
+	}
+
+	// Z axis
+	if (Input::GetInstance()->IsKeyDown('W'))
+	{
+		aCurrentModelInstance->Move({ 0.0f, 0.0f, -moveSpeed * dt });
+	}
+	// ! Zoom/ move functions
+
+	
 	if (Input::GetInstance()->IsKeyDown(VK_RETURN))
 	{
 		size_t loadModelNumber = aModelFilePathList.size();
@@ -206,6 +256,8 @@ void Update(std::vector<std::string>& aModelFilePathList, CModelInstance* aCurre
 		oldModel = nullptr;
 	}
 }
+
+//////////////////////////////////// MAIN STARTS HERE ///////////////////////////////////////////////////////////////////
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nShowCmd)
 {
@@ -230,17 +282,17 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		return 1;
 
 
-	std::cout << "Which folder root do you want to look in? \n examples: Assets, Models, Assets/3D/Character/, Models/Particle_Chest. \n";
-	std::string root = "";
-	std::cin >> root;
+	//std::cout << "Which folder root do you want to look in? \n examples: Assets, Models, Assets/3D/Character/, Models/Particle_Chest. \n";
+	//std::string root = "";
+	//std::cin >> root;
 
 	std::vector<std::string> filePaths;
-	LoadModelPaths(/*"Assets"*/root, filePaths);
+	LoadModelPaths("Assets"/*root*/, filePaths);
 
 	CModelInstance* currentModel = nullptr;
 	currentModel = InitModels(filePaths[0]);
 	
-	std::cout << "Models in " << root << std::endl;
+	//std::cout << "Models in " << root << std::endl;
 	int counter = 0;
 	for (auto& str : filePaths)
 	{
