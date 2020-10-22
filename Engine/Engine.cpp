@@ -12,14 +12,14 @@
 #include "EnvironmentLight.h"
 #include "LightFactory.h"
 #include "RenderManager.h"
-
+#include <rapidjson\document.h>
 #include <string>
 
 #pragma comment(lib, "d3d11.lib")
 
 CEngine::CEngine()
 {
-	myScene = new CScene();	
+	myScene = new CScene();
 	myTimer = new CTimer();
 	myWindowHandler = new CWindowHandler();
 	myFramework = new CDirectXFramework();
@@ -58,7 +58,7 @@ bool CEngine::Init(CWindowHandler::SWindowData& someWindowData)
 
 	ENGINE_ERROR_BOOL_MESSAGE(myWindowHandler->Init(someWindowData), "Window Handler could not be initialized.");
 	ENGINE_ERROR_BOOL_MESSAGE(myFramework->Init(myWindowHandler), "Framework could not be initialized.");
-	
+
 	//ENGINE_ERROR_BOOL_MESSAGE(myForwardRenderer->Init(*this), "Forward Renderer could not be initiliazed.");
 
 	ENGINE_ERROR_BOOL_MESSAGE(myModelFactory->Init(*this), "Model Factory could not be initiliazed.");
@@ -84,7 +84,7 @@ void CEngine::RenderFrame()
 
 	/*CEnvironmentLight* environmentLight = myScene->GetEnvironmentLight();
 	CCamera* mainCamera = myScene->GetMainCamera();
-	
+
 	std::vector<CGameObject*> gameObjectsToRender = myScene->CullGameObjects(mainCamera);
 
 	std::vector<CModelInstance*> modelsToRender = myScene->CullModels(mainCamera);

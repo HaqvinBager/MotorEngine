@@ -6,7 +6,7 @@
 class ObjectDataRaw
 {
 public:
-	std::string myName;
+	//std::string myName; //funkar inte i binary!!
 
 	float myRotX;
 	float myRotY;
@@ -19,8 +19,8 @@ public:
 	float myScaleY;
 	float myScaleZ;
 
-	float myColliderRadius;
-	float myColliderHeight;
+	//float myColliderRadius;
+	//float myColliderHeight;
 
 	//float myIntensity;
 	//float myR;
