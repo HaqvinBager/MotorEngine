@@ -25,10 +25,12 @@ bool CLevelLoader::Init()
 void CLevelLoader::CreateLevel(const std::string& aPath)
 {
 	//CCamera* camera = CCameraFactory::GetInstance()->CreateCamera(65.0f, 5000.0f);
+	
+	std::string modelPath = aPath;
+	modelPath.append("_bin_modelPaths.txt");
+	myUnityLoader->LoadModels(modelPath);
 
-	myUnityLoader->LoadModels(aPath);
-
-	objectData = myUnityLoader->LoadGameObjects(aPath, EReadMode::EReadMode_ASCII);
+	objectData = myUnityLoader->LoadGameObjects(aPath + "_bin.bin", EReadMode::EReadMode_Binary);
 	//for (auto object : objectData) {
 	//	if (object.myRelativePath.length() > 1)
 	//	{
@@ -47,12 +49,12 @@ void CLevelLoader::CreateLevel(const std::string& aPath)
 		transform->Scale(0.25f);
 		transform->Position({ object.myPosX, object.myPosY, object.myPosZ });
 		CModelComponent* model = gameObject->AddComponent<CModelComponent>(*gameObject);
-		model->SetMyModel(CModelFactory::GetInstance()->GetModelPBR("Assets/3D/Character/Boss/CH_NPC_Boss_01_19G4_1_19.fbx"));
+		model->SetMyModel(CModelFactory::GetInstance()->GetModelPBR(object.myRelativePath));
 
-		if (object.myColliderHeight > 0.0f)
-		{
-			gameObject->AddComponent<CCapsuleColliderComponent>(*gameObject, object.myColliderRadius, object.myColliderHeight);
-		}
+		//if (object.myColliderHeight > 0.0f)
+		//{
+		//	gameObject->AddComponent<CCapsuleColliderComponent>(*gameObject, object.myColliderRadius, object.myColliderHeight);
+		//}
 
 		myScene->AddInstance(gameObject);
 	}

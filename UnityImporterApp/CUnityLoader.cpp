@@ -15,8 +15,8 @@ CUnityLoader::CUnityLoader()
 	myLoaderFunctions[EReadMode_ASCII] = std::bind(&CUnityLoader::LoadGameObjectsASCII, this, std::placeholders::_1);
 	myLoaderFunctions[EReadMode_Binary] = std::bind(&CUnityLoader::LoadGameObjectsBinary, this, std::placeholders::_1);
 
-
 }
+
 void CUnityLoader::LoadModels(std::string aModelPathFile)
 {
 	std::ifstream modelFile(aModelPathFile);
@@ -105,14 +105,14 @@ std::vector<ObjectData> CUnityLoader::LoadGameObjectsASCII(const std::string& aG
 		object.myScaleY = results[i]["myScaleY"].GetDouble();
 		object.myScaleZ = results[i]["myScaleZ"].GetDouble();
 
-		if (results[i].HasMember("myColliderData"))
+		/*if (results[i].HasMember("myColliderData"))
 		{
 			if(results[i]["myColliderData"].HasMember("myHeight"))
 				object.myColliderHeight = results[i]["myColliderData"]["myHeight"].GetDouble();
 
 			if(results[i]["myColliderData"].HasMember("myRadius"))
 				object.myColliderRadius = results[i]["myColliderData"]["myRadius"].GetDouble();
-		}
+		}*/
 
 		//object.myIntensity = results[i]["myIntensity"].GetDouble();
 		//object.myR = results[i]["myR"].GetDouble();
