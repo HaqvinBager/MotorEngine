@@ -10,8 +10,6 @@ class CCamera
 public:
 	CCamera();
 	~CCamera();
-	//En rolig kommentar
-	//EN till Rolig kommentar!! Waoow
 	bool Init(float aFoV, DirectX::SimpleMath::Vector2 aResolution, float aFarPlane = 1000.0f);
 	void SetTransform(DirectX::SimpleMath::Vector3 aPosition, DirectX::SimpleMath::Vector3 aRotation);
 	void SetPosition(DirectX::SimpleMath::Vector3 aRotation);
@@ -24,8 +22,8 @@ public:
 	/// </summary>
 	void Update()
 	{
-		//SetPosition(myTarget->Position() + myOffset);
-		//SetRotation(myDirection);
+		SetPosition(myTarget->Position() + myOffset);
+		SetRotation(myDirection);
 	}
 
 	/// <summary>

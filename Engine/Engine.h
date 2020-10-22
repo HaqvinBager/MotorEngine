@@ -10,6 +10,7 @@ class CCameraFactory;
 class CLightFactory;
 class CScene;
 class CRenderManager;
+class CParticleFactory;
 
 class CEngine
 {
@@ -39,4 +40,5 @@ private:
 	CModelFactory* myModelFactory;
 	CCameraFactory* myCameraFactory;
 	CLightFactory* myLightFactory;
+	CParticleFactory* myParticleFactory;
 };

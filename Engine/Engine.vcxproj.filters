@@ -34,6 +34,9 @@
     <Filter Include="Shader Files\Fullscreen">
       <UniqueIdentifier>{711b76d9-bd21-422d-b3e6-fa89ef658563}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader Files\Particle">
+      <UniqueIdentifier>{b03fa958-3abb-4657-8f91-82211613b907}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -144,6 +147,27 @@
     <ClInclude Include="RenderManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleInstance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugTimerUtility.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RandomNumberGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderStateManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -239,6 +263,21 @@
     <ClCompile Include="RenderManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleInstance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderStateManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="CubePixelShader.hlsl">
@@ -277,6 +316,18 @@
     <FxCompile Include="FullscreenVertexShader.hlsl">
       <Filter>Shader Files\Fullscreen</Filter>
     </FxCompile>
+    <FxCompile Include="ParticleGeometryShader.hlsl">
+      <Filter>Shader Files\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticlePixelShader.hlsl">
+      <Filter>Shader Files\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticleVertexShader.hlsl">
+      <Filter>Shader Files\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_Vignette.hlsl">
+      <Filter>Shader Files\Fullscreen</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="CubeShaderStructs.hlsli">
@@ -299,6 +350,9 @@
     </None>
     <None Include="FullscreenShaderStructs.hlsli">
       <Filter>Shader Files\Fullscreen</Filter>
+    </None>
+    <None Include="ParticleShaderStructs.hlsli">
+      <Filter>Shader Files\Particle</Filter>
     </None>
   </ItemGroup>
 </Project>
