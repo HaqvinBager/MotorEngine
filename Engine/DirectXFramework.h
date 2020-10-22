@@ -9,6 +9,7 @@ struct ID3D11Device;
 struct ID3D11DeviceContext;
 struct ID3D11RenderTargetView;
 struct ID3D11DepthStencilView;
+struct ID3D11Texture2D;
 
 class CDirectXFramework {
 public:
@@ -24,6 +25,7 @@ public:
 
 	ID3D11Device* GetDevice() const;
 	ID3D11DeviceContext* GetContext() const;
+	ID3D11Texture2D* GetBackbufferTexture() const;
 
 private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain> mySwapChain;

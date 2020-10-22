@@ -22,16 +22,16 @@ CForwardRenderer::~CForwardRenderer() {
 	myContext = nullptr;
 }
 
-bool CForwardRenderer::Init(CEngine& anEngine) {
-	if (!anEngine.myFramework)
+bool CForwardRenderer::Init(CDirectXFramework* aFramework) {
+	if (!aFramework)
 		return false;
 
-	myContext = anEngine.myFramework->GetContext();
+	myContext = aFramework->GetContext();
 	if (!myContext) {
 		return false;
 	}
 
-	ID3D11Device* device = anEngine.myFramework->GetDevice();
+	ID3D11Device* device = aFramework->GetDevice();
 	if (!device)
 		return false;
 

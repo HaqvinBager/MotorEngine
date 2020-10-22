@@ -3,7 +3,8 @@
 
 using namespace DirectX::SimpleMath;
 
-CCamera::CCamera() //gör rätt 
+CCamera::CCamera()
+	: myTarget(nullptr) //gör rätt 
 //Okej jag gör väl rätt då Hahaha roligt fyfan bästa skiten ever omfg
 {
 }

@@ -58,9 +58,6 @@ PixelOutPut main(VertexToPixel input)
     
     float3 emissive = albedo * emissivedata;
     
-    ambience *= 0.1f;
-    directionallight *= 0.0f;
-   
     float3 radiance = ambience + directionallight + pointLights +  emissive;
    
     output.myColor.rgb = LinearToGamma(radiance);

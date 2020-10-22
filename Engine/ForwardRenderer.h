@@ -18,7 +18,7 @@ public:
 	CForwardRenderer();
 	~CForwardRenderer();
 
-	bool Init(CEngine& anEngine);
+	bool Init(CDirectXFramework* aFramework);
 	void Render(CEnvironmentLight* anEnvironmentLight, std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> aModelPointLightList, CCamera* aCamera, std::vector<CModelInstance*>& aModelList, std::vector<CGameObject*>& aGameObjectList);
 
 private:
