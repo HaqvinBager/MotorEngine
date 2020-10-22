@@ -11,6 +11,7 @@
 #include "CameraFactory.h"
 #include "EnvironmentLight.h"
 #include "LightFactory.h"
+#include "RenderManager.h"
 #include <string>
 
 #pragma comment(lib, "d3d11.lib")
