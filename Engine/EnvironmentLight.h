@@ -30,6 +30,7 @@ public:
 		myColor.x = aColor.x; 
 		myColor.y = aColor.y; 
 		myColor.z = aColor.z; 
+		myColor.w = 1.0f;
 	}
 
 	DirectX::SimpleMath::Vector4 GetDirection() { return myDirection; }

@@ -155,7 +155,7 @@ void LoadModelPaths(const std::string& aStartFolderPath, std::vector<std::string
 	}
 }
 
-CModelInstance* InitModels(const std::string& aModelPath)
+CModelInstance* InitModels(const std::string& aModelPath/*, CCamera* aCamera*/)
 {
 	CScene* scene = CScene::GetInstance();
 
@@ -166,8 +166,10 @@ CModelInstance* InitModels(const std::string& aModelPath)
 
 	CLightFactory* lightFactory = CLightFactory::GetInstance();
 	CEnvironmentLight* environmentLight = lightFactory->CreateEnvironmentLight("Yokohama2.dds");
-	environmentLight->SetDirection(SM::Vector3(0, 0, 1));
+	environmentLight->SetDirection(SM::Vector3(1, 0, 0));
+	//environmentLight->SetColor(SM::Vector3(1.0f, 0.0f, 0.0f));
 	environmentLight->SetColor(SM::Vector3(1.0f, 1.0f, 1.0f));
+
 	scene->AddInstance(environmentLight);
 
 	CModelInstance* model = CModelFactory::GetInstance()->CreateModel(aModelPath, { 1.0f, 1.0f, 1.0f });
@@ -193,53 +195,93 @@ bool CheckForIncorrectModelNumber(const size_t& aLoadModelNumber, const size_t& 
 /// Move the model on x axis, y axis, z axis
 /// Reset transformations.
 
-void Update(std::vector<std::string>& aModelFilePathList, CModelInstance* aCurrentModelInstance)
+void Update(std::vector<std::string>& aModelFilePathList, CModelInstance* aCurrentModelInstance/*,CCamera* aCamera*/)
 {
 	// Rotation functions
 	float rotationSpeed = 1.0f;
 	float dt = CTimer::Dt();
 	// X axis
-	if (Input::GetInstance()->IsKeyDown('E'))
+	if (Input::GetInstance()->IsKeyDown('R'))
 	{
 		aCurrentModelInstance->Rotate({ rotationSpeed * dt,0.0f,0.0f });
 	}
 
+	if (Input::GetInstance()->IsKeyDown('F'))
+	{
+		aCurrentModelInstance->Rotate({ -rotationSpeed * dt,0.0f,0.0f });
+	}
+
 	// Y axis
-	if (Input::GetInstance()->IsKeyDown('R'))
+	if (Input::GetInstance()->IsKeyDown('T'))
 	{
 		aCurrentModelInstance->Rotate({ 0.0f, rotationSpeed * dt,0.0f });
 	}
 
+	if (Input::GetInstance()->IsKeyDown('G'))
+	{
+		aCurrentModelInstance->Rotate({ 0.0f, -rotationSpeed * dt,0.0f });
+	}
+
 	// Z axis
-	if (Input::GetInstance()->IsKeyDown('T'))
+	if (Input::GetInstance()->IsKeyDown('Y'))
 	{
 		aCurrentModelInstance->Rotate({ 0.0f,0.0f,rotationSpeed * dt });
 	}
+	if (Input::GetInstance()->IsKeyDown('H'))
+	{
+		aCurrentModelInstance->Rotate({ 0.0f,0.0f,-rotationSpeed * dt });
+	}
+
 	// ! Rotation Functions 
 
-	// Zoom/ move functions
+	// Zoom/ move Camera functions
 	float moveSpeed = 50.0f;
 	// X axis
+
+	if (Input::GetInstance()->IsKeyDown('A'))
+	{
+		aCurrentModelInstance->Move({ -moveSpeed * dt, 0.0f, 0.0f });
+	}
+
 	if (Input::GetInstance()->IsKeyDown('D'))
 	{
 		aCurrentModelInstance->Move({ moveSpeed * dt, 0.0f, 0.0f });
 	}
 
 	// Y axis
-	if (Input::GetInstance()->IsKeyDown(VK_SPACE))
+	if (Input::GetInstance()->IsKeyDown('Q'))
 	{
 		aCurrentModelInstance->Move({ 0.0f, moveSpeed * dt, 0.0f });
 	}
 
+	if (Input::GetInstance()->IsKeyDown('E'))
+	{
+		aCurrentModelInstance->Move({ 0.0f, -moveSpeed * dt, 0.0f });
+	}
+
 	// Z axis
+
 	if (Input::GetInstance()->IsKeyDown('W'))
 	{
 		aCurrentModelInstance->Move({ 0.0f, 0.0f, -moveSpeed * dt });
 	}
+
+	if (Input::GetInstance()->IsKeyDown('S'))
+	{
+		aCurrentModelInstance->Move({ 0.0f, 0.0f, moveSpeed * dt });
+	}
 	// ! Zoom/ move functions
 
+	// Reset function
+
+	if (Input::GetInstance()->IsKeyDown('K'))
+	{
+		aCurrentModelInstance->SetTransform({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
+	}
+
+	// ! Reset function
 	
-	if (Input::GetInstance()->IsKeyDown(VK_RETURN))
+	if (Input::GetInstance()->IsKeyDown(VK_ESCAPE))
 	{
 		size_t loadModelNumber = aModelFilePathList.size();
 		std::cout << "Which model do you wish to load Give a number between: 0 and " << aModelFilePathList.size() - 1 << "\nL>"<< std::endl;
@@ -287,8 +329,9 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	//std::cin >> root;
 
 	std::vector<std::string> filePaths;
-	LoadModelPaths("Assets"/*root*/, filePaths);
+	LoadModelPaths("Model"/*root*/, filePaths);
 
+	//CCamera* camera = nullptr;
 	CModelInstance* currentModel = nullptr;
 	currentModel = InitModels(filePaths[0]);
 	
@@ -320,7 +363,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		}
 	
 		engine.BeginFrame();
-		Update(filePaths, currentModel);
+		Update(filePaths, currentModel/*, camera*/);
 		engine.RenderFrame();
 		engine.EndFrame();
 		Input::GetInstance()->update();
@@ -328,6 +371,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
 	delete currentModel;
 	currentModel = nullptr;
+	
 
 #ifdef USE_CONSOLE_COMMAND
 	CloseConsole();
