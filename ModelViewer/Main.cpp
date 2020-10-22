@@ -51,6 +51,16 @@ void CloseConsole()
 #pragma warning( pop )
 }
 
+/// Notes for SG feedback session:
+/// Ask them if they want to be able to load several models. I.e be able to have Sword and King side by side
+///		About controls: move camera? move with mouse?
+///		Manip light?
+/// /// Remember: on initial model positon some models are not facing the camera, might not be visible but they are there. 
+///		Or might be positioned to high/ low. So try to move the object. 
+///		ex: nr31 EN_P_L3Painting_01_19G4_01_19.fbx, is facing away from the camera.
+/// 
+/// EN_W_WallDoor_01_19G4_01_19.fbx causes crash might be due to fbx version
+
 std::size_t number_of_files_in_directory(std::filesystem::path path)
 {//https://stackoverflow.com/questions/41304891/how-to-count-the-number-of-files-in-a-directory-using-standard/41305019
 	using std::filesystem::directory_iterator;
@@ -178,22 +188,41 @@ CModelInstance* InitModels(const std::string& aModelPath/*, CCamera* aCamera*/)
 
 	scene->AddInstance(model);
 
-	return model;
-	
+	return model;	
 }
 
 // Reminder: Vem tar hand om delete av CModel? CModelFactory verkar inte ta hand om det och inte CModelInstace?
 
 bool CheckForIncorrectModelNumber(const size_t& aLoadModelNumber, const size_t& aMax)
 {
-	return (aLoadModelNumber > 0 && aLoadModelNumber < aMax);
+	return (static_cast<int>(aLoadModelNumber) > -1 && aLoadModelNumber < aMax);
 }
+std::string CheckForGroupNumber(short& aNumber)
+{
+	std::string path = "";
+	std::cin.clear();
+	std::cout << "Enter group number - 3 or 4:";
+	std::cin >> aNumber;
+	
+	if (aNumber == 4 || aNumber == 3)
+	{
+		if (aNumber == 3)
+		{
+			path = "Model";
+		}
+		else if (aNumber == 4)
+		{
+			path = "Assets";
+		}
+	}
+	else
+	{
+		std::cout << " ! Input not supported!" << std::endl;
+		path = CheckForGroupNumber(aNumber);
+	}
 
-/// 22/10
-/// We are going to:
-/// Rotate the model around x axis, y axis, z axis
-/// Move the model on x axis, y axis, z axis
-/// Reset transformations.
+	return std::move(path);
+}
 
 void Update(std::vector<std::string>& aModelFilePathList, CModelInstance* aCurrentModelInstance/*,CCamera* aCamera*/)
 {
@@ -280,22 +309,25 @@ void Update(std::vector<std::string>& aModelFilePathList, CModelInstance* aCurre
 	}
 
 	// ! Reset function
-	
-	if (Input::GetInstance()->IsKeyDown(VK_ESCAPE))
+
+	if (Input::GetInstance()->IsKeyPressed(VK_ESCAPE))
 	{
 		size_t loadModelNumber = aModelFilePathList.size();
-		std::cout << "Which model do you wish to load Give a number between: 0 and " << aModelFilePathList.size() - 1 << "\nL>"<< std::endl;
+		std::cout << "Which model do you wish to load Give a number between: 0 and " << aModelFilePathList.size() - 1 << "\nL> ";
 		std::cin >> loadModelNumber;
 		while (!CheckForIncorrectModelNumber(loadModelNumber, aModelFilePathList.size()))
 		{
+			std::cin.clear();
 			std::cout << "Try again: Which model do you wish to load Give a number between: 0 and " << aModelFilePathList.size() - 1 << std::endl;
 			std::cin >> loadModelNumber;
 		}
 		
 		std::cout << "Loading model number: " << loadModelNumber << " : " << aModelFilePathList[loadModelNumber] << std::endl;
-		CModel* oldModel = aCurrentModelInstance->SetModel(CModelFactory::GetInstance()->CreateModel(aModelFilePathList[loadModelNumber], { 1.0f, 1.0f, 1.0f })->GetModel());
-		delete oldModel;
-		oldModel = nullptr;
+		aCurrentModelInstance->SetModel(CModelFactory::GetInstance()->CreateModel(aModelFilePathList[loadModelNumber], { 1.0f, 1.0f, 1.0f })->GetModel());	
+		aCurrentModelInstance->SetTransform({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
+		std::cout << "\nInstructions" << std::endl 
+			<< "   Main Window: Press 'ESC' and then return to this Console." << std::endl
+			<< "   Console: Enter the desired models number." << std::endl;
 	}
 }
 
@@ -323,13 +355,11 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	if (!shouldRun)
 		return 1;
 
-
-	//std::cout << "Which folder root do you want to look in? \n examples: Assets, Models, Assets/3D/Character/, Models/Particle_Chest. \n";
-	//std::string root = "";
-	//std::cin >> root;
+	short groupNumber = 0;
+	std::string root = CheckForGroupNumber(groupNumber);
 
 	std::vector<std::string> filePaths;
-	LoadModelPaths("Model"/*root*/, filePaths);
+	LoadModelPaths(root, filePaths);
 
 	//CCamera* camera = nullptr;
 	CModelInstance* currentModel = nullptr;
@@ -340,12 +370,12 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	for (auto& str : filePaths)
 	{
 		const size_t last_slash_idx = str.find_last_of("\\/");
-		std::string modelName = str.substr(last_slash_idx + 1, str.size() - last_slash_idx - 5);
+		std::string modelName		= str.substr(last_slash_idx + 1, str.size() - last_slash_idx - 5);
 		std::cout << "Number: " << counter << "\t: " << modelName << std::endl;
 		++counter;
 	}
 	std::cout << "\nInstructions" << std::endl 
-		<< "   Main Window (Iron Wrought, where you can see a model): Press 'ENTER' and then return to this window (Console)." << std::endl
+		<< "   Main Window (Iron Wrought, where you can see a model): Press 'ESC' and then return to this window (Console)." << std::endl
 		<< "   Console: Enter the desired models number." << std::endl;
 	
 	MSG windowMessage = { 0 };

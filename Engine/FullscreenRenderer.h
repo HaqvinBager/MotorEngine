@@ -9,12 +9,13 @@ class CRenderManager;
 
 class CFullscreenRenderer {
 public:
-	enum FullscreenShader {
+	enum class FullscreenShader {
 		FULLSCREENSHADER_COPY,
 		FULLSCREENSHADER_LUMINANCE,
 		FULLSCREENSHADER_GAUSSIANHORIZONTAL,
 		FULLSCREENSHADER_GAUSSIANVERTICAL,
 		FULLSCREENSHADER_BLOOM,
+		FULLSCREENSHADER_VIGNETTE,
 		FULLSCREENSHADER_COUNT,
 	};
 
@@ -28,5 +29,6 @@ private:
 
 	ID3D11DeviceContext* myContext;
 	ID3D11VertexShader* myVertexShader;
-	std::array<ID3D11PixelShader*, FullscreenShader::FULLSCREENSHADER_COUNT> myPixelShaders;
+	ID3D11SamplerState* mySampler;
+	std::array<ID3D11PixelShader*, static_cast<size_t>(FullscreenShader::FULLSCREENSHADER_COUNT)> myPixelShaders;
 };

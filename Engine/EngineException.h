@@ -70,12 +70,8 @@ namespace Engine
 
 		static std::wstring stringToWstring(const std::string& t_str)
 		{
-			//setup converter
-			typedef std::codecvt_utf8<wchar_t> convert_type;
-			std::wstring_convert<convert_type, wchar_t> converter;
-
-			//use converter (.to_bytes: wstr->str, .from_bytes: str->wstr)
-			return converter.from_bytes(t_str);
+#pragma warning(suppress : 4244)
+			return std::wstring(t_str.begin(), t_str.end());
 		}
 
 		static std::string string_vsprintf(const char* format, std::va_list args)

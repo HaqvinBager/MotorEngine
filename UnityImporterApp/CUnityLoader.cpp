@@ -93,17 +93,17 @@ std::vector<ObjectData> CUnityLoader::LoadGameObjectsASCII(const std::string& aG
 	for (rapidjson::SizeType i = 0; i < results.Size(); i++)
 	{
 		ObjectData object;
-		object.myRotX = results[i]["myRotX"].GetDouble();
-		object.myRotY = results[i]["myRotY"].GetDouble();
-		object.myRotZ = results[i]["myRotZ"].GetDouble();
+		object.myRotX = results[i]["myRotX"].GetFloat();
+		object.myRotY = results[i]["myRotY"].GetFloat();
+		object.myRotZ = results[i]["myRotZ"].GetFloat();
 
-		object.myPosX = results[i]["myPosX"].GetDouble();
-		object.myPosY = results[i]["myPosY"].GetDouble();
-		object.myPosZ = results[i]["myPosZ"].GetDouble();
+		object.myPosX = results[i]["myPosX"].GetFloat();
+		object.myPosY = results[i]["myPosY"].GetFloat();
+		object.myPosZ = results[i]["myPosZ"].GetFloat();
 
-		object.myScaleX = results[i]["myScaleX"].GetDouble();
-		object.myScaleY = results[i]["myScaleY"].GetDouble();
-		object.myScaleZ = results[i]["myScaleZ"].GetDouble();
+		object.myScaleX = results[i]["myScaleX"].GetFloat();
+		object.myScaleY = results[i]["myScaleY"].GetFloat();
+		object.myScaleZ = results[i]["myScaleZ"].GetFloat();
 
 		/*if (results[i].HasMember("myColliderData"))
 		{
