@@ -12,6 +12,7 @@
 #include "EnvironmentLight.h"
 #include "LightFactory.h"
 #include "RenderManager.h"
+#include "ParticleFactory.h"
 #include <rapidjson\document.h>
 #include <string>
 
@@ -27,6 +28,7 @@ CEngine::CEngine()
 	myModelFactory = new CModelFactory();
 	myCameraFactory = new CCameraFactory();
 	myLightFactory = new CLightFactory();
+	myParticleFactory = new CParticleFactory();
 }
 
 CEngine::~CEngine()
@@ -48,26 +50,22 @@ CEngine::~CEngine()
 	myLightFactory = nullptr;
 	delete myRenderManager;
 	myRenderManager = nullptr;
+
+	delete myParticleFactory;
+	myParticleFactory = nullptr;
 }
 
 bool CEngine::Init(CWindowHandler::SWindowData& someWindowData)
 {
-	//if (!myWindowHandler->Init(someWindowData)) {
-	//	return false;
-	//}
-
 	ENGINE_ERROR_BOOL_MESSAGE(myWindowHandler->Init(someWindowData), "Window Handler could not be initialized.");
 	ENGINE_ERROR_BOOL_MESSAGE(myFramework->Init(myWindowHandler), "Framework could not be initialized.");
-
-	//ENGINE_ERROR_BOOL_MESSAGE(myForwardRenderer->Init(*this), "Forward Renderer could not be initiliazed.");
-
 	ENGINE_ERROR_BOOL_MESSAGE(myModelFactory->Init(*this), "Model Factory could not be initiliazed.");
 	ENGINE_ERROR_BOOL_MESSAGE(myCameraFactory->Init(myWindowHandler), "Camera Factory could not be initialized.");
 	ENGINE_ERROR_BOOL_MESSAGE(myScene->Init(), "Scene could not be initialized.");
 	myRenderManager = new CRenderManager();
 	ENGINE_ERROR_BOOL_MESSAGE(myRenderManager->Init(myFramework, myWindowHandler), "RenderManager could not be initialized.");
 	ENGINE_ERROR_BOOL_MESSAGE(myLightFactory->Init(*this), "Light Factory could not be initialized.");
-
+	ENGINE_ERROR_BOOL_MESSAGE(myParticleFactory->Init(myFramework), "Particle Factory coult not be initialized.");
 	return true;
 }
 
@@ -81,19 +79,6 @@ float CEngine::BeginFrame()
 void CEngine::RenderFrame()
 {
 	myRenderManager->Render();
-
-	/*CEnvironmentLight* environmentLight = myScene->GetEnvironmentLight();
-	CCamera* mainCamera = myScene->GetMainCamera();
-
-	std::vector<CGameObject*> gameObjectsToRender = myScene->CullGameObjects(mainCamera);
-
-	std::vector<CModelInstance*> modelsToRender = myScene->CullModels(mainCamera);
-
-	std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> modelPointLights;
-	for (CModelInstance* instance : modelsToRender) {
-		modelPointLights.push_back(myScene->CullLights(instance));
-	}*/
-	//myForwardRenderer->Render(environmentLight, modelPointLights, mainCamera, modelsToRender, gameObjectsToRender);
 }
 
 void CEngine::EndFrame()

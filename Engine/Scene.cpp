@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "CollisionManager.h"
 #include "PointLight.h"
+#include "ParticleInstance.h"
 
 CScene* CScene::ourInstance = nullptr;
 
@@ -102,6 +103,15 @@ std::pair<unsigned int, std::array<CPointLight*, 8>> CScene::CullLights(CModelIn
 	return pointLightPair;
 }
 
+std::vector<CParticleInstance*> CScene::CullParticles(CCamera* aMainCamera)
+{
+	for (unsigned int i = 0; i < myParticles.size(); ++i)
+	{
+		myParticles[i]->Update(CTimer::Dt(), aMainCamera->GetTransform().Translation());
+	}
+	return myParticles;
+}
+
 bool CScene::AddInstance(CModelInstance* aModel)
 {
 	myModelInstances.emplace_back(aModel);
@@ -128,6 +138,12 @@ bool CScene::AddInstance(CPointLight* aPointLight) {
 bool CScene::AddInstance(CGameObject* aGameObject)
 {
 	myGameObjects.emplace_back(aGameObject);
+	return true;
+}
+
+bool CScene::AddInstance(CParticleInstance* aParticleInstance)
+{
+	myParticles.emplace_back(aParticleInstance);
 	return true;
 }
 

@@ -20,7 +20,7 @@ PixelOutPut main(VertexToPixel input)
     
     float3 returnColor = ambient + diffuse;
    
-    returnValue.myColor = float4(returnColor.xyz, 1);
+    returnValue.myColor = float4(returnColor.xyz, 1.0f);
     //returnValue.myColor = input.myColor;
     return returnValue;
 }

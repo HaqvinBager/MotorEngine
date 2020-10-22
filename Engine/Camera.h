@@ -24,8 +24,8 @@ public:
 	/// </summary>
 	void Update()
 	{
-		//SetPosition(myTarget->Position() + myOffset);
-		//SetRotation(myDirection);
+		SetPosition(myTarget->Position() + myOffset);
+		SetRotation(myDirection);
 	}
 
 	/// <summary>
