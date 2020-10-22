@@ -1,0 +1,283 @@
+{
+    "dataList": [
+        {
+            "myName": "Main Camera",
+            "myRotX": -360.0,
+            "myRotY": 180.0,
+            "myRotZ": -360.0,
+            "myPosX": 0.0,
+            "myPosY": 1.0,
+            "myPosZ": -10.0,
+            "myScaleX": 1.0,
+            "myScaleY": 1.0,
+            "myScaleZ": 1.0,
+            "myPath": "",
+            "myCharacterData": {
+                "myName": "",
+                "myHealth": 0.0,
+                "myDamage": 0.0,
+                "myMoveSpeed": 0.0,
+                "myAttackSpeed": 0.0,
+                "myCastSpeed": 0.0
+            },
+            "myColliderData": {
+                "myColliderType": "",
+                "myCenterX": 0.0,
+                "myCenterY": 0.0,
+                "myCenterZ": 0.0,
+                "myRadius": 0.0,
+                "mySizeX": 0.0,
+                "mySizeY": 0.0,
+                "mySizeZ": 0.0
+            }
+        },
+        {
+            "myName": "EN_W_L1Wall_02_19G4_01_19",
+            "myRotX": -360.0,
+            "myRotY": 180.0,
+            "myRotZ": -360.0,
+            "myPosX": 0.0,
+            "myPosY": 0.0,
+            "myPosZ": 0.0,
+            "myScaleX": 1.0,
+            "myScaleY": 1.0,
+            "myScaleZ": 1.0,
+            "myPath": "Assets/3D/Environment/EN_W_L1Wall_02_19G4_01_19/EN_W_L1Wall_02_19G4_01_19.fbx",
+            "myCharacterData": {
+                "myName": "",
+                "myHealth": 0.0,
+                "myDamage": 0.0,
+                "myMoveSpeed": 0.0,
+                "myAttackSpeed": 0.0,
+                "myCastSpeed": 0.0
+            },
+            "myColliderData": {
+                "myColliderType": "",
+                "myCenterX": 0.0,
+                "myCenterY": 0.0,
+                "myCenterZ": 0.0,
+                "myRadius": 0.0,
+                "mySizeX": 0.0,
+                "mySizeY": 0.0,
+                "mySizeZ": 0.0
+            }
+        },
+        {
+            "myName": "EN_P_L1BridgePillar_01_19G4_01_19",
+            "myRotX": -360.0,
+            "myRotY": 180.0,
+            "myRotZ": -360.0,
+            "myPosX": 3.049999952316284,
+            "myPosY": 0.0,
+            "myPosZ": 0.0,
+            "myScaleX": 1.0,
+            "myScaleY": 1.0,
+            "myScaleZ": 1.0,
+            "myPath": "Assets/3D/Environment/EN_P_L1BridgePillar_01_19G4_01_19/EN_P_L1BridgePillar_01_19G4_01_19.fbx",
+            "myCharacterData": {
+                "myName": "",
+                "myHealth": 0.0,
+                "myDamage": 0.0,
+                "myMoveSpeed": 0.0,
+                "myAttackSpeed": 0.0,
+                "myCastSpeed": 0.0
+            },
+            "myColliderData": {
+                "myColliderType": "",
+                "myCenterX": 0.0,
+                "myCenterY": 0.0,
+                "myCenterZ": 0.0,
+                "myRadius": 0.0,
+                "mySizeX": 0.0,
+                "mySizeY": 0.0,
+                "mySizeZ": 0.0
+            }
+        },
+        {
+            "myName": "EN_P_Banner_01_18G5_v2_19",
+            "myRotX": -360.0,
+            "myRotY": 180.0,
+            "myRotZ": -360.0,
+            "myPosX": -2.985940456390381,
+            "myPosY": -1.6763489246368409,
+            "myPosZ": 1.9639945030212403,
+            "myScaleX": 1.0,
+            "myScaleY": 1.0,
+            "myScaleZ": 1.0,
+            "myPath": "Assets/3D/Environment/EN_P_Banner_01_18G5_v2_19/EN_P_Banner_01_18G5_v2_19.fbx",
+            "myCharacterData": {
+                "myName": "",
+                "myHealth": 0.0,
+                "myDamage": 0.0,
+                "myMoveSpeed": 0.0,
+                "myAttackSpeed": 0.0,
+                "myCastSpeed": 0.0
+            },
+            "myColliderData": {
+                "myColliderType": "",
+                "myCenterX": 0.0,
+                "myCenterY": 0.0,
+                "myCenterZ": 0.0,
+                "myRadius": 0.0,
+                "mySizeX": 0.0,
+                "mySizeY": 0.0,
+                "mySizeZ": 0.0
+            }
+        },
+        {
+            "myName": "EN_P_Banner_01_18G5_v2_19 (1)",
+            "myRotX": -360.0,
+            "myRotY": 180.0,
+            "myRotZ": -360.0,
+            "myPosX": -5.840000152587891,
+            "myPosY": -1.6763489246368409,
+            "myPosZ": 1.9639945030212403,
+            "myScaleX": 1.0,
+            "myScaleY": 1.0,
+            "myScaleZ": 1.0,
+            "myPath": "Assets/3D/Environment/EN_P_Banner_01_18G5_v2_19/EN_P_Banner_01_18G5_v2_19.fbx",
+            "myCharacterData": {
+                "myName": "",
+                "myHealth": 0.0,
+                "myDamage": 0.0,
+                "myMoveSpeed": 0.0,
+                "myAttackSpeed": 0.0,
+                "myCastSpeed": 0.0
+            },
+            "myColliderData": {
+                "myColliderType": "",
+                "myCenterX": 0.0,
+                "myCenterY": 0.0,
+                "myCenterZ": 0.0,
+                "myRadius": 0.0,
+                "mySizeX": 0.0,
+                "mySizeY": 0.0,
+                "mySizeZ": 0.0
+            }
+        },
+        {
+            "myName": "EN_P_Banner_01_18G5_v2_19 (2)",
+            "myRotX": -360.0,
+            "myRotY": 180.0,
+            "myRotZ": -360.0,
+            "myPosX": -9.550000190734864,
+            "myPosY": -1.6763489246368409,
+            "myPosZ": 1.9639945030212403,
+            "myScaleX": 1.0,
+            "myScaleY": 1.0,
+            "myScaleZ": 1.0,
+            "myPath": "Assets/3D/Environment/EN_P_Banner_01_18G5_v2_19/EN_P_Banner_01_18G5_v2_19.fbx",
+            "myCharacterData": {
+                "myName": "",
+                "myHealth": 0.0,
+                "myDamage": 0.0,
+                "myMoveSpeed": 0.0,
+                "myAttackSpeed": 0.0,
+                "myCastSpeed": 0.0
+            },
+            "myColliderData": {
+                "myColliderType": "",
+                "myCenterX": 0.0,
+                "myCenterY": 0.0,
+                "myCenterZ": 0.0,
+                "myRadius": 0.0,
+                "mySizeX": 0.0,
+                "mySizeY": 0.0,
+                "mySizeZ": 0.0
+            }
+        },
+        {
+            "myName": "Directional Light",
+            "myRotX": -410.0,
+            "myRotY": 510.0,
+            "myRotZ": -360.0,
+            "myPosX": 0.0,
+            "myPosY": 3.0,
+            "myPosZ": 0.0,
+            "myScaleX": 1.0,
+            "myScaleY": 1.0,
+            "myScaleZ": 1.0,
+            "myPath": "",
+            "myCharacterData": {
+                "myName": "",
+                "myHealth": 0.0,
+                "myDamage": 0.0,
+                "myMoveSpeed": 0.0,
+                "myAttackSpeed": 0.0,
+                "myCastSpeed": 0.0
+            },
+            "myColliderData": {
+                "myColliderType": "",
+                "myCenterX": 0.0,
+                "myCenterY": 0.0,
+                "myCenterZ": 0.0,
+                "myRadius": 0.0,
+                "mySizeX": 0.0,
+                "mySizeY": 0.0,
+                "mySizeZ": 0.0
+            }
+        },
+        {
+            "myName": "Walls",
+            "myRotX": -360.0,
+            "myRotY": 180.0,
+            "myRotZ": -360.0,
+            "myPosX": 0.0,
+            "myPosY": 0.0,
+            "myPosZ": 0.0,
+            "myScaleX": 1.0,
+            "myScaleY": 1.0,
+            "myScaleZ": 1.0,
+            "myPath": "",
+            "myCharacterData": {
+                "myName": "",
+                "myHealth": 0.0,
+                "myDamage": 0.0,
+                "myMoveSpeed": 0.0,
+                "myAttackSpeed": 0.0,
+                "myCastSpeed": 0.0
+            },
+            "myColliderData": {
+                "myColliderType": "",
+                "myCenterX": 0.0,
+                "myCenterY": 0.0,
+                "myCenterZ": 0.0,
+                "myRadius": 0.0,
+                "mySizeX": 0.0,
+                "mySizeY": 0.0,
+                "mySizeZ": 0.0
+            }
+        },
+        {
+            "myName": "Floor",
+            "myRotX": -360.0,
+            "myRotY": 180.0,
+            "myRotZ": -360.0,
+            "myPosX": 0.0,
+            "myPosY": 0.0,
+            "myPosZ": 0.0,
+            "myScaleX": 1.0,
+            "myScaleY": 1.0,
+            "myScaleZ": 1.0,
+            "myPath": "",
+            "myCharacterData": {
+                "myName": "",
+                "myHealth": 0.0,
+                "myDamage": 0.0,
+                "myMoveSpeed": 0.0,
+                "myAttackSpeed": 0.0,
+                "myCastSpeed": 0.0
+            },
+            "myColliderData": {
+                "myColliderType": "",
+                "myCenterX": 0.0,
+                "myCenterY": 0.0,
+                "myCenterZ": 0.0,
+                "myRadius": 0.0,
+                "mySizeX": 0.0,
+                "mySizeY": 0.0,
+                "mySizeZ": 0.0
+            }
+        }
+    ]
+}

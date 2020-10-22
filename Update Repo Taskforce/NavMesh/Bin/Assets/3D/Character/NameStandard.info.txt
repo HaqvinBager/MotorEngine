@@ -1,0 +1,9 @@
+CH_Type_Name_Number_19G4_version_19
+
+Type =
+	_PL_ = Player
+	_NPC_ = NPC
+	_GE_ = Gear
+	_WP_ = weapon
+	
+T.ex: EN_G_BridgeGround_01_19G4_01_19
