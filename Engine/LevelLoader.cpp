@@ -9,6 +9,8 @@
 #include "CapsuleColliderComponent.h"
 #include "ModelComponent.h"
 
+#include <rapidjson\document.h>
+
 CLevelLoader::CLevelLoader()
 	: myUnityLoader(nullptr)
 	, myScene(nullptr)
@@ -19,6 +21,23 @@ bool CLevelLoader::Init()
 {
 	myUnityLoader = new CUnityLoader();
 	myScene = CScene::GetInstance();
+
+	std::ifstream t("Levels/json.txt");
+	assert(t.is_open());
+	std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
+
+	rapidjson::Document document;
+	document.Parse(str.c_str());
+
+	rapidjson::Value::ConstMemberIterator root = document.MemberBegin();
+	rapidjson::Value::ConstMemberIterator oneStepDown = document.FindMember("Levels");
+
+	rapidjson::Value& results = document["Levels"];
+
+	std::string s = results[0]["LevelName"].GetString();
+
+	LoadNewLevel("Levels/" + s);
+
 	return true;
 }
 
@@ -46,7 +65,7 @@ void CLevelLoader::CreateLevel(const std::string& aPath)
 	{
 		CGameObject* gameObject = new CGameObject();
 		CTransformComponent* transform = gameObject->AddComponent<CTransformComponent>(*gameObject);
-		transform->Scale(0.25f);
+		transform->Scale(object.myScaleX);
 		transform->Position({ object.myPosX, object.myPosY, object.myPosZ });
 		CModelComponent* model = gameObject->AddComponent<CModelComponent>(*gameObject);
 		model->SetMyModel(CModelFactory::GetInstance()->GetModelPBR(object.myRelativePath));
