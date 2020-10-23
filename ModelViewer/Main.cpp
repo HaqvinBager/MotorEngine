@@ -345,9 +345,9 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 #endif
 
 	CWindowHandler::SWindowData windowData;
-	windowData.myX = 100;
-	windowData.myY = 100;
-	windowData.myWidth = 1280;
+	windowData.myX		= 100;
+	windowData.myY		= 100;
+	windowData.myWidth	= 1280;
 	windowData.myHeight = 720;
 	
 	CEngine engine;
