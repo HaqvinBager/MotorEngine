@@ -19,6 +19,7 @@ class CEngine
 	friend class CVFXFactory;
 	friend class CLightFactory;
 public:
+	friend class CLineFactory;
 	CEngine();
 	~CEngine();
 	bool Init(CWindowHandler::SWindowData& someWindowData);
@@ -43,4 +44,5 @@ private:
 	CLightFactory* myLightFactory;
 	CParticleFactory* myParticleFactory;
 	CVFXFactory* myVFXFactory;
+	CLineFactory* myLineFactory;
 };

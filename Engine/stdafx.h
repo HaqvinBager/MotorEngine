@@ -19,3 +19,4 @@
 #include "Timer.h"
 #include "DirectXFramework.h"
 #include "EngineException.h"
+#define SAFE_DELETE(aPointer) delete aPointer; aPointer = nullptr;

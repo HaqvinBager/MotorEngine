@@ -9,6 +9,7 @@ class CCollisionManager;
 class CPointLight;
 class CParticleInstance;
 class CVFXInstance;
+class CLineInstance;
 
 class CScene {
 
@@ -26,6 +27,7 @@ public:
 	std::pair<unsigned int, std::array<CPointLight*, 8>> CullLights(CModelInstance* aModelInstance);
 	std::vector<CParticleInstance*> CullParticles(CCamera* aMainCamera);
 	std::vector<CVFXInstance*> CullVFX(CCamera* aMainCamera);
+	std::vector<CLineInstance*> CullLines(CCamera* aMainCamera);
 
 	bool AddInstance(CModelInstance* aModel);
 	bool AddInstance(CCamera* aCamera);
@@ -34,6 +36,8 @@ public:
 	bool AddInstance(CGameObject* aGameObject);
 	bool AddInstance(CParticleInstance* aParticleInstance);
 	bool AddInstance(CVFXInstance* aVFXInstance);
+	bool AddInstance(CLineInstance* aLineInstance);
+
 
 
 	bool ClearInstances();
@@ -50,6 +54,7 @@ private:
 	std::vector<CGameObject*> myGameObjects;
 	std::vector<CParticleInstance*> myParticles;
 	std::vector<CVFXInstance*> myVFXInstances;
+	std::vector<CLineInstance*> myLineInstances;
 	CCollisionManager* myCollisionManager;
 	static CScene* ourInstance;
 };

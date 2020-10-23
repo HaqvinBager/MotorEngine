@@ -83,6 +83,8 @@ void CRenderManager::Render()
 	std::vector<CGameObject*> gameObjects = myScene.CullGameObjects(maincamera);
 	myForwardRenderer.Render(environmentlight, pointlights, maincamera, modelsToRender, gameObjects);
 
+	std::vector<CLineInstance*> lines = myScene.CullLines(maincamera);
+	myForwardRenderer.RenderLines(maincamera, lines);
 
 	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_ALPHABLEND);
 	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_ONLYREAD);

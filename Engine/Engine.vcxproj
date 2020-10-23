@@ -136,6 +136,9 @@
     <ClInclude Include="IntersectionManager.h" />
     <ClInclude Include="LevelLoader.h" />
     <ClInclude Include="LightFactory.h" />
+    <ClInclude Include="Line.h" />
+    <ClInclude Include="LineFactory.h" />
+    <ClInclude Include="LineInstance.h" />
     <ClInclude Include="MathFunc.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelComponent.h" />
@@ -182,6 +185,9 @@
     <ClCompile Include="IntersectionManager.cpp" />
     <ClCompile Include="LevelLoader.cpp" />
     <ClCompile Include="LightFactory.cpp" />
+    <ClCompile Include="Line.cpp" />
+    <ClCompile Include="LineFactory.cpp" />
+    <ClCompile Include="LineInstance.cpp" />
     <ClCompile Include="MathFunc.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelComponent.cpp" />
@@ -266,6 +272,18 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
+    <FxCompile Include="LinePixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="LineVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="ParticleGeometryShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
@@ -312,6 +330,7 @@
   <ItemGroup>
     <None Include="CubeShaderStructs.hlsli" />
     <None Include="FullscreenShaderStructs.hlsli" />
+    <None Include="LineShaderStructs.hlsli" />
     <None Include="MathHelpers.hlsli" />
     <None Include="ParticleShaderStructs.hlsli" />
     <None Include="PBRAmbience.hlsli" />

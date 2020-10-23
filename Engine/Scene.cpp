@@ -10,6 +10,7 @@
 #include "PointLight.h"
 #include "ParticleInstance.h"
 #include "VFXInstance.h"
+#include "LineInstance.h"
 
 CScene* CScene::ourInstance = nullptr;
 
@@ -122,6 +123,12 @@ std::vector<CVFXInstance*> CScene::CullVFX(CCamera* /*aMainCamera*/) {
 	return myVFXInstances;
 }
 
+std::vector<CLineInstance*> CScene::CullLines(CCamera* /*aMainCamera*/)
+{
+	return myLineInstances;
+}
+
+
 bool CScene::AddInstance(CModelInstance* aModel)
 {
 	myModelInstances.emplace_back(aModel);
@@ -159,6 +166,12 @@ bool CScene::AddInstance(CParticleInstance* aParticleInstance)
 
 bool CScene::AddInstance(CVFXInstance* aVFXInstance) {
 	myVFXInstances.emplace_back(aVFXInstance);
+	return true;
+}
+
+bool CScene::AddInstance(CLineInstance* aLineInstance)
+{
+	myLineInstances.emplace_back(aLineInstance);
 	return true;
 }
 

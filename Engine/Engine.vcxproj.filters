@@ -40,6 +40,9 @@
     <Filter Include="Shader Files\VFX">
       <UniqueIdentifier>{c83dee2d-cede-40e6-98ee-f1404084d471}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader Files\LineDrawer">
+      <UniqueIdentifier>{576ec3b6-c1ef-4b20-80fa-60b7723abc44}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -183,6 +186,15 @@
     <ClInclude Include="VFXRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="LineFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LineInstance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Line.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -305,6 +317,15 @@
     <ClCompile Include="VFXRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Line.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LineFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LineInstance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="CubePixelShader.hlsl">
@@ -361,6 +382,12 @@
     <FxCompile Include="VFXTextureBlendPixelShader.hlsl">
       <Filter>Shader Files\VFX</Filter>
     </FxCompile>
+    <FxCompile Include="LinePixelShader.hlsl">
+      <Filter>Shader Files\LineDrawer</Filter>
+    </FxCompile>
+    <FxCompile Include="LineVertexShader.hlsl">
+      <Filter>Shader Files\LineDrawer</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="CubeShaderStructs.hlsli">
@@ -389,6 +416,9 @@
     </None>
     <None Include="VFXShaderStructs.hlsli">
       <Filter>Shader Files\VFX</Filter>
+    </None>
+    <None Include="LineShaderStructs.hlsli">
+      <Filter>Shader Files\LineDrawer</Filter>
     </None>
   </ItemGroup>
 </Project>
