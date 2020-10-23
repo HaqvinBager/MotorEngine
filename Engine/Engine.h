@@ -16,6 +16,7 @@ class CEngine
 {
 	friend class CForwardRenderer;
 	friend class CModelFactory;
+	friend class CVFXFactory;
 	friend class CLightFactory;
 public:
 	CEngine();
@@ -41,4 +42,5 @@ private:
 	CCameraFactory* myCameraFactory;
 	CLightFactory* myLightFactory;
 	CParticleFactory* myParticleFactory;
+	CVFXFactory* myVFXFactory;
 };

@@ -37,6 +37,9 @@
     <Filter Include="Shader Files\Particle">
       <UniqueIdentifier>{b03fa958-3abb-4657-8f91-82211613b907}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader Files\VFX">
+      <UniqueIdentifier>{c83dee2d-cede-40e6-98ee-f1404084d471}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -168,6 +171,18 @@
     <ClInclude Include="RenderStateManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="VFXBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VFXFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VFXInstance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VFXRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -278,6 +293,18 @@
     <ClCompile Include="RenderStateManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="VFXBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VFXFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VFXInstance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VFXRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="CubePixelShader.hlsl">
@@ -328,6 +355,12 @@
     <FxCompile Include="FullscreenPixelShader_Vignette.hlsl">
       <Filter>Shader Files\Fullscreen</Filter>
     </FxCompile>
+    <FxCompile Include="VFXTextureBlendVertexShader.hlsl">
+      <Filter>Shader Files\VFX</Filter>
+    </FxCompile>
+    <FxCompile Include="VFXTextureBlendPixelShader.hlsl">
+      <Filter>Shader Files\VFX</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="CubeShaderStructs.hlsli">
@@ -353,6 +386,9 @@
     </None>
     <None Include="ParticleShaderStructs.hlsli">
       <Filter>Shader Files\Particle</Filter>
+    </None>
+    <None Include="VFXShaderStructs.hlsli">
+      <Filter>Shader Files\VFX</Filter>
     </None>
   </ItemGroup>
 </Project>

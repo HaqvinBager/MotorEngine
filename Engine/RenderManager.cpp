@@ -3,6 +3,7 @@
 #include "DirectXFramework.h"
 #include "Scene.h"
 
+
 CRenderManager::CRenderManager() : myScene(*CScene::GetInstance())
 {
 }
@@ -34,6 +35,11 @@ bool CRenderManager::Init(CDirectXFramework* aFramework, CWindowHandler* aWindow
 	}
 
 	if (!myRenderStateManager.Init(aFramework))
+	{
+		return false;
+	}
+
+	if (!myVFXRenderer.Init(aFramework))
 	{
 		return false;
 	}
@@ -80,6 +86,10 @@ void CRenderManager::Render()
 
 	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_ALPHABLEND);
 	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_ONLYREAD);
+
+	std::vector<CVFXInstance*> vfx = myScene.CullVFX(maincamera);
+	myVFXRenderer.Render(maincamera, vfx);  
+
 
 	std::vector<CParticleInstance*> particles = myScene.CullParticles(maincamera);
 	myParticleRenderer.Render(maincamera, particles);

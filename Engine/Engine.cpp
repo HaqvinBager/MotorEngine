@@ -13,6 +13,7 @@
 #include "LightFactory.h"
 #include "RenderManager.h"
 #include "ParticleFactory.h"
+#include "VFXFactory.h"
 #include <rapidjson\document.h>
 #include <string>
 
@@ -29,6 +30,7 @@ CEngine::CEngine()
 	myCameraFactory = new CCameraFactory();
 	myLightFactory = new CLightFactory();
 	myParticleFactory = new CParticleFactory();
+	myVFXFactory = new CVFXFactory();
 }
 
 CEngine::~CEngine()
@@ -53,6 +55,8 @@ CEngine::~CEngine()
 
 	delete myParticleFactory;
 	myParticleFactory = nullptr;
+	delete myVFXFactory;
+	myVFXFactory = nullptr;
 }
 
 bool CEngine::Init(CWindowHandler::SWindowData& someWindowData)
@@ -65,7 +69,8 @@ bool CEngine::Init(CWindowHandler::SWindowData& someWindowData)
 	myRenderManager = new CRenderManager();
 	ENGINE_ERROR_BOOL_MESSAGE(myRenderManager->Init(myFramework, myWindowHandler), "RenderManager could not be initialized.");
 	ENGINE_ERROR_BOOL_MESSAGE(myLightFactory->Init(*this), "Light Factory could not be initialized.");
-	ENGINE_ERROR_BOOL_MESSAGE(myParticleFactory->Init(myFramework), "Particle Factory coult not be initialized.");
+	ENGINE_ERROR_BOOL_MESSAGE(myParticleFactory->Init(myFramework), "Particle Factory could not be initialized.");
+	ENGINE_ERROR_BOOL_MESSAGE(myVFXFactory->Init(myFramework), "VFX Factory could not be initialized.");
 	return true;
 }
 

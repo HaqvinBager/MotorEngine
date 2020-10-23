@@ -4,6 +4,7 @@
 #include "FullscreenTexture.h"
 #include "FullscreenTextureFactory.h"
 #include "ParticleRenderer.h"
+#include "VFXRenderer.h"
 #include "RenderStateManager.h"
 
 class CDirectXFramework;
@@ -23,6 +24,7 @@ private:
 	CForwardRenderer myForwardRenderer;
 	CFullscreenRenderer myFullscreenRenderer;
 	CParticleRenderer myParticleRenderer;
+	CVFXRenderer myVFXRenderer;
 	
 
 	CFullscreenTextureFactory myFullscreenTextureFactory;

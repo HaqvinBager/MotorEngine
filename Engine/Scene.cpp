@@ -9,6 +9,7 @@
 #include "CollisionManager.h"
 #include "PointLight.h"
 #include "ParticleInstance.h"
+#include "VFXInstance.h"
 
 CScene* CScene::ourInstance = nullptr;
 
@@ -112,6 +113,15 @@ std::vector<CParticleInstance*> CScene::CullParticles(CCamera* aMainCamera)
 	return myParticles;
 }
 
+std::vector<CVFXInstance*> CScene::CullVFX(CCamera* /*aMainCamera*/) {
+	
+	for (unsigned int i = 0; i < myVFXInstances.size(); ++i) {
+		
+		myVFXInstances[i]->Scroll({0.15f * CTimer::Dt(), 0.15f * CTimer::Dt() }, { 0.15f * CTimer::Dt() , 0.15f * CTimer::Dt() });
+	}
+	return myVFXInstances;
+}
+
 bool CScene::AddInstance(CModelInstance* aModel)
 {
 	myModelInstances.emplace_back(aModel);
@@ -144,6 +154,11 @@ bool CScene::AddInstance(CGameObject* aGameObject)
 bool CScene::AddInstance(CParticleInstance* aParticleInstance)
 {
 	myParticles.emplace_back(aParticleInstance);
+	return true;
+}
+
+bool CScene::AddInstance(CVFXInstance* aVFXInstance) {
+	myVFXInstances.emplace_back(aVFXInstance);
 	return true;
 }
 
