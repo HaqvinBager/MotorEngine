@@ -43,6 +43,11 @@ bool CRenderManager::Init(CDirectXFramework* aFramework, CWindowHandler* aWindow
 	{
 		return false;
 	}
+	
+	if (!mySpriteRenderer.Init(aFramework))
+	{
+		return false;
+	}
 
 	ID3D11Texture2D* backbufferTexture = aFramework->GetBackbufferTexture();
 	if (!backbufferTexture)
@@ -95,6 +100,9 @@ void CRenderManager::Render()
 
 	std::vector<CParticleInstance*> particles = myScene.CullParticles(maincamera);
 	myParticleRenderer.Render(maincamera, particles);
+	
+	std::vector<CSpriteInstance*> sprites = myScene.CullSprites(maincamera);
+	mySpriteRenderer.Render(sprites);
 
 	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_DISABLE);
 	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_DEFAULT);

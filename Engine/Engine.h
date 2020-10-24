@@ -11,6 +11,7 @@ class CLightFactory;
 class CScene;
 class CRenderManager;
 class CParticleFactory;
+class CSpriteFactory;
 
 class CEngine
 {
@@ -45,4 +46,5 @@ private:
 	CParticleFactory* myParticleFactory;
 	CVFXFactory* myVFXFactory;
 	CLineFactory* myLineFactory;
+	CSpriteFactory* mySpriteFactory;
 };

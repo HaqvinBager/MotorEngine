@@ -15,6 +15,7 @@
 #include "ParticleFactory.h"
 #include "VFXFactory.h"
 #include "LineFactory.h"
+#include "SpriteFactory.h"
 #include <rapidjson\document.h>
 #include <string>
 
@@ -33,6 +34,7 @@ CEngine::CEngine()
 	myParticleFactory = new CParticleFactory();
 	myVFXFactory = new CVFXFactory();
 	myLineFactory = new CLineFactory();
+	mySpriteFactory = new CSpriteFactory();
 }
 
 CEngine::~CEngine()
@@ -61,6 +63,8 @@ CEngine::~CEngine()
 	myVFXFactory = nullptr;
 	delete myLineFactory;
 	myLineFactory = nullptr;
+	delete mySpriteFactory;
+	mySpriteFactory = nullptr;
 }
 
 bool CEngine::Init(CWindowHandler::SWindowData& someWindowData)
@@ -76,6 +80,7 @@ bool CEngine::Init(CWindowHandler::SWindowData& someWindowData)
 	ENGINE_ERROR_BOOL_MESSAGE(myParticleFactory->Init(myFramework), "Particle Factory could not be initialized.");
 	ENGINE_ERROR_BOOL_MESSAGE(myVFXFactory->Init(myFramework), "VFX Factory could not be initialized.");
 	ENGINE_ERROR_BOOL_MESSAGE(myLineFactory->Init(myFramework), "Line Factory could not be initialized.");
+	ENGINE_ERROR_BOOL_MESSAGE(mySpriteFactory->Init(myFramework), "Sprite Factory could not be initialized.");
 	return true;
 }
 

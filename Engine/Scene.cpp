@@ -11,6 +11,7 @@
 #include "ParticleInstance.h"
 #include "VFXInstance.h"
 #include "LineInstance.h"
+#include "SpriteInstance.h"
 
 CScene* CScene::ourInstance = nullptr;
 
@@ -128,6 +129,11 @@ std::vector<CLineInstance*> CScene::CullLines(CCamera* /*aMainCamera*/)
 	return myLineInstances;
 }
 
+std::vector<CSpriteInstance*> CScene::CullSprites(CCamera* /*aMainCamera*/)
+{
+	return mySprites;
+}
+
 
 bool CScene::AddInstance(CModelInstance* aModel)
 {
@@ -172,6 +178,15 @@ bool CScene::AddInstance(CVFXInstance* aVFXInstance) {
 bool CScene::AddInstance(CLineInstance* aLineInstance)
 {
 	myLineInstances.emplace_back(aLineInstance);
+	return true;
+}
+
+bool CScene::AddInstance(CSpriteInstance* aSprite)
+{
+	if (!aSprite) {
+		return false;
+	}
+	mySprites.emplace_back(aSprite);
 	return true;
 }
 

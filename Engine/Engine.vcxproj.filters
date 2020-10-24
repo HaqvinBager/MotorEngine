@@ -43,6 +43,9 @@
     <Filter Include="Shader Files\LineDrawer">
       <UniqueIdentifier>{576ec3b6-c1ef-4b20-80fa-60b7723abc44}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader Files\Sprite">
+      <UniqueIdentifier>{d58d3a16-8c55-47b5-a82d-a3115227cec2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -204,6 +207,18 @@
     <ClInclude Include="Heap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteInstance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -341,6 +356,18 @@
     <ClCompile Include="AStar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteInstance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="CubePixelShader.hlsl">
@@ -403,6 +430,15 @@
     <FxCompile Include="LineVertexShader.hlsl">
       <Filter>Shader Files\LineDrawer</Filter>
     </FxCompile>
+    <FxCompile Include="SpriteGeometryShader.hlsl">
+      <Filter>Shader Files\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="SpritePixelShader.hlsl">
+      <Filter>Shader Files\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="SpriteVertexShader.hlsl">
+      <Filter>Shader Files\Sprite</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="CubeShaderStructs.hlsli">
@@ -434,6 +470,9 @@
     </None>
     <None Include="LineShaderStructs.hlsli">
       <Filter>Shader Files\LineDrawer</Filter>
+    </None>
+    <None Include="SpriteShaderStructs.hlsli">
+      <Filter>Shader Files\Structs</Filter>
     </None>
   </ItemGroup>
 </Project>
