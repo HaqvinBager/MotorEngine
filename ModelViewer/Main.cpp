@@ -114,6 +114,61 @@ void LoadModelPaths(const std::string& aStartFolderPath, std::vector<std::string
 	for (auto i = start; i != end; ++i)
 	{
 		std::string filePath = i->path().filename().string();
+#ifdef _DEBUG
+		//std::cout << "Current: " << filePath << std::endl;
+		//std::cout << std::endl;
+		//std::string nextDepthSpacing = " ";
+		//for (int d = 0; d < depth + 1; ++d)
+		//{
+		//	std::cout << nextDepthSpacing <<"prevFolders[" << d << "] = " << prevFolders[d] << std::endl;
+		//	std::cout << nextDepthSpacing << "folders[prevFolders[" << d << "]].myFullPath = " << folders[prevFolders[d]].myFullPath << std::endl;
+		//	std::cout << nextDepthSpacing << "folders[prevFolders[" << d << "]].myNumItems = " << folders[prevFolders[d]].myNumItems << std::endl;
+		//	nextDepthSpacing.append(" ");
+		//}
+		//std::cout << std::endl;
+#endif// ! _DEBUG
+
+		if (folders[prevFolders[depth]].myNumItems > 0)
+		{
+			folders[prevFolders[depth]].myNumItems -= 1;
+		}
+		else if (folders[prevFolders[depth]].myNumItems == 0)
+		{
+			if (depth != 0)
+			{
+				--depth;
+				prevFolders.pop_back();
+#ifdef _DEBUG
+				//std::cout << "--DEPTH    Reducing depth to " << depth << std::endl;
+#endif // ! _DEBUG
+			}
+
+			folderPath = folders[prevFolders[depth]].myFullPath;
+
+#ifdef _DEBUG
+			//std::cout << "FOLDER ENDS" << std::endl;
+			//std::cout << " Changing to folder: " << folderPath << std::endl << std::endl;
+#endif // ! _DEBUG
+
+			folders[prevFolders[depth]].myNumItems -= 1;
+			if (folders[prevFolders[depth]].myNumItems <= 0)
+			{
+				if (depth != 0)
+				{
+					--depth;
+					prevFolders.pop_back();
+#ifdef _DEBUG
+					//std::cout << "--DEPTH    Reducing depth, again; to " << depth << std::endl;
+#endif // ! _DEBUG
+				}
+
+				folderPath = folders[prevFolders[depth]].myFullPath;
+#ifdef _DEBUG
+				//std::cout << "FOLDER ENDS" << std::endl;
+				//std::cout << " Changing to folder: " << folderPath << std::endl << std::endl;
+#endif // ! _DEBUG
+			}
+		}
 
 		if (i->is_directory())
 		{
@@ -126,7 +181,9 @@ void LoadModelPaths(const std::string& aStartFolderPath, std::vector<std::string
 			fileInfo.myFullPath = folderPath;
 
 			folders.emplace(filePath, fileInfo);
-			//std::cout << " L> Found directory: " << filePath << std::endl /*<< std::endl*/;
+#ifdef _DEBUG
+			//std::cout << "L> Found directory: " << filePath << std::endl /*<< std::endl*/;
+#endif // ! _DEBUG
 		}
 		else
 		{
@@ -136,32 +193,14 @@ void LoadModelPaths(const std::string& aStartFolderPath, std::vector<std::string
 			if (fileExtension == ".fbx")
 			{
 				aFBXFilePaths.emplace_back(folders[prevFolders[depth]].myFullPath + "/" + filePath);
-				//std::cout	<< "      Found FBX: \n      " << aFBXFilePaths.back() << std::endl;
+#ifdef _DEBUG
+				std::cout	<< "      Found FBX: \n        " << aFBXFilePaths.back() << std::endl;
+#endif // ! _DEBUG
 			}
 		}
-		
-		if (folders[prevFolders[depth]].myNumItems > -1)
-		{
-			folders[prevFolders[depth]].myNumItems -= 1;
-			if (folders[prevFolders[depth]].myNumItems == -1)
-			{
-				--depth;
-				prevFolders.pop_back();
-				
-				folderPath = folders[prevFolders[depth]].myFullPath;
-				
-				folders[prevFolders[depth]].myNumItems -= 1;
-				if (folders[prevFolders[depth]].myNumItems == -1)
-				{
-					--depth;
-					prevFolders.pop_back();
-
-					folderPath = folders[prevFolders[depth]].myFullPath;
-				}
-				/*std::cout << "FOLDER ENDS" << std::endl;
-				std::cout << "Changing to folder: " << folderPath << std::endl << std::endl;*/
-			}
-		}
+#ifdef _DEBUG
+		//std::cout << "__________________________________________________________________________________________" << std::endl;
+#endif // ! _DEBUG
 	}
 }
 
@@ -200,10 +239,10 @@ bool CheckForIncorrectModelNumber(const size_t& aLoadModelNumber, const size_t& 
 std::string CheckForGroupNumber(short& aNumber)
 {
 	std::string path = "";
-	std::cin.clear();
+	//std::cin.clear();
 	std::cout << "Enter group number - 3 or 4:";
-	std::cin >> aNumber;
-	
+	//std::cin >> aNumber;
+	aNumber = 4;
 	if (aNumber == 4 || aNumber == 3)
 	{
 		if (aNumber == 3)
@@ -312,6 +351,8 @@ void Update(std::vector<std::string>& aModelFilePathList, CModelInstance* aCurre
 
 	if (Input::GetInstance()->IsKeyPressed(VK_ESCAPE))
 	{
+		SetForegroundWindow(GetConsoleWindow());
+
 		size_t loadModelNumber = aModelFilePathList.size();
 		std::cout << "Which model do you wish to load Give a number between: 0 and " << aModelFilePathList.size() - 1 << "\nL> ";
 		std::cin >> loadModelNumber;
@@ -328,6 +369,7 @@ void Update(std::vector<std::string>& aModelFilePathList, CModelInstance* aCurre
 		std::cout << "\nInstructions" << std::endl 
 			<< "   Main Window: Press 'ESC' and then return to this Console." << std::endl
 			<< "   Console: Enter the desired models number." << std::endl;
+
 	}
 }
 
