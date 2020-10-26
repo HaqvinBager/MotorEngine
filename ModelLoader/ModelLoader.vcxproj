@@ -167,6 +167,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ApplicationInterface.h" />
+    <ClInclude Include="AssImp\config.h" />
     <ClInclude Include="ConstModelStructs.h" />
     <ClInclude Include="FBXLoaderCustom.h" />
     <ClInclude Include="Vector.h" />
