@@ -37,13 +37,13 @@ struct STriangle {
 	}
 };
 
+struct SNavMesh {
+	std::vector<STriangle*> myTriangles;
+};
+
 class CNavmeshLoader
 {
 public:
-	struct SNavMesh {
-		std::vector<STriangle*> myTriangles;
-	};
-
 	CNavmeshLoader();
 	~CNavmeshLoader();
 	bool Init();

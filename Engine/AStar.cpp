@@ -15,7 +15,7 @@ float CalculateH(DirectX::SimpleMath::Vector3& aStartCentroid, DirectX::SimpleMa
 	return (abs(aStartCentroid.x - anEndCentroid.x) + abs(aStartCentroid.y - anEndCentroid.y) + abs(aStartCentroid.z - anEndCentroid.z));
 }
 
-std::vector<DirectX::SimpleMath::Vector3> CAStar::AStar(CNavmeshLoader::SNavMesh* aNavmesh, STriangle* aStartTriangle, STriangle* anEndTriangle)
+std::vector<DirectX::SimpleMath::Vector3> CAStar::AStar(SNavMesh* aNavmesh, STriangle* aStartTriangle, STriangle* anEndTriangle)
 {
 	// Create nodes from tiles
 	std::vector<STriangle*> triangles = aNavmesh->myTriangles;
