@@ -12,7 +12,7 @@
 #include "Camera.h"
 #include "LightFactory.h"
 #include "EnvironmentLight.h"
-#include <CUnityLoader.h> //In order to know the size of ObjectData to use unique ptr for LevelLoader (Should probably just use a local Variable and not a ptr)
+#include <CUnityLoader.h> //In order to know the size of ObjectData
 
 CInGameState::CInGameState(CStateStack& aStateStack) : CState(aStateStack)
 {
@@ -27,9 +27,9 @@ CInGameState::~CInGameState()
 void CInGameState::Awake()
 {
 	//Push Load Level State for Level (Saved somewhere)
-	std::unique_ptr<CLevelLoader> levelLoader = std::make_unique<CLevelLoader>();
-	levelLoader->Init();
-	levelLoader->LoadNewLevel("Levels/SampleScene");
+	CLevelLoader levelLoader;// = //std::make_unique<CLevelLoader>();
+	levelLoader.Init();
+	levelLoader.LoadNewLevel("Levels/SampleScene");
 
 	CGameObject* player = new CGameObject();
 	player->AddComponent<CTransformComponent>(*player);
