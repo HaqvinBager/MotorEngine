@@ -5,8 +5,5 @@ CState::CState(CStateStack& aStateStack): myStateStack(aStateStack) {
 
 }
 
-CState::~CState()
-{
-
+CState::~CState() {
 }
-
