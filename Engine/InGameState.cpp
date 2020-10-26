@@ -12,6 +12,7 @@
 #include "Camera.h"
 #include "LightFactory.h"
 #include "EnvironmentLight.h"
+#include <CUnityLoader.h> //In order to know the size of ObjectData to use unique ptr for LevelLoader (Should probably just use a local Variable and not a ptr)
 
 CInGameState::CInGameState(CStateStack& aStateStack) : CState(aStateStack)
 {
