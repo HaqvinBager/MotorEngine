@@ -195,10 +195,15 @@ void LoadModelPaths(const std::string& aStartFolderPath, std::vector<std::string
 			// todo filesystem::path has a function to check if it is a directory.
 			if (fileExtension == ".fbx")
 			{
-				aFBXFilePaths.emplace_back(folders[prevFolders[depth]].myFullPath + "/" + filePath);
+				//ex: CH_NPC_Boss_Attack_AN.fbx 7 from last
+				std::string suffix = filePath.substr(filePath.length() - 7 - 1, filePath.length() - 1);
+				if (suffix != "_AN")
+				{
+					aFBXFilePaths.emplace_back(folders[prevFolders[depth]].myFullPath + "/" + filePath);
 #ifdef _DEBUG
-				std::cout	<< "      Found FBX: \n        " << aFBXFilePaths.back() << std::endl;
+					std::cout	<< "      Found FBX: \n        " << aFBXFilePaths.back() << std::endl;
 #endif // ! _DEBUG
+				}
 			}
 		}
 #ifdef _DEBUG
