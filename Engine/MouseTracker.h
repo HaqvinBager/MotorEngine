@@ -13,6 +13,7 @@ public:
 	static DirectX::SimpleMath::Vector4 ScreenPositionToWorldPosition(const float aX, const float aY, float aWidth, float aHeight)
 	{
 		CCamera* testCamera = CScene::GetInstance()->GetMainCamera();
+
 		DirectX::SimpleMath::Matrix proj =  /*testCamera->GetView()*/testCamera->GetTransform() * testCamera->GetProjection();
 		DirectX::SimpleMath::Matrix porjInvert = proj.Invert();
 
