@@ -123,6 +123,7 @@
     <ClInclude Include="CapsuleColliderComponent.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="State.h" />
     <ClInclude Include="DebugTimerUtility.h" />
     <ClInclude Include="DirectXFramework.h" />
     <ClInclude Include="Engine.h" />
@@ -162,6 +163,7 @@
     <ClInclude Include="SpriteFactory.h" />
     <ClInclude Include="SpriteInstance.h" />
     <ClInclude Include="SpriteRenderer.h" />
+    <ClInclude Include="StateStack.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TransformComponent.h" />
@@ -181,6 +183,7 @@
     <ClCompile Include="CapsuleColliderComponent.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="State.cpp" />
     <ClCompile Include="DirectXFramework.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="EnvironmentLight.cpp" />
@@ -214,6 +217,7 @@
     <ClCompile Include="SpriteFactory.cpp" />
     <ClCompile Include="SpriteInstance.cpp" />
     <ClCompile Include="SpriteRenderer.cpp" />
+    <ClCompile Include="StateStack.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
