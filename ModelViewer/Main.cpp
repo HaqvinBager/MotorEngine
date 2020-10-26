@@ -196,8 +196,8 @@ void LoadModelPaths(const std::string& aStartFolderPath, std::vector<std::string
 			if (fileExtension == ".fbx")
 			{
 				//ex: CH_NPC_Boss_Attack_AN.fbx 7 from last
-				std::string suffix = filePath.substr(filePath.length() - 7 - 1, filePath.length() - 1);
-				if (suffix != "_AN")
+				std::string suffix = filePath.substr(filePath.length() - 7, filePath.length() - 5);
+				if (suffix != "_AN.fbx")
 				{
 					aFBXFilePaths.emplace_back(folders[prevFolders[depth]].myFullPath + "/" + filePath);
 #ifdef _DEBUG
