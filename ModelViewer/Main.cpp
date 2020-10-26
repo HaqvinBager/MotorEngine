@@ -407,7 +407,12 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
 	CLineInstance* grid = new CLineInstance();
 	grid->Init(CLineFactory::GetInstance()->CreateGrid({ 0.33f,0.33f,0.33f, 1.0f }));
+	grid->SetPosition({ 0.0f,-0.01f,0.0f });
 	CScene::GetInstance()->AddInstance(grid);
+
+	CLineInstance* origin = new CLineInstance();
+	origin->Init(CLineFactory::GetInstance()->CreateAxisMarker());
+	CScene::GetInstance()->AddInstance(origin);
 
 	//short groupNumber = 0;
 	std::string root = "Assets";//CheckForGroupNumber(groupNumber);
@@ -448,6 +453,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	
 		engine.BeginFrame();
 		Update(filePaths, currentModel/*, camera*/);
+
 		engine.RenderFrame();
 		engine.EndFrame();
 		Input::GetInstance()->update();
@@ -458,6 +464,9 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
 	delete grid;
 	grid = nullptr;
+
+	delete origin;
+	origin = nullptr;
 	
 
 #ifdef USE_CONSOLE_COMMAND

@@ -16,6 +16,7 @@ public:
 
 	CLine* CreateLine(const DirectX::SimpleMath::Vector3& aFrom, const DirectX::SimpleMath::Vector3& aTo, const DirectX::SimpleMath::Vector4& aColor);
 	CLine* CreateGrid(const DirectX::SimpleMath::Vector4& aColor);
+	CLine* CreateAxisMarker();
 
 private:
 	CLineFactory();

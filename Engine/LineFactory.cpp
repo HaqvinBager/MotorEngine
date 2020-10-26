@@ -283,6 +283,114 @@ CLine* CLineFactory::CreateGrid(const DirectX::SimpleMath::Vector4& aColor)
 	return line;
 }
 
+CLine* CLineFactory::CreateAxisMarker()
+{
+	HRESULT hResult;
+
+	//UINT myNumVertices = 0;
+	//UINT dX = abs(aTo.x - aFrom.x);
+	//UINT dY = abs(aTo.y - aFrom.y);
+	//UINT dZ = abs(aTo.z - aFrom.z);
+
+
+	struct SVertex
+	{
+		float myX, myY, myZ, myW;
+		float myR, myG, myB, myA;
+	} vertices[6] = 
+	{
+		{0.f, 0.f, 0.f, 1,		1.0f, 0.f, 0.f, 1}
+		,{0.5f, 0.f, 0.f, 1,		1.0f, 0.f, 0.f, 1}
+
+		,{0.f, 0.f, 0.f, 1,		 0.f, 1.0f, 0.f, 1}
+		,{0.f, 0.5f, 0.f, 1,		 0.f, 1.0f, 0.f, 1}
+
+		,{0.f, 0.f, 0.f, 1,		 0.f, 0.f, 1.0f, 1}
+		,{0.f, 0.f, 0.5f, 1,		 0.f, 0.f, 1.0f, 1}
+	};
+
+	D3D11_BUFFER_DESC bufferDescription = {0};
+	bufferDescription.ByteWidth =	sizeof(vertices);
+	bufferDescription.Usage		=	D3D11_USAGE_IMMUTABLE;
+	bufferDescription.BindFlags =	D3D11_BIND_VERTEX_BUFFER;
+
+	D3D11_SUBRESOURCE_DATA subresourceData = {0};
+	subresourceData.pSysMem = vertices;
+
+	ID3D11Buffer* vertexBuffer = nullptr;
+	hResult = myDevice->CreateBuffer(&bufferDescription, &subresourceData, &vertexBuffer);
+	if( FAILED( hResult ) )
+	{
+		return nullptr;
+	}
+
+	//Shaders
+	//	Vertex Shader
+	std::ifstream vsFile;
+	vsFile.open("LineVertexShader.cso",std::ios::binary);
+	std::string vsData = {std::istreambuf_iterator<char>(vsFile), std::istreambuf_iterator<char>()};
+
+	ID3D11VertexShader* vertexShader = nullptr;
+	hResult = myDevice->CreateVertexShader(vsData.data(), vsData.size(), nullptr, &vertexShader);
+	if( FAILED( hResult ) )
+	{
+		return nullptr;
+	}
+	vsFile.close();
+	//	!Vertex Shader
+
+	//	Pixel Shader
+	std::ifstream psFile;
+	psFile.open("LinePixelShader.cso", std::ios::binary);
+	std::string psData = {std::istreambuf_iterator<char>(psFile), std::istreambuf_iterator<char>()};
+
+	ID3D11PixelShader* pixelShader = nullptr;
+	hResult = myDevice->CreatePixelShader(psData.data(), psData.size(), nullptr, &pixelShader);
+	if( FAILED( hResult ) )
+	{
+		return nullptr;
+	}
+	psFile.close();
+	//	!Pixel Shader
+	//!Shaders
+
+	//Input Layout
+	D3D11_INPUT_ELEMENT_DESC layout[] = 
+	{
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
+		,{"COLOR"   , 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
+	};
+	ID3D11InputLayout* inputLayout = nullptr;
+	hResult = myDevice->CreateInputLayout(layout, 2, vsData.data(), vsData.size(), &inputLayout);
+	if( FAILED( hResult ) )
+	{
+		return nullptr;
+	}
+	//!Input Layout
+
+	CLine* line = new CLine();
+	if( !line )
+	{
+		return nullptr;
+	}
+	CLine::SLineData lineData;
+	lineData.myNumberOfVertices		= sizeof(vertices) / sizeof(SVertex);
+	lineData.myStride				= sizeof(SVertex);
+	lineData.myOffset				= 0;
+	lineData.myVertexBuffer			= vertexBuffer;
+	lineData.myVertexShader			= vertexShader;
+	lineData.myPixelShader			= pixelShader;
+	lineData.myPrimitiveTopology	= D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
+	lineData.myInputLayout			= inputLayout;
+	line->Init(lineData);
+
+	//Yikes? +8bytes per Line
+	// Don't. full explenation in Line.hpp
+	//line->SetDevice(myDevice);
+
+	return line;
+}
+
 CLineFactory::CLineFactory()
 {
 	ourInstance = this;
