@@ -12,6 +12,9 @@
 #include <ModelInstance.h>
 #include <LightFactory.h>
 #include <EnvironmentLight.h>
+#include <Line.h>
+#include <LineInstance.h>
+#include <LineFactory.h>
 #include <Timer.h>
 #include "LevelLoader.h"
 
@@ -209,7 +212,7 @@ CModelInstance* InitModels(const std::string& aModelPath/*, CCamera* aCamera*/)
 	CScene* scene = CScene::GetInstance();
 
 	CCamera* camera = CCameraFactory::GetInstance()->CreateCamera(65.0f, 5000.0f);
-	camera->SetPosition({ 0,0,-5.0f });
+	camera->SetPosition({ 0,1.0f,-5.0f });
 	scene->AddInstance(camera);
 	scene->SetMainCamera(camera);
 
@@ -237,9 +240,9 @@ bool CheckForIncorrectModelNumber(const size_t& aLoadModelNumber, const size_t& 
 	return (static_cast<int>(aLoadModelNumber) > -1 && aLoadModelNumber < aMax);
 }
 std::string CheckForGroupNumber(short& aNumber)
-{
+{// Obsolete as of 
 	std::string path = "";
-	//std::cin.clear();
+	std::cin.clear();
 	std::cout << "Enter group number - 3 or 4:";
 	//std::cin >> aNumber;
 	aNumber = 4;
@@ -308,12 +311,12 @@ void Update(std::vector<std::string>& aModelFilePathList, CModelInstance* aCurre
 
 	if (Input::GetInstance()->IsKeyDown('A'))
 	{
-		aCurrentModelInstance->Move({ -moveSpeed * dt, 0.0f, 0.0f });
+		aCurrentModelInstance->Move({ moveSpeed * dt, 0.0f, 0.0f });
 	}
 
 	if (Input::GetInstance()->IsKeyDown('D'))
 	{
-		aCurrentModelInstance->Move({ moveSpeed * dt, 0.0f, 0.0f });
+		aCurrentModelInstance->Move({ -moveSpeed * dt, 0.0f, 0.0f });
 	}
 
 	// Y axis
@@ -397,8 +400,12 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	if (!shouldRun)
 		return 1;
 
-	short groupNumber = 0;
-	std::string root = CheckForGroupNumber(groupNumber);
+	CLineInstance* grid = new CLineInstance();
+	grid->Init(CLineFactory::GetInstance()->CreateGrid({ 0.33f,0.33f,0.33f, 1.0f }));
+	CScene::GetInstance()->AddInstance(grid);
+
+	//short groupNumber = 0;
+	std::string root = "Assets";//CheckForGroupNumber(groupNumber);
 
 	std::vector<std::string> filePaths;
 	LoadModelPaths(root, filePaths);
@@ -443,6 +450,9 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
 	delete currentModel;
 	currentModel = nullptr;
+
+	delete grid;
+	grid = nullptr;
 	
 
 #ifdef USE_CONSOLE_COMMAND
