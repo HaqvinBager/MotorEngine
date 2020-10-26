@@ -8,7 +8,7 @@ class CStateStack {
 public:
 		
 	CStateStack() = default;
-	~CStateStack();
+	 ~CStateStack();
 
 	bool PushState(CState* aState);
 	bool PopState();

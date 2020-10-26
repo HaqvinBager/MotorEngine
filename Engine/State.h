@@ -6,7 +6,7 @@ class CState {
 
 public:
 	CState(CStateStack& aStateStack);
-
+	virtual ~CState();
 
 	virtual void Awake() = 0;
 	virtual void Start() = 0;
