@@ -3,7 +3,6 @@
 #include "State.h"
 
 CStateStack::~CStateStack() {
-	
 	while (!myStateStack.empty()) {
 		delete myStateStack.top();
 		myStateStack.pop();
@@ -11,14 +10,15 @@ CStateStack::~CStateStack() {
 }
 
 bool CStateStack::PushState(CState* aState) {
-
 	ENGINE_ERROR_BOOL_MESSAGE(aState , "Trying to push aState that was nullptr");
 	myStateStack.push(aState);
+	return true;
 }
 
 bool CStateStack::PopState() {
 	ENGINE_ERROR_BOOL_MESSAGE(!myStateStack.empty(), "Trying to pop an empty stack");
 	myStateStack.pop();
+	return true;
 }
 
 void CStateStack::Awake() {

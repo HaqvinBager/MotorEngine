@@ -13,9 +13,8 @@ class CLineInstance;
 class CSpriteInstance;
 
 class CScene {
-
 	friend class CEngine;
-
+	friend class CInGameState;
 public:
 
 	static CScene* GetInstance();
@@ -42,6 +41,9 @@ public:
 	bool AddInstance(CSpriteInstance* aSprite);
 
 	bool ClearInstances();
+
+private:
+
 private:
 	CScene();
 	~CScene();
