@@ -6,7 +6,7 @@ class CAStar {
 
 public:
 	std::vector<DirectX::SimpleMath::Vector3> AStar(
-		CNavmeshLoader::SNavMesh* aNavmesh, STriangle* aStartTriangle, STriangle* anEndTriangle
+		SNavMesh* aNavmesh, STriangle* aStartTriangle, STriangle* anEndTriangle
 	);
 
 private:

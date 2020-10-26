@@ -23,7 +23,7 @@ bool CNavmeshLoader::Init()
 	return false;
 }
 
-CNavmeshLoader::SNavMesh* CNavmeshLoader::LoadNavmesh(std::string aFilepath)
+SNavMesh* CNavmeshLoader::LoadNavmesh(std::string aFilepath)
 {
 	std::ifstream infile(aFilepath);
 	if (!infile.good())
