@@ -16,6 +16,7 @@
 #include "VFXFactory.h"
 #include "LineFactory.h"
 #include "SpriteFactory.h"
+#include "InputMapper.h"
 #include <rapidjson\document.h>
 #include <string>
 
@@ -35,6 +36,7 @@ CEngine::CEngine()
 	myVFXFactory = new CVFXFactory();
 	myLineFactory = new CLineFactory();
 	mySpriteFactory = new CSpriteFactory();
+	myInputMapper = new CInputMapper();
 }
 
 CEngine::~CEngine()
@@ -65,6 +67,8 @@ CEngine::~CEngine()
 	myLineFactory = nullptr;
 	delete mySpriteFactory;
 	mySpriteFactory = nullptr;
+	delete myInputMapper;
+	myInputMapper = nullptr;
 }
 
 bool CEngine::Init(CWindowHandler::SWindowData& someWindowData)

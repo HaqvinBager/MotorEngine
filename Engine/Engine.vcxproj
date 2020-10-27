@@ -124,7 +124,10 @@
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="InGameState.h" />
+    <ClInclude Include="InputMapper.h" />
+    <ClInclude Include="InputObserver.h" />
     <ClInclude Include="LoadLevelState.h" />
+    <ClInclude Include="PlayerControllerComponent.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="DebugTimerUtility.h" />
     <ClInclude Include="DirectXFramework.h" />
@@ -185,7 +188,9 @@
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="InGameState.cpp" />
+    <ClCompile Include="InputMapper.cpp" />
     <ClCompile Include="LoadLevelState.cpp" />
+    <ClCompile Include="PlayerControllerComponent.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="DirectXFramework.cpp" />
     <ClCompile Include="Engine.cpp" />
