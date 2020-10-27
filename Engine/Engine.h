@@ -12,6 +12,7 @@ class CScene;
 class CRenderManager;
 class CParticleFactory;
 class CSpriteFactory;
+class CInputMapper;
 
 class CEngine
 {
@@ -47,4 +48,5 @@ private:
 	CVFXFactory* myVFXFactory;
 	CLineFactory* myLineFactory;
 	CSpriteFactory* mySpriteFactory;
+	CInputMapper* myInputMapper;
 };
