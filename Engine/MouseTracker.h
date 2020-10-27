@@ -2,6 +2,7 @@
 #include "SimpleMath.h"
 #include "Camera.h"
 #include "Scene.h"
+#include "Input.h"
 #include <iostream>
 
 //namespace MouseTracker {
@@ -45,6 +46,30 @@ public:
 		
 		return std::move(worldPosNear);
 	};
+
+	static DirectX::SimpleMath::Ray WorldSpacePick(unsigned int aWidth, unsigned int aHeight) {
+		float mouseX = static_cast<float>(CommonUtilities::Input::GetInstance()->MouseX());
+		float mouseY = static_cast<float>(CommonUtilities::Input::GetInstance()->MouseY());
+
+		CCamera* cam = CScene::GetInstance()->GetMainCamera();
+
+		float xV = (((2 * mouseX) / aWidth) - 1) / cam->GetProjection()._11;
+		float yV = (-((2 * mouseY) / aHeight) + 1) / cam->GetProjection()._22;
+
+		DirectX::SimpleMath::Vector3 target = cam->GetPosition() - cam->GetTransform().Forward();
+
+		DirectX::SimpleMath::Matrix viewMatrix = DirectX::XMMatrixLookAtLH(cam->GetPosition(), target, cam->GetTransform().Up());
+		DirectX::SimpleMath::Matrix viewMatrixInv = viewMatrix.Invert();
+
+		DirectX::SimpleMath::Vector4 origin = { 0.0f, 0.0f, 0.0f, 1.0f };
+		DirectX::SimpleMath::Vector4 dir = { xV, yV, 1.0f, 0.0f };
+
+		origin = DirectX::XMVector4Transform(origin, viewMatrixInv);
+		dir = DirectX::XMVector4Transform(dir, viewMatrixInv);
+		dir.Normalize();
+
+		return DirectX::SimpleMath::Ray({ origin.x, origin.y, origin.z }, { dir.x, dir.y, dir.z });
+	}
 };
 //};
 
