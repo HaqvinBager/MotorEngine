@@ -19,6 +19,7 @@
 #include "InputMapper.h"
 #include <rapidjson\document.h>
 #include <string>
+#include "Debug.h"
 
 #pragma comment(lib, "d3d11.lib")
 
@@ -37,6 +38,7 @@ CEngine::CEngine()
 	myLineFactory = new CLineFactory();
 	mySpriteFactory = new CSpriteFactory();
 	myInputMapper = new CInputMapper();
+	myDebug = new CDebug();
 }
 
 CEngine::~CEngine()
@@ -69,6 +71,9 @@ CEngine::~CEngine()
 	mySpriteFactory = nullptr;
 	delete myInputMapper;
 	myInputMapper = nullptr;
+
+	delete myDebug;
+	myDebug = nullptr;
 }
 
 bool CEngine::Init(CWindowHandler::SWindowData& someWindowData)

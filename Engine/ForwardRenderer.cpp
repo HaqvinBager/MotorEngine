@@ -157,7 +157,7 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector
 	}*/
 }
 
-void CForwardRenderer::RenderLines(CCamera* aCamera, std::vector<CLineInstance*>& aLineList) {
+void CForwardRenderer::RenderLines(CCamera* aCamera, const std::vector<CLineInstance>& aLineList) {
 
 	namespace SM = DirectX::SimpleMath;
 	myFrameBufferData.myToCamera = aCamera->GetTransform().Invert();
@@ -168,11 +168,11 @@ void CForwardRenderer::RenderLines(CCamera* aCamera, std::vector<CLineInstance*>
 	myContext->VSSetConstantBuffers(0, 1, &myFrameBuffer);
 	myContext->PSSetConstantBuffers(0, 1, &myFrameBuffer);
 
-	for (CLineInstance* instance : aLineList)
+	for (const CLineInstance& instance : aLineList)
 	{
-		CLine::SLineData lineData = instance->GetLine()->GetLineData();
+		CLine::SLineData lineData = instance.GetLine()->GetLineData();
 
-		myObjectBufferData.myToWorld = instance->GetTransform();
+		myObjectBufferData.myToWorld = instance.GetTransform();
 
 		BindBuffer(myObjectBuffer, myObjectBufferData, "Object Buffer");
 

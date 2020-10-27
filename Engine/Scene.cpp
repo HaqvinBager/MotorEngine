@@ -12,6 +12,8 @@
 #include "LineInstance.h"
 #include "SpriteInstance.h"
 #include "Component.h"
+#include "Debug.h"
+
 
 CScene* CScene::ourInstance = nullptr;
 
@@ -108,9 +110,9 @@ std::vector<CVFXInstance*> CScene::CullVFX(CCamera* /*aMainCamera*/) {
 	return myVFXInstances;
 }
 
-std::vector<CLineInstance*> CScene::CullLines(CCamera* /*aMainCamera*/)
+const std::vector<CLineInstance>& CScene::CullLines(CCamera* /*aMainCamera*/) const
 {
-	return myLineInstances;
+	return CDebug::GetInstance()->GetLines();
 }
 
 std::vector<CSpriteInstance*> CScene::CullSprites(CCamera* /*aMainCamera*/)

@@ -13,6 +13,7 @@ class CRenderManager;
 class CParticleFactory;
 class CSpriteFactory;
 class CInputMapper;
+class CDebug;
 
 class CEngine
 {
@@ -40,6 +41,7 @@ private:
 	CRenderManager* myRenderManager;
 	CScene* myScene;
 	CTimer* myTimer;
+	CDebug* myDebug;
 
 	CModelFactory* myModelFactory;
 	CCameraFactory* myCameraFactory;

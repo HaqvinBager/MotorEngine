@@ -123,6 +123,7 @@
     <ClInclude Include="CapsuleColliderComponent.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="Debug.h" />
     <ClInclude Include="InGameState.h" />
     <ClInclude Include="InputMapper.h" />
     <ClInclude Include="InputObserver.h" />
@@ -187,6 +188,7 @@
     <ClCompile Include="CapsuleColliderComponent.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="Debug.cpp" />
     <ClCompile Include="InGameState.cpp" />
     <ClCompile Include="InputMapper.cpp" />
     <ClCompile Include="LoadLevelState.cpp" />

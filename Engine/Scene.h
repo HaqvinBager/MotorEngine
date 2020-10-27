@@ -26,7 +26,7 @@ public:
 	std::pair<unsigned int, std::array<CPointLight*, 8>> CullLights(CGameObject* aGameObject);
 	std::vector<CParticleInstance*> CullParticles(CCamera* aMainCamera);
 	std::vector<CVFXInstance*> CullVFX(CCamera* aMainCamera);
-	std::vector<CLineInstance*> CullLines(CCamera* aMainCamera);
+	const std::vector<CLineInstance>& CullLines(CCamera* aMainCamera) const;
 	std::vector<CSpriteInstance*> CullSprites(CCamera* aMainCamera);
 
 	bool AddInstance(CCamera* aCamera);

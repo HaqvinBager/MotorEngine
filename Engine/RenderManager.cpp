@@ -2,7 +2,7 @@
 #include "RenderManager.h"
 #include "DirectXFramework.h"
 #include "Scene.h"
-
+#include "LineInstance.h"
 
 CRenderManager::CRenderManager() : myScene(*CScene::GetInstance())
 {
@@ -88,7 +88,7 @@ void CRenderManager::Render()
 	}
 	myForwardRenderer.Render(environmentlight, pointlights, maincamera, gameObjects);
 
-	std::vector<CLineInstance*> lines = myScene.CullLines(maincamera);
+	const std::vector<CLineInstance>& lines = myScene.CullLines(maincamera);
 	myForwardRenderer.RenderLines(maincamera, lines);
 
 	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_ALPHABLEND);

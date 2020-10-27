@@ -10,6 +10,20 @@ public:
 	~CLineInstance();
 
 	void Init(CLine* aLine);
+
+	// Copy constructor.
+	CLineInstance(const CLineInstance& other)
+		: myLine(other.myLine)
+		, myTransform(other.myTransform)
+	{
+		//std::copy();
+	}
+
+	CLineInstance(CLineInstance&& other) noexcept : myLine(nullptr), myTransform() { 
+		myLine = other.myLine;
+		myTransform = other.myTransform;
+		other.myLine = nullptr;
+	}
 	
 	void SetTransform(const DirectX::SimpleMath::Vector3& aPosition, const DirectX::SimpleMath::Vector3& aRotation);
 	void SetPosition(const DirectX::SimpleMath::Vector3& aPosition);
@@ -19,8 +33,8 @@ public:
 	void Rotate(const DirectX::SimpleMath::Vector3& aRotation);
 	
 public:
-	CLine* GetLine(){ return myLine; }
-	DirectX::SimpleMath::Matrix GetTransform(){ return myTransform; }
+	const CLine* GetLine() const{ return myLine; }
+	const DirectX::SimpleMath::Matrix GetTransform() const { return myTransform; }
 
 private:
 	CLine*						myLine;
