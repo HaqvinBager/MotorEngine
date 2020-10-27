@@ -49,10 +49,28 @@ void CInputMapper::UpdateKeyboardInput()
 	}
 }
 
+void CInputMapper::UpdateMouseInput()
+{
+
+	if (myInput->IsMousePressed(CommonUtilities::Input::MouseButton::Left))
+	{
+		TranslateActionToEvent(CInputObserver::EInputAction::MouseLeft, 1.0f);
+	}
+	else if (myInput->IsMouseDown(CommonUtilities::Input::MouseButton::Left))
+	{
+		TranslateActionToEvent(CInputObserver::EInputAction::MouseLeft, 1.0f);
+	}
+	else if (myInput->IsMouseReleased(CommonUtilities::Input::MouseButton::Left))
+	{
+		TranslateActionToEvent(CInputObserver::EInputAction::MouseLeft, 1.0f);
+	}
+}
+
 void CInputMapper::Update()
 {
 	myInput->update();
 	UpdateKeyboardInput();
+	UpdateMouseInput();
 }
 
 void CInputMapper::MapEvent(const CInputObserver::EInputAction aInputEvent, const CInputObserver::EInputEvent aOutputEvent)

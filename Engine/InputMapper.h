@@ -23,6 +23,7 @@ private:
 	void RunEvent(const CInputObserver::EInputEvent aOutputEvent, const float aValue = 0);
 	void TranslateActionToEvent(const CInputObserver::EInputAction aAction, const float aValue = 0);
 	void UpdateKeyboardInput();
+	void UpdateMouseInput();
 
 	std::unordered_map<CInputObserver::EInputEvent, std::vector<CInputObserver*>> myObservers;
 	std::unordered_map<CInputObserver::EInputAction, CInputObserver::EInputEvent> myEvents;
