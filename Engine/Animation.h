@@ -7,6 +7,9 @@ class AnimationController;
 class CAnimation
 {
 public:
+	CAnimation() = default;
+	~CAnimation();
+
 	void Init(const char* aRig, std::vector<std::string>& somePathsToAnimations);
 
 	// ANIMATION STUFF

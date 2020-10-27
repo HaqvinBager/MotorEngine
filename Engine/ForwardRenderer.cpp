@@ -79,6 +79,9 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector
 		if (gameobject->GetComponent<CModelComponent>() == nullptr)
 			continue;
 
+		if (gameobject->GetComponent<CModelComponent>()->GetMyModel() == nullptr)
+			continue;
+
 		CModel* model = gameobject->GetComponent<CModelComponent>()->GetMyModel();
 
 		CModel::SModelData modelData = model->GetModelData();

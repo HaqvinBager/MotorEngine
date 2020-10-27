@@ -11,6 +11,7 @@ CGameObject::~CGameObject()
 {
 	for (size_t i = 0; i < myComponents.size(); ++i)
 	{
+		delete myComponents[i];
 		myComponents[i] = nullptr;
 	}
 	myComponents.clear();

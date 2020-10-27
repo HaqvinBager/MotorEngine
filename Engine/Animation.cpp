@@ -2,6 +2,14 @@
 #include "Animation.h"
 #include "AnimationController.h"
 
+
+CAnimation::~CAnimation()
+{
+	delete controller;
+	controller = nullptr;
+	myActiveAnimations.clear();
+}
+
 void CAnimation::Init(const char* aRig, std::vector<std::string>& somePathsToAnimations)
 {
 	controller = new AnimationController(aRig);
