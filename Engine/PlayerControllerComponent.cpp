@@ -31,7 +31,7 @@ void CPlayerControllerComponent::RecieveEvent(const CInputObserver::EInputEvent 
 	switch (aEvent)
 	{
 	case CInputObserver::EInputEvent::MoveClick:
-		std::cout << "Hejsan" << std::endl;
+		//std::cout << "Hejsan" << std::endl;
 		//DO STUFF
 		break;
 	case CInputObserver::EInputEvent::AttackClick:

@@ -65,6 +65,7 @@ void CLevelLoader::CreateLevel(const std::string& aPath)
 		CGameObject* gameObject = new CGameObject();
 		CTransformComponent* transform = gameObject->AddComponent<CTransformComponent>(*gameObject);
 		transform->Scale(object.myScaleX);
+		transform->Rotation({object.myRotX, object.myRotY, object.myRotZ});
 		transform->Position({ object.myPosX, object.myPosY, object.myPosZ });
 		gameObject->AddComponent<CModelComponent>(*gameObject, object.myRelativePath);
 

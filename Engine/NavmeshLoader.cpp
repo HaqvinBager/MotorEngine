@@ -35,7 +35,7 @@ SNavMesh* CNavmeshLoader::LoadNavmesh(std::string aFilepath)
 	SNavMesh* navMesh = new SNavMesh();
 	const struct aiScene* scene = NULL;
 
-	scene = aiImportFile(aFilepath.c_str(), aiProcess_ValidateDataStructure | aiProcess_MakeLeftHanded | aiProcess_FlipUVs | aiProcess_FlipWindingOrder | 0);
+	scene = aiImportFile(aFilepath.c_str(), aiProcess_ValidateDataStructure |/* aiProcess_MakeLeftHanded | aiProcess_FlipUVs | aiProcess_FlipWindingOrder |*/ 0);
 
 	if (!scene) {
 		ENGINE_ERROR_BOOL_MESSAGE(false, "Navmesh could not be loaded.")
