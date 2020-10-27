@@ -39,6 +39,8 @@ struct STriangle {
 
 struct SNavMesh {
 	std::vector<STriangle*> myTriangles;
+
+	STriangle* GetTriangleAtPoint(DirectX::SimpleMath::Vector3 aPosition);
 };
 
 class CNavmeshLoader
@@ -49,6 +51,7 @@ public:
 	bool Init();
 
 	SNavMesh* LoadNavmesh(std::string aFilepath);
+
 private:
 	void MakeTriangles(aiMesh* aMesh, SNavMesh* aNavMesh);
 	DirectX::SimpleMath::Vector3 GetCentroid(DirectX::SimpleMath::Vector3& aVectorOne, DirectX::SimpleMath::Vector3& aVectorTwo, DirectX::SimpleMath::Vector3& aVectorThree);

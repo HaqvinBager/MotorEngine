@@ -14,8 +14,8 @@ namespace CommonUtilities {
 		void Resort();
 
 	private:
-		void MoveUp(std::vector<T>& someData, size_t aChild);
-		void MoveDown(std::vector<T>& someData, size_t aFirst, size_t aLast);
+		void MoveUp(std::vector<T>& someData, int aChild);
+		void MoveDown(std::vector<T>& someData, int aFirst, int aLast);
 
 		compare myComparisonFunction;
 		std::vector<T> myData;
@@ -29,7 +29,7 @@ namespace CommonUtilities {
 	template <class T, class compare>
 	void CHeap<T, compare>::Enqueue(const T& anElement) {
 		myData.emplace_back(anElement);
-		MoveUp(myData, myData.size() - 1);
+		MoveUp(myData, static_cast<int>(myData.size()) - 1);
 	}
 
 	template <class T, class compare>
@@ -42,7 +42,7 @@ namespace CommonUtilities {
 		T largest = myData[0];
 		myData[0] = myData[myData.size() - 1];
 		myData.pop_back();
-		MoveDown(myData, 0, myData.size() - 1);
+		MoveDown(myData, 0, static_cast<int>(myData.size()) - 1);
 		return largest;
 	}
 
@@ -53,8 +53,8 @@ namespace CommonUtilities {
 	}
 
 	template <class T, class compare>
-	void CHeap<T, compare>::MoveUp(std::vector<T>& someData, size_t aChild) {
-		size_t parent = (aChild - 1) / 2; // Parent of a node has index n-1 / 2
+	void CHeap<T, compare>::MoveUp(std::vector<T>& someData, int aChild) {
+		int parent = (aChild - 1) / 2; // Parent of a node has index n-1 / 2
 		while (aChild != 0 && myComparisonFunction(someData[aChild], someData[parent])) { // If child value is greater than parent, swap
 			std::swap(someData[aChild], someData[parent]);
 			aChild = parent;   // Move up
@@ -63,8 +63,8 @@ namespace CommonUtilities {
 	}
 
 	template <class T, class compare>
-	void CHeap<T, compare>::MoveDown(std::vector<T>& someData, size_t aFirst, size_t aLast) {
-		size_t largestChild = 2 * aFirst + 1; // Children of a node have indeces 2*n + 1 and 2*n + 2
+	void CHeap<T, compare>::MoveDown(std::vector<T>& someData, int aFirst, int aLast) {
+		int largestChild = 2 * aFirst + 1; // Children of a node have indeces 2*n + 1 and 2*n + 2
 		while (largestChild <= aLast) {
 			if (largestChild < aLast && myComparisonFunction(someData[largestChild + 1], someData[largestChild])) {
 				largestChild++;           // If left child not last element and value is smaller than right child, choose right child

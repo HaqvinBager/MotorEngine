@@ -5,7 +5,7 @@
 class CAStar {
 
 public:
-	std::vector<DirectX::SimpleMath::Vector3> AStar(
+	static std::vector<DirectX::SimpleMath::Vector3> AStar(
 		SNavMesh* aNavmesh, STriangle* aStartTriangle, STriangle* anEndTriangle
 	);
 

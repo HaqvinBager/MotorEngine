@@ -102,3 +102,15 @@ bool CNavmeshLoader::AreNeighbors(UINT* someIndices, UINT* someOtherIndices)
 
 	return counter >= 2;
 }
+
+STriangle* SNavMesh::GetTriangleAtPoint(DirectX::SimpleMath::Vector3 aPosition)
+{
+	float dist = FLT_MAX;
+	STriangle* closestTriangle = nullptr;
+	for (auto& tri : myTriangles) {
+		if (DirectX::SimpleMath::Vector3::DistanceSquared(aPosition, tri->myCenterPosition) < dist) {
+			closestTriangle = tri;
+		}
+	}
+	return closestTriangle;
+}
