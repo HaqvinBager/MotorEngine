@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "ForwardRenderer.h"
 #include "Engine.h"
-#include "ModelInstance.h"
 #include "Model.h"
 #include "Camera.h"
 #include "EnvironmentLight.h"
@@ -56,7 +55,7 @@ bool CForwardRenderer::Init(CDirectXFramework* aFramework) {
 	return true;
 }
 
-void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> aModelPointLightList, CCamera* aCamera, std::vector<CModelInstance*>& aModelList, std::vector<CGameObject*>& aGameObjectList)
+void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> aModelPointLightList, CCamera* aCamera, std::vector<CGameObject*>& aGameObjectList)
 {
 	myFrameBufferData.myToCamera = aCamera->GetTransform().Invert();
 	myFrameBufferData.myToProjection = aCamera->GetProjection();
@@ -80,7 +79,7 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector
 		if (gameobject->GetComponent<CModelComponent>() == nullptr)
 			continue;
 
-		CModel* model = gameobject->GetComponent<CModelComponent>()->GetMyModel()->GetModel();
+		CModel* model = gameobject->GetComponent<CModelComponent>()->GetMyModel();
 
 		CModel::SModelData modelData = model->GetModelData();
 
@@ -114,7 +113,7 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector
 	}
 	// MODELCOMPONENT END
 
-	int modelIndex = 0;
+	/*int modelIndex = 0;
 	for (CModelInstance* instance : aModelList) {
 		CModel* model = instance->GetModel();
 		CModel::SModelData modelData = model->GetModelData();
@@ -152,7 +151,7 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector
 		myContext->PSSetShader(modelData.myPixelShader, nullptr, 0);
 
 		myContext->DrawIndexed(modelData.myNumberOfIndicies, 0, 0);
-	}
+	}*/
 }
 
 void CForwardRenderer::RenderLines(CCamera* aCamera, std::vector<CLineInstance*>& aLineList) {

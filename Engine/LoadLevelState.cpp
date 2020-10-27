@@ -19,12 +19,10 @@ CLoadLevelState::CLoadLevelState(CStateStack& aStateStack) : CState(aStateStack)
 
 }
 
-CLoadLevelState::~CLoadLevelState()
-{
+CLoadLevelState::~CLoadLevelState() {
 }
 
-void CLoadLevelState::Awake()
-{
+void CLoadLevelState::Awake() {
 	//Push Load Level State for Level (Saved somewhere)
 	CLevelLoader levelLoader;// = //std::make_unique<CLevelLoader>();
 	levelLoader.Init();
@@ -32,10 +30,7 @@ void CLoadLevelState::Awake()
 
 	CGameObject* player = new CGameObject();
 	player->AddComponent<CTransformComponent>(*player);
-	auto model = player->AddComponent<CModelComponent>(*player);
-
-	CModel* playerModel = CModelFactory::GetInstance()->GetModelPBR("Assets/3D/Character/MainCharacter/CH_PL_Daughter_01_19G4_1_19.fbx");
-	model->SetMyModel(playerModel);
+	player->AddComponent<CModelComponent>(*player, "Assets/3D/Character/MainCharacter/CH_PL_Daughter_01_19G4_1_19.fbx" );
 
 	CCamera* camera = CCameraFactory::GetInstance()->CreateCamera(65.0f);
 
@@ -57,6 +52,4 @@ void CLoadLevelState::Start() {
 	myStateStack.Start();
 }
 
-void CLoadLevelState::Update()
-{
-}
+void CLoadLevelState::Update() { }

@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 
-class CModelInstance;
+class CModelComponent;
 class CCamera;
 class CEnvironmentLight;
 class CGameObject;
@@ -22,15 +22,13 @@ public:
 	void SetMainCamera(CCamera* aCamera);
 	CCamera* GetMainCamera();
 	CEnvironmentLight* GetEnvironmentLight();
-	std::vector<CModelInstance*> CullModels(CCamera* aMainCamera);
 	std::vector<CGameObject*> CullGameObjects(CCamera* aMainCamera);
-	std::pair<unsigned int, std::array<CPointLight*, 8>> CullLights(CModelInstance* aModelInstance);
+	std::pair<unsigned int, std::array<CPointLight*, 8>> CullLights(CGameObject* aGameObject);
 	std::vector<CParticleInstance*> CullParticles(CCamera* aMainCamera);
 	std::vector<CVFXInstance*> CullVFX(CCamera* aMainCamera);
 	std::vector<CLineInstance*> CullLines(CCamera* aMainCamera);
 	std::vector<CSpriteInstance*> CullSprites(CCamera* aMainCamera);
 
-	bool AddInstance(CModelInstance* aModel);
 	bool AddInstance(CCamera* aCamera);
 	bool AddInstance(CEnvironmentLight* anEnvironmentLight);
 	bool AddInstance(CPointLight* aPointLight);
@@ -40,21 +38,19 @@ public:
 	bool AddInstance(CLineInstance* aLineInstance);
 	bool AddInstance(CSpriteInstance* aSprite);
 
-	bool ClearInstances();
-
-private:
-
+	bool ClearScene();
 private:
 	CScene();
 	~CScene();
 
 private:
+	std::vector<CGameObject*> myGameObjects;
 	CCamera* myMainCamera;
+
+	//Ev Remove
 	std::vector<CCamera*> myCameras;
-	std::vector<CModelInstance*> myModelInstances;
 	std::vector<CEnvironmentLight*> myEnvironmentLights;
 	std::vector<CPointLight*> myPointLights;
-	std::vector<CGameObject*> myGameObjects;
 	std::vector<CParticleInstance*> myParticles;
 	std::vector<CVFXInstance*> myVFXInstances;
 	std::vector<CLineInstance*> myLineInstances;

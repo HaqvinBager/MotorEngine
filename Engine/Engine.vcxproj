@@ -148,7 +148,6 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelComponent.h" />
     <ClInclude Include="ModelFactory.h" />
-    <ClInclude Include="ModelInstance.h" />
     <ClInclude Include="ModelMath.h" />
     <ClInclude Include="MouseTracker.h" />
     <ClInclude Include="NavmeshLoader.h" />
@@ -207,7 +206,6 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelComponent.cpp" />
     <ClCompile Include="ModelFactory.cpp" />
-    <ClCompile Include="ModelInstance.cpp" />
     <ClCompile Include="NavmeshLoader.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="ParticleFactory.cpp" />

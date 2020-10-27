@@ -79,14 +79,14 @@ void CRenderManager::Render()
 
 	CEnvironmentLight* environmentlight = myScene.GetEnvironmentLight();
 	CCamera* maincamera = myScene.GetMainCamera();
-	std::vector<CModelInstance*> modelsToRender = myScene.CullModels(maincamera);
+	//std::vector<CModelComponent*> modelsToRender = myScene.CullGameObjects(maincamera);
+	std::vector<CGameObject*> gameObjects = myScene.CullGameObjects(maincamera);
 	std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> pointlights;
-	for (CModelInstance* instance : modelsToRender)
+	for (CGameObject* instance : gameObjects)
 	{
 		pointlights.push_back(myScene.CullLights(instance));
 	}
-	std::vector<CGameObject*> gameObjects = myScene.CullGameObjects(maincamera);
-	myForwardRenderer.Render(environmentlight, pointlights, maincamera, modelsToRender, gameObjects);
+	myForwardRenderer.Render(environmentlight, pointlights, maincamera, gameObjects);
 
 	std::vector<CLineInstance*> lines = myScene.CullLines(maincamera);
 	myForwardRenderer.RenderLines(maincamera, lines);

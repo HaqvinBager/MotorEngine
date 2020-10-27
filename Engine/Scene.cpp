@@ -1,8 +1,7 @@
 #include "stdafx.h"
 #include "Scene.h"
-#include "ModelInstance.h"
 #include "EnvironmentLight.h"
-#include "ModelInstance.h"
+#include "ModelComponent.h"
 #include "GameObject.h"
 #include "TransformComponent.h"
 #include "Camera.h"
@@ -12,6 +11,7 @@
 #include "VFXInstance.h"
 #include "LineInstance.h"
 #include "SpriteInstance.h"
+#include "Component.h"
 
 CScene* CScene::ourInstance = nullptr;
 
@@ -57,22 +57,6 @@ CEnvironmentLight* CScene::GetEnvironmentLight()
 	return myEnvironmentLights[0];
 }
 
-std::vector<CModelInstance*> CScene::CullModels(CCamera* aMainCamera)
-{
-	using namespace DirectX::SimpleMath;
-	Vector3 cameraPosition = aMainCamera->GetTransform().Translation();
-	std::vector<CModelInstance*> culledModelInstances;
-	for (auto& gameObject : myModelInstances)
-	{
-		float distanceToCameraSquared = Vector3::DistanceSquared(gameObject->GetTransform().Translation(), cameraPosition);
-		if (distanceToCameraSquared < 1500.0f)
-		{
-			culledModelInstances.emplace_back(gameObject);
-		}
-	}
-	return culledModelInstances;
-}
-
 std::vector<CGameObject*> CScene::CullGameObjects(CCamera* aMainCamera)
 {
 	using namespace DirectX::SimpleMath;
@@ -89,12 +73,12 @@ std::vector<CGameObject*> CScene::CullGameObjects(CCamera* aMainCamera)
 	return culledGameObjects;
 }
 
-std::pair<unsigned int, std::array<CPointLight*, 8>> CScene::CullLights(CModelInstance* aModelInstance) {
+std::pair<unsigned int, std::array<CPointLight*, 8>> CScene::CullLights(CGameObject* aGameObject) {
 	std::pair<unsigned int, std::array<CPointLight*, 8>> pointLightPair;
 	UINT counter = 0;
 
 	for (UINT i = 0; i < myPointLights.size() && counter < 8; ++i) {
-		float distanceSquared = DirectX::SimpleMath::Vector3::DistanceSquared(myPointLights[i]->GetPosition(), aModelInstance->GetTransform().Translation());
+		float distanceSquared = DirectX::SimpleMath::Vector3::DistanceSquared(myPointLights[i]->GetPosition(), aGameObject->GetComponent<CTransformComponent>()->Transform().Translation());
 		float range = myPointLights[i]->GetRange();
 		if (distanceSquared < (range * range)) {
 			pointLightPair.second[counter] = myPointLights[i];
@@ -134,13 +118,6 @@ std::vector<CSpriteInstance*> CScene::CullSprites(CCamera* /*aMainCamera*/)
 	return mySprites;
 }
 
-
-bool CScene::AddInstance(CModelInstance* aModel)
-{
-	myModelInstances.emplace_back(aModel);
-	return true;
-}
-
 bool CScene::AddInstance(CCamera* aCamera)
 {
 	myCameras.emplace_back(aCamera);
@@ -175,14 +152,12 @@ bool CScene::AddInstance(CVFXInstance* aVFXInstance) {
 	return true;
 }
 
-bool CScene::AddInstance(CLineInstance* aLineInstance)
-{
+bool CScene::AddInstance(CLineInstance* aLineInstance) {
 	myLineInstances.emplace_back(aLineInstance);
 	return true;
 }
 
-bool CScene::AddInstance(CSpriteInstance* aSprite)
-{
+bool CScene::AddInstance(CSpriteInstance* aSprite) {
 	if (!aSprite) {
 		return false;
 	}
@@ -190,12 +165,12 @@ bool CScene::AddInstance(CSpriteInstance* aSprite)
 	return true;
 }
 
-bool CScene::ClearInstances()
-{
-	for (auto models : myModelInstances) {
-		delete models;
-		models = nullptr;
+bool CScene::ClearScene() {
+
+	for (auto gameObject : myGameObjects) {
+		delete gameObject;
+		gameObject = nullptr;
 	}
-	myModelInstances.clear();
+	myGameObjects.clear();
 	return true;
 }

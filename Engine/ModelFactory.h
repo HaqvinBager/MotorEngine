@@ -21,8 +21,6 @@ public:
 	CModel* LoadModel(std::string aFilePath);
 	CModel* GetCube();
 
-	CModelInstance* CreateModel(std::string aModelName, DirectX::SimpleMath::Vector3 aScale = { 0.1f, 0.1f, 0.1f });
-
 private:
 	CModelFactory();
 	~CModelFactory();

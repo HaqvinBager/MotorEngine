@@ -72,9 +72,6 @@
     <ClInclude Include="Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ModelInstance.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CameraFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -252,9 +249,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ModelFactory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelInstance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">

@@ -4,7 +4,6 @@
 #include "GameObject.h"
 #include "ModelComponent.h"
 #include "Model.h"
-#include "ModelInstance.h"
 #include "Animation.h"
 #include "Timer.h"
 
@@ -28,7 +27,7 @@ void CAnimationComponent::Start()
 void CAnimationComponent::Update()
 {
 	float dt = CTimer::Dt();
-	for (CAnimation* anim : GetParent().GetComponent<CModelComponent>()->GetMyModel()->GetModel()->GetAnimations())
+	for (CAnimation* anim : GetParent().GetComponent<CModelComponent>()->GetMyModel()->GetAnimations())
 	{
 		anim->Step(dt);
 	}
@@ -44,7 +43,7 @@ void CAnimationComponent::Update()
 void CAnimationComponent::GetAnimatedTransforms(float dt, SlimMatrix44 * transforms)
 {
 	dt;
-	CModel* model = GetParent().GetComponent<CModelComponent>()->GetMyModel()->GetModel();
+	CModel* model = GetParent().GetComponent<CModelComponent>()->GetMyModel();
 	if(model->GetAnimations().size() > 0)
 	{
 		CAnimation* first = model->GetAnimations()[0];

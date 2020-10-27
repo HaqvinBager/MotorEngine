@@ -3,7 +3,6 @@
 #include "CUnityLoader.h"
 #include "Scene.h"
 #include "ModelFactory.h"
-#include "ModelInstance.h"
 #include "Camera.h"
 #include "CameraFactory.h"
 #include "CapsuleColliderComponent.h"
@@ -67,8 +66,7 @@ void CLevelLoader::CreateLevel(const std::string& aPath)
 		CTransformComponent* transform = gameObject->AddComponent<CTransformComponent>(*gameObject);
 		transform->Scale(object.myScaleX);
 		transform->Position({ object.myPosX, object.myPosY, object.myPosZ });
-		CModelComponent* model = gameObject->AddComponent<CModelComponent>(*gameObject);
-		model->SetMyModel(CModelFactory::GetInstance()->GetModelPBR(object.myRelativePath));
+		gameObject->AddComponent<CModelComponent>(*gameObject, object.myRelativePath);
 
 		//if (object.myColliderHeight > 0.0f)
 		//{
@@ -84,7 +82,7 @@ void CLevelLoader::CreateLevel(const std::string& aPath)
 void CLevelLoader::LoadNewLevel(const std::string& aPath)
 {
 	if (objectData.size() > 0) {
-		myScene->ClearInstances();
+		myScene->ClearScene();
 		objectData.clear();
 	}
 	CreateLevel(aPath);

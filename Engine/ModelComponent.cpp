@@ -1,17 +1,17 @@
 #include "stdafx.h"
 #include "ModelComponent.h"
-#include "ModelInstance.h"
+#include "ModelFactory.h"
 #include "GameObject.h"
 #include "Model.h"
 
-CModelComponent::CModelComponent(CGameObject& aParent) : CComponent(aParent), myModelInstance(new CModelInstance())
-{
-	
+CModelComponent::CModelComponent(CGameObject& aParent, std::string aFBXPath) : CComponent(aParent) {
+	myModel = CModelFactory::GetInstance()->GetModelPBR(aFBXPath);
+
 }
 
 CModelComponent::~CModelComponent()
 {
-	myModelInstance = nullptr;
+
 }
 
 void CModelComponent::Awake()
@@ -26,13 +26,7 @@ void CModelComponent::Update()
 {
 }
 
-
-void CModelComponent::SetMyModel(CModel* aModel)
+CModel* CModelComponent::GetMyModel() const
 {
-	myModelInstance->Init(aModel);
-}
-
-CModelInstance* CModelComponent::GetMyModel() const
-{
-	return myModelInstance;
+	return myModel;
 }

@@ -21,20 +21,40 @@ class CModel;
 class CModelComponent : public CComponent 
 {
 public:
-	CModelComponent(CGameObject& aParent);
+	CModelComponent(CGameObject& aParent, std::string aFBXPath);
 	~CModelComponent() override;
-
 
 	void Awake() override;
 	void Start() override;
 	void Update() override;
 
-	void SetMyModel(CModel* aModel);
-
-
-	CModelInstance* GetMyModel() const;
+	CModel *GetMyModel() const;
 
 private:
-	CModelInstance* myModelInstance;
 
+	CModel* myModel;
 };
+
+
+//public:
+//	CModel* GetModel() { return myModel; }
+//	// Temp
+//	CModel* SetModel(CModel* aModel)
+//	{
+//		CModel* oldModel = myModel;
+//		myModel = aModel;
+//		return oldModel;
+//	}
+//	// !Temp
+//	DirectX::SimpleMath::Matrix GetTransform() { return myTransform; };
+//	DirectX::SimpleMath::Vector2 GetUVOffset() { return myUVOffset; };
+//	void SetUVOffset(DirectX::SimpleMath::Vector2 aUVOffset) { myUVOffset = aUVOffset; };
+//
+//private:
+//	CModel* myModel;
+//	DirectX::SimpleMath::Matrix myTransform;
+//	DirectX::SimpleMath::Vector2 myUVOffset;
+//	DirectX::SimpleMath::Vector3 myScale;
+//	std::array<SlimMatrix44, 64> myBones{ };
+//  SModelInstanceAnimationBlend myBlend;
+//};
