@@ -42,6 +42,7 @@ bool CDirectXFramework::Init(CWindowHandler* aWindowHandler)
 		return false;
 	}
 
+#if _DEBUG
 	DXGI_SWAP_CHAIN_DESC swapchainDesc = {};
 	swapchainDesc.BufferCount = 1;
 	swapchainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -62,6 +63,29 @@ bool CDirectXFramework::Init(CWindowHandler* aWindowHandler)
 		&myDevice,
 		nullptr,
 		&myContext), "Failed to created Device and Swap Chain.");
+#else
+	DXGI_SWAP_CHAIN_DESC swapchainDesc = {};
+	swapchainDesc.BufferCount = 1;
+	swapchainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	swapchainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	swapchainDesc.OutputWindow = aWindowHandler->GetWindowHandle();
+	swapchainDesc.SampleDesc.Count = 1;
+	swapchainDesc.Windowed = true;
+	ENGINE_HR_MESSAGE(D3D11CreateDeviceAndSwapChain(
+		nullptr,
+		D3D_DRIVER_TYPE_HARDWARE,
+		nullptr,
+		0,
+		nullptr,
+		0,
+		D3D11_SDK_VERSION,
+		&swapchainDesc,
+		&mySwapChain,
+		&myDevice,
+		nullptr,
+		&myContext), "Failed to created Device and Swap Chain.");
+#endif
+	
 
 	//ID3D11Texture2D* backbufferTexture;
 	//ENGINE_HR_MESSAGE(mySwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backbufferTexture), "Failed to Get Buffer");
