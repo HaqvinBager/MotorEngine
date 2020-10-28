@@ -66,9 +66,9 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::AStar(SNavMesh* aNavmesh, STri
 	}
 
 	// Checks if the end index was found
-	//if (anEndTriangle.myG >= triangles.size()) {
-	//	return std::vector<int>();
-	//}
+	if (anEndTriangle->myG >= triangles.size()) {
+		return std::vector<DirectX::SimpleMath::Vector3>();
+	}
 
 	std::vector<DirectX::SimpleMath::Vector3> pathCentroids;
 	STriangle* iteratorTriangle = anEndTriangle;
@@ -80,6 +80,6 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::AStar(SNavMesh* aNavmesh, STri
 		pathCentroids.emplace_back((*it)->myCenterPosition);
 	}
 
-	std::reverse(pathCentroids.begin(), pathCentroids.end());
+	//std::reverse(pathCentroids.begin(), pathCentroids.end());
 	return pathCentroids;
 }

@@ -32,8 +32,15 @@ public:
 
 	void Move(DirectX::SimpleMath::Vector3 aMovement);
 	void Rotate(DirectX::SimpleMath::Vector3 aRotation);
+	
+	void MoveAlongPath();
+	void SetPath(std::vector<DirectX::SimpleMath::Vector3>& aPath, DirectX::SimpleMath::Vector3 aFinalPosition);
+	void ClearPath();
 
 private:
 	float myScale;
+	// TODO: Move speed into "Resource Component"
+	float myMoveSpeed;
 	DirectX::SimpleMath::Matrix myTransform;
+	std::vector<DirectX::SimpleMath::Vector3> myPath;
 };

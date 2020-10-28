@@ -5,7 +5,7 @@
 #define ENGINE_SCALE 0.01f
 using namespace DirectX::SimpleMath;
 
-CTransformComponent::CTransformComponent(CGameObject& aParent, DirectX::SimpleMath::Vector3 aPosition) : myScale(ENGINE_SCALE), CComponent(aParent)
+CTransformComponent::CTransformComponent(CGameObject& aParent, DirectX::SimpleMath::Vector3 aPosition) : myScale(ENGINE_SCALE), CComponent(aParent), myMoveSpeed(3.0f)
 {
 	Position(aPosition);
 }
@@ -74,9 +74,10 @@ DirectX::SimpleMath::Matrix& CTransformComponent::Transform()
 
 void CTransformComponent::Move(DirectX::SimpleMath::Vector3 aMovement)
 {
-	myTransform.Translation(myTransform.Translation() + myTransform.Right() * aMovement.x);
-	myTransform.Translation(myTransform.Translation() + myTransform.Up() * aMovement.y);
-	myTransform.Translation(myTransform.Translation() - myTransform.Forward() * aMovement.z);
+	//myTransform.Translation(myTransform.Translation() + myTransform.Right() * aMovement.x);
+	//myTransform.Translation(myTransform.Translation() + myTransform.Up() * aMovement.y);
+	//myTransform.Translation(myTransform.Translation() - myTransform.Forward() * aMovement.z);
+	myTransform.Translation(myTransform.Translation() + aMovement);
 }
 
 void CTransformComponent::Rotate(DirectX::SimpleMath::Vector3 aRotation)
@@ -97,4 +98,51 @@ void CTransformComponent::Rotate(DirectX::SimpleMath::Vector3 aRotation)
 	//
 	//myTransform = tempRotation;
 	//myTransform.Translation(tempTranslation);
+}
+
+void CTransformComponent::MoveAlongPath()
+{
+	// Astar returns backwards path. Because we cannot swap path nodes, 
+	// we go from the back to the front in the path.
+	size_t pathSize = myPath.size();
+	if (pathSize > 0) {
+
+		DirectX::SimpleMath::Vector3 newPos;
+		DirectX::SimpleMath::Vector3 dir;
+
+		float epsilon = 0.005f;
+
+		//if (pathSize > 1) {
+			dir = (myPath[pathSize - 1] - this->Position());
+			dir.Normalize();
+			this->Move(dir * myMoveSpeed * CTimer::Dt());
+			
+			if (DirectX::SimpleMath::Vector3::DistanceSquared(this->Position(), myPath[pathSize - 1]) < epsilon) {
+				myPath.pop_back();
+			}
+		//}
+		//else if (myPath.size() == 1) {
+		//	dir = myPath[0] - this->Position();
+		//	dir.Normalize();
+		//	this->Move(dir * myMoveSpeed * CTimer::Dt());
+
+		//	if (DirectX::SimpleMath::Vector3::DistanceSquared(this->Position(), myPath[0]) < epsilon) {
+		//		myPath.pop_back();
+		//	}
+		//}
+	}
+}
+
+void CTransformComponent::SetPath(std::vector<DirectX::SimpleMath::Vector3>& aPath, DirectX::SimpleMath::Vector3 aFinalPosition)
+{
+	myPath.emplace_back(aFinalPosition);
+	for (unsigned int i = 0; i < aPath.size(); ++i) {
+		myPath.emplace_back(aPath[i]);
+	}
+	//myPath.emplace_back(this->Position());
+}
+
+void CTransformComponent::ClearPath()
+{
+	myPath.clear();
 }
