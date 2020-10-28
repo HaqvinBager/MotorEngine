@@ -16,11 +16,12 @@
 #pragma comment(lib, "ModelLoader_Release.lib")
 #endif
 
+#define TRIMSHEET_STRING "ts_"
 #define NUM_TRIM_SHEETS 2
-#define TRIMSHEET_1 "ts_1_Dungeon"
-#define TRIMSHEET_2 "ts_2_Ungeon"
+#define TRIMSHEET_1 ""
+#define TRIMSHEET_2 ""
 //#define TRIMSHEET_PATH "Model\\Trimsheet_test\\Trimsheets\\"		// group 3 ...? is it Assets/ now?
-#define TRIMSHEET_PATH "Assets\\3D\\Trimsheet_test\\Trimsheets\\"	// group 4
+#define TRIMSHEET_PATH "Assets\\3D\\Trimsheets\\"	// group 4
 
 
 CModelFactory* CModelFactory::ourInstance = nullptr;
@@ -164,15 +165,19 @@ CModel* CModelFactory::LoadModelPBR(std::string aFilePath)
 	//trimsheets.emplace(static_cast<int>('2'), "ts_2_Something");
 
 	// Check if model uses trimsheet.
-	std::string suffix = aFilePath.substr(aFilePath.length() - 8, aFilePath.length() - 5);
-													// Info:
-	int suffixNr	= static_cast<int>(suffix[3]);	// std::string suffix = "ts_1". "ts_#" ; # = an integer
-	suffixNr		= abs(49 - suffixNr);			// 49 == static_cast<int>('1'). The ASCII value of '1' is 49. '1' == 49, '2' == 50, '9' == 58 => 49 - (int)'2' = -1 and 49 - '3' = -2
-	if (suffixNr >= 0/*static_cast<int>(MIN_NUM_TRIMSHEETS_CHAR)*/ && suffixNr <= NUM_TRIM_SHEETS/*static_cast<int>(MAX_NUM_TRIMSHEETS_CHAR)*/)
+	// suffix ts_#
+	std::string suffix = aFilePath.substr(aFilePath.length() - 8, 4);
+	if (suffix.substr(0, 3) == TRIMSHEET_STRING)
 	{
-		std::array<std::string, NUM_TRIM_SHEETS> trimsheets = { TRIMSHEET_1, TRIMSHEET_2 };
-		modelDirectoryAndName = TRIMSHEET_PATH + trimsheets[suffixNr];
-	}
+														// Info
+		int suffixNr	= static_cast<int>(suffix[3]);	// std::string suffix = "ts_1". "ts_#" ; # = an integer
+		suffixNr		= abs(49 - suffixNr);			// 49 == static_cast<int>('1'). The ASCII value of '1' is 49. '1' == 49, '2' == 50, '9' == 58 => 49 - (int)'2' = -1 and 49 - '3' = -2
+		if (suffixNr >= 0/*static_cast<int>(MIN_NUM_TRIMSHEETS_CHAR)*/ && suffixNr <= NUM_TRIM_SHEETS/*static_cast<int>(MAX_NUM_TRIMSHEETS_CHAR)*/)
+		{
+			std::array<std::string, NUM_TRIM_SHEETS> trimsheets = { TRIMSHEET_1, TRIMSHEET_2 };
+			modelDirectoryAndName = TRIMSHEET_PATH + trimsheets[suffixNr];
+		}
+	}											
 	// ! Check if model uses trimsheet
 
 	ID3D11ShaderResourceView* diffuseResourceView = GetShaderResourceView(device, /*TexturePathWide*/(modelDirectoryAndName + "_D.dds"));
