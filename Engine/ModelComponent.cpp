@@ -26,6 +26,11 @@ void CModelComponent::Update()
 {
 }
 
+void CModelComponent::SetModel(const std::string& aFBXPath)
+{
+	myModel = CModelFactory::GetInstance()->GetModelPBR(aFBXPath);
+}
+
 CModel* CModelComponent::GetMyModel() const
 {
 	return myModel;

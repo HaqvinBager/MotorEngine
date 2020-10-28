@@ -9,7 +9,11 @@
 #include "../Engine/Model.h"
 //#include "Model.h"// Reminder. Gives directX Model.h not Engine Model.h
 #include <ModelFactory.h>
-#include <ModelInstance.h>
+
+#include <GameObject.h>
+#include <TransformComponent.h>
+#include <ModelComponent.h>
+
 #include <LightFactory.h>
 #include <EnvironmentLight.h>
 #include <Line.h>
@@ -212,7 +216,7 @@ void LoadModelPaths(const std::string& aStartFolderPath, std::vector<std::string
 	}
 }
 
-CModelInstance* InitModels(const std::string& aModelPath/*, CCamera* aCamera*/)
+CGameObject* InitModels(const std::string& aModelPath/*, CCamera* aCamera*/)
 {
 	CScene* scene = CScene::GetInstance();
 
@@ -229,13 +233,15 @@ CModelInstance* InitModels(const std::string& aModelPath/*, CCamera* aCamera*/)
 
 	scene->AddInstance(environmentLight);
 
-	CModelInstance* model = CModelFactory::GetInstance()->CreateModel(aModelPath, { 1.0f, 1.0f, 1.0f });
-	//CModelInstance* model = CModelFactory::GetInstance()->CreateModel("Model/Chest/Particle_Chest.fbx", { 1.0f, 1.0f, 1.0f });
-	model->SetPosition({ 0.0f, 0.0f, .0f });
+	CGameObject* gameobject = new CGameObject();
 
-	scene->AddInstance(model);
+	gameobject->AddComponent<CModelComponent>(CModelComponent(*gameobject, aModelPath));
+	gameobject->AddComponent<CTransformComponent>(CTransformComponent(*gameobject, { 0.0f, 0.0f, 0.0f }));
+	gameobject->GetComponent<CTransformComponent>()->Scale(1.0f);
+	
+	scene->AddInstance(gameobject);
 
-	return model;	
+	return gameobject;
 }
 
 // Reminder: Vem tar hand om delete av CModel? CModelFactory verkar inte ta hand om det och inte CModelInstace?
@@ -271,7 +277,7 @@ std::string CheckForGroupNumber(short& aNumber)
 	return std::move(path);
 }
 
-void Update(std::vector<std::string>& aModelFilePathList, CModelInstance* aCurrentModelInstance/*,CCamera* aCamera*/)
+void Update(std::vector<std::string>& aModelFilePathList, CGameObject* aCurrentGameObject/*,CCamera* aCamera*/)
 {
 	// Rotation functions
 	float rotationSpeed = 1.0f;
@@ -279,72 +285,72 @@ void Update(std::vector<std::string>& aModelFilePathList, CModelInstance* aCurre
 	// X axis
 	if (Input::GetInstance()->IsKeyDown('R'))
 	{
-		aCurrentModelInstance->Rotate({ rotationSpeed * dt,0.0f,0.0f });
+		aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ rotationSpeed * dt,0.0f,0.0f });
 	}
 
 	if (Input::GetInstance()->IsKeyDown('F'))
 	{
-		aCurrentModelInstance->Rotate({ -rotationSpeed * dt,0.0f,0.0f });
+		aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ -rotationSpeed * dt,0.0f,0.0f });
 	}
 
 	// Y axis
 	if (Input::GetInstance()->IsKeyDown('T'))
 	{
-		aCurrentModelInstance->Rotate({ 0.0f, rotationSpeed * dt,0.0f });
+		aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ 0.0f, rotationSpeed * dt,0.0f });
 	}
 
 	if (Input::GetInstance()->IsKeyDown('G'))
 	{
-		aCurrentModelInstance->Rotate({ 0.0f, -rotationSpeed * dt,0.0f });
+		aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ 0.0f, -rotationSpeed * dt,0.0f });
 	}
 
 	// Z axis
 	if (Input::GetInstance()->IsKeyDown('Y'))
 	{
-		aCurrentModelInstance->Rotate({ 0.0f,0.0f,rotationSpeed * dt });
+		aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ 0.0f,0.0f,rotationSpeed * dt });
 	}
 	if (Input::GetInstance()->IsKeyDown('H'))
 	{
-		aCurrentModelInstance->Rotate({ 0.0f,0.0f,-rotationSpeed * dt });
+		aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ 0.0f,0.0f,-rotationSpeed * dt });
 	}
 
 	// ! Rotation Functions 
 
 	// Zoom/ move Camera functions
-	float moveSpeed = 50.0f;
+	float moveSpeed = 5.0f;
 	// X axis
 
 	if (Input::GetInstance()->IsKeyDown('A'))
 	{
-		aCurrentModelInstance->Move({ moveSpeed * dt, 0.0f, 0.0f });
+		aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ moveSpeed * dt, 0.0f, 0.0f });
 	}
 
 	if (Input::GetInstance()->IsKeyDown('D'))
 	{
-		aCurrentModelInstance->Move({ -moveSpeed * dt, 0.0f, 0.0f });
+		aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ -moveSpeed * dt, 0.0f, 0.0f });
 	}
 
 	// Y axis
 	if (Input::GetInstance()->IsKeyDown('Q'))
 	{
-		aCurrentModelInstance->Move({ 0.0f, moveSpeed * dt, 0.0f });
+		aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ 0.0f, moveSpeed * dt, 0.0f });
 	}
 
 	if (Input::GetInstance()->IsKeyDown('E'))
 	{
-		aCurrentModelInstance->Move({ 0.0f, -moveSpeed * dt, 0.0f });
+		aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ 0.0f, -moveSpeed * dt, 0.0f });
 	}
 
 	// Z axis
 
 	if (Input::GetInstance()->IsKeyDown('W'))
 	{
-		aCurrentModelInstance->Move({ 0.0f, 0.0f, -moveSpeed * dt });
+		aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ 0.0f, 0.0f, -moveSpeed * dt });
 	}
 
 	if (Input::GetInstance()->IsKeyDown('S'))
 	{
-		aCurrentModelInstance->Move({ 0.0f, 0.0f, moveSpeed * dt });
+		aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ 0.0f, 0.0f, moveSpeed * dt });
 	}
 	// ! Zoom/ move functions
 
@@ -352,7 +358,7 @@ void Update(std::vector<std::string>& aModelFilePathList, CModelInstance* aCurre
 
 	if (Input::GetInstance()->IsKeyDown('K'))
 	{
-		aCurrentModelInstance->SetTransform({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
+		aCurrentGameObject->GetComponent<CTransformComponent>()->Transform({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
 	}
 
 	// ! Reset function
@@ -372,8 +378,10 @@ void Update(std::vector<std::string>& aModelFilePathList, CModelInstance* aCurre
 		}
 		
 		std::cout << "Loading model number: " << loadModelNumber << " : " << aModelFilePathList[loadModelNumber] << std::endl;
-		aCurrentModelInstance->SetModel(CModelFactory::GetInstance()->CreateModel(aModelFilePathList[loadModelNumber], { 1.0f, 1.0f, 1.0f })->GetModel());	
-		aCurrentModelInstance->SetTransform({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
+
+		aCurrentGameObject->GetComponent<CModelComponent>()->SetModel(aModelFilePathList[loadModelNumber]);
+		aCurrentGameObject->GetComponent<CTransformComponent>()->Transform({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
+
 		std::cout << "\nInstructions" << std::endl 
 			<< "   Main Window: Press 'ESC' and then return to this Console." << std::endl
 			<< "   Console: Enter the desired models number." << std::endl;
@@ -421,8 +429,8 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	LoadModelPaths(root, filePaths);
 
 	//CCamera* camera = nullptr;
-	CModelInstance* currentModel = nullptr;
-	currentModel = InitModels(filePaths[0]);
+	CGameObject* currentGameObject = nullptr;
+	currentGameObject = InitModels(filePaths[1]);
 	
 	//std::cout << "Models in " << root << std::endl;
 	int counter = 0;
@@ -452,15 +460,15 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		}
 	
 		engine.BeginFrame();
-		Update(filePaths, currentModel/*, camera*/);
+		Update(filePaths, currentGameObject/*, camera*/);
 
 		engine.RenderFrame();
 		engine.EndFrame();
 		Input::GetInstance()->update();
 	}
 
-	delete currentModel;
-	currentModel = nullptr;
+	delete currentGameObject;
+	currentGameObject = nullptr;
 
 	delete grid;
 	grid = nullptr;

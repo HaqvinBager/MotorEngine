@@ -28,6 +28,8 @@ public:
 	void Start() override;
 	void Update() override;
 
+	void SetModel(const std::string& aFBXPath);
+
 	CModel *GetMyModel() const;
 
 private:
