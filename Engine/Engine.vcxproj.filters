@@ -240,6 +240,9 @@
     <ClInclude Include="Debug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MenuState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -405,6 +408,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

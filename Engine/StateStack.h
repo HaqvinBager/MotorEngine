@@ -4,7 +4,7 @@
 class CState;
 
 class CStateStack {
-
+	friend class CShowCase;
 public:
 		
 	CStateStack() = default;

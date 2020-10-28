@@ -176,3 +176,14 @@ bool CScene::ClearScene() {
 	myGameObjects.clear();
 	return true;
 }
+
+bool CScene::ClearSprites() {
+
+	for (auto  sprite : mySprites) {
+		delete sprite;
+		sprite = nullptr;
+	}
+	mySprites.clear();
+
+	return true;
+}
