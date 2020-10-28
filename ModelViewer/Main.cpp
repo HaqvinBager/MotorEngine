@@ -430,7 +430,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
 	//CCamera* camera = nullptr;
 	CGameObject* currentGameObject = nullptr;
-	currentGameObject = InitModels(filePaths[1]);
+	currentGameObject = InitModels(filePaths[0]);
 	
 	//std::cout << "Models in " << root << std::endl;
 	int counter = 0;
