@@ -123,7 +123,7 @@ public:
 		, _curScene(NULL)
 		, m_ModelPath(modelpath)
 		, _rotation(0.f)
-		, _prevAnimIndex(-1)
+		, _prevAnimIndex(0)
 		, _blendingTime(0.f)
 		, _blendingTimeMul(1.f)
 		, _updateBoth(true)

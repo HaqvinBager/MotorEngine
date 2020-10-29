@@ -9,7 +9,7 @@ public:
 	CLineInstance();
 	~CLineInstance();
 
-	void Init(CLine* aLine);
+	CLineInstance& Init(CLine* aLine);
 
 	// Copy constructor.
 	CLineInstance(const CLineInstance& other)
@@ -23,6 +23,14 @@ public:
 		myLine = other.myLine;
 		myTransform = other.myTransform;
 		other.myLine = nullptr;
+	}
+
+	CLineInstance& operator=(CLineInstance&& other) noexcept
+	{
+		myLine = other.myLine;
+		myTransform = other.myTransform;
+		other.myLine = nullptr;
+		return *this;
 	}
 	
 	void SetTransform(const DirectX::SimpleMath::Vector3& aPosition, const DirectX::SimpleMath::Vector3& aRotation);

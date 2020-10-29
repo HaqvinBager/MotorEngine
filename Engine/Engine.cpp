@@ -97,6 +97,12 @@ float CEngine::BeginFrame()
 {
 	std::array<float, 4> clearColor = { 0.5f, 0.5f, 0.5f, 1.0f };
 	myFramework->BeginFrame(clearColor);
+
+#ifdef _DEBUG
+	myDebug->Update();
+	//CDebug::GetInstance()->Update();
+#endif
+
 	return myTimer->Mark();
 }
 

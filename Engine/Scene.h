@@ -11,6 +11,7 @@ class CParticleInstance;
 class CVFXInstance;
 class CLineInstance;
 class CSpriteInstance;
+struct SLineTime;
 
 class CScene {
 	friend class CEngine;
@@ -27,7 +28,7 @@ public:
 	std::pair<unsigned int, std::array<CPointLight*, 8>> CullLights(CGameObject* aGameObject);
 	std::vector<CParticleInstance*> CullParticles(CCamera* aMainCamera);
 	std::vector<CVFXInstance*> CullVFX(CCamera* aMainCamera);
-	const std::vector<CLineInstance>& CullLines(CCamera* aMainCamera) const;
+	const std::vector<SLineTime>& CullLines(CCamera* aMainCamera) const;
 	std::vector<CSpriteInstance*> CullSprites(CCamera* aMainCamera);
 
 	bool AddInstance(CCamera* aCamera);

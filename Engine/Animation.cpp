@@ -41,10 +41,12 @@ void CAnimation::Step(float aDelta)
 {
 	if (controller->IsDoneBlending())
 	{
+		//controller->SetAnimIndex();
 		//	controller->SetAnimIndex(2, true, 5);
 	}
 
 	myTotalAnimationTime += aDelta;
+	//std::cout << myTotalAnimationTime << std::endl;
 	controller->Update();
 }
 

@@ -12,6 +12,7 @@
 #include "PointLight.h"
 #include "Line.h"
 #include "LineInstance.h"
+#include "Debug.h"
 
 namespace SM = DirectX::SimpleMath;
 
@@ -157,7 +158,7 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector
 	}*/
 }
 
-void CForwardRenderer::RenderLines(CCamera* aCamera, const std::vector<CLineInstance>& aLineList) {
+void CForwardRenderer::RenderLines(CCamera* aCamera, const std::vector<SLineTime>& aLineList) {
 
 	namespace SM = DirectX::SimpleMath;
 	myFrameBufferData.myToCamera = aCamera->GetTransform().Invert();
@@ -168,17 +169,17 @@ void CForwardRenderer::RenderLines(CCamera* aCamera, const std::vector<CLineInst
 	myContext->VSSetConstantBuffers(0, 1, &myFrameBuffer);
 	myContext->PSSetConstantBuffers(0, 1, &myFrameBuffer);
 
-	for (const CLineInstance& instance : aLineList)
+	for (const SLineTime& instance : aLineList)
 	{
-		CLine::SLineData lineData = instance.GetLine()->GetLineData();
+		CLine::SLineData lineData = instance.myLine.GetLine()->GetLineData();
 
-		myObjectBufferData.myToWorld = instance.GetTransform();
+		myObjectBufferData.myToWorld = instance.myLine.GetTransform();
 
 		BindBuffer(myObjectBuffer, myObjectBufferData, "Object Buffer");
 
 		myContext->IASetPrimitiveTopology(lineData.myPrimitiveTopology);
 		myContext->IASetInputLayout(lineData.myInputLayout);
-		myContext->IASetVertexBuffers(0, 1, &lineData.myVertexBuffer, &lineData.myStride, &lineData.myOffset);
+ 		myContext->IASetVertexBuffers(0, 1, &lineData.myVertexBuffer, &lineData.myStride, &lineData.myOffset);
 		myContext->IASetIndexBuffer(lineData.myIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 		myContext->VSSetConstantBuffers(1, 1, &myObjectBuffer);

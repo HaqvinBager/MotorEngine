@@ -88,7 +88,9 @@ void CRenderManager::Render()
 	}
 	myForwardRenderer.Render(environmentlight, pointlights, maincamera, gameObjects);
 
-	const std::vector<CLineInstance>& lines = myScene.CullLines(maincamera);
+	//const std::vector<CLineInstance>& lines = myScene.CullLines(maincamera);
+	const std::vector<SLineTime>& lines = myScene.CullLines(maincamera);
+
 	myForwardRenderer.RenderLines(maincamera, lines);
 
 	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_ALPHABLEND);

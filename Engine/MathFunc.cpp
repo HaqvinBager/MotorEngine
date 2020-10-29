@@ -97,7 +97,7 @@ uint FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim)
 {
 	assert(pNodeAnim->mNumPositionKeys > 0);
 
-	for (uint i = 0; i < pNodeAnim->mNumPositionKeys - 1; i++)
+ 	for (uint i = 0; i < pNodeAnim->mNumPositionKeys - 1; i++)
 	{
 		if (AnimationTime < (float)pNodeAnim->mPositionKeys[i + 1].mTime)
 		{

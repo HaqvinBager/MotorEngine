@@ -14,9 +14,10 @@ CLineInstance::~CLineInstance()
 	delete myLine;
 	myLine = nullptr;
 }
-void CLineInstance::Init(CLine* aLine )
+CLineInstance& CLineInstance::Init(CLine* aLine )
 {
 	myLine = aLine;
+	return *this;
 }
 
 void CLineInstance::SetTransform(const DirectX::SimpleMath::Vector3& aPosition, const DirectX::SimpleMath::Vector3& aRotation)

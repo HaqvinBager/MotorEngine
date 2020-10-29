@@ -110,9 +110,10 @@ std::vector<CVFXInstance*> CScene::CullVFX(CCamera* /*aMainCamera*/) {
 	return myVFXInstances;
 }
 
-const std::vector<CLineInstance>& CScene::CullLines(CCamera* /*aMainCamera*/) const
+const std::vector<SLineTime>& CScene::CullLines(CCamera* /*aMainCamera*/) const
 {
-	return CDebug::GetInstance()->GetLines();
+	return CDebug::GetInstance()->GetLinesTime();
+	//return CDebug::GetInstance()->GetLines();
 }
 
 std::vector<CSpriteInstance*> CScene::CullSprites(CCamera* /*aMainCamera*/)

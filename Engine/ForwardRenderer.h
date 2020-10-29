@@ -12,6 +12,7 @@ class CEnvironmentLight;
 class CPointLight;
 class CGameObject;
 class CLineInstance;
+struct SLineTime;
 
 class CForwardRenderer
 {
@@ -21,7 +22,7 @@ public:
 
 	bool Init(CDirectXFramework* aFramework);
 	void Render(CEnvironmentLight* anEnvironmentLight, std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> aModelPointLightList, CCamera* aCamera, std::vector<CGameObject*>& aGameObjectList);
-	void RenderLines(CCamera* aCamera, const std::vector<CLineInstance>& aLineList);
+	void RenderLines(CCamera* aCamera, const std::vector<SLineTime>& aLineList);
 
 private:
 	template<class T>
