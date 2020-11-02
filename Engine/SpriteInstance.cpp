@@ -27,6 +27,11 @@ void CSpriteInstance::SetSize(DirectX::SimpleMath::Vector2 aSize)
 	mySize = aSize;
 }
 
+void CSpriteInstance::SetShouldRender(bool aBool)
+{
+	myShouldRender = aBool;
+}
+
 void CSpriteInstance::SetPosition(DirectX::SimpleMath::Vector2 aPosition)
 {
 	myPosition.x = aPosition.x;

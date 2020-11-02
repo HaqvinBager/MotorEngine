@@ -16,6 +16,7 @@
 #include "VFXFactory.h"
 #include "LineFactory.h"
 #include "SpriteFactory.h"
+#include "TextFactory.h"
 #include "InputMapper.h"
 #include <rapidjson\document.h>
 #include <string>
@@ -37,6 +38,7 @@ CEngine::CEngine()
 	myVFXFactory = new CVFXFactory();
 	myLineFactory = new CLineFactory();
 	mySpriteFactory = new CSpriteFactory();
+	myTextFactory = new CTextFactory();
 	myInputMapper = new CInputMapper();
 	myDebug = new CDebug();
 }
@@ -69,6 +71,8 @@ CEngine::~CEngine()
 	myLineFactory = nullptr;
 	delete mySpriteFactory;
 	mySpriteFactory = nullptr;
+	delete myTextFactory;
+	myTextFactory = nullptr;
 	delete myInputMapper;
 	myInputMapper = nullptr;
 
@@ -90,6 +94,7 @@ bool CEngine::Init(CWindowHandler::SWindowData& someWindowData)
 	ENGINE_ERROR_BOOL_MESSAGE(myVFXFactory->Init(myFramework), "VFX Factory could not be initialized.");
 	ENGINE_ERROR_BOOL_MESSAGE(myLineFactory->Init(myFramework), "Line Factory could not be initialized.");
 	ENGINE_ERROR_BOOL_MESSAGE(mySpriteFactory->Init(myFramework), "Sprite Factory could not be initialized.");
+	ENGINE_ERROR_BOOL_MESSAGE(myTextFactory->Init(myFramework), "Text Factory could not be initialized.");
 	return true;
 }
 

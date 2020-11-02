@@ -7,6 +7,7 @@
 #include "VFXRenderer.h"
 #include "RenderStateManager.h"
 #include "SpriteRenderer.h"
+#include "TextRenderer.h"
 
 class CDirectXFramework;
 class CWindowHandler;
@@ -27,6 +28,7 @@ private:
 	CParticleRenderer myParticleRenderer;
 	CVFXRenderer myVFXRenderer;
 	CSpriteRenderer mySpriteRenderer;
+	CTextRenderer myTextRenderer;
 
 	CFullscreenTextureFactory myFullscreenTextureFactory;
 	CFullscreenTexture myBackbuffer;

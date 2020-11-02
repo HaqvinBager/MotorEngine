@@ -12,6 +12,7 @@ class CScene;
 class CRenderManager;
 class CParticleFactory;
 class CSpriteFactory;
+class CTextFactory;
 class CInputMapper;
 class CDebug;
 
@@ -50,5 +51,6 @@ private:
 	CVFXFactory* myVFXFactory;
 	CLineFactory* myLineFactory;
 	CSpriteFactory* mySpriteFactory;
+	CTextFactory* myTextFactory;
 	CInputMapper* myInputMapper;
 };

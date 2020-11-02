@@ -118,7 +118,18 @@ const std::vector<SLineTime>& CScene::CullLines(CCamera* /*aMainCamera*/) const
 
 std::vector<CSpriteInstance*> CScene::CullSprites(CCamera* /*aMainCamera*/)
 {
-	return mySprites;
+	std::vector<CSpriteInstance*> spritesToRender;
+	for (auto& sprite : mySprites) {
+		if (sprite->GetShouldRender()) {
+			spritesToRender.emplace_back(sprite);
+		}
+	}
+	return spritesToRender;
+}
+
+std::vector<CTextInstance*> CScene::GetTexts()
+{
+	return myTexts;
 }
 
 bool CScene::AddInstance(CCamera* aCamera)
@@ -165,6 +176,15 @@ bool CScene::AddInstance(CSpriteInstance* aSprite) {
 		return false;
 	}
 	mySprites.emplace_back(aSprite);
+	return true;
+}
+
+bool CScene::AddInstance(CTextInstance* aText)
+{
+	if (!aText) {
+		return false;
+	}
+	myTexts.emplace_back(aText);
 	return true;
 }
 
