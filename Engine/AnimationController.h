@@ -483,7 +483,7 @@ public:
 		_prevAnimIndex = _curScene;
 		_curScene = index;
 		_blendingTime = 1.f;
-		_blendingTimeMul = 1.f / blendDuration;
+		_blendingTimeMul = blendDuration > 0.0f ? 1.0f / blendDuration : 1.0f;
 		_animationTime1 = 0.f;
 		_updateBoth = updateBoth;
 		_temporary = temporary;
