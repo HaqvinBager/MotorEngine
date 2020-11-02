@@ -19,17 +19,17 @@ CInGameState::CInGameState(CStateStack& aStateStack) : CState(aStateStack) {
 	spriteInstance->SetPosition({ 0.0f,-0.85f });
 	CScene::GetInstance()->AddInstance(spriteInstance);
 
-	CGameObject* enemy = new CGameObject();
-	enemy->AddComponent<CTransformComponent>(*enemy);
-	enemy->AddComponent<CModelComponent>(*enemy, "Assets/3D/Character/Enemy1/enemy_sk.fbx");
+	//CGameObject* enemy = new CGameObject();
+	//enemy->AddComponent<CTransformComponent>(*enemy);
+	//enemy->AddComponent<CModelComponent>(*enemy, "Assets/3D/Character/Enemy1/enemy_sk.fbx");
 
-	CAnimation* anim = new CAnimation();
-	std::vector < std::string> animationClips = {
-		"Assets/3D/Character/Enemy1/enemy_excitedJump.fbx"
-	};
-	anim->Init("Assets/3D/Character/Enemy1/enemy_sk.fbx", animationClips);
-	enemy->AddComponent<CAnimationComponent>(*enemy);
-	CScene::GetInstance()->AddInstance(enemy);
+	//CAnimation* anim = new CAnimation();
+	//std::vector < std::string> animationClips = {
+	//	"Assets/3D/Character/Enemy1/enemy_excitedJump.fbx"
+	//};
+	//anim->Init("Assets/3D/Character/Enemy1/enemy_sk.fbx", animationClips);
+	//enemy->AddComponent<CAnimationComponent>(*enemy);
+	//CScene::GetInstance()->AddInstance(enemy);
 }
 
 CInGameState::~CInGameState()
