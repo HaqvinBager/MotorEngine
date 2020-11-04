@@ -1,9 +1,53 @@
 #include "stdafx.h"
 #include "IntersectionManager.h"
 #include "CapsuleColliderComponent.h"
+#include "TriangleColliderComponent.h"
+#include "CircleColliderComponent.h"
+#include "RectangleColliderComponent.h"
 #include "SimpleMath.h"
 
 using namespace DirectX::SimpleMath;
+
+bool CIntersectionManager::RectangleIntersection(CRectangleColliderComponent& aRectangle, CRectangleColliderComponent& aRectangle2) {
+	if (aRectangle.myMaxPoint.x < aRectangle2.myMinPoint.x) return false;
+	if (aRectangle.myMinPoint.x > aRectangle2.myMaxPoint.x) return false;
+	if (aRectangle.myMaxPoint.y < aRectangle2.myMinPoint.y) return false;
+	if (aRectangle.myMinPoint.y > aRectangle2.myMaxPoint.y) return false;
+	return true;
+}
+
+bool CIntersectionManager::CircleIntersection(CCircleColliderComponent& aCircle, CCircleColliderComponent& aCircle2) {
+	if (aCircle.myRadius + aCircle.myRadius < DirectX::SimpleMath::Vector3::Distance(aCircle.myPosition, aCircle2.myPosition))
+		return false;
+
+	return true;
+}
+
+//bool CIntersectionManager::TriangleIntersection(CTriangleColliderComponent& aTriangle, CTriangleColliderComponent& aTriangle2) {
+//	return false;
+//}
+
+bool CIntersectionManager::RectangleVsCircleIntersection(CRectangleColliderComponent& aRectangle, CCircleColliderComponent& aCircle) {
+	Vector2 circleDistance = { abs(aCircle.myPosition.x - aRectangle.myPosition.x), abs(aCircle.myPosition.y - aRectangle.myPosition.y) };
+
+	if (circleDistance.x > (aRectangle.myColliderSize.x / 2.0f + aCircle.myRadius)) { return false; }
+	if (circleDistance.y > (aRectangle.myColliderSize.y / 2.0f + aCircle.myRadius)) { return false; }
+
+	if (circleDistance.x <= (aRectangle.myColliderSize.x / 2.0f)) { return true; }
+	if (circleDistance.y <= (aRectangle.myColliderSize.y / 2.0f)) { return true; }
+
+	float cornerDistance_sq = pow((circleDistance.x - aRectangle.myColliderSize.x / 2.0f), 2) + pow((circleDistance.y - aRectangle.myColliderSize.y / 2.0f), 2);
+
+	return (cornerDistance_sq <= (pow(aCircle.myRadius, 2)));
+}
+
+bool CIntersectionManager::CircleVsTriangleIntersection(CCircleColliderComponent& /*aCircle*/, CTriangleColliderComponent& /*aTriangle*/) {
+	//do(http://www.phatcode.net/articles.php?id=459){
+	//	return true;
+	//}
+
+	return false;
+}
 
 bool CIntersectionManager::CapsuleIntersection(CCapsuleColliderComponent& aCapsuleA, CCapsuleColliderComponent& aCapsuleB)
 {

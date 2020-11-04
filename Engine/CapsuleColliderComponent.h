@@ -7,8 +7,7 @@ namespace DirectX {
 	}
 }
 
-class CCapsuleColliderComponent : public CComponent
-{
+class CCapsuleColliderComponent : public CComponent {
 	friend class CIntersectionManager;
 
 public:
