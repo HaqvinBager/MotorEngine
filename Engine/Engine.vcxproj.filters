@@ -318,6 +318,9 @@
     <ClInclude Include="TextRenderer.h">
       <Filter>Text</Filter>
     </ClInclude>
+    <ClInclude Include="TriangleColliderComponent.h">
+      <Filter>GameObject\Components\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LevelLoader.cpp">
@@ -499,6 +502,9 @@
     </ClCompile>
     <ClCompile Include="TextRenderer.cpp">
       <Filter>Text</Filter>
+    </ClCompile>
+    <ClCompile Include="TriangleColliderComponent.cpp">
+      <Filter>GameObject\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -177,6 +177,7 @@
     <ClInclude Include="TextRenderer.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TransformComponent.h" />
+    <ClInclude Include="TriangleColliderComponent.h" />
     <ClInclude Include="VFXBase.h" />
     <ClInclude Include="VFXFactory.h" />
     <ClInclude Include="VFXInstance.h" />
@@ -243,6 +244,7 @@
     <ClCompile Include="TextRenderer.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TransformComponent.cpp" />
+    <ClCompile Include="TriangleColliderComponent.cpp" />
     <ClCompile Include="VFXBase.cpp" />
     <ClCompile Include="VFXFactory.cpp" />
     <ClCompile Include="VFXInstance.cpp" />

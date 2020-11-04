@@ -2,6 +2,7 @@
 #include "CollisionManager.h"
 #include "IntersectionManager.h"
 #include "CapsuleColliderComponent.h"
+//#include "TriangleColliderComponent.h"
 #include "TransformComponent.h"
 #include <SimpleMath.h>
 
@@ -25,8 +26,15 @@ CCollisionManager::~CCollisionManager()
 
 void CCollisionManager::RegisterCollider(CCapsuleColliderComponent* aCollider)
 {
+    assert(aCollider != nullptr && "Collider is nullptr");
     myCapsuleColliders.emplace_back(aCollider);
 }
+
+//void CCollisionManager::RegisterCollider(CTriangleColliderComponent* aCollider)
+//{
+//    assert(aCollider != nullptr && "Collider is nullptr");
+//    myCapsuleColliders.emplace_back(aCollider);
+//}
 
 void CCollisionManager::Update()
 {

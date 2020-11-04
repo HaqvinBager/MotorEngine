@@ -13,6 +13,7 @@ namespace DirectX {
 }
 
 class CCapsuleColliderComponent;
+//class CTriangleColliderComponent;
 
 class CCollisionManager
 {
@@ -21,10 +22,12 @@ public:
 	~CCollisionManager();
 
 	void RegisterCollider(CCapsuleColliderComponent* aCollider);
+	//void RegisterCollider(CTriangleColliderComponent* aCollider);
 	void Update();
 
 private:
 	std::vector<CCapsuleColliderComponent*> myCapsuleColliders;
+	//std::vector<CTriangleColliderComponent*> myTriangleColliders;
 
 public:
 	static CCollisionManager* GetInstance();
