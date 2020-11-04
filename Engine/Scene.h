@@ -33,6 +33,8 @@ public:
 	std::vector<CSpriteInstance*> CullSprites(CCamera* aMainCamera);
 	std::vector<CTextInstance*> GetTexts();
 
+	CGameObject* GetModelToOutline() const { return myModelToOutline; }
+
 	bool AddInstance(CCamera* aCamera);
 	bool AddInstance(CEnvironmentLight* anEnvironmentLight);
 	bool AddInstance(CPointLight* aPointLight);
@@ -45,6 +47,9 @@ public:
 
 	bool ClearScene();
 	bool ClearSprites();
+
+	void SetModelToOutline(CGameObject* aGameObject);
+
 private:
 	CScene();
 	~CScene();
@@ -64,4 +69,6 @@ private:
 	std::vector<CTextInstance*> myTexts;
 	CCollisionManager* myCollisionManager;
 	static CScene* ourInstance;
+
+	CGameObject* myModelToOutline;
 };

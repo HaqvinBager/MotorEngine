@@ -26,6 +26,8 @@ public:
 	void Rotation(DirectX::SimpleMath::Vector3 aRotation);
 	void Scale(float aScale);
 	float Scale();
+	void SetOutlineScale();
+	void ResetScale();
 
 	void Transform(DirectX::SimpleMath::Vector3 aPosition, DirectX::SimpleMath::Vector3 aRotation);
 	DirectX::SimpleMath::Matrix& Transform();

@@ -3,6 +3,9 @@
 #include "DirectXFramework.h"
 #include "Scene.h"
 #include "LineInstance.h"
+#include "GameObject.h"
+#include "TransformComponent.h"
+#include "ModelFactory.h"
 
 CRenderManager::CRenderManager() : myScene(*CScene::GetInstance())
 {
@@ -60,7 +63,7 @@ bool CRenderManager::Init(CDirectXFramework* aFramework, CWindowHandler* aWindow
 		return false;
 	}
 	myBackbuffer = myFullscreenTextureFactory.CreateTexture(backbufferTexture);
-	myIntermediateDepth = myFullscreenTextureFactory.CreateDepth({ (float)aWindowHandler->GetWidth(), (float)aWindowHandler->GetHeight() }, DXGI_FORMAT_D32_FLOAT);
+	myIntermediateDepth = myFullscreenTextureFactory.CreateDepth({ (float)aWindowHandler->GetWidth(), (float)aWindowHandler->GetHeight() }, DXGI_FORMAT_D24_UNORM_S8_UINT);
 
 	myIntermediateTexture = myFullscreenTextureFactory.CreateTexture({ (float)aWindowHandler->GetWidth(), (float)aWindowHandler->GetHeight() }, DXGI_FORMAT_R8G8B8A8_UNORM);
 	myLuminanceTexture = myFullscreenTextureFactory.CreateTexture({ (float)aWindowHandler->GetWidth(), (float)aWindowHandler->GetHeight() }, DXGI_FORMAT_R8G8B8A8_UNORM);
@@ -92,6 +95,20 @@ void CRenderManager::Render()
 		pointlights.push_back(myScene.CullLights(instance));
 	}
 	myForwardRenderer.Render(environmentlight, pointlights, maincamera, gameObjects);
+
+	auto modelToOutline = myScene.GetModelToOutline();
+	pointlights.emplace_back(myScene.CullLights(modelToOutline));
+	std::vector<CGameObject*> interimVector;
+	if (modelToOutline) {
+		interimVector.emplace_back(modelToOutline);
+		myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_STENCILWRITE, 0xFF);
+		myForwardRenderer.Render(environmentlight, pointlights, maincamera, interimVector);
+
+		modelToOutline->GetComponent<CTransformComponent>()->SetOutlineScale();
+		myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_STENCILMASK, 0xFF);
+		myForwardRenderer.RenderOutline(maincamera, modelToOutline, CModelFactory::GetInstance()->GetOutlineModelSubset());
+		modelToOutline->GetComponent<CTransformComponent>()->ResetScale();
+	}
 
 	//const std::vector<CLineInstance>& lines = myScene.CullLines(maincamera);
 	const std::vector<SLineTime>& lines = myScene.CullLines(maincamera);

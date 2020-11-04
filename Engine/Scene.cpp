@@ -208,3 +208,19 @@ bool CScene::ClearSprites() {
 
 	return true;
 }
+
+void CScene::SetModelToOutline(CGameObject* aGameObject)
+{
+	if (myModelToOutline) {
+		myGameObjects.emplace_back(std::move(myModelToOutline));
+	}
+	auto it = std::find(myGameObjects.begin(), myGameObjects.end(), aGameObject);
+	if (it != myGameObjects.end()) {
+		std::swap(*it, myGameObjects.back());
+		myModelToOutline = myGameObjects.back();
+		myGameObjects.pop_back();
+	}
+	else {
+		myModelToOutline = aGameObject;
+	}
+}

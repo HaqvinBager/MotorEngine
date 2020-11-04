@@ -109,6 +109,9 @@
     <Filter Include="Text">
       <UniqueIdentifier>{868dedcd-e8e8-4abe-aee3-bcea5ca18876}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader Files\Outline">
+      <UniqueIdentifier>{283958f7-c856-4f8b-bff7-4c60c6f0516a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -196,12 +199,6 @@
       <Filter>StateStack</Filter>
     </ClInclude>
     <ClInclude Include="StateStack.h">
-      <Filter>StateStack</Filter>
-    </ClInclude>
-    <ClInclude Include="LoadLevelState.h">
-      <Filter>StateStack</Filter>
-    </ClInclude>
-    <ClInclude Include="InGameState.h">
       <Filter>StateStack</Filter>
     </ClInclude>
     <ClInclude Include="Engine.h">
@@ -359,9 +356,6 @@
     <ClCompile Include="GameObject.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="InGameState.cpp">
-      <Filter>StateStack</Filter>
-    </ClCompile>
     <ClCompile Include="Input.cpp">
       <Filter>Input</Filter>
     </ClCompile>
@@ -382,9 +376,6 @@
     </ClCompile>
     <ClCompile Include="LineInstance.cpp">
       <Filter>Debug\DebugLines</Filter>
-    </ClCompile>
-    <ClCompile Include="LoadLevelState.cpp">
-      <Filter>StateStack</Filter>
     </ClCompile>
     <ClCompile Include="Model.cpp">
       <Filter>Model</Filter>
@@ -570,6 +561,12 @@
     </FxCompile>
     <FxCompile Include="SpriteVertexShader.hlsl">
       <Filter>Shader Files\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="OutlinePixelShader.hlsl">
+      <Filter>Shader Files\Outline</Filter>
+    </FxCompile>
+    <FxCompile Include="OutlineVertexShader.hlsl">
+      <Filter>Shader Files\Outline</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

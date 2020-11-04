@@ -7,8 +7,8 @@ class CAnimation;
 class CModel {
 public:
 	struct SModelData {
-		UINT myNumberOfVerticies = 0;
-		UINT myNumberOfIndicies = 0;
+		UINT myNumberOfVertices = 0;
+		UINT myNumberOfIndices = 0;
 		UINT myStride = 0;
 		UINT myOffset = 0;
 		ID3D11Buffer* myVertexBuffer = nullptr;
