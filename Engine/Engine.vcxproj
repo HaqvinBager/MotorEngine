@@ -121,6 +121,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraFactory.h" />
     <ClInclude Include="CapsuleColliderComponent.h" />
+    <ClInclude Include="CircleColliderComponent.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Debug.h" />
@@ -128,6 +129,7 @@
     <ClInclude Include="InputObserver.h" />
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="PlayerControllerComponent.h" />
+    <ClInclude Include="RectangleColliderComponent.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="DebugTimerUtility.h" />
     <ClInclude Include="DirectXFramework.h" />
@@ -175,6 +177,7 @@
     <ClInclude Include="TextRenderer.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TransformComponent.h" />
+    <ClInclude Include="TriangleColliderComponent.h" />
     <ClInclude Include="VFXBase.h" />
     <ClInclude Include="VFXFactory.h" />
     <ClInclude Include="VFXInstance.h" />
@@ -189,12 +192,14 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraFactory.cpp" />
     <ClCompile Include="CapsuleColliderComponent.cpp" />
+    <ClCompile Include="CircleColliderComponent.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="InputMapper.cpp" />
     <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="PlayerControllerComponent.cpp" />
+    <ClCompile Include="RectangleColliderComponent.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="DirectXFramework.cpp" />
     <ClCompile Include="Engine.cpp" />
@@ -239,6 +244,7 @@
     <ClCompile Include="TextRenderer.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TransformComponent.cpp" />
+    <ClCompile Include="TriangleColliderComponent.cpp" />
     <ClCompile Include="VFXBase.cpp" />
     <ClCompile Include="VFXFactory.cpp" />
     <ClCompile Include="VFXInstance.cpp" />

@@ -7,12 +7,12 @@ namespace DirectX {
 	}
 }
 
-class CCapsuleColliderComponent : public CComponent {
+class CCircleColliderComponent : public CComponent {
 	friend class CIntersectionManager;
 
 public:
-	CCapsuleColliderComponent(CGameObject& aParent, float aRadius, float aHeight);
-	~CCapsuleColliderComponent() override;
+	CCircleColliderComponent(CGameObject& aParent, float aRadius, bool isStatic);
+	~CCircleColliderComponent() override;
 
 	void Awake() override;
 	void Start() override;
@@ -21,8 +21,8 @@ public:
 
 private:
 	float myRadius;
-	float myHeight;
-	DirectX::SimpleMath::Vector3 myBase;
-	DirectX::SimpleMath::Vector3 myTip;
+	bool myIsStatic;
+	DirectX::SimpleMath::Vector3 myPosition;
 };
+
 

@@ -116,6 +116,11 @@ const std::vector<SLineTime>& CScene::CullLines(CCamera* /*aMainCamera*/) const
 	//return CDebug::GetInstance()->GetLines();
 }
 
+const std::vector<CLineInstance*>& CScene::CullLineInstances(CCamera* /*aMainCamera*/) const
+{
+	return myLineInstances;
+}
+
 std::vector<CSpriteInstance*> CScene::CullSprites(CCamera* /*aMainCamera*/)
 {
 	std::vector<CSpriteInstance*> spritesToRender;

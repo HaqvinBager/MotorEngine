@@ -2,7 +2,6 @@
 #include "CapsuleColliderComponent.h"
 #include "TransformComponent.h"
 #include "CollisionManager.h"
-#include <iostream>
 
 CCapsuleColliderComponent::CCapsuleColliderComponent(CGameObject& aParent, float aRadius, float aHeight) 
 	: CComponent(aParent)

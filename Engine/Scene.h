@@ -30,6 +30,7 @@ public:
 	std::vector<CParticleInstance*> CullParticles(CCamera* aMainCamera);
 	std::vector<CVFXInstance*> CullVFX(CCamera* aMainCamera);
 	const std::vector<SLineTime>& CullLines(CCamera* aMainCamera) const;
+	const std::vector<CLineInstance*>& CullLineInstances(CCamera* aMainCamera) const;
 	std::vector<CSpriteInstance*> CullSprites(CCamera* aMainCamera);
 	std::vector<CTextInstance*> GetTexts();
 

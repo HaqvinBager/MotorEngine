@@ -46,7 +46,7 @@ bool CRenderManager::Init(CDirectXFramework* aFramework, CWindowHandler* aWindow
 	{
 		return false;
 	}
-	
+
 	if (!mySpriteRenderer.Init(aFramework))
 	{
 		return false;
@@ -110,21 +110,23 @@ void CRenderManager::Render()
 		modelToOutline->GetComponent<CTransformComponent>()->ResetScale();
 	}
 
-	//const std::vector<CLineInstance>& lines = myScene.CullLines(maincamera);
+	const std::vector<CLineInstance*>& lineInstances = myScene.CullLineInstances(maincamera);
 	const std::vector<SLineTime>& lines = myScene.CullLines(maincamera);
 
 	myForwardRenderer.RenderLines(maincamera, lines);
+	myForwardRenderer.RenderLineInstances(maincamera, lineInstances);
+
 
 	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_ALPHABLEND);
 	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_ONLYREAD);
 
 	std::vector<CVFXInstance*> vfx = myScene.CullVFX(maincamera);
-	myVFXRenderer.Render(maincamera, vfx);  
+	myVFXRenderer.Render(maincamera, vfx);
 
 
 	std::vector<CParticleInstance*> particles = myScene.CullParticles(maincamera);
 	myParticleRenderer.Render(maincamera, particles);
-	
+
 	std::vector<CSpriteInstance*> sprites = myScene.CullSprites(maincamera);
 	mySpriteRenderer.Render(sprites);
 
