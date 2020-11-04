@@ -93,10 +93,12 @@ void CRenderManager::Render()
 	}
 	myForwardRenderer.Render(environmentlight, pointlights, maincamera, gameObjects);
 
-	//const std::vector<CLineInstance>& lines = myScene.CullLines(maincamera);
+	const std::vector<CLineInstance*>& lineInstances = myScene.CullLineInstances(maincamera);
 	const std::vector<SLineTime>& lines = myScene.CullLines(maincamera);
 
 	myForwardRenderer.RenderLines(maincamera, lines);
+	myForwardRenderer.RenderLineInstances(maincamera, lineInstances);
+
 
 	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_ALPHABLEND);
 	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_ONLYREAD);
