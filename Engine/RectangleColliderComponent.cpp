@@ -3,9 +3,10 @@
 #include "CollisionManager.h"
 #include "TransformComponent.h"
 
-CRectangleColliderComponent::CRectangleColliderComponent(CGameObject& aParent, DirectX::SimpleMath::Vector2 aColliderSize, bool isStatic) :
+CRectangleColliderComponent::CRectangleColliderComponent(CGameObject& aParent, float aWidth, float aHeight, bool isStatic) :
 	CComponent(aParent),
-	myColliderSize(aColliderSize),
+	myWidth(aWidth),
+	myHeight(aHeight),
 	myIsStatic(isStatic)
 {
 	CCollisionManager::GetInstance()->RegisterCollider(this);
@@ -15,10 +16,16 @@ CRectangleColliderComponent::~CRectangleColliderComponent() {
 }
 
 void CRectangleColliderComponent::Awake() {
-	myPosition = GetParent().GetComponent<CTransformComponent>()->Position();
+	DirectX::SimpleMath::Vector3 vector = GetParent().GetComponent<CTransformComponent>()->Position() + GetParent().GetComponent<CTransformComponent>()->Position().Forward * (myHeight / 2.0f);
 
-	myMinPoint = { myPosition.x - myColliderSize.x / 2.0f, myPosition.y - myColliderSize.y / 2.0f };
-	myMaxPoint = { myPosition.x + myColliderSize.x / 2.0f, myPosition.y + myColliderSize.y / 2.0f };
+	myPosition = GetParent().GetComponent<CTransformComponent>()->Position();
+	myVertices[0] = vector - GetParent().GetComponent<CTransformComponent>()->Position().Right * (myWidth / 2.0f);
+	myVertices[1] = vector + GetParent().GetComponent<CTransformComponent>()->Position().Right * (myWidth / 2.0f);
+	
+	vector = GetParent().GetComponent<CTransformComponent>()->Position() - GetParent().GetComponent<CTransformComponent>()->Position().Forward * (myHeight / 2.0f);
+
+	myVertices[2] = vector - GetParent().GetComponent<CTransformComponent>()->Position().Right * (myWidth / 2.0f);
+	myVertices[3] = vector + GetParent().GetComponent<CTransformComponent>()->Position().Right * (myWidth / 2.0f);
 }
 
 void CRectangleColliderComponent::Start() {
@@ -26,10 +33,16 @@ void CRectangleColliderComponent::Start() {
 
 void CRectangleColliderComponent::Update() {
 	if (!myIsStatic) {
-		myPosition = GetParent().GetComponent<CTransformComponent>()->Position();
+		DirectX::SimpleMath::Vector3 vector = GetParent().GetComponent<CTransformComponent>()->Position() + GetParent().GetComponent<CTransformComponent>()->Position().Forward * (myHeight / 2.0f);
 
-		myMinPoint = { myPosition.x - myColliderSize.x / 2.0f, myPosition.y - myColliderSize.y / 2.0f };
-		myMaxPoint = { myPosition.x + myColliderSize.x / 2.0f, myPosition.y + myColliderSize.y / 2.0f };
+		myPosition = GetParent().GetComponent<CTransformComponent>()->Position();
+		myVertices[0] = vector - GetParent().GetComponent<CTransformComponent>()->Position().Right * (myWidth / 2.0f);
+		myVertices[1] = vector + GetParent().GetComponent<CTransformComponent>()->Position().Right * (myWidth / 2.0f);
+
+		vector = GetParent().GetComponent<CTransformComponent>()->Position() - GetParent().GetComponent<CTransformComponent>()->Position().Forward * (myHeight / 2.0f);
+
+		myVertices[2] = vector - GetParent().GetComponent<CTransformComponent>()->Position().Right * (myWidth / 2.0f);
+		myVertices[3] = vector + GetParent().GetComponent<CTransformComponent>()->Position().Right * (myWidth / 2.0f);
 	}
 }
 
