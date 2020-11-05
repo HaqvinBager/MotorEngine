@@ -12,7 +12,7 @@ class CTriangleColliderComponent : public CComponent
 	friend class CIntersectionManager;
 
 public:
-	CTriangleColliderComponent(CGameObject& aParent, std::vector<DirectX::SimpleMath::Vector3> someVertices);
+	CTriangleColliderComponent(CGameObject& aParent, float aWidth, float aHeight);
 	~CTriangleColliderComponent() override;
 
 	void Awake() override;
@@ -21,6 +21,8 @@ public:
 	void Collided(CGameObject* aCollidedGameObject) override;
 
 private:
+	const float myHeight;
+	const float myWidth;
 	std::vector<DirectX::SimpleMath::Vector3> myVertices;
 };
 

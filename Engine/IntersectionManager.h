@@ -16,7 +16,6 @@ class CIntersectionManager
 public:
 	static bool RectangleIntersection(CRectangleColliderComponent& aRectangle, CRectangleColliderComponent& aRectangle2);
 	static bool CircleIntersection(CCircleColliderComponent& aCircle, CCircleColliderComponent& aCircle2);
-	//static bool TriangleIntersection(CTriangleColliderComponent& aTriangle, CTriangleColliderComponent& aTriangle2);
 	static bool RectangleVsCircleIntersection(CRectangleColliderComponent& aRectangle, CCircleColliderComponent& aCircle);
 	static bool CircleVsTriangleIntersection(CCircleColliderComponent& aCircle, CTriangleColliderComponent& aTriangle);
 	static bool CapsuleIntersection(CCapsuleColliderComponent& aCapsule, CCapsuleColliderComponent& aCapsule2);

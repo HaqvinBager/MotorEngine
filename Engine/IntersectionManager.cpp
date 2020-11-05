@@ -23,10 +23,6 @@ bool CIntersectionManager::CircleIntersection(CCircleColliderComponent& aCircle,
 	return true;
 }
 
-//bool CIntersectionManager::TriangleIntersection(CTriangleColliderComponent& aTriangle, CTriangleColliderComponent& aTriangle2) {
-//	return false;
-//}
-
 bool CIntersectionManager::RectangleVsCircleIntersection(CRectangleColliderComponent& aRectangle, CCircleColliderComponent& aCircle) {
 	Vector2 circleDistance = { abs(aCircle.myPosition.x - aRectangle.myPosition.x), abs(aCircle.myPosition.y - aRectangle.myPosition.y) };
 
@@ -41,11 +37,76 @@ bool CIntersectionManager::RectangleVsCircleIntersection(CRectangleColliderCompo
 	return (cornerDistance_sq <= (pow(aCircle.myRadius, 2)));
 }
 
-bool CIntersectionManager::CircleVsTriangleIntersection(CCircleColliderComponent& /*aCircle*/, CTriangleColliderComponent& /*aTriangle*/) {
-	//do(http://www.phatcode.net/articles.php?id=459){
-	//	return true;
-	//}
+bool CIntersectionManager::CircleVsTriangleIntersection(CCircleColliderComponent& aCircle, CTriangleColliderComponent& aTriangle) {
+	//Test 1, Vertex within circle
+	float c1x = aCircle.myPosition.x - aTriangle.myVertices[0].x;
+	float c1z = aCircle.myPosition.z - aTriangle.myVertices[0].z;
 
+	float radiusSqr = aCircle.myRadius * aCircle.myRadius;
+	float c1sqr = c1x * c1x + c1z * c1z - radiusSqr;
+
+	if (c1sqr <= 0) return true;
+
+	float c2x = aCircle.myPosition.x - aTriangle.myVertices[1].x;
+	float c2z = aCircle.myPosition.z - aTriangle.myVertices[1].z;
+	float c2sqr = c2x * c2x + c2z * c2z - radiusSqr;
+
+	if (c2sqr <= 0) return true;
+
+	float c3x = aCircle.myPosition.x - aTriangle.myVertices[2].x;
+	float c3z = aCircle.myPosition.z - aTriangle.myVertices[2].z;
+
+	float c3sqr = c3x * c3x + c3z * c3z - radiusSqr;
+
+	if (c3sqr <= 0) return true;
+
+	//Test 2, Circle centre within triangle
+	float e1x = aTriangle.myVertices[1].x - aTriangle.myVertices[0].x;
+	float e1z = aTriangle.myVertices[1].z - aTriangle.myVertices[0].z;
+
+	float e2x = aTriangle.myVertices[2].x - aTriangle.myVertices[1].x;
+	float e2z = aTriangle.myVertices[2].z - aTriangle.myVertices[1].z;
+
+	float e3x = aTriangle.myVertices[0].x - aTriangle.myVertices[2].x;
+	float e3z = aTriangle.myVertices[0].z - aTriangle.myVertices[2].z;
+
+	if (signed((e1z * c1x - e1x * c1z) || (e2z * c2x - e2x * c2z) || (e3z * c3x - e3x * c3z)) >= 0) return true;
+
+	//Test 3, Circle intersects edge
+	float k = c1x * e1x + c1z * e1z;
+
+	//First edge
+	if (k > 0) {
+		float len = e1x * e1x + e1z * e1z;
+
+		if (k < len) {
+			if (c1sqr * len <= k * k) return true;
+		}
+	}
+
+	//Second edge
+	k = c2x * e2x + c2z * e2z;
+
+	if (k > 0) {
+		float len = e2x * e2x + e2z * e2z;
+
+		if (k < len) {
+			if (c2sqr * len <= k * k) return true;
+		}
+	}
+
+	//Third edge
+	k = c3x * e3x + c3z * e3z;
+
+	if (k > 0) {
+		float len = e3x * e3x + e3z * e3z;
+
+		if (k < len) {
+			if (c3sqr * len <= k * k) return true;
+		}
+	}
+
+	//No haqvinsection #PHATCODE
 	return false;
 }
 
