@@ -182,6 +182,7 @@
     <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="TriangleColliderComponent.h" />
     <ClInclude Include="VFXBase.h" />
+    <ClInclude Include="VFXComponent.h" />
     <ClInclude Include="VFXFactory.h" />
     <ClInclude Include="VFXInstance.h" />
     <ClInclude Include="VFXRenderer.h" />
@@ -252,6 +253,7 @@
     <ClCompile Include="TransformComponent.cpp" />
     <ClCompile Include="TriangleColliderComponent.cpp" />
     <ClCompile Include="VFXBase.cpp" />
+    <ClCompile Include="VFXComponent.cpp" />
     <ClCompile Include="VFXFactory.cpp" />
     <ClCompile Include="VFXInstance.cpp" />
     <ClCompile Include="VFXRenderer.cpp" />

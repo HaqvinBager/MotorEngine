@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "VFXRenderer.h"
+#include "VFXComponent.h"
 #include "DirectXFramework.h"
 #include "Camera.h"
 #include "VFXInstance.h"
@@ -39,7 +40,7 @@ bool CVFXRenderer::Init(CDirectXFramework* aFramework) {
     return true;
 }
 
-void CVFXRenderer::Render(CCamera* aCamera, std::vector<CVFXInstance*>& aVFXInstanceList) 
+void CVFXRenderer::Render(CCamera* aCamera, std::vector<CGameObject*>& aGameObjectList) 
 {
 	myFrameBufferData.myToCamera = aCamera->GetTransform().Invert();
 	myFrameBufferData.myToProjection = aCamera->GetProjection();
@@ -49,11 +50,20 @@ void CVFXRenderer::Render(CCamera* aCamera, std::vector<CVFXInstance*>& aVFXInst
 	myContext->VSSetConstantBuffers(0, 1, &myFrameBuffer);
 	myContext->PSSetConstantBuffers(0, 1, &myFrameBuffer);
 
-	for (CVFXInstance* instance : aVFXInstanceList) {
-		CVFXBase* vfxBase = instance->GetVFXBase();
+
+
+	for (CGameObject* gameobject : aGameObjectList) {
+		
+		if (gameobject->GetComponent<CVFXComponent>() == nullptr)
+			continue;
+
+		if (gameobject->GetComponent<CVFXComponent>()->GetVFXBase() == nullptr)
+			continue;
+		
+		CVFXBase* vfxBase = gameobject->GetComponent<CVFXComponent>()->GetVFXBase();
 		CVFXBase::SVFXBaseData vfxBaseData = vfxBase->GetVFXBaseData();
 
-		myObjectBufferData.myToWorld = instance->GetTransform();
+		myObjectBufferData.myToWorld = gameobject->GetComponent<CVFXComponent>()->GetTransform();
 		BindBuffer<SObjectBufferData>(myObjectBuffer, myObjectBufferData, "Object Buffer");
 
 		myTime += CTimer::Dt();
