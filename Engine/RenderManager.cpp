@@ -97,9 +97,9 @@ void CRenderManager::Render()
 	myForwardRenderer.Render(environmentlight, pointlights, maincamera, gameObjects);
 
 	auto modelToOutline = myScene.GetModelToOutline();
-	pointlights.emplace_back(myScene.CullLights(modelToOutline));
-	std::vector<CGameObject*> interimVector;
 	if (modelToOutline) {
+		pointlights.emplace_back(myScene.CullLights(modelToOutline));
+		std::vector<CGameObject*> interimVector;
 		interimVector.emplace_back(modelToOutline);
 		myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_STENCILWRITE, 0xFF);
 		myForwardRenderer.Render(environmentlight, pointlights, maincamera, interimVector);

@@ -319,10 +319,10 @@
       <Filter>GameObject\Components\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CircleColliderComponent.h">
-      <Filter>Header Files</Filter>
+      <Filter>GameObject\Components\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RectangleColliderComponent.h">
-      <Filter>Header Files</Filter>
+      <Filter>GameObject\Components\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -504,10 +504,10 @@
       <Filter>GameObject\Components</Filter>
     </ClCompile>
     <ClCompile Include="CircleColliderComponent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>GameObject\Components</Filter>
     </ClCompile>
     <ClCompile Include="RectangleColliderComponent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>GameObject\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

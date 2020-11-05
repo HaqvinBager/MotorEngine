@@ -30,11 +30,11 @@ bool CIntersectionManager::CircleIntersection(CCircleColliderComponent& aCircle,
 bool CIntersectionManager::RectangleVsCircleIntersection(CRectangleColliderComponent& aRectangle, CCircleColliderComponent& aCircle) {
 	Vector2 circleDistance = { abs(aCircle.myPosition.x - aRectangle.myPosition.x), abs(aCircle.myPosition.y - aRectangle.myPosition.y) };
 
-	if (circleDistance.x > (aRectangle.myColliderSize.x / 2.0f + aCircle.myRadius)) { return false; }
-	if (circleDistance.y > (aRectangle.myColliderSize.y / 2.0f + aCircle.myRadius)) { return false; }
+	if (circleDistance.x > (aRectangle.myColliderSize.x / 2.0f + aCircle.myRadius)) return false;
+	if (circleDistance.y > (aRectangle.myColliderSize.y / 2.0f + aCircle.myRadius)) return false;
 
-	if (circleDistance.x <= (aRectangle.myColliderSize.x / 2.0f)) { return true; }
-	if (circleDistance.y <= (aRectangle.myColliderSize.y / 2.0f)) { return true; }
+	if (circleDistance.x <= (aRectangle.myColliderSize.x / 2.0f)) return true;
+	if (circleDistance.y <= (aRectangle.myColliderSize.y / 2.0f)) return true;
 
 	float cornerDistance_sq = pow((circleDistance.x - aRectangle.myColliderSize.x / 2.0f), 2) + pow((circleDistance.y - aRectangle.myColliderSize.y / 2.0f), 2);
 
