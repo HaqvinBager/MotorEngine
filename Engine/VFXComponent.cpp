@@ -7,6 +7,8 @@ namespace SM = DirectX::SimpleMath;
 #define ENGINE_SCALE 0.01f
 
 CVFXComponent::CVFXComponent(CGameObject& aParent): CComponent(aParent), myVFXBase(nullptr) {
+	myTransform.Translation(GetParent().GetComponent<CTransformComponent>()->Position());
+	//SetPosition(GetParent().GetComponent<CTransformComponent>()->Position());
 }
 
 CVFXComponent::~CVFXComponent() {
@@ -23,7 +25,7 @@ void CVFXComponent::Update() {
 
 	myTextureScroll += {0.15f * CTimer::Dt(), 0.15f * CTimer::Dt()};
 	myTextureScroll2 += {0.15f * CTimer::Dt(), 0.15f * CTimer::Dt()};
-	//SetPosition(GetParent().GetComponent<CTransformComponent>()->Position());
+	SetPosition(GetParent().GetComponent<CTransformComponent>()->Position());
 }
 
 bool CVFXComponent::Init(CVFXBase* aVFXBase) {
