@@ -1,6 +1,8 @@
 #pragma once
 #include <codecvt>
 #include <cstdarg>
+#include <string>
+#include <comdef.h>
 
 #define ENGINE_HR_ERROR_MESSAGE(hr, ...)	{ Engine::EngineException::EngineErrorMessage(hr, __LINE__, __FUNCTION__, __FILE__, ##__VA_ARGS__);  }
 #define ENGINE_HR(hr)						{ HRESULT hresult = hr; if (FAILED(hresult))	{ ENGINE_HR_ERROR_MESSAGE(hresult, ""); }}

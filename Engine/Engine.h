@@ -1,6 +1,7 @@
 #pragma once
 #include "WindowHandler.h"
 #include "DirectXFramework.h"
+#include <string>
 
 class CWindowHandler;
 class CDirextXFramework;
@@ -31,8 +32,8 @@ public:
 	void RenderFrame();
 	void EndFrame();
 	CWindowHandler* GetWindowHandler();
-
-
+	void InitWindowsImaging();
+	void ScreenShot(std::wstring& aSubPath);
 
 private:
 	

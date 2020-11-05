@@ -21,7 +21,10 @@
 #include <rapidjson\document.h>
 #include <string>
 #include "Debug.h"
+#include <ScreenGrab.h>
+#include <wincodec.h>
 
+#pragma comment(lib, "runtimeobject.lib")
 #pragma comment(lib, "d3d11.lib")
 
 CEngine::CEngine()
@@ -41,6 +44,7 @@ CEngine::CEngine()
 	myTextFactory = new CTextFactory();
 	myInputMapper = new CInputMapper();
 	myDebug = new CDebug();
+	myRenderManager = nullptr;
 }
 
 CEngine::~CEngine()
@@ -95,6 +99,7 @@ bool CEngine::Init(CWindowHandler::SWindowData& someWindowData)
 	ENGINE_ERROR_BOOL_MESSAGE(myLineFactory->Init(myFramework), "Line Factory could not be initialized.");
 	ENGINE_ERROR_BOOL_MESSAGE(mySpriteFactory->Init(myFramework), "Sprite Factory could not be initialized.");
 	ENGINE_ERROR_BOOL_MESSAGE(myTextFactory->Init(myFramework), "Text Factory could not be initialized.");
+	InitWindowsImaging();
 	return true;
 }
 
@@ -124,4 +129,34 @@ void CEngine::EndFrame()
 CWindowHandler* CEngine::GetWindowHandler()
 {
 	return myWindowHandler;
+}
+
+void CEngine::InitWindowsImaging()
+{
+#if (_WIN32_WINNT >= 0x0A00 /*_WIN32_WINNT_WIN10*/)
+	Microsoft::WRL::Wrappers::RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);
+	if (FAILED(initialize))
+		// error
+#else
+	HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+	if (FAILED(hr))
+		// error
+#endif
+		return;
+}
+#include <DbgHelp.h>
+#include <strsafe.h>
+
+void CEngine::ScreenShot(std::wstring &aSubPath)
+{
+	aSubPath += L"\\screenshot.bmp";
+	HRESULT hr = CoInitialize(nullptr);
+	hr = SaveWICTextureToFile(myFramework->GetContext(), myFramework->GetBackbufferTexture(),
+		GUID_ContainerFormatBmp, aSubPath.c_str(),
+		&GUID_WICPixelFormat16bppBGR565);
+
+	if (FAILED(hr)) {
+		return;
+	}
+	CoUninitialize();
 }
