@@ -125,9 +125,11 @@
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Debug.h" />
+    <ClInclude Include="EnemyFactory.h" />
     <ClInclude Include="InputMapper.h" />
     <ClInclude Include="InputObserver.h" />
     <ClInclude Include="MenuState.h" />
+    <ClInclude Include="ObjectPool.h" />
     <ClInclude Include="PlayerControllerComponent.h" />
     <ClInclude Include="RectangleColliderComponent.h" />
     <ClInclude Include="State.h" />
@@ -170,6 +172,7 @@
     <ClInclude Include="SpriteInstance.h" />
     <ClInclude Include="SpriteRenderer.h" />
     <ClInclude Include="StateStack.h" />
+    <ClInclude Include="StatsComponent.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextFactory.h" />
@@ -196,8 +199,10 @@
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="EnemyFactory.cpp" />
     <ClCompile Include="InputMapper.cpp" />
     <ClCompile Include="MenuState.cpp" />
+    <ClCompile Include="ObjectPool.cpp" />
     <ClCompile Include="PlayerControllerComponent.cpp" />
     <ClCompile Include="RectangleColliderComponent.cpp" />
     <ClCompile Include="State.cpp" />
@@ -234,6 +239,7 @@
     <ClCompile Include="SpriteInstance.cpp" />
     <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="StateStack.cpp" />
+    <ClCompile Include="StatsComponent.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
