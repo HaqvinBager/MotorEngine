@@ -325,7 +325,7 @@
       <Filter>GameObject\Components\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="VFXComponent.h">
-      <Filter>Header Files</Filter>
+      <Filter>GameObject\Components\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -513,7 +513,7 @@
       <Filter>GameObject\Components</Filter>
     </ClCompile>
     <ClCompile Include="VFXComponent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>GameObject\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
