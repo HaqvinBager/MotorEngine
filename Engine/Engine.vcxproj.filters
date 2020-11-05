@@ -324,6 +324,9 @@
     <ClInclude Include="RectangleColliderComponent.h">
       <Filter>GameObject\Components\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="VFXComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LevelLoader.cpp">
@@ -508,6 +511,9 @@
     </ClCompile>
     <ClCompile Include="RectangleColliderComponent.cpp">
       <Filter>GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="VFXComponent.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

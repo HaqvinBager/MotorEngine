@@ -120,8 +120,8 @@ void CRenderManager::Render()
 	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_ALPHABLEND);
 	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_ONLYREAD);
 
-	std::vector<CVFXInstance*> vfx = myScene.CullVFX(maincamera);
-	myVFXRenderer.Render(maincamera, vfx);
+
+	myVFXRenderer.Render(maincamera, gameObjects);
 
 
 	std::vector<CParticleInstance*> particles = myScene.CullParticles(maincamera);

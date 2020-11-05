@@ -7,6 +7,7 @@ struct ID3D11Buffer;
 class CDirectXFramework;
 class CCamera;
 class CVFXInstance;
+class CGameObject;
 
 class CVFXRenderer {
 public:
@@ -15,7 +16,7 @@ public:
 
 	bool Init(CDirectXFramework* aFramework);
 
-	void Render(CCamera* aCamera, std::vector<CVFXInstance*>& aVFXInstanceList);
+	void Render(CCamera* aCamera, std::vector<CGameObject*>& aGameObjectList);
 
 private:
 	template<class T>
