@@ -23,6 +23,7 @@
 #include "Debug.h"
 #include <ScreenGrab.h>
 #include <wincodec.h>
+#include "EnemyFactory.h"
 
 #pragma comment(lib, "runtimeobject.lib")
 #pragma comment(lib, "d3d11.lib")
@@ -45,6 +46,7 @@ CEngine::CEngine()
 	myInputMapper = new CInputMapper();
 	myDebug = new CDebug();
 	myRenderManager = nullptr;
+	myEnemyFactory = new CEnemyFactory();
 }
 
 CEngine::~CEngine()
@@ -82,6 +84,9 @@ CEngine::~CEngine()
 
 	delete myDebug;
 	myDebug = nullptr;
+
+	delete myEnemyFactory;
+	myEnemyFactory = nullptr;
 }
 
 bool CEngine::Init(CWindowHandler::SWindowData& someWindowData)
