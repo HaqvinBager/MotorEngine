@@ -43,6 +43,8 @@ public:
 	bool AddInstance(CSpriteInstance* aSprite);
 	bool AddInstance(CTextInstance* aText);
 
+	bool RemoveInstance(CGameObject* aGameObject);
+
 	bool ClearScene();
 	bool ClearSprites();
 private:

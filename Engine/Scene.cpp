@@ -13,6 +13,7 @@
 #include "SpriteInstance.h"
 #include "Component.h"
 #include "Debug.h"
+#include <algorithm>
 
 
 CScene* CScene::ourInstance = nullptr;
@@ -185,6 +186,17 @@ bool CScene::AddInstance(CTextInstance* aText)
 		return false;
 	}
 	myTexts.emplace_back(aText);
+	return true;
+}
+
+bool CScene::RemoveInstance(CGameObject* aGameObject) {
+	for (int i = 0; i < myGameObjects.size(); ++i) {
+		if (aGameObject == myGameObjects[i]) {
+			//std::swap(myGameObjects[i], myGameObjects[myGameObjects.size() - 1]);
+			//myGameObjects.pop_back();
+			myGameObjects.erase(myGameObjects.begin() + i);
+		}
+	}
 	return true;
 }
 
