@@ -69,7 +69,7 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector
 	myContext->VSSetConstantBuffers(0, 1, &myFrameBuffer);
 	myContext->PSSetConstantBuffers(0, 1, &myFrameBuffer);
 	myContext->PSSetShaderResources(0, 1, anEnvironmentLight->GetCubeMap());
-	
+
 	// MODELCOMPONENT
 	for (CGameObject* gameobject : aGameObjectList)
 	{
@@ -112,7 +112,7 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector
 		myContext->PSSetSamplers(0, 1, &modelData.mySamplerState);
 		myContext->PSSetShader(modelData.myPixelShader, nullptr, 0);
 
-		myContext->DrawIndexed(modelData.myNumberOfIndicies, 0, 0);
+		myContext->DrawIndexed(modelData.myNumberOfIndices, 0, 0);
 
 	}
 	// MODELCOMPONENT END
@@ -189,5 +189,85 @@ void CForwardRenderer::RenderLines(CCamera* aCamera, const std::vector<SLineTime
 
 		//myContext->DrawIndexed(lineData.myNumberOfIndices, 0, 0);
 		myContext->Draw(lineData.myNumberOfVertices, 0);
+
+
 	}
+}
+
+void CForwardRenderer::RenderOutline(CCamera* aCamera, CGameObject* aModelInstance, CModel* someOutlineModelData)
+{
+	if (!someOutlineModelData) {
+		return;
+	}
+
+	myFrameBufferData.myCameraPosition = aCamera->GetPosition();
+	myFrameBufferData.myToCamera = aCamera->GetTransform().Invert();
+	myFrameBufferData.myToProjection = aCamera->GetProjection();
+
+	BindBuffer(myFrameBuffer, myFrameBufferData, "Frame Buffer");
+
+	myContext->VSSetConstantBuffers(0, 1, &myFrameBuffer);
+	myContext->PSSetConstantBuffers(0, 1, &myFrameBuffer);
+
+	CModel* model = aModelInstance->GetComponent<CModelComponent>()->GetMyModel();
+	CModel::SModelData modelData = model->GetModelData();
+	CModel::SModelData outlineModelData = someOutlineModelData->GetModelData();
+
+	myObjectBufferData.myToWorld = aModelInstance->GetComponent<CTransformComponent>()->Transform();
+
+	BindBuffer(myObjectBuffer, myObjectBufferData, "Object Buffer");
+
+	myContext->IASetPrimitiveTopology(modelData.myPrimitiveTopology);
+	myContext->IASetInputLayout(modelData.myInputLayout);
+
+	myContext->IASetVertexBuffers(0, 1, &modelData.myVertexBuffer, &modelData.myStride, &modelData.myOffset);
+	myContext->IASetIndexBuffer(modelData.myIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+	myContext->VSSetConstantBuffers(1, 1, &myObjectBuffer);
+	myContext->VSSetShader(outlineModelData.myVertexShader, nullptr, 0);
+
+	myContext->PSSetConstantBuffers(1, 1, &myObjectBuffer);
+	myContext->PSSetShaderResources(1, 3, &modelData.myTexture[0]);
+	myContext->PSSetShader(outlineModelData.myPixelShader, nullptr, 0);
+
+	myContext->PSSetSamplers(0, 1, &modelData.mySamplerState);
+
+	myContext->DrawIndexed(modelData.myNumberOfIndices, 0, 0);
+}
+
+void CForwardRenderer::RenderLineInstances(CCamera* aCamera, const std::vector<CLineInstance*>& aLineList) {
+
+    namespace SM = DirectX::SimpleMath;
+    myFrameBufferData.myToCamera = aCamera->GetTransform().Invert();
+    myFrameBufferData.myToProjection = aCamera->GetProjection();
+
+    BindBuffer(myFrameBuffer, myFrameBufferData, "Frame Buffer");
+
+    myContext->VSSetConstantBuffers(0, 1, &myFrameBuffer);
+    myContext->PSSetConstantBuffers(0, 1, &myFrameBuffer);
+
+    for (const CLineInstance* instance : aLineList)
+    {
+
+        CLine::SLineData lineData = instance->GetLine()->GetLineData();
+
+        myObjectBufferData.myToWorld = instance->GetTransform();
+
+        BindBuffer(myObjectBuffer, myObjectBufferData, "Object Buffer");
+
+        myContext->IASetPrimitiveTopology(lineData.myPrimitiveTopology);
+        myContext->IASetInputLayout(lineData.myInputLayout);
+        myContext->IASetVertexBuffers(0, 1, &lineData.myVertexBuffer, &lineData.myStride, &lineData.myOffset);
+        myContext->IASetIndexBuffer(lineData.myIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+        myContext->VSSetConstantBuffers(1, 1, &myObjectBuffer);
+        myContext->VSSetShader(lineData.myVertexShader, nullptr, 0);
+
+        myContext->PSSetShader(lineData.myPixelShader, nullptr, 0);
+
+        //myContext->DrawIndexed(lineData.myNumberOfIndices, 0, 0);
+        myContext->Draw(lineData.myNumberOfVertices, 0);
+
+
+    }
 }

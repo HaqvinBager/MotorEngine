@@ -117,6 +117,11 @@ const std::vector<SLineTime>& CScene::CullLines(CCamera* /*aMainCamera*/) const
 	//return CDebug::GetInstance()->GetLines();
 }
 
+const std::vector<CLineInstance*>& CScene::CullLineInstances(CCamera* /*aMainCamera*/) const
+{
+	return myLineInstances;
+}
+
 std::vector<CSpriteInstance*> CScene::CullSprites(CCamera* /*aMainCamera*/)
 {
 	std::vector<CSpriteInstance*> spritesToRender;
@@ -219,4 +224,20 @@ bool CScene::ClearSprites() {
 	mySprites.clear();
 
 	return true;
+}
+
+void CScene::SetModelToOutline(CGameObject* aGameObject)
+{
+	if (myModelToOutline) {
+		myGameObjects.emplace_back(std::move(myModelToOutline));
+	}
+	auto it = std::find(myGameObjects.begin(), myGameObjects.end(), aGameObject);
+	if (it != myGameObjects.end()) {
+		std::swap(*it, myGameObjects.back());
+		myModelToOutline = myGameObjects.back();
+		myGameObjects.pop_back();
+	}
+	else {
+		myModelToOutline = aGameObject;
+	}
 }

@@ -12,6 +12,7 @@ class CEnvironmentLight;
 class CPointLight;
 class CGameObject;
 class CLineInstance;
+class CModel;
 struct SLineTime;
 
 class CForwardRenderer
@@ -23,6 +24,8 @@ public:
 	bool Init(CDirectXFramework* aFramework);
 	void Render(CEnvironmentLight* anEnvironmentLight, std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> aModelPointLightList, CCamera* aCamera, std::vector<CGameObject*>& aGameObjectList);
 	void RenderLines(CCamera* aCamera, const std::vector<SLineTime>& aLineList);
+	void RenderOutline(CCamera* aCamera, CGameObject* aModelInstance, CModel* someOutlineModelData);
+	void RenderLineInstances(CCamera* aCamera, const std::vector<CLineInstance*>& aLineList);
 
 private:
 	template<class T>
@@ -87,6 +90,6 @@ private:
 //	DirectX::SimpleMath::Vector3 myPosition; //4 bytes *
 //	float myRange;							//4 bytes (1
 //	DirectX::SimpleMath::Vector4 myColorAndIntensity; //
-//	float myNumberOfUsedPointLights; //4 bytes 
+//	float myNumberOfUsedPointLights; //4 bytes
 //	float padding[3]; // 4 * 3 Bytes (12)
 //} myLightBufferData;

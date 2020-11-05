@@ -109,6 +109,9 @@
     <Filter Include="Text">
       <UniqueIdentifier>{868dedcd-e8e8-4abe-aee3-bcea5ca18876}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader Files\Outline">
+      <UniqueIdentifier>{283958f7-c856-4f8b-bff7-4c60c6f0516a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -196,12 +199,6 @@
       <Filter>StateStack</Filter>
     </ClInclude>
     <ClInclude Include="StateStack.h">
-      <Filter>StateStack</Filter>
-    </ClInclude>
-    <ClInclude Include="LoadLevelState.h">
-      <Filter>StateStack</Filter>
-    </ClInclude>
-    <ClInclude Include="InGameState.h">
       <Filter>StateStack</Filter>
     </ClInclude>
     <ClInclude Include="Engine.h">
@@ -318,6 +315,15 @@
     <ClInclude Include="TextRenderer.h">
       <Filter>Text</Filter>
     </ClInclude>
+    <ClInclude Include="TriangleColliderComponent.h">
+      <Filter>GameObject\Components\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CircleColliderComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RectangleColliderComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LevelLoader.cpp">
@@ -359,9 +365,6 @@
     <ClCompile Include="GameObject.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="InGameState.cpp">
-      <Filter>StateStack</Filter>
-    </ClCompile>
     <ClCompile Include="Input.cpp">
       <Filter>Input</Filter>
     </ClCompile>
@@ -382,9 +385,6 @@
     </ClCompile>
     <ClCompile Include="LineInstance.cpp">
       <Filter>Debug\DebugLines</Filter>
-    </ClCompile>
-    <ClCompile Include="LoadLevelState.cpp">
-      <Filter>StateStack</Filter>
     </ClCompile>
     <ClCompile Include="Model.cpp">
       <Filter>Model</Filter>
@@ -500,6 +500,15 @@
     <ClCompile Include="TextRenderer.cpp">
       <Filter>Text</Filter>
     </ClCompile>
+    <ClCompile Include="TriangleColliderComponent.cpp">
+      <Filter>GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="CircleColliderComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RectangleColliderComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="CubePixelShader.hlsl">
@@ -570,6 +579,12 @@
     </FxCompile>
     <FxCompile Include="SpriteVertexShader.hlsl">
       <Filter>Shader Files\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="OutlinePixelShader.hlsl">
+      <Filter>Shader Files\Outline</Filter>
+    </FxCompile>
+    <FxCompile Include="OutlineVertexShader.hlsl">
+      <Filter>Shader Files\Outline</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

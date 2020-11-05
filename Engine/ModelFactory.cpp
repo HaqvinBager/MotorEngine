@@ -90,6 +90,9 @@ CModel* CModelFactory::LoadModelPBR(std::string aFilePath)
 	D3D11_SUBRESOURCE_DATA subVertexResourceData = { 0 };
 	subVertexResourceData.pSysMem = mesh->myVerticies;
 
+	if (vertexBufferDesc.ByteWidth == 0) {
+		return nullptr;
+	}
 	ID3D11Buffer* vertexBuffer;
 	ENGINE_HR_MESSAGE(myEngine->myFramework->GetDevice()->CreateBuffer(&vertexBufferDesc, &subVertexResourceData, &vertexBuffer), "Vertex Buffer could not be created.");
 
@@ -194,8 +197,8 @@ CModel* CModelFactory::LoadModelPBR(std::string aFilePath)
 	ENGINE_ERROR_BOOL_MESSAGE(model, "Empty model could not be loaded.");
 
 	CModel::SModelData modelData;
-	modelData.myNumberOfVerticies = mesh->myVertexCount;
-	modelData.myNumberOfIndicies = static_cast<UINT>(mesh->myIndexes.size());
+	modelData.myNumberOfVertices = mesh->myVertexCount;
+	modelData.myNumberOfIndices = static_cast<UINT>(mesh->myIndexes.size());
 	modelData.myStride = mesh->myVertexBufferSize;
 	modelData.myOffset = 0;
 	modelData.myVertexBuffer = vertexBuffer;
@@ -243,6 +246,10 @@ CModel* CModelFactory::LoadModel(std::string aFilePath)
 	subVertexResourceData.pSysMem = mesh->myVerticies;
 
 	ID3D11Buffer* vertexBuffer;
+
+	if (vertexBufferDesc.ByteWidth == 0) {
+		return nullptr;
+	}
 	ENGINE_HR_MESSAGE(myEngine->myFramework->GetDevice()->CreateBuffer(&vertexBufferDesc, &subVertexResourceData, &vertexBuffer), "Vertex Buffer could not be created.");
 
 	D3D11_BUFFER_DESC indexBufferDesc = { 0 };
@@ -309,8 +316,8 @@ CModel* CModelFactory::LoadModel(std::string aFilePath)
 	ENGINE_ERROR_BOOL_MESSAGE(model, "Empty model could not be loaded.");
 
 	CModel::SModelData modelData;
-	modelData.myNumberOfVerticies = mesh->myVertexCount;
-	modelData.myNumberOfIndicies = static_cast<UINT>(mesh->myIndexes.size());
+	modelData.myNumberOfVertices = mesh->myVertexCount;
+	modelData.myNumberOfIndices = static_cast<UINT>(mesh->myIndexes.size());
 	modelData.myStride = mesh->myVertexBufferSize;
 	modelData.myOffset = 0;
 	modelData.myVertexBuffer = vertexBuffer;
@@ -449,8 +456,8 @@ CModel* CModelFactory::GetCube()
 	ENGINE_ERROR_BOOL_MESSAGE(model, "Empty model could not be loaded.");
 
 	CModel::SModelData modelData;
-	modelData.myNumberOfVerticies = sizeof(verticies) / sizeof(Vertex);
-	modelData.myNumberOfIndicies = sizeof(indicies) / sizeof(unsigned int);
+	modelData.myNumberOfVertices = sizeof(verticies) / sizeof(Vertex);
+	modelData.myNumberOfIndices = sizeof(indicies) / sizeof(unsigned int);
 	modelData.myStride = sizeof(Vertex);
 	modelData.myOffset = 0;
 	modelData.myVertexBuffer = vertexBuffer;
@@ -465,6 +472,50 @@ CModel* CModelFactory::GetCube()
 	model->Init(modelData);
 	myModelMap.emplace("Cube", model);
 	return model;
+}
+
+CModel* CModelFactory::GetOutlineModelSubset()
+{
+	if (myOutlineModelSubset) {
+		return myOutlineModelSubset;
+	}
+
+	//Start Shader
+	std::ifstream vsFile;
+	vsFile.open("OutlineVertexShader.cso", std::ios::binary);
+	std::string vsData = { std::istreambuf_iterator<char>(vsFile), std::istreambuf_iterator<char>() };
+	ID3D11VertexShader* vertexShader;
+	ENGINE_HR_MESSAGE(myEngine->myFramework->GetDevice()->CreateVertexShader(vsData.data(), vsData.size(), nullptr, &vertexShader), "Vertex Shader could not be created.");
+	vsFile.close();
+
+	std::ifstream psFile;
+	psFile.open("OutlinePixelShader.cso", std::ios::binary);
+	std::string psData = { std::istreambuf_iterator<char>(psFile), std::istreambuf_iterator<char>() };
+	ID3D11PixelShader* pixelShader;
+	ENGINE_HR_MESSAGE(myEngine->myFramework->GetDevice()->CreatePixelShader(psData.data(), psData.size(), nullptr, &pixelShader), "Pixel Shader could not be created.");
+	psFile.close();
+	//End Shader
+
+	myOutlineModelSubset = new CModel();
+
+	CModel::SModelData modelData;
+	modelData.myNumberOfVertices = 0;
+	modelData.myNumberOfIndices = 0;
+	modelData.myStride = 0;
+	modelData.myOffset = 0;
+	modelData.myVertexBuffer = nullptr;
+	modelData.myIndexBuffer = nullptr;
+	modelData.myVertexShader = vertexShader;
+	modelData.myPixelShader = pixelShader;
+	modelData.mySamplerState = nullptr;
+	modelData.myPrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	modelData.myInputLayout = nullptr;
+	modelData.myTexture[0] = nullptr;
+	modelData.myTexture[1] = nullptr;
+	modelData.myTexture[2] = nullptr;
+	myOutlineModelSubset->Init(modelData);
+
+	return myOutlineModelSubset;
 }
 
 

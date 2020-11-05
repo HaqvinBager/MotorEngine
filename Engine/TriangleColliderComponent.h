@@ -7,12 +7,13 @@ namespace DirectX {
 	}
 }
 
-class CCapsuleColliderComponent : public CComponent {
+class CTriangleColliderComponent : public CComponent
+{
 	friend class CIntersectionManager;
 
 public:
-	CCapsuleColliderComponent(CGameObject& aParent, float aRadius, float aHeight);
-	~CCapsuleColliderComponent() override;
+	CTriangleColliderComponent(CGameObject& aParent, std::vector<DirectX::SimpleMath::Vector3> someVertices);
+	~CTriangleColliderComponent() override;
 
 	void Awake() override;
 	void Start() override;
@@ -20,9 +21,6 @@ public:
 	void Collided(CGameObject* aCollidedGameObject) override;
 
 private:
-	float myRadius;
-	float myHeight;
-	DirectX::SimpleMath::Vector3 myBase;
-	DirectX::SimpleMath::Vector3 myTip;
+	std::vector<DirectX::SimpleMath::Vector3> myVertices;
 };
 

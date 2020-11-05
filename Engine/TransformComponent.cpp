@@ -61,6 +61,28 @@ float CTransformComponent::Scale()
 	return myScale;
 }
 
+void CTransformComponent::SetOutlineScale()
+{
+	Vector3 scale;
+	Vector3 translation;
+	Quaternion rotation;
+	myTransform.Decompose(scale, rotation, translation);
+	myTransform = Matrix::CreateFromQuaternion(rotation);
+	myTransform *= Matrix::CreateScale((myScale * ENGINE_SCALE) * 1.01f);
+	myTransform.Translation(translation);
+}
+
+void CTransformComponent::ResetScale()
+{
+	Vector3 scale;
+	Vector3 translation;
+	Quaternion rotation;
+	myTransform.Decompose(scale, rotation, translation);
+	myTransform = Matrix::CreateFromQuaternion(rotation);
+	myTransform *= Matrix::CreateScale(myScale * ENGINE_SCALE);
+	myTransform.Translation(translation);
+}
+
 void CTransformComponent::Transform(DirectX::SimpleMath::Vector3 aPosition, DirectX::SimpleMath::Vector3 aRotation)
 {
 	Rotation(aRotation);

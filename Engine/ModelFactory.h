@@ -21,6 +21,8 @@ public:
 	CModel* LoadModel(std::string aFilePath);
 	CModel* GetCube();
 
+	CModel* GetOutlineModelSubset();
+
 private:
 	CModelFactory();
 	~CModelFactory();
@@ -30,5 +32,6 @@ private:
 	std::map<std::string, CModel*> myModelMapPBR;
 	std::map<std::string, CModel*> myModelMap;
 	CEngine* myEngine;
+	CModel* myOutlineModelSubset;
 	static CModelFactory* ourInstance;
 };
