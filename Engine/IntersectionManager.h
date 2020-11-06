@@ -16,7 +16,7 @@ class CIntersectionManager
 public:
 	//static bool RectangleIntersection(CRectangleColliderComponent& aRectangle, CRectangleColliderComponent& aRectangle2);
 	static bool CircleIntersection(CCircleColliderComponent& aCircle, CCircleColliderComponent& aCircle2);
-	static bool RectangleVsCircleIntersection(CRectangleColliderComponent& aRectangle, CCircleColliderComponent& aCircle);
+	static bool CircleVsRectangleIntersection(CCircleColliderComponent& aCircle, CRectangleColliderComponent& aRectangle);
 	static bool CircleVsTriangleIntersection(CCircleColliderComponent& aCircle, CTriangleColliderComponent& aTriangle);
 	static bool CapsuleIntersection(CCapsuleColliderComponent& aCapsule, CCapsuleColliderComponent& aCapsule2);
 	static bool CircleVsRay(CCircleColliderComponent& aCircle, DirectX::SimpleMath::Ray aRay);
