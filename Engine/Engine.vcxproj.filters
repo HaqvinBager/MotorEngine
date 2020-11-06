@@ -112,6 +112,9 @@
     <Filter Include="Shader Files\Outline">
       <UniqueIdentifier>{283958f7-c856-4f8b-bff7-4c60c6f0516a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Debug\DL_Debug">
+      <UniqueIdentifier>{37f1db06-8f75-4dc9-a849-e1e578f30e69}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -336,6 +339,15 @@
     <ClInclude Include="EnemyFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DL_Debug.h">
+      <Filter>Debug\DL_Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="DL_StackWalker.h">
+      <Filter>Debug\DL_Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="StackWalker.h">
+      <Filter>Debug\DL_Debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LevelLoader.cpp">
@@ -532,6 +544,15 @@
     </ClCompile>
     <ClCompile Include="EnemyFactory.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DL_Debug.cpp">
+      <Filter>Debug\DL_Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="DL_StackWalker.cpp">
+      <Filter>Debug\DL_Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="StackWalker.cpp">
+      <Filter>Debug\DL_Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

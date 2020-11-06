@@ -125,6 +125,8 @@
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Debug.h" />
+    <ClInclude Include="DL_Debug.h" />
+    <ClInclude Include="DL_StackWalker.h" />
     <ClInclude Include="EnemyFactory.h" />
     <ClInclude Include="InputMapper.h" />
     <ClInclude Include="InputObserver.h" />
@@ -132,6 +134,7 @@
     <ClInclude Include="ObjectPool.h" />
     <ClInclude Include="PlayerControllerComponent.h" />
     <ClInclude Include="RectangleColliderComponent.h" />
+    <ClInclude Include="StackWalker.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="DebugTimerUtility.h" />
     <ClInclude Include="DirectXFramework.h" />
@@ -200,12 +203,15 @@
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="DL_Debug.cpp" />
+    <ClCompile Include="DL_StackWalker.cpp" />
     <ClCompile Include="EnemyFactory.cpp" />
     <ClCompile Include="InputMapper.cpp" />
     <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="ObjectPool.cpp" />
     <ClCompile Include="PlayerControllerComponent.cpp" />
     <ClCompile Include="RectangleColliderComponent.cpp" />
+    <ClCompile Include="StackWalker.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="DirectXFramework.cpp" />
     <ClCompile Include="Engine.cpp" />
