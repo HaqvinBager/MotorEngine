@@ -5,7 +5,7 @@
 #define ENGINE_SCALE 0.01f
 using namespace DirectX::SimpleMath;
 
-CTransformComponent::CTransformComponent(CGameObject& aParent, DirectX::SimpleMath::Vector3 aPosition) : myScale(ENGINE_SCALE), CComponent(aParent), myMoveSpeed(3.0f)
+CTransformComponent::CTransformComponent(CGameObject& aParent, DirectX::SimpleMath::Vector3 aPosition) : myScale(1.0f), CComponent(aParent), myMoveSpeed(3.0f)
 {
 	Scale(1.0f);
 	Position(aPosition);

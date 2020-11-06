@@ -221,7 +221,7 @@ CGameObject* InitModels(const std::string& aModelPath/*, CCamera* aCamera*/)
 	CScene* scene = CScene::GetInstance();
 
 	CCamera* camera = CCameraFactory::GetInstance()->CreateCamera(65.0f, 5000.0f);
-	camera->SetPosition({ 0,1.0f,-5.0f });
+	camera->SetPosition({ 0,1.0f,-25.0f });
 	scene->AddInstance(camera);
 	scene->SetMainCamera(camera);
 

@@ -68,7 +68,7 @@ std::vector<CGameObject*> CScene::CullGameObjects(CCamera* aMainCamera)
 	for (auto& gameObject : myGameObjects)
 	{
 		float distanceToCameraSquared = Vector3::DistanceSquared(gameObject->GetComponent<CTransformComponent>()->Position(), cameraPosition);
-		if (distanceToCameraSquared < 1500.0f)
+		if (distanceToCameraSquared < 5000.0f)
 		{
 			culledGameObjects.emplace_back(gameObject);
 		}
