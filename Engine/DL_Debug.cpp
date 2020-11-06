@@ -2,12 +2,17 @@
 #include "DL_Debug.h"
 #include <iostream>
 #include <time.h>
+#include <filesystem>
 
 namespace DL_Debug {
     CDebug *CDebug::ourInstance = nullptr;
 
     void CDebug::Create(const std::string &aFile, const std::string aCatalogue) {
         assert(ourInstance == nullptr && "Debug object already created");
+
+#pragma warning(suppress : 4244)
+        CreateDirectory(std::wstring(aCatalogue.begin(), aCatalogue.end()).c_str(), NULL);
+
         ourInstance = new CDebug();
         ourInstance->myDebugFile = std::ofstream(aFile);
 
@@ -25,10 +30,13 @@ namespace DL_Debug {
 
     void CDebug::Destroy() {
         assert(ourInstance != nullptr && "No DL_DEBUG created!");
-        ourInstance->myDebugFile.close();
+        
+        if (ourInstance->myDebugFile.is_open())
+            ourInstance->myDebugFile.close();
 
         for (auto i = ourInstance->myLogs.begin(); i != ourInstance->myLogs.end(); i++) {
-            (*i).second.close();
+            if ((*i).second.is_open())
+                (*i).second.close();
         }
 
         SAFE_DELETE(ourInstance);
@@ -93,6 +101,7 @@ namespace DL_Debug {
         if (ourInstance->myLogFilter.find(aFilterLog) != ourInstance->myLogFilter.end()) 
             ourInstance->myLogFilter[aFilterLog] = false;
     }
+
     void CDebug::ReadCommandLineArguments(LPWSTR lpCmdLine)
     {
         std::wstring wideString(lpCmdLine);
@@ -141,5 +150,22 @@ namespace DL_Debug {
                 ActivateFilterLog("engine");
             }
         }
+    }
+
+    void CDebug::CopyToCrashFolder(std::wstring aSubPath)
+    {
+        aSubPath += L"/";
+        aSubPath += std::wstring(ourInstance->myDebugCatalogue.begin(), ourInstance->myDebugCatalogue.end());
+        CreateDirectory(std::wstring(aSubPath.begin(), aSubPath.end()).c_str(), NULL);
+
+        if (ourInstance->myDebugFile.is_open())
+            ourInstance->myDebugFile.close();
+
+        for (auto i = ourInstance->myLogs.begin(); i != ourInstance->myLogs.end(); i++) {
+            if ((*i).second.is_open())
+                (*i).second.close();
+        }
+
+        std::filesystem::copy(ourInstance->myDebugCatalogue, aSubPath.c_str());
     }
 }

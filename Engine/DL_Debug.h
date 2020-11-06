@@ -36,6 +36,7 @@ namespace DL_Debug {
         void ActivateFilterLog(const char* aFilterLog);
         void DeactivateFilterLog(const char* aFilterLog);
         void ReadCommandLineArguments(LPWSTR lpCmdLine);
+        void CopyToCrashFolder(std::wstring aSubPath);
 
     private:
         static CDebug *ourInstance;
