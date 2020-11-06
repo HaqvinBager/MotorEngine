@@ -7,8 +7,8 @@ namespace SM = DirectX::SimpleMath;
 #define ENGINE_SCALE 0.01f
 
 CVFXComponent::CVFXComponent(CGameObject& aParent): CComponent(aParent), myVFXBase(nullptr) {
-	myTransform.Translation(GetParent().GetComponent<CTransformComponent>()->Position());
-	//SetPosition(GetParent().GetComponent<CTransformComponent>()->Position());
+	SetScale(1.0f);
+	myTransform.Translation(GetParent().myTransform->Position());
 }
 
 CVFXComponent::~CVFXComponent() {
@@ -25,7 +25,7 @@ void CVFXComponent::Update() {
 
 	myTextureScroll += {0.15f * CTimer::Dt(), 0.15f * CTimer::Dt()};
 	myTextureScroll2 += {0.15f * CTimer::Dt(), 0.15f * CTimer::Dt()};
-	SetPosition(GetParent().GetComponent<CTransformComponent>()->Position());
+	SetPosition(GetParent().myTransform->Position());
 }
 
 bool CVFXComponent::Init(CVFXBase* aVFXBase) {
@@ -59,7 +59,13 @@ void CVFXComponent::SetPosition(DirectX::SimpleMath::Vector3 aPosition) {
 
 void CVFXComponent::SetScale(float aScale) {
 	myScale = aScale;
+	SM::Vector3 scale;
+	SM::Vector3 translation;
+	SM::Quaternion rotation;
+	myTransform.Decompose(scale, rotation, translation);
+	myTransform = SM::Matrix::CreateFromQuaternion(rotation);
 	myTransform *= SM::Matrix::CreateScale(myScale * ENGINE_SCALE);
+	myTransform.Translation(translation);
 }
 
 void CVFXComponent::Move(DirectX::SimpleMath::Vector3 aMovement) {

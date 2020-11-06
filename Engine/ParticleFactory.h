@@ -1,5 +1,6 @@
 #pragma once
 #include "Particle.h"
+#include <map>
 
 class CDirectXFramework;
 
@@ -24,6 +25,6 @@ private:
 
 private:
 	ID3D11Device* myDevice;
-	std::vector<std::pair<std::string, CParticle*>> myParticles;
+	std::map<std::string, CParticle*> myParticles;
 };
 

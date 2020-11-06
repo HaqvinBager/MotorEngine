@@ -2,7 +2,9 @@
 #include "ParticleRenderer.h"
 #include "DirectXFramework.h"
 #include "Camera.h"
-#include "ParticleInstance.h"
+//#include "ParticleInstance.h"
+#include "GameObject.h"
+#include "ParticleEmitterComponent.h"
 #include <iostream>
 
 CParticleRenderer::CParticleRenderer() : myContext(nullptr), myFrameBuffer(), myObjectBuffer()
@@ -48,9 +50,8 @@ bool CParticleRenderer::Init(CDirectXFramework* aFramework)
     return true;
 }
 
-void CParticleRenderer::Render(CCamera* aCamera, std::vector<CParticleInstance*>& aParticleList)
+void CParticleRenderer::Render(CCamera* aCamera, std::vector<CGameObject*>& aGameObjectList)
 {
-    //HRESULT result;
     D3D11_MAPPED_SUBRESOURCE bufferData;
 
     myFrameBufferData.myToCamera = aCamera->GetTransform().Invert();
@@ -61,16 +62,21 @@ void CParticleRenderer::Render(CCamera* aCamera, std::vector<CParticleInstance*>
     myContext->VSSetConstantBuffers(0, 1, &myFrameBuffer);
     myContext->GSSetConstantBuffers(0, 1, &myFrameBuffer);
 
-    for (unsigned int instanceIndex = 0; instanceIndex < aParticleList.size(); ++instanceIndex)
+    for (CGameObject* gameObject : aGameObjectList) 
     {
-        CParticleInstance* instance = aParticleList[instanceIndex];
-        CParticle* particle = instance->GetParticle();
+        CParticleEmitterComponent* component = gameObject->GetComponent<CParticleEmitterComponent>();
+        if (component == nullptr)
+            continue;
 
-        if (instance->GetParticleVertices().size() < 1) {
+        CParticle* particle = component->GetParticle();
+        if (particle == nullptr)
+            continue;
+
+        if (component->GetParticleVertices().size() < 1) {
             continue;
         }
 
-        myObjectBufferData.myToWorld = instance->GetTransform();
+        myObjectBufferData.myToWorld = component->GetTransform();
         BindBuffer(myObjectBuffer, myObjectBufferData, "Object Buffer");
 
         CParticle::SParticleData particleData = particle->GetParticleData();
@@ -78,9 +84,9 @@ void CParticleRenderer::Render(CCamera* aCamera, std::vector<CParticleInstance*>
         ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
         ENGINE_HR_MESSAGE(myContext->Map(particleData.myParticleVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData), "Vertex Buffer could not be mapped.");
 
-        UINT numberOfVertices = (UINT)instance->GetParticleVertices().size();
+        UINT numberOfVertices = (UINT)component->GetParticleVertices().size();
 
-        memcpy(bufferData.pData, &(instance->GetParticleVertices()[0]), sizeof(CParticle::SParticleVertex) * numberOfVertices);
+        memcpy(bufferData.pData, &(component->GetParticleVertices()[0]), sizeof(CParticle::SParticleVertex) * numberOfVertices);
         myContext->Unmap(particleData.myParticleVertexBuffer, 0);
 
         myContext->IASetPrimitiveTopology(particleData.myPrimitiveTopology);

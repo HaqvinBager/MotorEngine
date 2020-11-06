@@ -6,6 +6,7 @@
 #include "StatsComponent.h"
 #include "TransformComponent.h"
 #include "CapsuleColliderComponent.h"
+#include "CircleColliderComponent.h"
 #include "ModelComponent.h"
 #include "Scene.h"
 #include "Model.h"

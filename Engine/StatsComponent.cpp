@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "StatsComponent.h"
 #include "ModelComponent.h"
+#include "TransformComponent.h"
 #include "Scene.h"
 #include "ObjectPool.h"
 
@@ -43,6 +44,16 @@ void CStatsComponent::Update()
 	if (myHealth <= 0) {
 		CScene::GetInstance()->RemoveInstance(&GetParent());
 		CObjectPool::GetInstance()->Remove(&GetParent());
+	}
+}
+
+void CStatsComponent::FindATarget(CGameObject& aTarget)
+{
+	float dist = DirectX::SimpleMath::Vector3::DistanceSquared(GetParent().GetComponent<CTransformComponent>()->Position(), aTarget.GetComponent<CTransformComponent>()->Position());
+	if (dist <= 15.f) {
+		DirectX::SimpleMath::Vector3 dir = aTarget.GetComponent<CTransformComponent>()->Position() - GetParent().GetComponent<CTransformComponent>()->Position();
+		dir.Normalize();
+		GetParent().GetComponent<CTransformComponent>()->Move(dir * 3.f * CTimer::Dt());
 	}
 }
 

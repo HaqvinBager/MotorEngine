@@ -7,6 +7,7 @@ struct ID3D11Buffer;
 class CDirectXFramework;
 class CCamera;
 class CParticleInstance;
+class CGameObject;
 
 class CParticleRenderer
 {
@@ -16,7 +17,7 @@ public:
 
 	bool Init(CDirectXFramework* aFramework);
 
-	void Render(CCamera* aCamera, std::vector<CParticleInstance*>& aParticleList);
+	void Render(CCamera* aCamera, std::vector<CGameObject*>& aGameObjectList);
 
 private:
 	template<class T>
