@@ -10,41 +10,54 @@
 class MouseTracker
 {
 public:
-	//Checks against farplane
-	static DirectX::SimpleMath::Vector4 ScreenPositionToWorldPosition(const float aX, const float aY, float aWidth, float aHeight)
+
+	static DirectX::SimpleMath::Vector3 ScreenPositionToWorldPosition(unsigned int aWidth, unsigned int aHeight/*const float aX, const float aY, float aWidth, float aHeight*/)
 	{
-		CCamera* testCamera = CScene::GetInstance()->GetMainCamera();
-
-		DirectX::SimpleMath::Matrix proj =  /*testCamera->GetView()*/testCamera->GetTransform() * testCamera->GetProjection();
-		DirectX::SimpleMath::Matrix porjInvert = proj.Invert();
-
-		float mouseX = (aX / (aWidth / 2.f) - 1.f);
-		float mouseY = (-aY / (aHeight / 2.f) + 1.f);
-
-		DirectX::SimpleMath::Vector4 mouseWorldPositionNear = DirectX::SimpleMath::Vector4(mouseX, mouseY, 2.0 * 1.0f - 1.0, 1.0f);
-		DirectX::SimpleMath::Vector4 worldPosNear = DirectX::XMVector4Transform(mouseWorldPositionNear, porjInvert);
+		DirectX::SimpleMath::Ray ray = MouseTracker::WorldSpacePick(aWidth, aHeight);
+		//The picking ray is checked against the floor of the world, **ASSUMING Y TO BE 0**
+		DirectX::SimpleMath::Plane worldPlane = DirectX::SimpleMath::Plane(DirectX::SimpleMath::Vector3::Zero, DirectX::SimpleMath::Vector3::Up);
 		
-		//DirectX::SimpleMath::Vector4 mouseWorldPositionFar = DirectX::SimpleMath::Vector4(mouseX, mouseY, 1000.0f, 1.f);
-		//DirectX::SimpleMath::Vector4 worldPosFar = DirectX::XMVector4Transform(mouseWorldPositionFar, porjInvert);
+		float distToPlane = 0.0f;
+		DirectX::SimpleMath::Vector3 worldPos{ 0.0f, 0.0f, 0.0f };
 
-		//std::cout << "Click Far [" << worldPosFar.x << ", " <<
-		//	worldPosFar.y << ", " <<
-		//	worldPosFar.z << "]" << std::endl;
+		if (ray.Intersects(worldPlane, distToPlane)) {
+			worldPos = ray.position + ray.direction * distToPlane;
+		}
 
-		worldPosNear.w = 1.f / worldPosNear.w;
-		worldPosNear.x *= worldPosNear.w;
-		worldPosNear.y *= worldPosNear.w;
-		worldPosNear.z *= worldPosNear.w;
+		return worldPos;
 
-		std::cout << "Click Near [" << worldPosNear.x << ", " <<
-			worldPosNear.y << ", " <<
-			worldPosNear.z << "] --- " << std::endl;
-	//	worldPosFar.w = 1.f / worldPosFar.w;
-	//	worldPosFar.x *= worldPosFar.w;
-	//	worldPosFar.y *= worldPosFar.w;
-		
-		
-		return std::move(worldPosNear);
+	//	CCamera* testCamera = CScene::GetInstance()->GetMainCamera();
+
+	//	DirectX::SimpleMath::Matrix proj =  /*testCamera->GetView()*/testCamera->GetTransform() * testCamera->GetProjection();
+	//	DirectX::SimpleMath::Matrix porjInvert = proj.Invert();
+
+	//	float mouseX = (aX / (aWidth / 2.f) - 1.f);
+	//	float mouseY = (-aY / (aHeight / 2.f) + 1.f);
+
+	//	DirectX::SimpleMath::Vector4 mouseWorldPositionNear = DirectX::SimpleMath::Vector4(mouseX, mouseY, 2.0 * 1.0f - 1.0, 1.0f);
+	//	DirectX::SimpleMath::Vector4 worldPosNear = DirectX::XMVector4Transform(mouseWorldPositionNear, porjInvert);
+	//	
+	//	//DirectX::SimpleMath::Vector4 mouseWorldPositionFar = DirectX::SimpleMath::Vector4(mouseX, mouseY, 1000.0f, 1.f);
+	//	//DirectX::SimpleMath::Vector4 worldPosFar = DirectX::XMVector4Transform(mouseWorldPositionFar, porjInvert);
+
+	//	//std::cout << "Click Far [" << worldPosFar.x << ", " <<
+	//	//	worldPosFar.y << ", " <<
+	//	//	worldPosFar.z << "]" << std::endl;
+
+	//	worldPosNear.w = 1.f / worldPosNear.w;
+	//	worldPosNear.x *= worldPosNear.w;
+	//	worldPosNear.y *= worldPosNear.w;
+	//	worldPosNear.z *= worldPosNear.w;
+
+	//	std::cout << "Click Near [" << worldPosNear.x << ", " <<
+	//		worldPosNear.y << ", " <<
+	//		worldPosNear.z << "] --- " << std::endl;
+	////	worldPosFar.w = 1.f / worldPosFar.w;
+	////	worldPosFar.x *= worldPosFar.w;
+	////	worldPosFar.y *= worldPosFar.w;
+	//	
+	//	
+	//	return std::move(worldPosNear);
 	};
 
 	static DirectX::SimpleMath::Ray WorldSpacePick(unsigned int aWidth, unsigned int aHeight) {

@@ -50,20 +50,19 @@ void CVFXRenderer::Render(CCamera* aCamera, std::vector<CGameObject*>& aGameObje
 	myContext->VSSetConstantBuffers(0, 1, &myFrameBuffer);
 	myContext->PSSetConstantBuffers(0, 1, &myFrameBuffer);
 
-
-
 	for (CGameObject* gameobject : aGameObjectList) {
 		
-		if (gameobject->GetComponent<CVFXComponent>() == nullptr)
+		CVFXComponent* component = gameobject->GetComponent<CVFXComponent>();
+		if (component == nullptr)
 			continue;
 
-		if (gameobject->GetComponent<CVFXComponent>()->GetVFXBase() == nullptr)
+		CVFXBase* vfxBase = component->GetVFXBase();
+		if (vfxBase == nullptr)
 			continue;
 		
-		CVFXBase* vfxBase = gameobject->GetComponent<CVFXComponent>()->GetVFXBase();
 		CVFXBase::SVFXBaseData vfxBaseData = vfxBase->GetVFXBaseData();
 
-		myObjectBufferData.myToWorld = gameobject->GetComponent<CVFXComponent>()->GetTransform();
+		myObjectBufferData.myToWorld = component->GetTransform();
 		BindBuffer<SObjectBufferData>(myObjectBuffer, myObjectBufferData, "Object Buffer");
 
 		myTime += CTimer::Dt();

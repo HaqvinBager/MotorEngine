@@ -123,9 +123,8 @@ void CRenderManager::Render()
 
 	myVFXRenderer.Render(maincamera, gameObjects);
 
-
-	std::vector<CParticleInstance*> particles = myScene.CullParticles(maincamera);
-	myParticleRenderer.Render(maincamera, particles);
+	//std::vector<CParticleInstance*> particles = myScene.CullParticles(maincamera);
+	myParticleRenderer.Render(maincamera, gameObjects);
 
 	std::vector<CSpriteInstance*> sprites = myScene.CullSprites(maincamera);
 	mySpriteRenderer.Render(sprites);

@@ -30,9 +30,13 @@ bool CParticleFactory::Init(CDirectXFramework* aFramework)
     return true;
 }
 
-CParticle* CParticleFactory::GetParticle(std::string /*aFilePath*/)
+CParticle* CParticleFactory::GetParticle(std::string aFilePath)
 {
-    return nullptr;
+    
+    if (myParticles.find(aFilePath) == myParticles.end()) {
+        return LoadParticle(aFilePath);
+    }
+    return myParticles.at(aFilePath);
 }
 
 CParticle* CParticleFactory::LoadParticle(std::string aFilePath)
@@ -121,6 +125,8 @@ CParticle* CParticleFactory::LoadParticle(std::string aFilePath)
     particleData.myTexture =                shaderResourceView;
 
     particleEmitter->Init(particleData);
+
+    myParticles.emplace(aFilePath, particleEmitter);
     return particleEmitter;
 }
 
