@@ -42,7 +42,7 @@ private:
 	CObjectPool();
 	~CObjectPool();
 private:
-	static const int poolSize = 10;
+	static const int poolSize = 100;
 	CEnemy enemies[poolSize];
 	CEnemy* firstAvailable;
 	static CObjectPool* ourInstance;
