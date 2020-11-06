@@ -13,6 +13,8 @@ public:
 	void Start() override;
 	void Update() override;
 
+	void FindATarget(CGameObject& aTarget);
+
 	void TakeDamage(float aDamage);
 	float GetDamage() const;
 
