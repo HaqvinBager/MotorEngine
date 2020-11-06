@@ -7,6 +7,7 @@ using namespace DirectX::SimpleMath;
 
 CTransformComponent::CTransformComponent(CGameObject& aParent, DirectX::SimpleMath::Vector3 aPosition) : myScale(ENGINE_SCALE), CComponent(aParent), myMoveSpeed(3.0f)
 {
+	Scale(1.0f);
 	Position(aPosition);
 }
 
@@ -53,7 +54,7 @@ void CTransformComponent::Rotation(DirectX::SimpleMath::Vector3 aRotation)
 void CTransformComponent::Scale(float aScale)
 {
 	myScale = aScale;
-	myTransform *= Matrix::CreateScale(aScale * ENGINE_SCALE);
+	ResetScale();
 }
 
 float CTransformComponent::Scale()
