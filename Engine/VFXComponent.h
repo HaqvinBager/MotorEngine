@@ -4,7 +4,6 @@
 
 class CVFXBase;
 class CGameObject;
-
 class CVFXComponent : public CComponent {
 
 public:

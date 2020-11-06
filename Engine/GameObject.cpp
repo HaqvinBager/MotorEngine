@@ -1,10 +1,13 @@
 #include "stdafx.h"
 #include "GameObject.h"
 #include "Component.h"
+#include "TransformComponent.h"
 #include <iostream>
 
 CGameObject::CGameObject()
 {
+	myTransform = new CTransformComponent(*this);
+	myComponents.emplace_back(myTransform);
 }
 
 CGameObject::~CGameObject()
