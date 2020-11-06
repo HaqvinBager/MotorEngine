@@ -205,7 +205,7 @@ void LoadModelPaths(const std::string& aStartFolderPath, std::vector<std::string
 				{
 					aFBXFilePaths.emplace_back(folders[prevFolders[depth]].myFullPath + "/" + filePath);
 #ifdef _DEBUG
-					std::cout	<< "      Found FBX: \n        " << aFBXFilePaths.back() << std::endl;
+					//std::cout	<< "      Found FBX: \n        " << aFBXFilePaths.back() << std::endl;
 #endif // ! _DEBUG
 				}
 			}
@@ -220,11 +220,6 @@ CGameObject* InitModels(const std::string& aModelPath/*, CCamera* aCamera*/)
 {
 	CScene* scene = CScene::GetInstance();
 
-	CCamera* camera = CCameraFactory::GetInstance()->CreateCamera(65.0f, 5000.0f);
-	camera->SetPosition({ 0,1.0f,-25.0f });
-	scene->AddInstance(camera);
-	scene->SetMainCamera(camera);
-
 	CLightFactory* lightFactory = CLightFactory::GetInstance();
 	CEnvironmentLight* environmentLight = lightFactory->CreateEnvironmentLight("Yokohama2.dds");
 	environmentLight->SetDirection(SM::Vector3(1, 0, 0));
@@ -236,8 +231,7 @@ CGameObject* InitModels(const std::string& aModelPath/*, CCamera* aCamera*/)
 	CGameObject* gameobject = new CGameObject();
 
 	gameobject->AddComponent<CModelComponent>(CModelComponent(*gameobject, aModelPath));
-	gameobject->AddComponent<CTransformComponent>(CTransformComponent(*gameobject, { 0.0f, 0.0f, 0.0f }));
-	gameobject->GetComponent<CTransformComponent>()->Scale(1.0f);
+	gameobject->myTransform->Position({ 0.0f,0.0f,0.0f });
 	
 	scene->AddInstance(gameobject);
 
@@ -277,11 +271,107 @@ std::string CheckForGroupNumber(short& aNumber)
 	return std::move(path);
 }
 
-void Update(std::vector<std::string>& aModelFilePathList, CGameObject* aCurrentGameObject/*,CCamera* aCamera*/)
+/* // OLD CAMERA CONTROLS -> MOVES MODEL
+// Rotation functions
+float rotationSpeed = 1.0f;
+float dt = CTimer::Dt();
+// X axis
+if (Input::GetInstance()->IsKeyDown('R'))
 {
+aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ rotationSpeed * dt,0.0f,0.0f });
+}
+
+if (Input::GetInstance()->IsKeyDown('F'))
+{
+aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ -rotationSpeed * dt,0.0f,0.0f });
+}
+
+// Y axis
+if (Input::GetInstance()->IsKeyDown('T'))
+{
+aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ 0.0f, rotationSpeed * dt,0.0f });
+}
+
+if (Input::GetInstance()->IsKeyDown('G'))
+{
+aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ 0.0f, -rotationSpeed * dt,0.0f });
+}
+
+// Z axis
+if (Input::GetInstance()->IsKeyDown('Y'))
+{
+aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ 0.0f,0.0f,rotationSpeed * dt });
+}
+if (Input::GetInstance()->IsKeyDown('H'))
+{
+aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ 0.0f,0.0f,-rotationSpeed * dt });
+}
+
+// ! Rotation Functions 
+
+// Zoom/ move Camera functions
+float moveSpeed = 5.0f;
+// X axis
+
+if (Input::GetInstance()->IsKeyDown('A'))
+{
+aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ moveSpeed * dt, 0.0f, 0.0f });
+}
+
+if (Input::GetInstance()->IsKeyDown('D'))
+{
+aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ -moveSpeed * dt, 0.0f, 0.0f });
+}
+
+// Y axis
+if (Input::GetInstance()->IsKeyDown('Q'))
+{
+aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ 0.0f, moveSpeed * dt, 0.0f });
+}
+
+if (Input::GetInstance()->IsKeyDown('E'))
+{
+aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ 0.0f, -moveSpeed * dt, 0.0f });
+}
+
+// Z axis
+
+if (Input::GetInstance()->IsKeyDown('W'))
+{
+aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ 0.0f, 0.0f, -moveSpeed * dt });
+}
+
+if (Input::GetInstance()->IsKeyDown('S'))
+{
+aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ 0.0f, 0.0f, moveSpeed * dt });
+}
+// ! Zoom/ move functions
+*/
+
+void Update(std::vector<std::string>& aModelFilePathList, CGameObject* aCurrentGameObject,CCamera* aCamera)
+{
+	float dt = CTimer::Dt();
+
+	float cameraMoveSpeed = 5.0f;
+	if (Input::GetInstance()->IsKeyDown(VK_UP))
+	{
+		aCamera->Move({ 0.0f, 0.0f, cameraMoveSpeed * dt });
+	}
+	if (Input::GetInstance()->IsKeyDown(VK_DOWN))
+	{
+		aCamera->Move({ 0.0f, 0.0f, -cameraMoveSpeed * dt });
+	}
+	if (Input::GetInstance()->IsKeyDown(VK_RIGHT))
+	{
+		aCamera->Move({ cameraMoveSpeed * dt, 0.0f, 0.0f });
+	}
+	if (Input::GetInstance()->IsKeyDown(VK_LEFT))
+	{
+		aCamera->Move({ -cameraMoveSpeed * dt, 0.0f, 0.0f });
+	}
+
 	// Rotation functions
 	float rotationSpeed = 1.0f;
-	float dt = CTimer::Dt();
 	// X axis
 	if (Input::GetInstance()->IsKeyDown('R'))
 	{
@@ -360,6 +450,11 @@ void Update(std::vector<std::string>& aModelFilePathList, CGameObject* aCurrentG
 	{
 		aCurrentGameObject->GetComponent<CTransformComponent>()->Transform({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
 	}
+	if (Input::GetInstance()->IsKeyDown('C'))
+	{
+		aCamera->SetRotation({ 33.f,-45.f,0.f });
+		aCamera->SetPosition({ 3.0f,4.0f,-3.5f });
+	}
 
 	// ! Reset function
 
@@ -413,6 +508,15 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	if (!shouldRun)
 		return 1;
 
+	CScene* scene = CScene::GetInstance();
+
+	CCamera* camera = CCameraFactory::GetInstance()->CreateCamera(65.0f, 5000.0f);
+	camera->SetRotation({ 33.f,-45.f,0.f });
+	camera->SetPosition({ 3.0f,4.0f,-3.5f });
+	//camera->SetPosition({ 0.0f,0.0f,0.0f });
+	scene->AddInstance(camera);
+	scene->SetMainCamera(camera);
+
 	CLineInstance* grid = new CLineInstance();
 	grid->Init(CLineFactory::GetInstance()->CreateGrid({ 0.33f,0.33f,0.33f, 1.0f }));
 	grid->SetPosition({ 0.0f,-0.01f,0.0f });
@@ -420,6 +524,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
 	CLineInstance* origin = new CLineInstance();
 	origin->Init(CLineFactory::GetInstance()->CreateAxisMarker());
+	origin->SetPosition({ 0.0f,0.01f,0.0f });
 	CScene::GetInstance()->AddInstance(origin);
 
 	//short groupNumber = 0;
@@ -441,9 +546,18 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		std::cout << "Number: " << counter << "\t: " << modelName << std::endl;
 		++counter;
 	}
-	std::cout << "\nInstructions" << std::endl 
+	std::cout << "\nInstructions" << std::endl
 		<< "   Main Window (Iron Wrought, where you can see a model): Press 'ESC' and then return to this window (Console)." << std::endl
-		<< "   Console: Enter the desired models number." << std::endl;
+		<< "   Console: Enter the desired models number." << std::endl << std::endl
+		<< "CONTROLS:\n"
+		<< "   Arrow Keys...........Move Camera\n"
+		<< "   W/A/S/D/Q/E..........Move Model\n"
+		<< "   R/F..................Rotate Model around its X axis\n"
+		<< "   T/G..................Rotate Model around its Y axis\n"
+		<< "   Y/H..................Rotate Model around its Z axis\n"
+		<< "   K....................Reset Model\n"
+		<< "   C....................Reset Camera\n"
+		<< std::endl;
 	
 	MSG windowMessage = { 0 };
 	while (shouldRun)
@@ -460,7 +574,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		}
 	
 		engine.BeginFrame();
-		Update(filePaths, currentGameObject/*, camera*/);
+		Update(filePaths, currentGameObject, camera);
 
 		engine.RenderFrame();
 		engine.EndFrame();
