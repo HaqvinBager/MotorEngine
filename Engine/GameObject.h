@@ -68,10 +68,11 @@ public:
 	template<class T>
 	T* GetComponent() const;
 
-	bool Enabled() const;
-	void Enabled(bool anIsEnabled);
-
 	CTransformComponent* myTransform;
+
+public:
+	bool Enabled() const { return myIsEnabled; }
+	void Enabled(bool anIsEnabled) { myIsEnabled = anIsEnabled; }
 
 private:
 	std::vector<CComponent*> myComponents;
