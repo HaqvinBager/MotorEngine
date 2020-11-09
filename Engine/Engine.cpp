@@ -24,12 +24,17 @@
 #include <ScreenGrab.h>
 #include <wincodec.h>
 #include "EnemyFactory.h"
+#include "DL_Debug.h"
 
 #pragma comment(lib, "runtimeobject.lib")
 #pragma comment(lib, "d3d11.lib")
 
+CEngine* CEngine::ourInstance = nullptr;
+
 CEngine::CEngine()
 {
+	ourInstance = this;
+
 	myScene = new CScene();
 	myTimer = new CTimer();
 	myWindowHandler = new CWindowHandler();
@@ -87,6 +92,54 @@ CEngine::~CEngine()
 
 	delete myEnemyFactory;
 	myEnemyFactory = nullptr;
+
+	ourInstance = nullptr;
+}
+
+void CEngine::Destroy() {
+	//delete myFramework;
+	//myFramework = nullptr;
+
+	//ourInstance = nullptr;
+
+	//delete myScene;
+	//myScene = nullptr;
+	//delete myWindowHandler;
+	//myWindowHandler = nullptr;
+	////delete myFramework;
+	////myFramework = nullptr;
+	//delete myTimer;
+	//myTimer = nullptr;
+
+	//delete myModelFactory;
+	//myModelFactory = nullptr;
+	//delete myCameraFactory;
+	//myCameraFactory = nullptr;
+	//delete myLightFactory;
+	//myLightFactory = nullptr;
+	//delete myRenderManager;
+	//myRenderManager = nullptr;
+
+	//delete myParticleFactory;
+	//myParticleFactory = nullptr;
+	//delete myVFXFactory;
+	//myVFXFactory = nullptr;
+	//delete myLineFactory;
+	//myLineFactory = nullptr;
+	//delete mySpriteFactory;
+	//mySpriteFactory = nullptr;
+	//delete myTextFactory;
+	//myTextFactory = nullptr;
+	//delete myInputMapper;
+	//myInputMapper = nullptr;
+
+	//delete myDebug;
+	//myDebug = nullptr;
+
+	//delete myEnemyFactory;
+	//myEnemyFactory = nullptr;
+
+	////ourInstance = nullptr;
 }
 
 bool CEngine::Init(CWindowHandler::SWindowData& someWindowData)
@@ -149,11 +202,14 @@ void CEngine::InitWindowsImaging()
 #endif
 		return;
 }
+
 #include <DbgHelp.h>
 #include <strsafe.h>
 
-void CEngine::ScreenShot(std::wstring &aSubPath)
+void CEngine::CrashWithScreenShot(std::wstring &aSubPath)
 {
+	DL_Debug::CDebug::GetInstance()->CopyToCrashFolder(aSubPath);
+
 	aSubPath += L"\\screenshot.bmp";
 	HRESULT hr = CoInitialize(nullptr);
 	hr = SaveWICTextureToFile(myFramework->GetContext(), myFramework->GetBackbufferTexture(),
@@ -164,4 +220,9 @@ void CEngine::ScreenShot(std::wstring &aSubPath)
 		return;
 	}
 	CoUninitialize();
+}
+
+CEngine* CEngine::GetInstance()
+{
+	return ourInstance;
 }

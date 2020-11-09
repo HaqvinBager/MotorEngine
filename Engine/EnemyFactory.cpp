@@ -6,6 +6,7 @@
 #include "StatsComponent.h"
 #include "TransformComponent.h"
 #include "CapsuleColliderComponent.h"
+#include "CircleColliderComponent.h"
 #include "ModelComponent.h"
 #include "Scene.h"
 #include "Model.h"
@@ -35,17 +36,18 @@ CGameObject& CEnemyFactory::CreateEnemy(DirectX::SimpleMath::Vector3 aPosition, 
 	transform->Position(aPosition);
 	transform->Rotation({ 0.0f, 0.0f, 0.0f });
 	enemy->AddComponent<CCapsuleColliderComponent>(*enemy, 0.5f, 2.0f);
-	auto modelComponent = enemy->AddComponent<CModelComponent>(*enemy, "ani/CH_NPC_Undead_17G3_SK.fbx");
+	/*auto modelComponent =*/ 
+	enemy->AddComponent<CModelComponent>(*enemy, "Assets/3D/Character/CH_NPC_enemy_01_19G4_1_19/CH_NPC_enemy_01_19G4_1_19.fbx");
 	
-	CAnimationComponent* animation = enemy->AddComponent<CAnimationComponent>(*enemy);
-	std::vector<std::string> somePathsToAnimations;
-	somePathsToAnimations.push_back("ani/CH_NPC_Undead@Walk_01_17G3_AN.fbx");
-	somePathsToAnimations.push_back("ani/CH_NPC_Undead@Idle_01_17G3_AN.fbx");
-	
-	const std::string rigModel = "Ani/CH_NPC_Undead_17G3_SK.fbx";
-	animation->GetMyAnimation()->Init(rigModel.c_str(), somePathsToAnimations);
-	modelComponent->GetMyModel()->AddAnimation(animation->GetMyAnimation());
-	animation->SetBlend(0, 1, 1.0f);
+	//CAnimationComponent* animation = enemy->AddComponent<CAnimationComponent>(*enemy);
+	//std::vector<std::string> somePathsToAnimations;
+	//somePathsToAnimations.push_back("ani/CH_NPC_Undead@Walk_01_17G3_AN.fbx");
+	//somePathsToAnimations.push_back("ani/CH_NPC_Undead@Idle_01_17G3_AN.fbx");
+	//
+	//const std::string rigModel = "Ani/CH_NPC_Undead_17G3_SK.fbx";
+	//animation->GetMyAnimation()->Init(rigModel.c_str(), somePathsToAnimations);
+	//modelComponent->GetMyModel()->AddAnimation(animation->GetMyAnimation());
+	//animation->SetBlend(0, 1, 1.0f);
 
 	enemy->AddComponent<CStatsComponent>(*enemy, aHealth, aDamage, aMoveSpeed, aCooldown);
 	CScene::GetInstance()->AddInstance(enemy);

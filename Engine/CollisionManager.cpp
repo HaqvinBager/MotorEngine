@@ -50,6 +50,37 @@ void CCollisionManager::RegisterCollider(CRectangleColliderComponent* aCollider)
 
 void CCollisionManager::Update()
 {
+    //Circle vs Circle collision test
+    for (UINT outer = 0; outer < myCircleColliders.size(); ++outer) {
+        for (UINT inner = outer + 1; inner < myCircleColliders.size(); ++inner) {
+            if (CIntersectionManager::CircleIntersection(*myCircleColliders[outer], *myCircleColliders[inner])) {
+                myCircleColliders[outer]->GetParent().Collided(myCircleColliders[inner]->GetParent());
+                myCircleColliders[inner]->GetParent().Collided(myCircleColliders[outer]->GetParent());
+            }
+        }
+    }
+
+    //Circle vs Rectangle collision test
+    for (UINT circle = 0; circle < myCircleColliders.size(); ++circle) {
+        for (UINT rectangle = 0; rectangle < myRectangleColliders.size(); ++rectangle) {
+            if (CIntersectionManager::CircleVsRectangleIntersection(*myCircleColliders[circle], *myRectangleColliders[rectangle])) {
+                myCircleColliders[circle]->GetParent().Collided(myRectangleColliders[rectangle]->GetParent());
+                myRectangleColliders[rectangle]->GetParent().Collided(myCircleColliders[circle]->GetParent());
+            }
+        }
+    }
+
+    //Circle vs Triangle collision test
+    for (UINT circle = 0; circle < myCircleColliders.size(); ++circle) {
+        for (UINT triangle = 0; triangle < myTriangleColliders.size(); ++triangle) {
+            if (CIntersectionManager::CircleVsTriangleIntersection(*myCircleColliders[circle], *myTriangleColliders[triangle])) {
+                myCircleColliders[circle]->GetParent().Collided(myTriangleColliders[triangle]->GetParent());
+                myTriangleColliders[triangle]->GetParent().Collided(myCircleColliders[circle]->GetParent());
+            }
+        }
+    }
+
+    //Capsule vs Capsule collision test
     for (unsigned int outer = 0; outer < myCapsuleColliders.size(); ++outer)
     {
         for (unsigned int inner = outer + 1; inner < myCapsuleColliders.size(); ++inner)

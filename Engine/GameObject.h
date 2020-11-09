@@ -1,37 +1,37 @@
 #pragma once
-///Mål: Göra så cache  vänligt som möjligt
+///Mï¿½l: Gï¿½ra sï¿½ cache  vï¿½nligt som mï¿½jligt
 ///		Alpha version: Att det funkar. KISS.
-///		
-/// Vi gör:
-///		En kub som är spelaren
+///
+/// Vi gï¿½r:
+///		En kub som ï¿½r spelaren
 ///			Kunna styras med en komponent
 ///			Ha en komponent som renderas (En CModelInstance)
-/// 
+///
 /// Vi har 2h: Start: 08/10 - 15:30
-/// 
+///
 /// GameObject
-///		Håller Component: Componenets definierar ett GameObject
-///		
+///		Hï¿½ller Component: Componenets definierar ett GameObject
+///
 ///		GameObject klass
 ///			Har en Awake
 ///			Har en Start
 ///			Har alltid en transform	komponent
 ///			Har en update
-///				Uppdaterar alla sina komponenter 
-///			Har en GetComponent function som är Template typ
-///			Kan lägga till en komponent
+///				Uppdaterar alla sina komponenter
+///			Har en GetComponent function som ï¿½r Template typ
+///			Kan lï¿½gga till en komponent
 ///			Kan ta bort en komponent
-///			
+///
 ///		Component klass
 ///			Har en Awake
 ///			Har en Start
-///			Har en GetComponent 
+///			Har en GetComponent
 ///			Har en GetParent
-///			Kan slås på och av
+///			Kan slï¿½s pï¿½ och av
 ///			Har en update
 ///
-///		Alla kompononenter kommer finnas på en plats. Är målet
-/// 
+///		Alla kompononenter kommer finnas pï¿½ en plats. ï¿½r mï¿½let
+///
 
 #include <typeinfo>
 #include <vector>

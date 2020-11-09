@@ -80,6 +80,7 @@
     </Link>
     <FxCompile>
       <ObjectFileOutput>$(ProjectDir)..\..\..\Bin\%(Filename).cso</ObjectFileOutput>
+      <ShaderModel>4.0</ShaderModel>
     </FxCompile>
     <Lib>
       <AdditionalLibraryDirectories>
@@ -111,6 +112,7 @@
     </Link>
     <FxCompile>
       <ObjectFileOutput>$(ProjectDir)..\..\..\Bin\%(Filename).cso</ObjectFileOutput>
+      <ShaderModel>4.0</ShaderModel>
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -124,7 +126,13 @@
     <ClInclude Include="CircleColliderComponent.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="Message.h" />
+    <ClInclude Include="MessageType.h" />
+    <ClInclude Include="Observer.h" />
+    <ClInclude Include="PostMaster.h" />
     <ClInclude Include="Debug.h" />
+    <ClInclude Include="DL_Debug.h" />
+    <ClInclude Include="DL_StackWalker.h" />
     <ClInclude Include="EnemyFactory.h" />
     <ClInclude Include="InputMapper.h" />
     <ClInclude Include="InputObserver.h" />
@@ -133,6 +141,7 @@
     <ClInclude Include="ParticleEmitterComponent.h" />
     <ClInclude Include="PlayerControllerComponent.h" />
     <ClInclude Include="RectangleColliderComponent.h" />
+    <ClInclude Include="StackWalker.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="DebugTimerUtility.h" />
     <ClInclude Include="DirectXFramework.h" />
@@ -180,6 +189,7 @@
     <ClInclude Include="TextInstance.h" />
     <ClInclude Include="TextRenderer.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="TokenPool.h" />
     <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="TriangleColliderComponent.h" />
     <ClInclude Include="VFXBase.h" />
@@ -201,13 +211,17 @@
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="DL_Debug.cpp" />
+    <ClCompile Include="DL_StackWalker.cpp" />
     <ClCompile Include="EnemyFactory.cpp" />
     <ClCompile Include="InputMapper.cpp" />
     <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="ObjectPool.cpp" />
     <ClCompile Include="ParticleEmitterComponent.cpp" />
     <ClCompile Include="PlayerControllerComponent.cpp" />
+    <ClCompile Include="PostMaster.cpp" />
     <ClCompile Include="RectangleColliderComponent.cpp" />
+    <ClCompile Include="StackWalker.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="DirectXFramework.cpp" />
     <ClCompile Include="Engine.cpp" />
@@ -252,6 +266,7 @@
     <ClCompile Include="TextInstance.cpp" />
     <ClCompile Include="TextRenderer.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="TokenPool.cpp" />
     <ClCompile Include="TransformComponent.cpp" />
     <ClCompile Include="TriangleColliderComponent.cpp" />
     <ClCompile Include="VFXBase.cpp" />
@@ -279,8 +294,6 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="FullscreenPixelShader_Bloom.hlsl">
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>

@@ -28,15 +28,19 @@ public:
 	friend class CLineFactory;
 	CEngine();
 	~CEngine();
+	void Destroy();
 	bool Init(CWindowHandler::SWindowData& someWindowData);
 	float BeginFrame();
 	void RenderFrame();
 	void EndFrame();
 	CWindowHandler* GetWindowHandler();
 	void InitWindowsImaging();
-	void ScreenShot(std::wstring& aSubPath);
+	void CrashWithScreenShot(std::wstring& aSubPath);
+
+	static CEngine* GetInstance();
 
 private:
+	static CEngine* ourInstance;
 	
 	CWindowHandler* myWindowHandler;
 	CDirectXFramework* myFramework;

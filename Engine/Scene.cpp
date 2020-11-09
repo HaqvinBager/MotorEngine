@@ -68,7 +68,7 @@ std::vector<CGameObject*> CScene::CullGameObjects(CCamera* aMainCamera)
 	for (auto& gameObject : myGameObjects)
 	{
 		float distanceToCameraSquared = Vector3::DistanceSquared(gameObject->GetComponent<CTransformComponent>()->Position(), cameraPosition);
-		if (distanceToCameraSquared < 1500.0f)
+		if (distanceToCameraSquared < 5000.0f)
 		{
 			culledGameObjects.emplace_back(gameObject);
 		}
@@ -200,6 +200,18 @@ bool CScene::RemoveInstance(CGameObject* aGameObject) {
 			//std::swap(myGameObjects[i], myGameObjects[myGameObjects.size() - 1]);
 			//myGameObjects.pop_back();
 			myGameObjects.erase(myGameObjects.begin() + i);
+		}
+	}
+	return true;
+}
+
+bool CScene::RemoveInstance(CPointLight* aPointLight)
+{
+	for (int i = 0; i < myPointLights.size(); ++i) {
+		if (aPointLight == myPointLights[i]) {
+			//std::swap(myGameObjects[i], myGameObjects[myGameObjects.size() - 1]);
+			//myGameObjects.pop_back();
+			myPointLights.erase(myPointLights.begin() + i);
 		}
 	}
 	return true;

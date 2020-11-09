@@ -2,9 +2,9 @@
 #include "ParticleRenderer.h"
 #include "DirectXFramework.h"
 #include "Camera.h"
-#include "ParticleInstance.h"
-#include "ParticleEmitterComponent.h"
+//#include "ParticleInstance.h"
 #include "GameObject.h"
+#include "ParticleEmitterComponent.h"
 #include <iostream>
 
 CParticleRenderer::CParticleRenderer() : myContext(nullptr), myFrameBuffer(), myObjectBuffer()
@@ -56,13 +56,17 @@ void CParticleRenderer::Render(CCamera* aCamera, std::vector<CGameObject*>& aGam
 
     myFrameBufferData.myToCamera = aCamera->GetTransform().Invert();
     myFrameBufferData.myToProjection = aCamera->GetProjection();
-    
+
     BindBuffer(myFrameBuffer, myFrameBufferData, "Frame Buffer");
 
     myContext->VSSetConstantBuffers(0, 1, &myFrameBuffer);
     myContext->GSSetConstantBuffers(0, 1, &myFrameBuffer);
 
+<<<<<<< HEAD
     for (CGameObject* gameObject : aGameObjectList)
+=======
+    for (CGameObject* gameObject : aGameObjectList)
+>>>>>>> 93a009a00941f10f116c96ec92102cd192764cf0
     {
         CParticleEmitterComponent* component = gameObject->GetComponent<CParticleEmitterComponent>();
         if (component == nullptr)

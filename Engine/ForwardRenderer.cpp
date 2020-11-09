@@ -71,6 +71,7 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector
 	myContext->PSSetShaderResources(0, 1, anEnvironmentLight->GetCubeMap());
 
 	// MODELCOMPONENT
+	int modelIndex = 0;
 	for (CGameObject* gameobject : aGameObjectList)
 	{
 		//Added this if Check because not all GameObjects Must have a CModelComponent.
@@ -82,6 +83,14 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector
 
 		if (gameobject->GetComponent<CModelComponent>()->GetMyModel() == nullptr)
 			continue;
+
+		for (unsigned int i = 0; i < aModelPointLightList[modelIndex].first; ++i) {
+			SM::Vector3 position = aModelPointLightList[modelIndex].second[i]->GetPosition();
+			SM::Vector3 color = aModelPointLightList[modelIndex].second[i]->GetColor();
+			myObjectBufferData.myPointLights[i].myPositionAndIntensity = { position.x, position.y, position.z, aModelPointLightList[modelIndex].second[i]->GetIntensity() };
+			myObjectBufferData.myPointLights[i].myColorAndRange = { color.x, color.y, color.z, aModelPointLightList[modelIndex].second[i]->GetRange() };
+		}
+		myObjectBufferData.myNumberOfUsedPointLights = aModelPointLightList[modelIndex].first;
 
 		CModel* model = gameobject->GetComponent<CModelComponent>()->GetMyModel();
 

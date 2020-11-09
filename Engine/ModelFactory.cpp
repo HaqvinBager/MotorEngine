@@ -18,10 +18,10 @@
 
 #define TRIMSHEET_STRING "ts_"
 #define NUM_TRIM_SHEETS 2
-#define TRIMSHEET_1 ""
+#define TRIMSHEET_1 "ts_1_Dungeon"
 #define TRIMSHEET_2 ""
+#define TRIMSHEET_PATH "Assets/Trimsheets/"	// group 4
 //#define TRIMSHEET_PATH "Model\\Trimsheet_test\\Trimsheets\\"		// group 3 ...? is it Assets/ now?
-#define TRIMSHEET_PATH "Assets\\3D\\Trimsheets\\"	// group 4
 
 
 CModelFactory* CModelFactory::ourInstance = nullptr;

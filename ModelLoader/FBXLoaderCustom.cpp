@@ -25,7 +25,7 @@
 #endif
 
 #define TEXTURE_SET_0 0
-
+#define ENGINE_SCALE 0.01f
 CFBXLoaderCustom::CFBXLoaderCustom()
 {
 }
@@ -84,6 +84,16 @@ int CFBXLoaderCustom::DetermineAndLoadVerticies(aiMesh* fbxMesh, CLoaderMesh* aL
 	std::vector<VertexBoneData> collectedBoneData;
 	if (fbxMesh->HasBones())
 	{
+		/*for (unsigned int i = 0; i < fbxMesh->mNumBones; ++i)
+		{	
+			aiVector3D scale(ENGINE_SCALE, ENGINE_SCALE, ENGINE_SCALE);	
+			aiMatrix4x4 scaleMatrix = fbxMesh->mBones[i]->mOffsetMatrix;
+			aiMatrix4x4::Scaling(scale, scaleMatrix);
+			fbxMesh->mBones[i]->mOffsetMatrix *= scaleMatrix;
+			int a = 0;
+			a;
+		}*/
+
 		collectedBoneData.resize(fbxMesh->mNumVertices);
 
 		unsigned int BoneIndex = 0;
@@ -99,6 +109,14 @@ int CFBXLoaderCustom::DetermineAndLoadVerticies(aiMesh* fbxMesh, CLoaderMesh* aL
 
 
 				Matrix44f NodeTransformation = ConvertToEngineMatrix44(fbxMesh->mBones[i]->mOffsetMatrix);
+
+				//Vector3 scale;
+				//Vector3 translation;
+				//Quaternion rotation;
+				//myTransform.Decompose(scale, rotation, translation);
+				//myTransform = Matrix44f::CreateFromQuaternion(rotation);
+				//myTransform *= Matrix44f::CreateScale(myScale);
+				//myTransform.Translation(translation);
 
 				aLoaderMesh->myModel->myBoneInfo[BoneIndex].BoneOffset = NodeTransformation;
 				aLoaderMesh->myModel->myBoneNameToIndex[BoneName] = BoneIndex;
@@ -130,6 +148,10 @@ int CFBXLoaderCustom::DetermineAndLoadVerticies(aiMesh* fbxMesh, CLoaderMesh* aL
 	hasBones = fbxMesh->HasBones();
 
 	
+	//for (unsigned int i = 0; i < fbxMesh->mNumVertices; ++i)
+	//{
+	//	fbxMesh->mVertices[i] *= ENGINE_SCALE;
+	//}
 
 	float* data = new float[(vertexBufferSize / 4) * fbxMesh->mNumVertices];
 	if (hasPositions && hasNormals && hasTangents && hasTextures && hasBones) {
@@ -294,8 +316,9 @@ void* CFBXLoaderCustom::LoadModelInternal(CLoaderModel* someInput)
 
 		return nullptr;
 	}
-		
+	//((aiSetImportPropertyFloat(scene, "UnitScaleFactor", 0.01f);
 	scene = aiImportFile(model->myModelPath.c_str(), aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_ConvertToLeftHanded);
+	//aiSetImportPropertyFloat(aiprops, AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY, GlobalScale);
 
 	OutputDebugStringA(model->myModelPath.c_str());
 
@@ -305,6 +328,11 @@ void* CFBXLoaderCustom::LoadModelInternal(CLoaderModel* someInput)
 		return nullptr;
 	}
 
+	/*float unitSize = 0.001f;
+	scene->mRootNode->mTransformation *= aiMatrix4x4(unitSize, 0, 0, 0,
+													 0, unitSize, 0, 0,
+													 0, 0, unitSize, 0,
+													 0, 0, 0, 1);*/
 	model->myScene = scene;
 
 
@@ -312,13 +340,13 @@ void* CFBXLoaderCustom::LoadModelInternal(CLoaderModel* someInput)
 	for (unsigned int n = 0; n < scene->mNumMeshes; ++n)
 	{
 		aiMesh* fbxMesh = scene->mMeshes[n];
+		//fbxMesh->
 		DetermineAndLoadVerticies(fbxMesh, mesh);
 		for (unsigned int i = 0; i < fbxMesh->mNumFaces; i++)
 		{
 			mesh->myIndexes.insert(mesh->myIndexes.end(), std::make_move_iterator(&fbxMesh->mFaces[i].mIndices[0]), std::make_move_iterator(&fbxMesh->mFaces[i].mIndices[fbxMesh->mFaces[i].mNumIndices]));
 		}
 	}
-
 	// CHange to support multiple animations
 	if (scene->mNumAnimations > 0)
 	{
@@ -327,6 +355,7 @@ void* CFBXLoaderCustom::LoadModelInternal(CLoaderModel* someInput)
 
 	LoadMaterials(scene, model);
 
+	
 	model->myGlobalInverseTransform = ConvertToEngineMatrix44(scene->mRootNode->mTransformation);
 
 	return model;
