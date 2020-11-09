@@ -43,7 +43,7 @@ CPostMaster::~CPostMaster()
 		for (unsigned int index = 0; index < myObserverMap[static_cast<EMessageType>(i)].size(); ++i)
 		{
 			//Should we Delete the Observers? Or will that cause a crash because we also delete the object that inherits from observer?
-			myObserverMap[static_cast<EMessageType>(i)][i] = nullptr;
+			myObserverMap[static_cast<EMessageType>(i)][index] = nullptr;
 		}
 
 		myObserverMap[static_cast<EMessageType>(i)].clear();
