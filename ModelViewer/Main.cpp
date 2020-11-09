@@ -58,16 +58,6 @@ void CloseConsole()
 #pragma warning( pop )
 }
 
-/// Notes for SG feedback session:
-/// Ask them if they want to be able to load several models. I.e be able to have Sword and King side by side
-///		About controls: move camera? move with mouse?
-///		Manip light?
-/// /// Remember: on initial model positon some models are not facing the camera, might not be visible but they are there. 
-///		Or might be positioned to high/ low. So try to move the object. 
-///		ex: nr31 EN_P_L3Painting_01_19G4_01_19.fbx, is facing away from the camera.
-/// 
-/// EN_W_WallDoor_01_19G4_01_19.fbx causes crash might be due to fbx version
-
 std::size_t number_of_files_in_directory(std::filesystem::path path)
 {//https://stackoverflow.com/questions/41304891/how-to-count-the-number-of-files-in-a-directory-using-standard/41305019
 	using std::filesystem::directory_iterator;
@@ -77,7 +67,7 @@ void LoadModelPaths(const std::string& aStartFolderPath, std::vector<std::string
 {
 	struct SFileInfo// Used for directories.
 	{
-		short myNumItems = 0;//rename to myNumItems
+		short myNumItems = 0;
 		std::string myFullPath;
 	};
 
@@ -88,7 +78,9 @@ void LoadModelPaths(const std::string& aStartFolderPath, std::vector<std::string
 
 	std::map<std::string, SFileInfo> folders;
 	std::vector<std::string> prevFolders;// Keys to use for std::map folders.
-	/// <prevFolders>
+
+	/// Description of how <prevFolders> works
+
 	///		prevFolders[depth]
 	///		"Assets" depth = 0
 	///			"3D" depth = 1
@@ -121,19 +113,6 @@ void LoadModelPaths(const std::string& aStartFolderPath, std::vector<std::string
 	for (auto i = start; i != end; ++i)
 	{
 		std::string filePath = i->path().filename().string();
-#ifdef _DEBUG
-		//std::cout << "Current: " << filePath << std::endl;
-		//std::cout << std::endl;
-		//std::string nextDepthSpacing = " ";
-		//for (int d = 0; d < depth + 1; ++d)
-		//{
-		//	std::cout << nextDepthSpacing <<"prevFolders[" << d << "] = " << prevFolders[d] << std::endl;
-		//	std::cout << nextDepthSpacing << "folders[prevFolders[" << d << "]].myFullPath = " << folders[prevFolders[d]].myFullPath << std::endl;
-		//	std::cout << nextDepthSpacing << "folders[prevFolders[" << d << "]].myNumItems = " << folders[prevFolders[d]].myNumItems << std::endl;
-		//	nextDepthSpacing.append(" ");
-		//}
-		//std::cout << std::endl;
-#endif// ! _DEBUG
 
 		if (folders[prevFolders[depth]].myNumItems > 0)
 		{
@@ -145,17 +124,9 @@ void LoadModelPaths(const std::string& aStartFolderPath, std::vector<std::string
 			{
 				--depth;
 				prevFolders.pop_back();
-#ifdef _DEBUG
-				//std::cout << "--DEPTH    Reducing depth to " << depth << std::endl;
-#endif // ! _DEBUG
+
 			}
-
 			folderPath = folders[prevFolders[depth]].myFullPath;
-
-#ifdef _DEBUG
-			//std::cout << "FOLDER ENDS" << std::endl;
-			//std::cout << " Changing to folder: " << folderPath << std::endl << std::endl;
-#endif // ! _DEBUG
 
 			folders[prevFolders[depth]].myNumItems -= 1;
 			if (folders[prevFolders[depth]].myNumItems <= 0)
@@ -164,16 +135,9 @@ void LoadModelPaths(const std::string& aStartFolderPath, std::vector<std::string
 				{
 					--depth;
 					prevFolders.pop_back();
-#ifdef _DEBUG
-					//std::cout << "--DEPTH    Reducing depth, again; to " << depth << std::endl;
-#endif // ! _DEBUG
 				}
 
 				folderPath = folders[prevFolders[depth]].myFullPath;
-#ifdef _DEBUG
-				//std::cout << "FOLDER ENDS" << std::endl;
-				//std::cout << " Changing to folder: " << folderPath << std::endl << std::endl;
-#endif // ! _DEBUG
 			}
 		}
 
@@ -188,9 +152,6 @@ void LoadModelPaths(const std::string& aStartFolderPath, std::vector<std::string
 			fileInfo.myFullPath = folderPath;
 
 			folders.emplace(filePath, fileInfo);
-#ifdef _DEBUG
-			//std::cout << "L> Found directory: " << filePath << std::endl /*<< std::endl*/;
-#endif // ! _DEBUG
 		}
 		else
 		{
@@ -204,27 +165,24 @@ void LoadModelPaths(const std::string& aStartFolderPath, std::vector<std::string
 				if (suffix != "_AN.fbx")
 				{
 					aFBXFilePaths.emplace_back(folders[prevFolders[depth]].myFullPath + "/" + filePath);
-#ifdef _DEBUG
-					//std::cout	<< "      Found FBX: \n        " << aFBXFilePaths.back() << std::endl;
-#endif // ! _DEBUG
 				}
 			}
 		}
-#ifdef _DEBUG
-		//std::cout << "__________________________________________________________________________________________" << std::endl;
-#endif // ! _DEBUG
 	}
 }
 
-CGameObject* InitModels(const std::string& aModelPath/*, CCamera* aCamera*/)
+CGameObject* InitModels(const std::string& aModelPath)
 {
 	CScene* scene = CScene::GetInstance();
 
 	CLightFactory* lightFactory = CLightFactory::GetInstance();
 	CEnvironmentLight* environmentLight = lightFactory->CreateEnvironmentLight("Yokohama2.dds");
-	environmentLight->SetDirection(SM::Vector3(1, 0, 0));
-	//environmentLight->SetColor(SM::Vector3(1.0f, 0.0f, 0.0f));
+	environmentLight->SetDirection(SM::Vector3(0, 0, -1));
 	environmentLight->SetColor(SM::Vector3(1.0f, 1.0f, 1.0f));
+	//environmentLight->SetColor(SM::Vector3(0.0f, 0.0f, 1.0f));
+
+	environmentLight->SetIntensity(1.0f);
+
 
 	scene->AddInstance(environmentLight);
 
@@ -238,115 +196,13 @@ CGameObject* InitModels(const std::string& aModelPath/*, CCamera* aCamera*/)
 	return gameobject;
 }
 
-// Reminder: Vem tar hand om delete av CModel? CModelFactory verkar inte ta hand om det och inte CModelInstace?
+// Reminder: Vem tar hand om delete av CModel? CModelFactory verkar inte ta hand om det och inte CModelInstance?
 
 bool CheckForIncorrectModelNumber(const size_t& aLoadModelNumber, const size_t& aMax)
 {
 	return (static_cast<int>(aLoadModelNumber) > -1 && aLoadModelNumber < aMax);
 }
-std::string CheckForGroupNumber(short& aNumber)
-{// Obsolete as of 
-	std::string path = "";
-	std::cin.clear();
-	std::cout << "Enter group number - 3 or 4:";
-	//std::cin >> aNumber;
-	aNumber = 4;
-	if (aNumber == 4 || aNumber == 3)
-	{
-		if (aNumber == 3)
-		{
-			path = "Model";
-		}
-		else if (aNumber == 4)
-		{
-			path = "Assets";
-		}
-	}
-	else
-	{
-		std::cout << " ! Input not supported!" << std::endl;
-		path = CheckForGroupNumber(aNumber);
-	}
 
-	return std::move(path);
-}
-
-/* // OLD CAMERA CONTROLS -> MOVES MODEL
-// Rotation functions
-float rotationSpeed = 1.0f;
-float dt = CTimer::Dt();
-// X axis
-if (Input::GetInstance()->IsKeyDown('R'))
-{
-aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ rotationSpeed * dt,0.0f,0.0f });
-}
-
-if (Input::GetInstance()->IsKeyDown('F'))
-{
-aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ -rotationSpeed * dt,0.0f,0.0f });
-}
-
-// Y axis
-if (Input::GetInstance()->IsKeyDown('T'))
-{
-aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ 0.0f, rotationSpeed * dt,0.0f });
-}
-
-if (Input::GetInstance()->IsKeyDown('G'))
-{
-aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ 0.0f, -rotationSpeed * dt,0.0f });
-}
-
-// Z axis
-if (Input::GetInstance()->IsKeyDown('Y'))
-{
-aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ 0.0f,0.0f,rotationSpeed * dt });
-}
-if (Input::GetInstance()->IsKeyDown('H'))
-{
-aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ 0.0f,0.0f,-rotationSpeed * dt });
-}
-
-// ! Rotation Functions 
-
-// Zoom/ move Camera functions
-float moveSpeed = 5.0f;
-// X axis
-
-if (Input::GetInstance()->IsKeyDown('A'))
-{
-aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ moveSpeed * dt, 0.0f, 0.0f });
-}
-
-if (Input::GetInstance()->IsKeyDown('D'))
-{
-aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ -moveSpeed * dt, 0.0f, 0.0f });
-}
-
-// Y axis
-if (Input::GetInstance()->IsKeyDown('Q'))
-{
-aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ 0.0f, moveSpeed * dt, 0.0f });
-}
-
-if (Input::GetInstance()->IsKeyDown('E'))
-{
-aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ 0.0f, -moveSpeed * dt, 0.0f });
-}
-
-// Z axis
-
-if (Input::GetInstance()->IsKeyDown('W'))
-{
-aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ 0.0f, 0.0f, -moveSpeed * dt });
-}
-
-if (Input::GetInstance()->IsKeyDown('S'))
-{
-aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ 0.0f, 0.0f, moveSpeed * dt });
-}
-// ! Zoom/ move functions
-*/
 
 void Update(std::vector<std::string>& aModelFilePathList, CGameObject* aCurrentGameObject,CCamera* aCamera)
 {
@@ -513,7 +369,6 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	CCamera* camera = CCameraFactory::GetInstance()->CreateCamera(65.0f, 5000.0f);
 	camera->SetRotation({ 33.f,-45.f,0.f });
 	camera->SetPosition({ 3.0f,4.0f,-3.5f });
-	//camera->SetPosition({ 0.0f,0.0f,0.0f });
 	scene->AddInstance(camera);
 	scene->SetMainCamera(camera);
 
@@ -527,17 +382,14 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	origin->SetPosition({ 0.0f,0.01f,0.0f });
 	CScene::GetInstance()->AddInstance(origin);
 
-	//short groupNumber = 0;
-	std::string root = "Assets";//CheckForGroupNumber(groupNumber);
+	std::string root = "Assets";
 
 	std::vector<std::string> filePaths;
 	LoadModelPaths(root, filePaths);
 
-	//CCamera* camera = nullptr;
 	CGameObject* currentGameObject = nullptr;
-	currentGameObject = InitModels(filePaths[0]);
+	currentGameObject = InitModels(filePaths[96]);
 	
-	//std::cout << "Models in " << root << std::endl;
 	int counter = 0;
 	for (auto& str : filePaths)
 	{
@@ -597,45 +449,3 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
 	return 0;
 }
-
-// Pseudo code for finding all the fbx:es in a root folder.
-/*
-	struct FileInfo
-		short mySize
-		string myFullPath
-
-	map<string, FileInfo> folders
-	vector<string> prevFolders
-	int depth = 0
-
-	prevFolders.emplace_back(aFolder)
-
-	fileInfo.mySize = start.DirectorySize
-	fileInfo.myFullPath = aFolder
-	folders.emplace(prevFolders[depth], fileInfo)
-
-	string folderPath = aFolder;
-	for(iterator)
-		string file = iterator.name
-		if(iterator is directory)
-			depth++
-			prevFolder.emplace_back(file)
-
-			folderPath.append(/ + file)
-
-			FileInfo.mySize = iterator.DirectorySize
-			FileInfo.myFullPath = folderPath
-			folders.emplace(file, FileInfo)
-
-		else
-			fileExtension = search for ., get substr from . to end of string
-			if(fileExtension == FBX)
-				save to modellist .emplace_back(folders[prevFolder[depth]].myFullPath + / + file)
-
-		if(folders[prevFolder[depth]].mySize > -1)
-			folders[prevFolder[depth]].mySize -= 1
-			if(folders[prevFolder[depth]].mySize == -1)
-				--depth
-				prevFolder.pop_back()
-				folderPath = prevFolder[depth]
-*/
