@@ -120,12 +120,14 @@
     <ClInclude Include="AnimationComponent.h" />
     <ClInclude Include="AnimationController.h" />
     <ClInclude Include="AStar.h" />
+    <ClInclude Include="Behaviour.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraFactory.h" />
     <ClInclude Include="CapsuleColliderComponent.h" />
     <ClInclude Include="CircleColliderComponent.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="MainSingleton.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="MessageType.h" />
     <ClInclude Include="Observer.h" />
@@ -215,6 +217,7 @@
     <ClCompile Include="DL_StackWalker.cpp" />
     <ClCompile Include="EnemyFactory.cpp" />
     <ClCompile Include="InputMapper.cpp" />
+    <ClCompile Include="MainSingleton.cpp" />
     <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="ObjectPool.cpp" />
     <ClCompile Include="ParticleEmitterComponent.cpp" />

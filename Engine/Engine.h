@@ -17,6 +17,7 @@ class CTextFactory;
 class CInputMapper;
 class CDebug;
 class CEnemyFactory;
+class CMainSingleton;
 
 class CEngine
 {
@@ -60,4 +61,5 @@ private:
 	CTextFactory* myTextFactory;
 	CInputMapper* myInputMapper;
 	CEnemyFactory* myEnemyFactory;
+	CMainSingleton* myMainSingleton;
 };

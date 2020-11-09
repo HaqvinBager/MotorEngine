@@ -10,6 +10,7 @@
 #include "ModelComponent.h"
 #include "Scene.h"
 #include "Model.h"
+#include "MainSingleton.h"
 
 CEnemyFactory* CEnemyFactory::ourInstance = nullptr;
 
@@ -31,14 +32,16 @@ CGameObject& CEnemyFactory::CreateEnemy(DirectX::SimpleMath::Vector3 aPosition, 
 {
 	CGameObject* enemy = new CGameObject();
 
-	CTransformComponent* transform = enemy->AddComponent<CTransformComponent>(*enemy);
-	transform->Scale(1.0f);
-	transform->Position(aPosition);
-	transform->Rotation({ 0.0f, 0.0f, 0.0f });
+	enemy->myTransform->Scale(1.0f);
+	enemy->myTransform->Position(aPosition);
+	enemy->myTransform->Rotation({ 0.0f, 0.0f, 0.0f });
+
 	enemy->AddComponent<CCapsuleColliderComponent>(*enemy, 0.5f, 2.0f);
-	/*auto modelComponent =*/ 
-	enemy->AddComponent<CModelComponent>(*enemy, "Assets/3D/Character/CH_NPC_enemy_01_19G4_1_19/CH_NPC_enemy_01_19G4_1_19.fbx");
-	
+	/*auto modelComponent =*/ enemy->AddComponent<CModelComponent>(*enemy, "Assets/3D/Character/CH_NPC_enemy_01_19G4_1_19/CH_NPC_enemy_01_19G4_1_19.fbx");
+
+	enemy->AddComponent<CStatsComponent>(*enemy, aHealth, aDamage, aMoveSpeed, aCooldown);
+
+	//---------Animation-----------
 	//CAnimationComponent* animation = enemy->AddComponent<CAnimationComponent>(*enemy);
 	//std::vector<std::string> somePathsToAnimations;
 	//somePathsToAnimations.push_back("ani/CH_NPC_Undead@Walk_01_17G3_AN.fbx");
@@ -48,8 +51,8 @@ CGameObject& CEnemyFactory::CreateEnemy(DirectX::SimpleMath::Vector3 aPosition, 
 	//animation->GetMyAnimation()->Init(rigModel.c_str(), somePathsToAnimations);
 	//modelComponent->GetMyModel()->AddAnimation(animation->GetMyAnimation());
 	//animation->SetBlend(0, 1, 1.0f);
+	//------------------------------
 
-	enemy->AddComponent<CStatsComponent>(*enemy, aHealth, aDamage, aMoveSpeed, aCooldown);
 	CScene::GetInstance()->AddInstance(enemy);
 
 	return *enemy;

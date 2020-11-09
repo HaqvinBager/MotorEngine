@@ -35,7 +35,6 @@ CGameObject* CObjectPool::Create(DirectX::SimpleMath::Vector3 aPosition, float a
 	firstAvailable = newEnemy->GetNext();
 
 	newEnemy->init(aPosition, aHealth, aDamage, aMoveSpeed, aCooldown);
-
 	return newEnemy->GetEnemy();
 }
 
@@ -43,6 +42,7 @@ void CObjectPool::Remove(CGameObject* aEnemy)
 {
 	for (int i = 0; i < poolSize; ++i) {
 		if (enemies[i].GetEnemy() == aEnemy) {
+			enemies[i].GetEnemy()->SetActive(false);
 			enemies[i].SetNext(firstAvailable);
 			firstAvailable = &enemies[i];
 		}

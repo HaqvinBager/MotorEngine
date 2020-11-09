@@ -48,8 +48,8 @@ public:
 
 	virtual void Collided(CGameObject* aCollidedGameObject);
 
-	void Enabled(bool aEnabled) { myEnabled = aEnabled; }
-	const bool Enabled() const { return myEnabled; }
+	virtual void OnEnable() {}
+	virtual void OnDisable() {}
 
 	template<class T>
 	T* GetComponent();

@@ -5,5 +5,5 @@ class IObserver
 {
 public:
 	virtual ~IObserver() { }
-	virtual void receive(const SMessage& message) = 0;
+	virtual void Receive(const SMessage& aMessage) = 0;
 };
