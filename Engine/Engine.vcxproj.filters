@@ -566,9 +566,8 @@
     <ClCompile Include="EnemyFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-<<<<<<< HEAD
     <ClCompile Include="ParticleEmitterComponent.cpp">
-=======
+	</ClCompile>
     <ClCompile Include="DL_Debug.cpp">
       <Filter>Debug\DL_Debug</Filter>
     </ClCompile>
@@ -585,7 +584,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PostMaster.cpp">
->>>>>>> 93a009a00941f10f116c96ec92102cd192764cf0
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
