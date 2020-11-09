@@ -342,11 +342,6 @@
     <ClInclude Include="EnemyFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-<<<<<<< HEAD
-    <ClInclude Include="ParticleEmitterComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-=======
     <ClInclude Include="DL_Debug.h">
       <Filter>Debug\DL_Debug</Filter>
     </ClInclude>
@@ -374,7 +369,6 @@
     <ClInclude Include="MessageType.h">
       <Filter>MainSingleton</Filter>
     </ClInclude>
->>>>>>> 93a009a00941f10f116c96ec92102cd192764cf0
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LevelLoader.cpp">
