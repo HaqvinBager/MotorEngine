@@ -130,6 +130,7 @@
     <ClInclude Include="InputObserver.h" />
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="ObjectPool.h" />
+    <ClInclude Include="ParticleEmitterComponent.h" />
     <ClInclude Include="PlayerControllerComponent.h" />
     <ClInclude Include="RectangleColliderComponent.h" />
     <ClInclude Include="State.h" />
@@ -204,6 +205,7 @@
     <ClCompile Include="InputMapper.cpp" />
     <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="ObjectPool.cpp" />
+    <ClCompile Include="ParticleEmitterComponent.cpp" />
     <ClCompile Include="PlayerControllerComponent.cpp" />
     <ClCompile Include="RectangleColliderComponent.cpp" />
     <ClCompile Include="State.cpp" />

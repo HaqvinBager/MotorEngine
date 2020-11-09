@@ -3,6 +3,7 @@
 #include "VFXBase.h"
 
 class CEngine;
+class CDirectXFramework;
 
 class CVFXFactory {
 	friend class CEngine;

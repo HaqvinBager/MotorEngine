@@ -37,6 +37,7 @@
 #include <vector>
 #include <memory>
 
+class CTransformComponent;
 class CComponent;
 class CGameObject
 {
@@ -64,14 +65,21 @@ public:
 	template<class T>
 	T* GetComponent() const;
 
+	bool Enabled() const;
+	void Enabled(bool anIsEnabled);
+
+	CTransformComponent* myTransform;
+
 private:
 	std::vector<CComponent*> myComponents;
+	bool myIsEnabled;
 };
 
 template<class T, typename... Args >
 T* CGameObject::AddComponent(Args&&... aParams)
 {
-	myComponents.emplace_back(std::move(new T(std::forward< Args >(aParams)...)));
+	myComponents.emplace_back(std::move(new T(std::forward<Args>(aParams)...)));
+	//myComponents.back()->myParent = *this;
 	return dynamic_cast<T*>(myComponents.back());
 }
 

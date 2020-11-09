@@ -1,10 +1,14 @@
 #include "stdafx.h"
 #include "GameObject.h"
 #include "Component.h"
+#include "TransformComponent.h"
 #include <iostream>
 
 CGameObject::CGameObject()
 {
+	myTransform = new CTransformComponent(*this);
+	myComponents.emplace_back(myTransform);
+	myIsEnabled = true;
 }
 
 CGameObject::~CGameObject()
@@ -58,4 +62,14 @@ void CGameObject::Collided(CGameObject& aCollidedGameObject)
 			myComponents[i]->Collided(&aCollidedGameObject);
 		}
 	}
+}
+
+bool CGameObject::Enabled() const
+{
+	return myIsEnabled;
+}
+
+void CGameObject::Enabled(bool anIsEnabled)
+{
+	myIsEnabled = anIsEnabled;
 }
