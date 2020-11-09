@@ -39,6 +39,8 @@
 
 class CTransformComponent;
 class CComponent;
+class CBehaviour;
+
 class CGameObject
 {
 public:
@@ -54,6 +56,7 @@ public:
 
 	void Collided(CGameObject& aCollidedGameObject);
 
+	void SetActive(bool aActive);
 
 	template< class T, typename... Args >
 	T* AddComponent(Args&&... aParams);

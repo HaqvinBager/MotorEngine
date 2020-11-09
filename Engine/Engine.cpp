@@ -25,6 +25,7 @@
 #include <wincodec.h>
 #include "EnemyFactory.h"
 #include "DL_Debug.h"
+#include "MainSingleton.h"
 
 #pragma comment(lib, "runtimeobject.lib")
 #pragma comment(lib, "d3d11.lib")
@@ -52,6 +53,7 @@ CEngine::CEngine()
 	myDebug = new CDebug();
 	myRenderManager = nullptr;
 	myEnemyFactory = new CEnemyFactory();
+	myMainSingleton = new CMainSingleton();
 }
 
 CEngine::~CEngine()
@@ -92,6 +94,9 @@ CEngine::~CEngine()
 
 	delete myEnemyFactory;
 	myEnemyFactory = nullptr;
+
+	delete myMainSingleton;
+	myMainSingleton = nullptr;
 
 	ourInstance = nullptr;
 }

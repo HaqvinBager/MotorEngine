@@ -8,11 +8,12 @@
 #include "TokenPool.h"
 #include "PointLight.h"
 #include "LightFactory.h"
+#include "MainSingleton.h"
 
 #include <iostream>
 
 CStatsComponent::CStatsComponent(CGameObject& aParent, float aHealth, float aDamage, float aMoveSpeed, float aDamageCooldown)
-	: CComponent(aParent)
+	: CBehaviour(aParent)
 	, myHealth(aHealth)
 	, myDamage(aDamage)
 	, myMoveSpeed(aMoveSpeed)
@@ -28,6 +29,7 @@ CStatsComponent::CStatsComponent(CGameObject& aParent, float aHealth, float aDam
 	myPointLight->SetIntensity(5.f);
 	myPointLight->SetRange(5.f);
 	CScene::GetInstance()->AddInstance(myPointLight);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyDied, this);
 }
 
 CStatsComponent::~CStatsComponent()
@@ -61,6 +63,7 @@ void CStatsComponent::Update()
 	}
 
 	if (myHealth <= 0) {
+		CMainSingleton::PostMaster().Send({EMessageType::EnemyDied, this});
 		if (myTokenSlot != nullptr) {
 			CTokenPool::GetInstance()->GiveBack(*myTokenSlot, false);
 			myTokenSlot = nullptr;
@@ -70,6 +73,21 @@ void CStatsComponent::Update()
 		CScene::GetInstance()->RemoveInstance(myPointLight);
 		myPointLight = nullptr;
 	}
+}
+
+void CStatsComponent::OnEnable()
+{
+	//CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyDied, this);
+}
+
+void CStatsComponent::OnDisable()
+{
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyDied, this);
+}
+
+void CStatsComponent::Receive(const SMessage& /*aMessage*/)
+{
+	//std::cout << "HELLO" << std::endl;
 }
 
 void CStatsComponent::FindATarget(CGameObject& aTarget)

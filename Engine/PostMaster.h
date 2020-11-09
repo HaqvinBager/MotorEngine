@@ -6,7 +6,10 @@
 
 
 class CPostMaster
-{
+{	
+
+	friend class CMainSingleton;
+
 public:
 	void Subscribe(const EMessageType aMessageType, IObserver* anObserver);
 	void Unsubscribe(const EMessageType aMessageType, IObserver* anObserver);

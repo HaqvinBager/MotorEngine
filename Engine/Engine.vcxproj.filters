@@ -109,14 +109,14 @@
     <Filter Include="Debug\DL_Debug">
       <UniqueIdentifier>{37f1db06-8f75-4dc9-a849-e1e578f30e69}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Components">
-      <UniqueIdentifier>{a85b9107-2f07-48f7-b8b9-3dd6110b365f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Components\Header Files">
-      <UniqueIdentifier>{659f129f-63ca-4814-9c90-2658efb9b2d1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MainSingleton">
       <UniqueIdentifier>{10ef7e0e-499e-409f-a0fa-7545051e9c23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{a85b9107-2f07-48f7-b8b9-3dd6110b365f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Header Files">
+      <UniqueIdentifier>{659f129f-63ca-4814-9c90-2658efb9b2d1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -271,19 +271,19 @@
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="AnimationComponent.h">
-      <Filter>Engine\Components\Header Files</Filter>
+      <Filter>Components\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CapsuleColliderComponent.h">
-      <Filter>Engine\Components\Header Files</Filter>
+      <Filter>Components\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ModelComponent.h">
-      <Filter>Engine\Components\Header Files</Filter>
+      <Filter>Components\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PlayerControllerComponent.h">
-      <Filter>Engine\Components\Header Files</Filter>
+      <Filter>Components\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TransformComponent.h">
-      <Filter>Engine\Components\Header Files</Filter>
+      <Filter>Components\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ForwardRenderer.h">
       <Filter>Engine\Rendering</Filter>
@@ -322,16 +322,16 @@
       <Filter>Text</Filter>
     </ClInclude>
     <ClInclude Include="TriangleColliderComponent.h">
-      <Filter>Engine\Components\Header Files</Filter>
+      <Filter>Components\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CircleColliderComponent.h">
-      <Filter>Engine\Components\Header Files</Filter>
+      <Filter>Components\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RectangleColliderComponent.h">
-      <Filter>Engine\Components\Header Files</Filter>
+      <Filter>Components\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="VFXComponent.h">
-      <Filter>Engine\Components\Header Files</Filter>
+      <Filter>Components\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ObjectPool.h">
       <Filter>Header Files</Filter>
@@ -352,7 +352,7 @@
       <Filter>Debug\DL_Debug</Filter>
     </ClInclude>
     <ClInclude Include="ParticleEmitterComponent.h">
-      <Filter>Engine\Components\Header Files</Filter>
+      <Filter>Components\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TokenPool.h">
       <Filter>Header Files</Filter>
@@ -369,13 +369,19 @@
     <ClInclude Include="MessageType.h">
       <Filter>MainSingleton</Filter>
     </ClInclude>
+    <ClInclude Include="MainSingleton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LevelLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AnimationComponent.cpp">
-      <Filter>Engine\Components</Filter>
+      <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="AStar.cpp">
       <Filter>Pathfinding</Filter>
@@ -387,7 +393,7 @@
       <Filter>Camera</Filter>
     </ClCompile>
     <ClCompile Include="CapsuleColliderComponent.cpp">
-      <Filter>Engine\Components</Filter>
+      <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="CollisionManager.cpp">
       <Filter>Collision</Filter>
@@ -438,7 +444,7 @@
       <Filter>Model</Filter>
     </ClCompile>
     <ClCompile Include="ModelComponent.cpp">
-      <Filter>Engine\Components</Filter>
+      <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="NavmeshLoader.cpp">
       <Filter>Pathfinding</Filter>
@@ -456,10 +462,10 @@
       <Filter>Particle</Filter>
     </ClCompile>
     <ClCompile Include="PlayerControllerComponent.cpp">
-      <Filter>Engine\Components</Filter>
+      <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="TransformComponent.cpp">
-      <Filter>Engine\Components</Filter>
+      <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="PointLight.cpp">
       <Filter>Light</Filter>
@@ -546,16 +552,16 @@
       <Filter>Text</Filter>
     </ClCompile>
     <ClCompile Include="TriangleColliderComponent.cpp">
-      <Filter>Engine\Components</Filter>
+      <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="CircleColliderComponent.cpp">
-      <Filter>Engine\Components</Filter>
+      <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="RectangleColliderComponent.cpp">
-      <Filter>Engine\Components</Filter>
+      <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="VFXComponent.cpp">
-      <Filter>Engine\Components</Filter>
+      <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="ObjectPool.cpp">
       <Filter>Source Files</Filter>
@@ -578,12 +584,15 @@
       <Filter>Debug\DL_Debug</Filter>
     </ClCompile>
     <ClCompile Include="ParticleEmitterComponent.cpp">
-      <Filter>Engine\Components</Filter>
+      <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="TokenPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PostMaster.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainSingleton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

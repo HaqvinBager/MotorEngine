@@ -24,7 +24,7 @@ void CPostMaster::Send(const SMessage& aMessage)
 {
 	for (int i = 0; i < myObserverMap[aMessage.myMessageType].size(); ++i)
 	{
-		myObserverMap[aMessage.myMessageType][i]->receive(aMessage);
+		myObserverMap[aMessage.myMessageType][i]->Receive(aMessage);
 	}
 }
 
