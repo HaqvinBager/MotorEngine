@@ -9,6 +9,7 @@ CGameObject::CGameObject()
 {
 	myTransform = new CTransformComponent(*this);
 	myComponents.emplace_back(myTransform);
+	myIsEnabled = true;
 }
 
 CGameObject::~CGameObject()
