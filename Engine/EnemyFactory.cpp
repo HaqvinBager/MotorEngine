@@ -37,7 +37,7 @@ CGameObject& CEnemyFactory::CreateEnemy(DirectX::SimpleMath::Vector3 aPosition, 
 	transform->Rotation({ 0.0f, 0.0f, 0.0f });
 	enemy->AddComponent<CCapsuleColliderComponent>(*enemy, 0.5f, 2.0f);
 	/*auto modelComponent =*/ 
-	enemy->AddComponent<CModelComponent>(*enemy, "Assets/3D/Character/Enemy1/CH_NPC_enemy_01_19G4_1_19.fbx");
+	enemy->AddComponent<CModelComponent>(*enemy, "Assets/3D/Character/CH_NPC_enemy_01_19G4_1_19/CH_NPC_enemy_01_19G4_1_19.fbx");
 	
 	//CAnimationComponent* animation = enemy->AddComponent<CAnimationComponent>(*enemy);
 	//std::vector<std::string> somePathsToAnimations;
