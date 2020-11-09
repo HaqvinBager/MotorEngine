@@ -126,6 +126,10 @@
     <ClInclude Include="CircleColliderComponent.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="Message.h" />
+    <ClInclude Include="MessageType.h" />
+    <ClInclude Include="Observer.h" />
+    <ClInclude Include="PostMaster.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="DL_Debug.h" />
     <ClInclude Include="DL_StackWalker.h" />
@@ -215,6 +219,7 @@
     <ClCompile Include="ObjectPool.cpp" />
     <ClCompile Include="ParticleEmitterComponent.cpp" />
     <ClCompile Include="PlayerControllerComponent.cpp" />
+    <ClCompile Include="PostMaster.cpp" />
     <ClCompile Include="RectangleColliderComponent.cpp" />
     <ClCompile Include="StackWalker.cpp" />
     <ClCompile Include="State.cpp" />
