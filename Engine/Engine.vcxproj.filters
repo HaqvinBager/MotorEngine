@@ -351,6 +351,9 @@
     <ClInclude Include="ParticleEmitterComponent.h">
       <Filter>GameObject\Components\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TokenPool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LevelLoader.cpp">
@@ -559,6 +562,9 @@
     </ClCompile>
     <ClCompile Include="ParticleEmitterComponent.cpp">
       <Filter>GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="TokenPool.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

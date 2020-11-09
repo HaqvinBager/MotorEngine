@@ -205,6 +205,18 @@ bool CScene::RemoveInstance(CGameObject* aGameObject) {
 	return true;
 }
 
+bool CScene::RemoveInstance(CPointLight* aPointLight)
+{
+	for (int i = 0; i < myPointLights.size(); ++i) {
+		if (aPointLight == myPointLights[i]) {
+			//std::swap(myGameObjects[i], myGameObjects[myGameObjects.size() - 1]);
+			//myGameObjects.pop_back();
+			myPointLights.erase(myPointLights.begin() + i);
+		}
+	}
+	return true;
+}
+
 bool CScene::ClearScene() {
 
 	for (auto gameObject : myGameObjects) {

@@ -16,6 +16,8 @@ using namespace DirectX::SimpleMath;
 //	return true;
 //}
 
+DirectX::SimpleMath::Vector3 CIntersectionManager::myCapsulePenetration = { 0.f, 0.f, 0.f };
+
 static bool colliderDebug = false;
 
 bool CIntersectionManager::CircleIntersection(CCircleColliderComponent& aCircle, CCircleColliderComponent& aCircle2) {
@@ -306,7 +308,7 @@ bool CIntersectionManager::CapsuleIntersection(CCapsuleColliderComponent& aCapsu
 	float aLength = aPenetrationNormal.Length();
 	aPenetrationNormal.Normalize();
 	float aPenetrationDepth = aCapsuleA.myRadius + aCapsuleB.myRadius - aLength;
-	
+	myCapsulePenetration = bestA - bestB;
 	if (aPenetrationDepth > 0) {
 		return true;
 	}

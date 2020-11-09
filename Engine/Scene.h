@@ -47,6 +47,7 @@ public:
 	bool AddInstance(CTextInstance* aText);
 
 	bool RemoveInstance(CGameObject* aGameObject);
+	bool RemoveInstance(CPointLight* aPointLight);
 
 	bool ClearScene();
 	bool ClearSprites();

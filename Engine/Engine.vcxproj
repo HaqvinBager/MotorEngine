@@ -185,6 +185,7 @@
     <ClInclude Include="TextInstance.h" />
     <ClInclude Include="TextRenderer.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="TokenPool.h" />
     <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="TriangleColliderComponent.h" />
     <ClInclude Include="VFXBase.h" />
@@ -260,6 +261,7 @@
     <ClCompile Include="TextInstance.cpp" />
     <ClCompile Include="TextRenderer.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="TokenPool.cpp" />
     <ClCompile Include="TransformComponent.cpp" />
     <ClCompile Include="TriangleColliderComponent.cpp" />
     <ClCompile Include="VFXBase.cpp" />

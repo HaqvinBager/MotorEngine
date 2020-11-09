@@ -2,6 +2,8 @@
 #include "Component.h"
 
 class CGameObject;
+class CToken;
+class CPointLight;
 
 class CStatsComponent : public CComponent
 {
@@ -16,11 +18,13 @@ public:
 	void FindATarget(CGameObject& aTarget);
 
 	void TakeDamage(float aDamage);
-	float GetDamage() const;
+	float GetDamage();
 
 	float GetHealth() const;
 
 	float GetMoveSpeed() const;
+
+	CToken* GetToken() const;
 
 private:
 	float myHealth;
@@ -29,5 +33,8 @@ private:
 	float myDamageCooldown;
 	float myBaseDamageCooldown;
 	bool canTakeDamage;
+	bool canAttack;
+	CToken* myTokenSlot;
+	CPointLight* myPointLight;
 };
 
