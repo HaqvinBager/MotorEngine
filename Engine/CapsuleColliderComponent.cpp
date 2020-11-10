@@ -4,7 +4,7 @@
 #include "CollisionManager.h"
 
 CCapsuleColliderComponent::CCapsuleColliderComponent(CGameObject& aParent, float aRadius, float aHeight) 
-	: CComponent(aParent)
+	: CBehaviour(aParent)
 	, myRadius(aRadius)
 	, myHeight(aHeight) 
 {
@@ -46,5 +46,13 @@ void CCapsuleColliderComponent::Update()
 
 void CCapsuleColliderComponent::Collided(CGameObject* /*aCollidedGameObject*/)
 {
-	
+	//GetParent().Collided(aCollidedGameObject);
+}
+
+void CCapsuleColliderComponent::OnEnable()
+{
+}
+
+void CCapsuleColliderComponent::OnDisable()
+{
 }

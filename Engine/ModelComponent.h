@@ -12,13 +12,13 @@
 /// Byt ut CModelInstance till en CModel
 ///
 
-#include "Component.h"
+#include "Behaviour.h"
 
 class CModelInstance;
 class CGameObject;
 class CModel;
 
-class CModelComponent : public CComponent 
+class CModelComponent : public CBehaviour
 {
 public:
 	CModelComponent(CGameObject& aParent, std::string aFBXPath);
@@ -32,6 +32,8 @@ public:
 
 	CModel *GetMyModel() const;
 
+	void OnEnable() override;
+	void OnDisable() override;
 private:
 
 	CModel* myModel;

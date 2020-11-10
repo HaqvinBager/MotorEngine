@@ -8,7 +8,7 @@
 #include "Timer.h"
 
 CAnimationComponent::CAnimationComponent(CGameObject& aParent) 
-	: CComponent(aParent)
+	: CBehaviour(aParent)
 	, myAnimation(new CAnimation())
 {}
 
@@ -38,6 +38,16 @@ void CAnimationComponent::Update()
 	}
 
 	GetAnimatedTransforms(dt, myBones.data());	
+}
+
+void CAnimationComponent::OnEnable()
+{
+
+}
+
+void CAnimationComponent::OnDisable()
+{
+
 }
 
 void CAnimationComponent::GetAnimatedTransforms(float dt, SlimMatrix44 * transforms)
