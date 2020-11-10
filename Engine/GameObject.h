@@ -56,8 +56,8 @@ public:
 
 	void Collided(CGameObject& aCollidedGameObject);
 
-	void SetActive(bool aActive);
-	bool SetActive() const { return myIsEnabled; };
+	void Active(bool aActive);
+	bool Active() const { return myIsActive; };
 
 	template< class T, typename... Args >
 	T* AddComponent(Args&&... aParams);
@@ -71,13 +71,10 @@ public:
 
 	CTransformComponent* myTransform;
 
-public:
-	bool Enabled() const { return myIsEnabled; }
-	void Enabled(bool anIsEnabled) { myIsEnabled = anIsEnabled; }
 
 private:
 	std::vector<CComponent*> myComponents;
-	bool myIsEnabled;
+	bool myIsActive;
 };
 
 template<class T, typename... Args >
