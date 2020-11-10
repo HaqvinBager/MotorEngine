@@ -67,7 +67,9 @@ std::vector<CGameObject*> CScene::CullGameObjects(CCamera* aMainCamera)
 	std::vector<CGameObject*> culledGameObjects;
 	for (auto& gameObject : myGameObjects)
 	{
-		if (!gameObject->Enabled()) {
+		//Backup
+		//if (!gameObject->Enabled()) {
+		if (!gameObject->SetActive()) {
 			continue;
 		}
 

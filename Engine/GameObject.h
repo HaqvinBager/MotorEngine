@@ -57,6 +57,7 @@ public:
 	void Collided(CGameObject& aCollidedGameObject);
 
 	void SetActive(bool aActive);
+	bool SetActive() const { return myIsEnabled; };
 
 	template< class T, typename... Args >
 	T* AddComponent(Args&&... aParams);
@@ -67,9 +68,6 @@ public:
 
 	template<class T>
 	T* GetComponent() const;
-
-	bool Enabled() const;
-	void Enabled(bool anIsEnabled);
 
 	CTransformComponent* myTransform;
 
