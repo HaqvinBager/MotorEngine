@@ -43,7 +43,7 @@ public:
 	unsigned int GetMipLevels();
 private:
 	unsigned int myMipLevels;
-	ID3D11ShaderResourceView* cubeShaderResourceView = nullptr;
+	ID3D11ShaderResourceView* myCubeShaderResourceView = nullptr;
 	DirectX::SimpleMath::Vector4 myDirection; //Points towards the Light
 	DirectX::SimpleMath::Vector4 myColor; //Color (XYZ) and Intensity (W)
 };

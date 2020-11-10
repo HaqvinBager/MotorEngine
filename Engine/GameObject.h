@@ -71,6 +71,10 @@ public:
 
 	CTransformComponent* myTransform;
 
+public:
+	bool Enabled() const { return myIsEnabled; }
+	void Enabled(bool anIsEnabled) { myIsEnabled = anIsEnabled; }
+
 private:
 	std::vector<CComponent*> myComponents;
 	bool myIsEnabled;

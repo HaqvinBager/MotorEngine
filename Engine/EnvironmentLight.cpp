@@ -20,7 +20,7 @@ bool CEnvironmentLight::Init(CDirectXFramework* aFramework, std::string aFilePat
 	std::copy(aFilePath.begin(), aFilePath.end(), cubeMapPathWide);
 	cubeMapPathWide[aFilePath.length()] = 0;
 
-	result = DirectX::CreateDDSTextureFromFile(aFramework->GetDevice(), cubeMapPathWide, nullptr, &cubeShaderResourceView);
+	result = DirectX::CreateDDSTextureFromFile(aFramework->GetDevice(), cubeMapPathWide, nullptr, &myCubeShaderResourceView);
 	if (FAILED(result))
 	{
 		return false;
@@ -29,7 +29,7 @@ bool CEnvironmentLight::Init(CDirectXFramework* aFramework, std::string aFilePat
 	delete[] cubeMapPathWide;
 
 	ID3D11Resource* cubeResource;
-	cubeShaderResourceView->GetResource(&cubeResource);
+	myCubeShaderResourceView->GetResource(&cubeResource);
 	ID3D11Texture2D* cubeTexture = reinterpret_cast<ID3D11Texture2D*>(cubeResource);
 	D3D11_TEXTURE2D_DESC cubeDescription = { 0 };
 	cubeTexture->GetDesc(&cubeDescription);
@@ -40,7 +40,7 @@ bool CEnvironmentLight::Init(CDirectXFramework* aFramework, std::string aFilePat
 
 ID3D11ShaderResourceView* const* CEnvironmentLight::GetCubeMap()
 {
-	return &cubeShaderResourceView;
+	return &myCubeShaderResourceView;
 }
 
 unsigned int CEnvironmentLight::GetMipLevels()
