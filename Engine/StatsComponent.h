@@ -43,4 +43,3 @@ private:
 	CToken* myTokenSlot;
 	CPointLight* myPointLight;
 };
-
