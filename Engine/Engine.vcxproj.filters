@@ -378,9 +378,6 @@
     <ClInclude Include="Behaviour.h">
       <Filter>GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="AudioManager.h">
-      <Filter>Audio</Filter>
-    </ClInclude>
     <ClInclude Include="FModWrapper.h">
       <Filter>Audio</Filter>
     </ClInclude>
@@ -612,9 +609,6 @@
     </ClCompile>
     <ClCompile Include="MainSingleton.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AudioManager.cpp">
-      <Filter>Audio</Filter>
     </ClCompile>
     <ClCompile Include="FModWrapper.cpp">
       <Filter>Audio</Filter>
