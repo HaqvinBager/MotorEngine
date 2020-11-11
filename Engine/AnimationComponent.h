@@ -28,6 +28,8 @@ public:
 
 public:
 	CAnimation* GetMyAnimation() { return myAnimation; }
+	const float GetBlend() const { return myBlend.myBlendLerp; }
+	
 
 public:
 	std::array<SlimMatrix44, 64> GetBones() { return myBones; }

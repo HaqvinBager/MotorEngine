@@ -50,6 +50,11 @@ void CAnimation::Step(float aDelta)
 	controller->Update();
 }
 
+const size_t CAnimation::GetNrOfAnimations() const
+{
+	return controller->GetNrOfAnimations(); 
+}
+
 //void CAnimation::SetAnimator(SceneAnimator* anAnimator)
 //{
 //	myAnimator = anAnimator;

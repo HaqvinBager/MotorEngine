@@ -30,6 +30,7 @@ public:
 	const float GetTotalAnimationTime() const { return myTotalAnimationTime; }
 	const float GetAnimationTime() const { return myAnimTime; } 
 	const int GetAnimationSpeed() const { return myAnimSpeed; }
+	const size_t GetNrOfAnimations() const;
 
 private:
 	SceneAnimator* myAnimator;

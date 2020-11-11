@@ -447,8 +447,9 @@ void UpdateAnimationTest(CGameObject* aCurrentGameObject,CCamera* /*aCamera*/, s
 	{
 		if (animComp->Enabled())
 		{
-			aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(0, 1, sinf(CTimer::Time()));
+			/*aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(0, 1, 1.0f);*/
 			aCurrentGameObject->GetComponent<CAnimationComponent>()->Update();
+			
 		}
 	}
 
@@ -459,6 +460,31 @@ void UpdateAnimationTest(CGameObject* aCurrentGameObject,CCamera* /*aCamera*/, s
 			// oh no. How could this even happen :o?
 		}
 	}
+
+	if (Input::GetInstance()->IsKeyPressed(VK_LEFT))
+	{
+		float current = aCurrentGameObject->GetComponent<CAnimationComponent>()->GetBlend();
+		current = (current > 0.0f ? current - 1.0f : current );
+		aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(static_cast<int>(current), static_cast<int>(aCurrentGameObject->GetComponent<CAnimationComponent>()->GetMyAnimation()->GetNrOfAnimations()), current);
+		std::cout << " " << current << std::endl;
+
+	}
+
+	if (Input::GetInstance()->IsKeyPressed(VK_RIGHT))
+	{
+		float current = aCurrentGameObject->GetComponent<CAnimationComponent>()->GetBlend();
+		current = (current < static_cast<float>(aCurrentGameObject->GetComponent<CAnimationComponent>()->GetMyAnimation()->GetNrOfAnimations()) ? current + 1.0f : current);
+		aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(static_cast<int>(current), static_cast<int>(aCurrentGameObject->GetComponent<CAnimationComponent>()->GetMyAnimation()->GetNrOfAnimations()), current);
+		std::cout << " " << current << std::endl;
+	}
+
+	/*aCurrentGameObject->GetComponent<CAnimationComponent>()->GetMyAnimation()->GetNrOfAnimations();
+	aCurrentGameObject->GetComponent<CAnimationComponent>()->GetBlend();*/
+
+	//aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(static_cast<int>(current), static_cast<int>(aCurrentGameObject->GetComponent<CAnimationComponent>()->GetMyAnimation()->GetNrOfAnimations()), current);
+
+
+
 }
 
 

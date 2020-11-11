@@ -103,6 +103,8 @@ public:
 	void SetRotation(const aiVector3D& r) { _rotation = r; }
 	aiVector3D GetRotation() { return _rotation; }
 
+	const size_t GetNrOfAnimations() const { return _scenes.size() - 1; }
+
 	~AnimationController()
 	{
 		Release();
