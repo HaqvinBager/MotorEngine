@@ -23,7 +23,8 @@ private:
 	bool myIsStatic;
 	float myWidth;
 	float myHeight;
-	std::vector<DirectX::SimpleMath::Vector3> myVertices;
+	DirectX::SimpleMath::Vector3 myMin;
+	DirectX::SimpleMath::Vector3 myMax;
 	DirectX::SimpleMath::Vector3 myPosition;
 };
 
