@@ -8,7 +8,7 @@
 #pragma comment(lib, "fmod_vc.lib")
 #pragma comment(lib, "fmodstudio_vc.lib")
 
-#define FMOD_EXCEPTION(result) { CFMod::CheckException(result); }
+#define FMOD_EXCEPTION(result)	{ FMOD_RESULT fresult = result; if (fresult != FMOD_OK) {ENGINE_ERROR_MESSAGE(FMOD_ErrorString(fresult)); exit(-1);} }
 
 CFMod::CFMod()
 {
