@@ -2,7 +2,7 @@
 #include "PlayerControllerComponent.h"
 #include "InputMapper.h"
 
-CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent) : CComponent(aParent)
+CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent) : CBehaviour(aParent)
 {
 	//IS PROBABLY RONG // ALEX LIVHOLTS
 	CInputMapper::GetInstance()->AddObserver(CInputObserver::EInputEvent::MoveClick, this);
@@ -23,6 +23,14 @@ void CPlayerControllerComponent::Start()
 }
 
 void CPlayerControllerComponent::Update()
+{
+}
+
+void CPlayerControllerComponent::OnEnable()
+{
+}
+
+void CPlayerControllerComponent::OnDisable()
 {
 }
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "Component.h"
+#include "Behaviour.h"
 
 #include "SimpleMath.h"
 #include "ModelMath.h"
@@ -13,7 +13,7 @@ struct SAnimationBlend
 
 class CGameObject;
 class CAnimation;
-class CAnimationComponent : public CComponent
+class CAnimationComponent : public CBehaviour
 {
 public:
 	CAnimationComponent(CGameObject& aParent);
@@ -22,6 +22,9 @@ public:
 	void Awake() override;
 	void Start() override;
 	void Update() override;
+
+	void OnEnable() override;
+	void OnDisable() override;
 
 public:
 	CAnimation* GetMyAnimation() { return myAnimation; }

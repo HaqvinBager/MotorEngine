@@ -1,12 +1,12 @@
 #pragma once
-#include "Component.h"
+#include "Behaviour.h"
 #include "Particle.h"
 #include <SimpleMath.h>
 #include <queue>
 
 class CGameObject;
 
-class CParticleEmitterComponent : public CComponent
+class CParticleEmitterComponent : public CBehaviour
 {
 public:
 	CParticleEmitterComponent(CGameObject& aParent);
@@ -26,6 +26,8 @@ public:
 
 	void Update(float aDeltaTime, DirectX::SimpleMath::Vector3 aCameraPosition);
 
+	void OnEnable() override;
+	void OnDisable() override;
 public:
 	CParticle* GetParticle() { return myParticle; }
 	std::vector<CParticle::SParticleVertex>& GetParticleVertices() { return myParticleVertices; }

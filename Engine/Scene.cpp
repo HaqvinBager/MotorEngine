@@ -69,7 +69,7 @@ std::vector<CGameObject*> CScene::CullGameObjects(CCamera* aMainCamera)
 	{
 		//Backup
 		//if (!gameObject->Enabled()) {
-		if (!gameObject->SetActive()) {
+		if (!gameObject->Active()) {
 			continue;
 		}
 

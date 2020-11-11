@@ -7,14 +7,13 @@ class ObjectDataRaw
 {
 public:
 	//std::string myName; //funkar inte i binary!!
-
+	int instanceID;
 	float myRotX;
 	float myRotY;
 	float myRotZ;
 	float myPosX;
 	float myPosY;
 	float myPosZ;
-
 	float myScaleX;
 	float myScaleY;
 	float myScaleZ;

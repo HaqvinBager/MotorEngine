@@ -120,6 +120,7 @@
     <ClInclude Include="AnimationComponent.h" />
     <ClInclude Include="AnimationController.h" />
     <ClInclude Include="AStar.h" />
+    <ClInclude Include="AudioManager.h" />
     <ClInclude Include="Behaviour.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraFactory.h" />
@@ -127,6 +128,7 @@
     <ClInclude Include="CircleColliderComponent.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="FModWrapper.h" />
     <ClInclude Include="MainSingleton.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="MessageType.h" />
@@ -206,6 +208,7 @@
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="AnimationComponent.cpp" />
     <ClCompile Include="AStar.cpp" />
+    <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraFactory.cpp" />
     <ClCompile Include="CapsuleColliderComponent.cpp" />
@@ -216,6 +219,7 @@
     <ClCompile Include="DL_Debug.cpp" />
     <ClCompile Include="DL_StackWalker.cpp" />
     <ClCompile Include="EnemyFactory.cpp" />
+    <ClCompile Include="FModWrapper.cpp" />
     <ClCompile Include="InputMapper.cpp" />
     <ClCompile Include="MainSingleton.cpp" />
     <ClCompile Include="MenuState.cpp" />

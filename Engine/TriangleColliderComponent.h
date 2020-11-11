@@ -1,5 +1,5 @@
 #pragma once
-#include "Component.h"
+#include "Behaviour.h"
 
 namespace DirectX {
 	namespace SimpleMath {
@@ -7,7 +7,7 @@ namespace DirectX {
 	}
 }
 
-class CTriangleColliderComponent : public CComponent
+class CTriangleColliderComponent : public CBehaviour
 {
 	friend class CIntersectionManager;
 
@@ -19,6 +19,9 @@ public:
 	void Start() override;
 	void Update()override;
 	void Collided(CGameObject* aCollidedGameObject) override;
+
+	void OnEnable() override;
+	void OnDisable() override;
 
 private:
 	const float myHeight;

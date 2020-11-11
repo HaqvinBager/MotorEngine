@@ -13,6 +13,7 @@
 #include <GameObject.h>
 #include <TransformComponent.h>
 #include <ModelComponent.h>
+#include <AnimationComponent.h>
 
 #include <LightFactory.h>
 #include <EnvironmentLight.h>
@@ -56,6 +57,13 @@ void CloseConsole()
 	fclose(stdout);
 	fclose(stderr);
 #pragma warning( pop )
+}
+
+// Returns the _NN part of the string ex CH_NPC_Boss_Attack_AN.fbx returns _AN
+std::string GetSuffixFromString(const std::string& aString)
+{
+	//ex: CH_NPC_Boss_Attack_AN.fbx 7 from last
+	return std::move(aString.substr(aString.length() - 7, 3));
 }
 
 std::size_t number_of_files_in_directory(std::filesystem::path path)
@@ -161,8 +169,8 @@ void LoadModelPaths(const std::string& aStartFolderPath, std::vector<std::string
 			if (fileExtension == ".fbx")
 			{
 				//ex: CH_NPC_Boss_Attack_AN.fbx 7 from last
-				std::string suffix = filePath.substr(filePath.length() - 7, filePath.length() - 5);
-				if (suffix != "_AN.fbx")
+				std::string suffix = GetSuffixFromString(filePath);
+				if (suffix != "_AN")
 				{
 					aFBXFilePaths.emplace_back(folders[prevFolders[depth]].myFullPath + "/" + filePath);
 				}
@@ -175,17 +183,6 @@ CGameObject* InitModels(const std::string& aModelPath)
 {
 	CScene* scene = CScene::GetInstance();
 
-	CLightFactory* lightFactory = CLightFactory::GetInstance();
-	CEnvironmentLight* environmentLight = lightFactory->CreateEnvironmentLight("Yokohama2.dds");
-	environmentLight->SetDirection(SM::Vector3(0, 0, -1));
-	environmentLight->SetColor(SM::Vector3(1.0f, 1.0f, 1.0f));
-	//environmentLight->SetColor(SM::Vector3(0.0f, 0.0f, 1.0f));
-
-	environmentLight->SetIntensity(1.0f);
-
-
-	scene->AddInstance(environmentLight);
-
 	CGameObject* gameobject = new CGameObject();
 
 	gameobject->AddComponent<CModelComponent>(CModelComponent(*gameobject, aModelPath));
@@ -197,12 +194,10 @@ CGameObject* InitModels(const std::string& aModelPath)
 }
 
 // Reminder: Vem tar hand om delete av CModel? CModelFactory verkar inte ta hand om det och inte CModelInstance?
-
 bool CheckForIncorrectModelNumber(const size_t& aLoadModelNumber, const size_t& aMax)
 {
 	return (static_cast<int>(aLoadModelNumber) > -1 && aLoadModelNumber < aMax);
 }
-
 
 void Update(std::vector<std::string>& aModelFilePathList, CGameObject* aCurrentGameObject,CCamera* aCamera)
 {
@@ -340,7 +335,140 @@ void Update(std::vector<std::string>& aModelFilePathList, CGameObject* aCurrentG
 	}
 }
 
+
+
+/// <Data driven animations test notes>
+/// 
+/// std::vector<std::string> pathsToAnimations;
+/// When loading model:
+/// If fbx has_SK in name before .fbx
+///		check its folder for files with _AN
+///			if file_AN == .fbx
+///				Add to pathsToAnimations
+/// 
+/// </Data driven animations test notes>
+
+CGameObject* InitAnimation(const std::string& aFilePath)
+{
+	CGameObject* gameObject = new CGameObject();
+
+	gameObject->AddComponent<CModelComponent>(CModelComponent(*gameObject, aFilePath));
+	gameObject->myTransform->Position({ 0.0f,0.0f,0.0f });
+
+	if (GetSuffixFromString(aFilePath) == "_SK")
+	{
+		const size_t lastSlashIndex		= aFilePath.find_last_of("\\/");
+		const std::string folderPath	= aFilePath.substr(0, lastSlashIndex + 1);
+
+		std::filesystem::path p(folderPath);
+		std::filesystem::directory_iterator start(p);
+		std::filesystem::directory_iterator end;
+
+		std::vector<std::string> somePathsToAnimations;
+		for (auto it = start; it != end; ++it)
+		{
+			if (it->path().extension() == ".fbx")
+			{
+				const std::string filePath = it->path().filename().string();
+				if (GetSuffixFromString(filePath) == "_AN")
+				{
+					somePathsToAnimations.emplace_back(folderPath + filePath);
+				}
+			}
+		}
+
+		CAnimationComponent* animComp = gameObject->AddComponent<CAnimationComponent>(*gameObject);
+		animComp->GetMyAnimation()->Init(aFilePath.c_str(), somePathsToAnimations);
+		animComp->SetBlend(0, 1, 1.0f);
+		gameObject->GetComponent<CModelComponent>()->GetMyModel()->AddAnimation(animComp->GetMyAnimation());
+	}
+
+	CScene::GetInstance()->AddInstance(gameObject);
+
+	return gameObject;
+}
+bool ChangeModel(CGameObject* aCurrentGameObject, std::vector<std::string>& aModelFilePathList)
+{
+	SetForegroundWindow(GetConsoleWindow());
+
+	size_t loadModelNumber = aModelFilePathList.size();
+	std::cout << "Which model do you wish to load Give a number between: 0 and " << aModelFilePathList.size() - 1 << "\nL> ";
+	std::cin >> loadModelNumber;
+	while (!CheckForIncorrectModelNumber(loadModelNumber, aModelFilePathList.size()))
+	{
+		std::cin.clear();
+		std::cout << "Try again: Which model do you wish to load Give a number between: 0 and " << aModelFilePathList.size() - 1 << std::endl;
+		std::cin >> loadModelNumber;
+	}
+
+	std::cout << "Loading model number: " << loadModelNumber << " : " << aModelFilePathList[loadModelNumber] << std::endl;
+
+	aCurrentGameObject->GetComponent<CModelComponent>()->SetModel(aModelFilePathList[loadModelNumber]);
+	aCurrentGameObject->GetComponent<CTransformComponent>()->Transform({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
+
+	if (GetSuffixFromString(aModelFilePathList[loadModelNumber]) == "_SK")
+	{
+		const size_t lastSlashIndex		= aModelFilePathList[loadModelNumber].find_last_of("\\/");
+		const std::string folderPath	= aModelFilePathList[loadModelNumber].substr(0, lastSlashIndex + 1);
+
+		std::filesystem::path p(folderPath);
+		std::filesystem::directory_iterator start(p);
+		std::filesystem::directory_iterator end;
+
+		std::vector<std::string> somePathsToAnimations;
+		for (auto it = start; it != end; ++it)
+		{
+			if (it->path().extension() == ".fbx")
+			{
+				const std::string filePath = it->path().filename().string();
+				if (GetSuffixFromString(filePath) == "_AN")
+				{
+					somePathsToAnimations.emplace_back(folderPath + filePath);
+				}
+			}
+		}
+
+		CAnimationComponent* animComp = aCurrentGameObject->AddComponent<CAnimationComponent>(*aCurrentGameObject);
+		animComp->GetMyAnimation()->Init(aModelFilePathList[loadModelNumber].c_str(), somePathsToAnimations);
+		animComp->SetBlend(0, 1, 1.0f);
+		aCurrentGameObject->GetComponent<CModelComponent>()->GetMyModel()->AddAnimation(animComp->GetMyAnimation());
+	}
+
+	std::cout << "\nInstructions" << std::endl 
+		<< "   Main Window: Press 'ESC' and then return to this Console." << std::endl
+		<< "   Console: Enter the desired models number." << std::endl;
+
+	return true;
+}
+void UpdateAnimationTest(CGameObject* aCurrentGameObject,CCamera* /*aCamera*/, std::vector<std::string>& aModelFilePathList)
+{
+	const auto animComp = aCurrentGameObject->GetComponent<CAnimationComponent>();
+	if (animComp)
+	{
+		if (animComp->Enabled())
+		{
+			aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(0, 1, sinf(CTimer::Time()));
+			aCurrentGameObject->GetComponent<CAnimationComponent>()->Update();
+		}
+	}
+
+	if (Input::GetInstance()->IsKeyPressed(VK_ESCAPE))
+	{
+		if (!ChangeModel(aCurrentGameObject, aModelFilePathList))
+		{
+			// oh no. How could this even happen :o?
+		}
+	}
+}
+
+
+
 //////////////////////////////////// MAIN STARTS HERE ///////////////////////////////////////////////////////////////////
+
+#define RUNNING_ANIMATIONS_TEST
+
+#define ASSET_ROOT "Assets"
+#define ASSET_ROOT_ANIMATION_TEST "Assets/3D/Datadriven_Animation_Test"
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nShowCmd)
 {
@@ -364,37 +492,49 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	if (!shouldRun)
 		return 1;
 
-	CScene* scene = CScene::GetInstance();
 
+// CAMERA
 	CCamera* camera = CCameraFactory::GetInstance()->CreateCamera(65.0f, 5000.0f);
-	camera->SetRotation({ 33.f,-45.f,0.f });
-	camera->SetPosition({ 3.0f,4.0f,-3.5f });
-	scene->AddInstance(camera);
-	scene->SetMainCamera(camera);
-
+		camera->SetRotation({ 33.f,-45.f,0.f });
+		camera->SetPosition({ 1.5f,2.0f,-1.5f });
+		CScene::GetInstance()->AddInstance(camera);
+		CScene::GetInstance()->SetMainCamera(camera);
+// ENV LIGHT
+	CEnvironmentLight* environmentLight = CLightFactory::GetInstance()->CreateEnvironmentLight("Yokohama2.dds");
+		environmentLight->SetDirection(SM::Vector3(0, 0, -1));
+		environmentLight->SetColor(SM::Vector3(1.0f, 1.0f, 1.0f));
+		environmentLight->SetIntensity(1.0f);
+		CScene::GetInstance()->AddInstance(environmentLight);
+// GRID
 	CLineInstance* grid = new CLineInstance();
-	grid->Init(CLineFactory::GetInstance()->CreateGrid({ 0.33f,0.33f,0.33f, 1.0f }));
-	grid->SetPosition({ 0.0f,-0.01f,0.0f });
-	CScene::GetInstance()->AddInstance(grid);
-
+		grid->Init(CLineFactory::GetInstance()->CreateGrid({ 0.33f,0.33f,0.33f, 1.0f }));
+		grid->SetPosition({ 0.0f,-0.01f,0.0f });
+		CScene::GetInstance()->AddInstance(grid);
+// AXIS ORIGIN MARKER
 	CLineInstance* origin = new CLineInstance();
-	origin->Init(CLineFactory::GetInstance()->CreateAxisMarker());
-	origin->SetPosition({ 0.0f,0.01f,0.0f });
-	CScene::GetInstance()->AddInstance(origin);
-
-	std::string root = "Assets";
-
-	std::vector<std::string> filePaths;
-	LoadModelPaths(root, filePaths);
+		origin->Init(CLineFactory::GetInstance()->CreateAxisMarker());
+		origin->SetPosition({ 0.0f,0.01f,0.0f });
+		CScene::GetInstance()->AddInstance(origin);
 
 	CGameObject* currentGameObject = nullptr;
-	currentGameObject = InitModels(filePaths[96]);
-	
+
+#ifdef RUNNING_ANIMATIONS_TEST
+	std::vector<std::string> filePaths;
+	LoadModelPaths(ASSET_ROOT_ANIMATION_TEST, filePaths);
+
+	currentGameObject = InitAnimation(filePaths[0]);
+
+#else
+	std::vector<std::string> filePaths;
+	LoadModelPaths(ASSET_ROOT, filePaths);
+	currentGameObject = InitModels(filePaths[0]);
+
+#endif // ! RUNNING_ANIMATIONS
 	int counter = 0;
 	for (auto& str : filePaths)
 	{
-		const size_t last_slash_idx = str.find_last_of("\\/");
-		std::string modelName		= str.substr(last_slash_idx + 1, str.size() - last_slash_idx - 5);
+		const size_t lastSlashIndex = str.find_last_of("\\/");
+		std::string modelName		= str.substr(lastSlashIndex + 1, str.size() - lastSlashIndex - 5);
 		std::cout << "Number: " << counter << "\t: " << modelName << std::endl;
 		++counter;
 	}
@@ -410,6 +550,8 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		<< "   K....................Reset Model\n"
 		<< "   C....................Reset Camera\n"
 		<< std::endl;
+
+	
 	
 	MSG windowMessage = { 0 };
 	while (shouldRun)
@@ -426,7 +568,11 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		}
 	
 		engine.BeginFrame();
+#ifdef RUNNING_ANIMATIONS_TEST
+		UpdateAnimationTest(currentGameObject, camera, filePaths);
+#else
 		Update(filePaths, currentGameObject, camera);
+#endif // ! RUNNING_ANIMATIONS_TEST
 
 		engine.RenderFrame();
 		engine.EndFrame();
@@ -435,6 +581,9 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
 	delete currentGameObject;
 	currentGameObject = nullptr;
+
+	delete environmentLight;
+	environmentLight = nullptr;
 
 	delete grid;
 	grid = nullptr;

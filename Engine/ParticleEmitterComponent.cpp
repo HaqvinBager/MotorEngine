@@ -9,7 +9,7 @@
 namespace SM = DirectX::SimpleMath;
 #define ENGINE_SCALE 0.01f
 
-CParticleEmitterComponent::CParticleEmitterComponent(CGameObject& aParent) : CComponent(aParent), myParticle(nullptr), myEmitterTimer(0.0f)
+CParticleEmitterComponent::CParticleEmitterComponent(CGameObject& aParent) : CBehaviour(aParent), myParticle(nullptr), myEmitterTimer(0.0f)
 {
 	SetScale(1.0f);
 	myTransform.Translation(GetParent().myTransform->Position());
@@ -105,6 +105,14 @@ void CParticleEmitterComponent::Update(float aDeltaTime, DirectX::SimpleMath::Ve
 			return aFirstParticle.mySquaredDistanceToCamera > aSecondParticle.mySquaredDistanceToCamera;
 		}
 	);
+}
+
+void CParticleEmitterComponent::OnEnable()
+{
+}
+
+void CParticleEmitterComponent::OnDisable()
+{
 }
 
 void CParticleEmitterComponent::SpawnParticles(float aDeltaTime, DirectX::SimpleMath::Vector3& aCameraPosition, CParticle::SParticleData& someParticleData)

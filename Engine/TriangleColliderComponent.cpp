@@ -4,7 +4,7 @@
 #include "TransformComponent.h"
 
 CTriangleColliderComponent::CTriangleColliderComponent(CGameObject& aParent, float aWidth, float aHeight) : 
-	CComponent(aParent),
+	CBehaviour(aParent),
 	myWidth(aWidth),
 	myHeight(aHeight)
 {
@@ -43,4 +43,12 @@ void CTriangleColliderComponent::Update() {
 }
 
 void CTriangleColliderComponent::Collided(CGameObject* /*aCollidedGameObject*/) {
+}
+
+void CTriangleColliderComponent::OnEnable()
+{
+}
+
+void CTriangleColliderComponent::OnDisable()
+{
 }

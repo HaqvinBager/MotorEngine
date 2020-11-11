@@ -9,7 +9,7 @@ CGameObject::CGameObject()
 {
 	myTransform = new CTransformComponent(*this);
 	myComponents.emplace_back(myTransform);
-	myIsEnabled = true;
+	myIsActive = true;
 }
 
 CGameObject::~CGameObject()
@@ -81,8 +81,10 @@ void CGameObject::Collided(CGameObject& aCollidedGameObject)
 	}
 }
 
-void CGameObject::SetActive(bool aActive)
+void CGameObject::Active(bool aActive)
 {
+	myIsActive = aActive;
+
 	if (aActive) {
 		for (size_t i = 0; i < myComponents.size(); ++i) {
 			myComponents[i]->OnEnable();

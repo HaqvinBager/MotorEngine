@@ -375,6 +375,12 @@
     <ClInclude Include="Behaviour.h">
       <Filter>GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="FModWrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LevelLoader.cpp">
@@ -573,7 +579,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ParticleEmitterComponent.cpp">
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="DL_Debug.cpp">
       <Filter>Debug\DL_Debug</Filter>
     </ClCompile>
@@ -593,6 +599,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MainSingleton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FModWrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

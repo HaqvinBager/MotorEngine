@@ -4,7 +4,7 @@
 #include "TransformComponent.h"
 
 CRectangleColliderComponent::CRectangleColliderComponent(CGameObject& aParent, float aWidth, float aHeight, bool isStatic) :
-	CComponent(aParent),
+	CBehaviour(aParent),
 	myWidth(aWidth),
 	myHeight(aHeight),
 	myIsStatic(isStatic)
@@ -47,4 +47,12 @@ void CRectangleColliderComponent::Update() {
 }
 
 void CRectangleColliderComponent::Collided(CGameObject* /*aCollidedGameObject*/) {
+}
+
+void CRectangleColliderComponent::OnEnable()
+{
+}
+
+void CRectangleColliderComponent::OnDisable()
+{
 }

@@ -42,7 +42,7 @@ void CObjectPool::Remove(CGameObject* aEnemy)
 {
 	for (int i = 0; i < poolSize; ++i) {
 		if (enemies[i].GetEnemy() == aEnemy) {
-			enemies[i].GetEnemy()->SetActive(false);
+			enemies[i].GetEnemy()->Active(false);
 			enemies[i].SetNext(firstAvailable);
 			firstAvailable = &enemies[i];
 		}
