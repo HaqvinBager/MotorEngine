@@ -1,12 +1,9 @@
 #pragma once
-#include <fmod/fmod_common.h>
+#include <string>
 
-namespace FMOD {
-	namespace Studio {
-		class System;
-	}
-	class System;
-}
+class CFMod;
+class CAudio;
+class CAudioChannel;
 
 class CFModWrapper
 {
@@ -14,12 +11,14 @@ public:
 	CFModWrapper();
 	~CFModWrapper();
 
-private:
-	static void CheckException(FMOD_RESULT aResult);
+	CAudio* RequestSound(std::string aFilePath);
+	CAudioChannel* RequestChannel(std::string aChannelName);
+
+	void Play(CAudio* aSound, CAudioChannel* aChannel);
 
 private:
-	FMOD::Studio::System* myStudioSystem;
-	FMOD::System* myCoreSystem;
-
+	
+private:
+	CFMod* myFModInstance;
 };
 

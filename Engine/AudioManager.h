@@ -3,9 +3,10 @@
 #include <vector>
 #include <random>
 #include <memory>
-//#include <tga2d/audio/audio.h>
-//#include <tga2d/audio/audio_out.h>
-//#include "PostMaster.hpp"
+#include "FModWrapper.h"
+
+class CAudio;
+class CAudioChannel;
 
 enum class EAmbiance { Dungeon1, Dungeon2, Dungeon3, Dungeon4, ItemRoom, Overworld1, Overworld2, Overworld3, Overworld4, Scrolls, Count };
 enum class ESFX { BlockBreaking, BlockFrozen, BlockPushed, BlockSliding, BlockStoppingSliding, BoundaryTransition, ChestOpening, DogManDeath, /*DogManGrowl1, DogManGrowl2, DogManGrowl3, DogManGrowl4,*/ DoorUnlocked, FireCrackling, FireWeapon, FrogManDeath, /*FrogManGrowl1, FrogManGrowl2, FrogManGrowl3, FrogManGrowl4,*/ GateUnlocked, IceWeapon, MapTransition, PressurePlateDown, PressurePlateUp, PuzzleSolved, ScrollPickup, StandardWeapon, WeaponHit, WeaponPickup, FirePlace, Count };
@@ -95,6 +96,9 @@ private:
 	std::string _vox_path = "Audio/Voice/";
 	GroundType _current_player_ground_type;
 
+	CFModWrapper myWrapper;
+	CAudio* mySound;
+	CAudioChannel* myChannel;
 
 
 };

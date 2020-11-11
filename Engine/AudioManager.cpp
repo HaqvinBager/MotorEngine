@@ -2,8 +2,10 @@
 #include <iostream>
 #include <random>
 #include "AudioManager.h"
+#include "Audio.h"
+#include "AudioChannel.h"
 
-CAudioManager::CAudioManager() {
+CAudioManager::CAudioManager() : myWrapper() {
 	//MainSingleton::get_instance().get_post_master().subscribe(EMessageType::MainMenu, this);
 	//MainSingleton::get_instance().get_post_master().subscribe(EMessageType::GroupLogo, this);
 	//MainSingleton::get_instance().get_post_master().subscribe(EMessageType::IntroStarted, this);
@@ -102,6 +104,12 @@ CAudioManager::CAudioManager() {
 	//set_channel_volume(SoundChannels::ESFX,       _starting_volume_mixer[SoundChannels::ESFX]);
 	//set_channel_volume(SoundChannels::EUI,        _starting_volume_mixer[SoundChannels::EUI]);
 	//set_channel_volume(SoundChannels::EVoiceLine, _starting_volume_mixer[SoundChannels::EVoiceLine]);
+
+	//myWrapper = new CFModWrapper();
+	mySound = myWrapper.RequestSound("Strings_test.mp3");
+	myChannel = myWrapper.RequestChannel("Master");
+	myChannel->SetVolume(0.1f);
+	//myWrapper.Play(mySound, myChannel);
 }
 
 CAudioManager::~CAudioManager() {

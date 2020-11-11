@@ -118,6 +118,9 @@
     <Filter Include="Components\Header Files">
       <UniqueIdentifier>{659f129f-63ca-4814-9c90-2658efb9b2d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{e6f2b31a-e1ba-4adf-8f52-51ab10a8e6a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -375,11 +378,20 @@
     <ClInclude Include="Behaviour.h">
       <Filter>GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="FModWrapper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="AudioManager.h">
-      <Filter>Header Files</Filter>
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="FModWrapper.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="FMod.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioChannel.h">
+      <Filter>Audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -601,11 +613,20 @@
     <ClCompile Include="MainSingleton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FModWrapper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="AudioManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="FModWrapper.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="FMod.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioChannel.cpp">
+      <Filter>Audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
