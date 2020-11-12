@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "TransformComponent.h"
 #include "ModelFactory.h"
+#include "CameraComponent.h"
 
 CRenderManager::CRenderManager() : myScene(*CScene::GetInstance())
 {
@@ -86,7 +87,7 @@ void CRenderManager::Render()
 	myIntermediateTexture.SetAsActiveTarget(&myIntermediateDepth);
 
 	CEnvironmentLight* environmentlight = myScene.GetEnvironmentLight();
-	CCamera* maincamera = myScene.GetMainCamera();
+	CCameraComponent* maincamera = myScene.GetMainCamera();
 	//std::vector<CModelComponent*> modelsToRender = myScene.CullGameObjects(maincamera);
 	std::vector<CGameObject*> gameObjects = myScene.CullGameObjects(maincamera);
 	std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> pointlights;
@@ -110,8 +111,8 @@ void CRenderManager::Render()
 		modelToOutline->GetComponent<CTransformComponent>()->ResetScale();
 	}
 
-	const std::vector<CLineInstance*>& lineInstances = myScene.CullLineInstances(maincamera);
-	const std::vector<SLineTime>& lines = myScene.CullLines(maincamera);
+	const std::vector<CLineInstance*>& lineInstances = myScene.CullLineInstances();
+	const std::vector<SLineTime>& lines = myScene.CullLines();
 
 	myForwardRenderer.RenderLines(maincamera, lines);
 	myForwardRenderer.RenderLineInstances(maincamera, lineInstances);

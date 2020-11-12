@@ -378,6 +378,7 @@
     <ClInclude Include="Behaviour.h">
       <Filter>GameObject</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="FModWrapper.h">
       <Filter>Audio</Filter>
     </ClInclude>
@@ -389,6 +390,13 @@
     </ClInclude>
     <ClInclude Include="AudioChannel.h">
       <Filter>Audio</Filter>
+=======
+    <ClInclude Include="CameraComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EnviromentLightComponent.h">
+      <Filter>Header Files</Filter>
+>>>>>>> f7652e0... Overhaul of everything
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -610,6 +618,7 @@
     <ClCompile Include="MainSingleton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="FModWrapper.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
@@ -621,6 +630,13 @@
     </ClCompile>
     <ClCompile Include="AudioChannel.cpp">
       <Filter>Audio</Filter>
+=======
+    <ClCompile Include="CameraComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EnviromentLightComponent.cpp">
+      <Filter>Source Files</Filter>
+>>>>>>> f7652e0... Overhaul of everything
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

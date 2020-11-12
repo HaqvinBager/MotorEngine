@@ -16,7 +16,7 @@ void CComponent::Collided(CGameObject* /*aCollidedGameObject*/)
 
 }
 
-CGameObject& CComponent::GetParent() const
+CGameObject& CComponent::GameObject() const
 {
 	return myParent;
 }

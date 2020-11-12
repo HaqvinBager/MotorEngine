@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include "Scene.h"
 #include "Input.h"
+#include "CameraComponent.h"
 #include <iostream>
 
 //namespace MouseTracker {
@@ -64,14 +65,15 @@ public:
 		float mouseX = static_cast<float>(CommonUtilities::Input::GetInstance()->MouseX());
 		float mouseY = static_cast<float>(CommonUtilities::Input::GetInstance()->MouseY());
 
-		CCamera* cam = CScene::GetInstance()->GetMainCamera();
+		CCameraComponent* cam = CScene::GetInstance()->GetMainCamera();
+		CTransformComponent* camTransform = cam->GameObject().myTransform;
 
 		float xV = (((2 * mouseX) / aWidth) - 1) / cam->GetProjection()._11;
 		float yV = (-((2 * mouseY) / aHeight) + 1) / cam->GetProjection()._22;
 
-		DirectX::SimpleMath::Vector3 target = cam->GetPosition() - cam->GetTransform().Forward();
+		DirectX::SimpleMath::Vector3 target = camTransform->Position() - camTransform->Transform().Forward();
 
-		DirectX::SimpleMath::Matrix viewMatrix = DirectX::XMMatrixLookAtLH(cam->GetPosition(), target, cam->GetTransform().Up());
+		DirectX::SimpleMath::Matrix viewMatrix = DirectX::XMMatrixLookAtLH(camTransform->Position(), target, camTransform->Transform().Up());
 		DirectX::SimpleMath::Matrix viewMatrixInv = viewMatrix.Invert();
 
 		DirectX::SimpleMath::Vector4 origin = { 0.0f, 0.0f, 0.0f, 1.0f };

@@ -124,13 +124,18 @@
     <ClInclude Include="AudioChannel.h" />
     <ClInclude Include="Behaviour.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CameraFactory.h" />
     <ClInclude Include="CapsuleColliderComponent.h" />
     <ClInclude Include="FMod.h" />
     <ClInclude Include="CircleColliderComponent.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Component.h" />
+<<<<<<< HEAD
     <ClInclude Include="FModWrapper.h" />
+=======
+    <ClInclude Include="EnviromentLightComponent.h" />
+>>>>>>> f7652e0... Overhaul of everything
     <ClInclude Include="MainSingleton.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="MessageType.h" />
@@ -213,6 +218,7 @@
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="AudioChannel.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="CameraFactory.cpp" />
     <ClCompile Include="CapsuleColliderComponent.cpp" />
     <ClCompile Include="FMod.cpp" />
@@ -223,7 +229,11 @@
     <ClCompile Include="DL_Debug.cpp" />
     <ClCompile Include="DL_StackWalker.cpp" />
     <ClCompile Include="EnemyFactory.cpp" />
+<<<<<<< HEAD
     <ClCompile Include="FModWrapper.cpp" />
+=======
+    <ClCompile Include="EnviromentLightComponent.cpp" />
+>>>>>>> f7652e0... Overhaul of everything
     <ClCompile Include="InputMapper.cpp" />
     <ClCompile Include="MainSingleton.cpp" />
     <ClCompile Include="MenuState.cpp" />

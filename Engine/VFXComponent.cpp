@@ -8,7 +8,7 @@ namespace SM = DirectX::SimpleMath;
 
 CVFXComponent::CVFXComponent(CGameObject& aParent): CComponent(aParent), myVFXBase(nullptr) {
 	SetScale(1.0f);
-	myTransform.Translation(GetParent().myTransform->Position());
+	myTransform.Translation(GameObject().myTransform->Position());
 }
 
 CVFXComponent::~CVFXComponent() {
@@ -25,7 +25,7 @@ void CVFXComponent::Update() {
 
 	myTextureScroll += {0.15f * CTimer::Dt(), 0.15f * CTimer::Dt()};
 	myTextureScroll2 += {0.15f * CTimer::Dt(), 0.15f * CTimer::Dt()};
-	SetPosition(GetParent().myTransform->Position());
+	SetPosition(GameObject().myTransform->Position());
 }
 
 bool CVFXComponent::Init(CVFXBase* aVFXBase) {

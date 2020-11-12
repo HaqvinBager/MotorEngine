@@ -13,6 +13,7 @@
 #include "Line.h"
 #include "LineInstance.h"
 #include "Debug.h"
+#include "CameraComponent.h"
 
 namespace SM = DirectX::SimpleMath;
 
@@ -56,11 +57,12 @@ bool CForwardRenderer::Init(CDirectXFramework* aFramework) {
 	return true;
 }
 
-void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> aModelPointLightList, CCamera* aCamera, std::vector<CGameObject*>& aGameObjectList)
+void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> aModelPointLightList, CCameraComponent* aCamera, std::vector<CGameObject*>& aGameObjectList)
 {
-	myFrameBufferData.myToCamera = aCamera->GetTransform().Invert();
+	DirectX::SimpleMath::Matrix& cameraMatrix = aCamera->GameObject().myTransform->Transform();
+	myFrameBufferData.myToCamera = cameraMatrix.Invert();;
 	myFrameBufferData.myToProjection = aCamera->GetProjection();
-	myFrameBufferData.myCameraPosition = aCamera->GetPosition();
+	myFrameBufferData.myCameraPosition = DirectX::SimpleMath::Vector4{cameraMatrix._41, cameraMatrix._42, cameraMatrix._43, 1.f};
 	myFrameBufferData.myDirectionalLightDirection = anEnvironmentLight->GetDirection();
 	myFrameBufferData.myDirectionalLightColor = anEnvironmentLight->GetColor();
 
@@ -78,6 +80,7 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector
 		//Refactoring suggestion: Have CModelComponents be "created" in some kind of Factory.
 		//This factory will make sure to hold all CModelComponent Data in a Cache friendly array <3
 		//Big hype!
+
 		if (gameobject->GetComponent<CModelComponent>() == nullptr)
 			continue;
 
@@ -124,53 +127,12 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector
 		myContext->DrawIndexed(modelData.myNumberOfIndices, 0, 0);
 
 	}
-	// MODELCOMPONENT END
-
-	/*int modelIndex = 0;
-	for (CModelInstance* instance : aModelList) {
-		CModel* model = instance->GetModel();
-		CModel::SModelData modelData = model->GetModelData();
-
-		myObjectBufferData.myToWorld = instance->GetTransform();
-
-		for (unsigned int i = 0; i < aModelPointLightList[modelIndex].first; ++i) {
-			SM::Vector3 position = aModelPointLightList[modelIndex].second[i]->GetPosition();
-			SM::Vector3 color = aModelPointLightList[modelIndex].second[i]->GetColor();
-			myObjectBufferData.myPointLights[i].myPositionAndIntensity = { position.x, position.y, position.z, aModelPointLightList[modelIndex].second[i]->GetIntensity() };
-			myObjectBufferData.myPointLights[i].myColorAndRange = { color.x, color.y, color.z, aModelPointLightList[modelIndex].second[i]->GetRange() };
-		}
-		myObjectBufferData.myNumberOfUsedPointLights = aModelPointLightList[modelIndex].first;
-
-		++modelIndex;
-
-		BindBuffer(myObjectBuffer, myObjectBufferData, "Object Buffer");
-
-		memcpy(myBoneBufferData.myBones, instance->GetBones().data(), sizeof(SlimMatrix44) * 64);
-
-		BindBuffer(myBoneBuffer, myBoneBufferData, "Bone Buffer");
-
-		myContext->IASetPrimitiveTopology(modelData.myPrimitiveTopology);
-		myContext->IASetInputLayout(modelData.myInputLayout);
-		myContext->IASetVertexBuffers(0, 1, &modelData.myVertexBuffer, &modelData.myStride, &modelData.myOffset);
-		myContext->IASetIndexBuffer(modelData.myIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
-		myContext->VSSetConstantBuffers(1, 1, &myObjectBuffer);
-		myContext->VSSetConstantBuffers(2, 1, &myBoneBuffer);
-		myContext->VSSetShader(modelData.myVertexShader, nullptr, 0);
-
-		myContext->PSSetConstantBuffers(1, 1, &myObjectBuffer);
-		myContext->PSSetShaderResources(1, 3, &modelData.myTexture[0]);
-		myContext->PSSetSamplers(0, 1, &modelData.mySamplerState);
-		myContext->PSSetShader(modelData.myPixelShader, nullptr, 0);
-
-		myContext->DrawIndexed(modelData.myNumberOfIndicies, 0, 0);
-	}*/
 }
 
-void CForwardRenderer::RenderLines(CCamera* aCamera, const std::vector<SLineTime>& aLineList) {
+void CForwardRenderer::RenderLines(CCameraComponent* aCamera, const std::vector<SLineTime>& aLineList) {
 
 	namespace SM = DirectX::SimpleMath;
-	myFrameBufferData.myToCamera = aCamera->GetTransform().Invert();
+	myFrameBufferData.myToCamera = aCamera->GameObject().myTransform->Transform().Invert();
 	myFrameBufferData.myToProjection = aCamera->GetProjection();
 
 	BindBuffer(myFrameBuffer, myFrameBufferData, "Frame Buffer");
@@ -203,14 +165,14 @@ void CForwardRenderer::RenderLines(CCamera* aCamera, const std::vector<SLineTime
 	}
 }
 
-void CForwardRenderer::RenderOutline(CCamera* aCamera, CGameObject* aModelInstance, CModel* someOutlineModelData)
+void CForwardRenderer::RenderOutline(CCameraComponent* aCamera, CGameObject* aModelInstance, CModel* someOutlineModelData)
 {
 	if (!someOutlineModelData) {
 		return;
 	}
-
-	myFrameBufferData.myCameraPosition = aCamera->GetPosition();
-	myFrameBufferData.myToCamera = aCamera->GetTransform().Invert();
+	DirectX::SimpleMath::Matrix& cameraMatrix = aCamera->GameObject().myTransform->Transform();
+	myFrameBufferData.myCameraPosition = DirectX::SimpleMath::Vector4(cameraMatrix._41, cameraMatrix._42, cameraMatrix._43, 1.f);
+	myFrameBufferData.myToCamera = cameraMatrix.Invert();
 	myFrameBufferData.myToProjection = aCamera->GetProjection();
 
 	BindBuffer(myFrameBuffer, myFrameBufferData, "Frame Buffer");
@@ -244,10 +206,10 @@ void CForwardRenderer::RenderOutline(CCamera* aCamera, CGameObject* aModelInstan
 	myContext->DrawIndexed(modelData.myNumberOfIndices, 0, 0);
 }
 
-void CForwardRenderer::RenderLineInstances(CCamera* aCamera, const std::vector<CLineInstance*>& aLineList) {
+void CForwardRenderer::RenderLineInstances(CCameraComponent* aCamera, const std::vector<CLineInstance*>& aLineList) {
 
     namespace SM = DirectX::SimpleMath;
-    myFrameBufferData.myToCamera = aCamera->GetTransform().Invert();
+    myFrameBufferData.myToCamera = aCamera->GameObject().myTransform->Transform().Invert();
     myFrameBufferData.myToProjection = aCamera->GetProjection();
 
     BindBuffer(myFrameBuffer, myFrameBufferData, "Frame Buffer");

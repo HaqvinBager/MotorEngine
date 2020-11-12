@@ -7,6 +7,8 @@
 #include "CameraFactory.h"
 #include "CapsuleColliderComponent.h"
 #include "ModelComponent.h"
+#include "CameraComponent.h"
+#include "EnviromentLightComponent.h"
 
 #include <rapidjson\document.h>
 
@@ -41,47 +43,47 @@ bool CLevelLoader::Init()
 }
 
 void CLevelLoader::CreateLevel(const std::string& aPath)
-{
-	//CCamera* camera = CCameraFactory::GetInstance()->CreateCamera(65.0f, 5000.0f);
-	
-	std::string modelPath = aPath;
-	modelPath.append("_bin_modelPaths.txt");
-	myUnityLoader->LoadModels(modelPath);
+{	
+	LevelData* levelData = myUnityLoader->LoadLevelBinary(aPath);
 
-	objectData = myUnityLoader->LoadGameObjects(aPath + "_bin.bin", EReadMode::EReadMode_Binary);
-	//for (auto object : objectData) {
-	//	if (object.myRelativePath.length() > 1)
-	//	{
-	//		CModelInstance* model = CModelFactory::GetInstance()->CreateModel(object.myRelativePath);
-	//		model->SetTransform(DirectX::SimpleMath::Vector3(object.myPosX, object.myPosY, object.myPosZ), DirectX::SimpleMath::Vector3(object.myRotX, object.myRotY, object.myRotZ));
-	//		//model->SetScale(DirectX::SimpleMath::Vector3(object.myScaleX, object.myScaleY, object.myScaleZ));
-	//		//model->SetScale({ 10.0f, 10.0f, 10.0f});
-	//		myScene->AddInstance(model);
-	//	}
-	//}
+	CGameObject* camera = new CGameObject();
+	CCameraComponent* cameraComponent = camera->AddComponent<CCameraComponent>(*camera, levelData->myCameraData.myFieldOfView);
+	CTransformComponent* cameraTransform = camera->myTransform;
+	cameraTransform->Position({ levelData->myCameraData.myPosX, levelData->myCameraData.myPosY, levelData->myCameraData.myPosZ});
+	cameraTransform->Rotation({ levelData->myCameraData.myRotX, levelData->myCameraData.myRotY, levelData->myCameraData.myRotZ });
+	myScene->SetMainCamera(cameraComponent);
+	myScene->AddInstance(camera);
 
-	for (auto object : objectData)
+	CGameObject* environmentLight = new CGameObject();
+	CEnviromentLightComponent* environmentLightComponent = environmentLight->AddComponent<CEnviromentLightComponent>(*environmentLight, 
+		DirectX::SimpleMath::Vector4(
+			levelData->myEnviromentData.myColorR, 
+			levelData->myEnviromentData.myColorG, 
+			levelData->myEnviromentData.myColorB, 
+			levelData->myEnviromentData.myIntensity),
+		DirectX::SimpleMath::Vector3(
+			levelData->myEnviromentData.myDirectionX, 
+			levelData->myEnviromentData.myDirectionY, 
+			levelData->myEnviromentData.myDirectionZ));
+	//maybe problemo in forwardrenderer - 20-11-11
+	myScene->AddInstance(environmentLight);
+	myScene->AddInstance(environmentLightComponent->GetEnviromentLight());
+
+	for (const auto &object : levelData->myModelData)
 	{
 		CGameObject* gameObject = new CGameObject();
-		//CTransformComponent* transform = gameObject->AddComponent<CTransformComponent>(*gameObject);
 		gameObject->myTransform->Scale(object.myScaleX);
 		gameObject->myTransform->Rotation({object.myRotX, object.myRotY, object.myRotZ});
 		gameObject->myTransform->Position({ object.myPosX, object.myPosY, object.myPosZ });
-		gameObject->AddComponent<CModelComponent>(*gameObject, object.myRelativePath);
-
-		//if (object.myColliderHeight > 0.0f)
-		//{
-		//	gameObject->AddComponent<CCapsuleColliderComponent>(*gameObject, object.myColliderRadius, object.myColliderHeight);
-		//}
+		gameObject->AddComponent<CModelComponent>(*gameObject, levelData->myModelPaths[object.myModelIndex]);
 
 		myScene->AddInstance(gameObject);
 	}
-//	myScene->SetMainCamera(camera);
-//	myScene->AddInstance(camera);
 }
 
 void CLevelLoader::LoadNewLevel(const std::string& aPath)
 {
+	//Fix 2020-11-11
 	if (objectData.size() > 0) {
 		myScene->ClearScene();
 		objectData.clear();

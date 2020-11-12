@@ -8,6 +8,7 @@ class CDirectXFramework;
 class CCamera;
 class CVFXInstance;
 class CGameObject;
+class CCameraComponent;
 
 class CVFXRenderer {
 public:
@@ -16,7 +17,7 @@ public:
 
 	bool Init(CDirectXFramework* aFramework);
 
-	void Render(CCamera* aCamera, std::vector<CGameObject*>& aGameObjectList);
+	void Render(CCameraComponent* aCamera, std::vector<CGameObject*>& aGameObjectList);
 
 private:
 	template<class T>

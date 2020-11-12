@@ -8,6 +8,7 @@ class CDirectXFramework;
 class CCamera;
 class CParticleInstance;
 class CGameObject;
+class CCameraComponent;
 
 class CParticleRenderer
 {
@@ -17,7 +18,7 @@ public:
 
 	bool Init(CDirectXFramework* aFramework);
 
-	void Render(CCamera* aCamera, std::vector<CGameObject*>& aGameObjectList);
+	void Render(CCameraComponent* aCamera, std::vector<CGameObject*>& aGameObjectList);
 
 private:
 	template<class T>

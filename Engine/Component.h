@@ -54,7 +54,7 @@ public:
 	template<class T>
 	T* GetComponent();
 
-	CGameObject& GetParent() const;
+	CGameObject& GameObject() const;
 
 protected:
 	bool myEnabled;

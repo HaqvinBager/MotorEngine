@@ -48,6 +48,7 @@ PixelOutPut main(VertexToPixel input)
     
     float3 ambience = EvaluateAmbience(environmentTexture, normal, input.myNormal.xyz, toEye, perceptualroughness, metalness, albedo, ambientocclusion, diffusecolor, specularcolor);
     float3 directionallight = EvaluateDirectionalLight(diffusecolor, specularcolor, normal, perceptualroughness, directionalLightColor.xyz, toDirectionalLight.xyz, toEye.xyz);
+    directionallight *= directionalLightColor.w;
  
     float3 pointLights = 0;
     for (unsigned int index = 0; index < myNumberOfUsedPointLights; index++)

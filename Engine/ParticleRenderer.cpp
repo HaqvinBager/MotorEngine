@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "GameObject.h"
 #include "ParticleEmitterComponent.h"
+#include "CameraComponent.h"
 #include <iostream>
 
 CParticleRenderer::CParticleRenderer() : myContext(nullptr), myFrameBuffer(), myObjectBuffer()
@@ -49,11 +50,11 @@ bool CParticleRenderer::Init(CDirectXFramework* aFramework)
     return true;
 }
 
-void CParticleRenderer::Render(CCamera* aCamera, std::vector<CGameObject*>& aGameObjectList)
+void CParticleRenderer::Render(CCameraComponent* aCamera, std::vector<CGameObject*>& aGameObjectList)
 {
     D3D11_MAPPED_SUBRESOURCE bufferData;
 
-    myFrameBufferData.myToCamera = aCamera->GetTransform().Invert();
+    myFrameBufferData.myToCamera = aCamera->GameObject().myTransform->Transform().Invert();
     myFrameBufferData.myToProjection = aCamera->GetProjection();
 
     BindBuffer(myFrameBuffer, myFrameBufferData, "Frame Buffer");

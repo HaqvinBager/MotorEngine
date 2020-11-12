@@ -33,6 +33,7 @@ public:
 	DirectX::SimpleMath::Matrix& Transform();
 
 	void Move(DirectX::SimpleMath::Vector3 aMovement);
+	void MoveLocal(DirectX::SimpleMath::Vector3 aMovement);
 	void Rotate(DirectX::SimpleMath::Vector3 aRotation);
 	
 	void MoveAlongPath();

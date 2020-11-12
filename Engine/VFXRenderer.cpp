@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "VFXInstance.h"
 #include "VFXBase.h"
+#include "CameraComponent.h"
 
 CVFXRenderer::CVFXRenderer() : myContext(nullptr), myFrameBuffer(), myObjectBuffer(), myTextureScrollingBuffer(), myTime(0.0f) {
 }
@@ -40,9 +41,9 @@ bool CVFXRenderer::Init(CDirectXFramework* aFramework) {
     return true;
 }
 
-void CVFXRenderer::Render(CCamera* aCamera, std::vector<CGameObject*>& aGameObjectList) 
+void CVFXRenderer::Render(CCameraComponent* aCamera, std::vector<CGameObject*>& aGameObjectList)
 {
-	myFrameBufferData.myToCamera = aCamera->GetTransform().Invert();
+	myFrameBufferData.myToCamera = aCamera->GameObject().myTransform->Transform().Invert();
 	myFrameBufferData.myToProjection = aCamera->GetProjection();
 
 	BindBuffer<SFrameBufferData>(myFrameBuffer, myFrameBufferData, "Frame Buffer");

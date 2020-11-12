@@ -16,7 +16,7 @@ CCircleColliderComponent::~CCircleColliderComponent() {
 }
 
 void CCircleColliderComponent::Awake() {
-	myPosition = GetParent().GetComponent<CTransformComponent>()->Position();
+	myPosition = GameObject().GetComponent<CTransformComponent>()->Position();
 }
 
 void CCircleColliderComponent::Start() {
@@ -24,7 +24,7 @@ void CCircleColliderComponent::Start() {
 
 void CCircleColliderComponent::Update() {
 	if (!myIsStatic) {
-		myPosition = GetParent().GetComponent<CTransformComponent>()->Position();
+		myPosition = GameObject().GetComponent<CTransformComponent>()->Position();
 	}
 
 	if (GetAsyncKeyState('C')) {

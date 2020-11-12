@@ -14,6 +14,7 @@
 #include "Component.h"
 #include "Debug.h"
 #include <algorithm>
+#include "CameraComponent.h"
 
 
 CScene* CScene::ourInstance = nullptr;
@@ -45,12 +46,12 @@ bool CScene::Init()
 }
 
 
-void CScene::SetMainCamera(CCamera* aCamera)
+void CScene::SetMainCamera(CCameraComponent* aCamera)
 {
 	myMainCamera = aCamera;
 }
 
-CCamera* CScene::GetMainCamera()
+CCameraComponent* CScene::GetMainCamera()
 {
 	return myMainCamera;
 }
@@ -60,10 +61,10 @@ CEnvironmentLight* CScene::GetEnvironmentLight()
 	return myEnvironmentLights[0];
 }
 
-std::vector<CGameObject*> CScene::CullGameObjects(CCamera* aMainCamera)
+std::vector<CGameObject*> CScene::CullGameObjects(CCameraComponent* aMainCamera)
 {
 	using namespace DirectX::SimpleMath;
-	Vector3 cameraPosition = aMainCamera->GetTransform().Translation();
+	Vector3 cameraPosition = aMainCamera->GameObject().myTransform->Transform().Translation();
 	std::vector<CGameObject*> culledGameObjects;
 	for (auto& gameObject : myGameObjects)
 	{
@@ -99,16 +100,16 @@ std::pair<unsigned int, std::array<CPointLight*, 8>> CScene::CullLights(CGameObj
 	return pointLightPair;
 }
 
-std::vector<CParticleInstance*> CScene::CullParticles(CCamera* aMainCamera)
+std::vector<CParticleInstance*> CScene::CullParticles(CCameraComponent* aMainCamera)
 {
 	for (unsigned int i = 0; i < myParticles.size(); ++i)
 	{
-		myParticles[i]->Update(CTimer::Dt(), aMainCamera->GetTransform().Translation());
+		myParticles[i]->Update(CTimer::Dt(), aMainCamera->GameObject().myTransform->Position());
 	}
 	return myParticles;
 }
 
-std::vector<CVFXInstance*> CScene::CullVFX(CCamera* /*aMainCamera*/) {
+std::vector<CVFXInstance*> CScene::CullVFX(CCameraComponent* /*aMainCamera*/) {
 	
 	for (unsigned int i = 0; i < myVFXInstances.size(); ++i) {
 		
@@ -117,18 +118,18 @@ std::vector<CVFXInstance*> CScene::CullVFX(CCamera* /*aMainCamera*/) {
 	return myVFXInstances;
 }
 
-const std::vector<SLineTime>& CScene::CullLines(CCamera* /*aMainCamera*/) const
+const std::vector<SLineTime>& CScene::CullLines() const
 {
 	return CDebug::GetInstance()->GetLinesTime();
 	//return CDebug::GetInstance()->GetLines();
 }
 
-const std::vector<CLineInstance*>& CScene::CullLineInstances(CCamera* /*aMainCamera*/) const
+const std::vector<CLineInstance*>& CScene::CullLineInstances() const
 {
 	return myLineInstances;
 }
 
-std::vector<CSpriteInstance*> CScene::CullSprites(CCamera* /*aMainCamera*/)
+std::vector<CSpriteInstance*> CScene::CullSprites(CCameraComponent* /*aMainCamera*/)
 {
 	std::vector<CSpriteInstance*> spritesToRender;
 	for (auto& sprite : mySprites) {

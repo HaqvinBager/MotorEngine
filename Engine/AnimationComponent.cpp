@@ -27,7 +27,7 @@ void CAnimationComponent::Start()
 void CAnimationComponent::Update()
 {
 	float dt = CTimer::Dt();
-	for (CAnimation* anim : GetParent().GetComponent<CModelComponent>()->GetMyModel()->GetAnimations())
+	for (CAnimation* anim : GameObject().GetComponent<CModelComponent>()->GetMyModel()->GetAnimations())
 	{
 		anim->Step(dt);
 	}
@@ -53,7 +53,7 @@ void CAnimationComponent::OnDisable()
 void CAnimationComponent::GetAnimatedTransforms(float dt, SlimMatrix44 * transforms)
 {
 	dt;
-	CModel* model = GetParent().GetComponent<CModelComponent>()->GetMyModel();
+	CModel* model = GameObject().GetComponent<CModelComponent>()->GetMyModel();
 	if(model->GetAnimations().size() > 0)
 	{
 		CAnimation* first = model->GetAnimations()[0];

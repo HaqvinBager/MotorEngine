@@ -97,10 +97,14 @@ DirectX::SimpleMath::Matrix& CTransformComponent::Transform()
 
 void CTransformComponent::Move(DirectX::SimpleMath::Vector3 aMovement)
 {
-	//myTransform.Translation(myTransform.Translation() + myTransform.Right() * aMovement.x);
-	//myTransform.Translation(myTransform.Translation() + myTransform.Up() * aMovement.y);
-	//myTransform.Translation(myTransform.Translation() - myTransform.Forward() * aMovement.z);
 	myTransform.Translation(myTransform.Translation() + aMovement);
+}
+
+void CTransformComponent::MoveLocal(DirectX::SimpleMath::Vector3 aMovement)
+{
+	myTransform.Translation(myTransform.Translation() + myTransform.Right() * aMovement.x);
+	myTransform.Translation(myTransform.Translation() + myTransform.Up() * aMovement.y);
+	myTransform.Translation(myTransform.Translation() - myTransform.Forward() * aMovement.z);
 }
 
 void CTransformComponent::Rotate(DirectX::SimpleMath::Vector3 aRotation)
@@ -109,18 +113,6 @@ void CTransformComponent::Rotate(DirectX::SimpleMath::Vector3 aRotation)
 	Matrix tempRotation = Matrix::CreateFromYawPitchRoll(aRotation.y, aRotation.x, aRotation.z);
 	myTransform *= tempRotation;
 	myTransform.Translation(tempTranslation);
-
-
-	//Vector3 tempTranslation = myTransform.Translation();
-	//
-	//Matrix tempRotation = Matrix::CreateFromYawPitchRoll(
-	//	DirectX::XMConvertToRadians(aRotation.y),
-	//	DirectX::XMConvertToRadians(aRotation.x),
-	//	DirectX::XMConvertToRadians(aRotation.z)
-	//);
-	//
-	//myTransform = tempRotation;
-	//myTransform.Translation(tempTranslation);
 }
 
 void CTransformComponent::MoveAlongPath()

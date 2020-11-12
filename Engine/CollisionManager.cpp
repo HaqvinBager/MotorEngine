@@ -54,8 +54,8 @@ void CCollisionManager::Update()
     for (UINT outer = 0; outer < myCircleColliders.size(); ++outer) {
         for (UINT inner = outer + 1; inner < myCircleColliders.size(); ++inner) {
             if (CIntersectionManager::CircleIntersection(*myCircleColliders[outer], *myCircleColliders[inner])) {
-                myCircleColliders[outer]->GetParent().Collided(myCircleColliders[inner]->GetParent());
-                myCircleColliders[inner]->GetParent().Collided(myCircleColliders[outer]->GetParent());
+                myCircleColliders[outer]->GameObject().Collided(myCircleColliders[inner]->GameObject());
+                myCircleColliders[inner]->GameObject().Collided(myCircleColliders[outer]->GameObject());
             }
         }
     }
@@ -64,8 +64,8 @@ void CCollisionManager::Update()
     for (UINT circle = 0; circle < myCircleColliders.size(); ++circle) {
         for (UINT rectangle = 0; rectangle < myRectangleColliders.size(); ++rectangle) {
             if (CIntersectionManager::CircleVsRectangleIntersection(*myCircleColliders[circle], *myRectangleColliders[rectangle])) {
-                myCircleColliders[circle]->GetParent().Collided(myRectangleColliders[rectangle]->GetParent());
-                myRectangleColliders[rectangle]->GetParent().Collided(myCircleColliders[circle]->GetParent());
+                myCircleColliders[circle]->GameObject().Collided(myRectangleColliders[rectangle]->GameObject());
+                myRectangleColliders[rectangle]->GameObject().Collided(myCircleColliders[circle]->GameObject());
             }
         }
     }
@@ -74,8 +74,8 @@ void CCollisionManager::Update()
     for (UINT circle = 0; circle < myCircleColliders.size(); ++circle) {
         for (UINT triangle = 0; triangle < myTriangleColliders.size(); ++triangle) {
             if (CIntersectionManager::CircleVsTriangleIntersection(*myCircleColliders[circle], *myTriangleColliders[triangle])) {
-                myCircleColliders[circle]->GetParent().Collided(myTriangleColliders[triangle]->GetParent());
-                myTriangleColliders[triangle]->GetParent().Collided(myCircleColliders[circle]->GetParent());
+                myCircleColliders[circle]->GameObject().Collided(myTriangleColliders[triangle]->GameObject());
+                myTriangleColliders[triangle]->GameObject().Collided(myCircleColliders[circle]->GameObject());
             }
         }
     }
@@ -87,8 +87,8 @@ void CCollisionManager::Update()
         {
             if (CIntersectionManager::CapsuleIntersection(*myCapsuleColliders[outer], *myCapsuleColliders[inner]))
             {
-                myCapsuleColliders[outer]->GetParent().Collided(myCapsuleColliders[inner]->GetParent());
-                myCapsuleColliders[inner]->GetParent().Collided(myCapsuleColliders[outer]->GetParent());
+                myCapsuleColliders[outer]->GameObject().Collided(myCapsuleColliders[inner]->GameObject());
+                myCapsuleColliders[inner]->GameObject().Collided(myCapsuleColliders[outer]->GameObject());
             }
         }
     }

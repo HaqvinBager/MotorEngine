@@ -3,6 +3,43 @@
 #include <vector>
 #include <map>
 
+class EnviromentDataRaw {
+public:
+	float myDirectionX;
+	float myDirectionY;
+	float myDirectionZ;
+	float myColorR;
+	float myColorG;
+	float myColorB;
+	float myIntensity;
+};
+
+class CameraDataRaw {
+public:
+	float myRotX;
+	float myRotY;
+	float myRotZ;
+	float myPosX;
+	float myPosY;
+	float myPosZ;
+	float myFieldOfView;
+};
+
+class AssetDataRaw {
+public:
+	int instanceID;
+	float myRotX;
+	float myRotY;
+	float myRotZ;
+	float myPosX;
+	float myPosY;
+	float myPosZ;
+	float myScaleX;
+	float myScaleY;
+	float myScaleZ;
+	int myModelIndex;
+};
+
 class ObjectDataRaw
 {
 public:
@@ -17,6 +54,7 @@ public:
 	float myScaleX;
 	float myScaleY;
 	float myScaleZ;
+	int myModelIndex;
 
 	//float myColliderRadius;
 	//float myColliderHeight;
@@ -43,6 +81,14 @@ public:
 	std::string myRelativePath;
 };
 
+class LevelData {
+public:
+	CameraDataRaw myCameraData;
+	EnviromentDataRaw myEnviromentData;
+	std::vector<AssetDataRaw> myModelData;
+	std::map<int, std::string> myModelPaths;
+};
+
 enum EReadMode
 {
 	EReadMode_ASCII,
@@ -54,13 +100,14 @@ class CUnityLoader
 {
 public:
 	CUnityLoader();
-	void LoadModels(std::string aModelPathFile);
 	std::vector<ObjectData> LoadGameObjects(const std::string& aGameObjectFile, EReadMode aReadMode = EReadMode_Binary);
+public:
+	LevelData* LoadLevelBinary(const std::string& aGameObjectFile);
 private:
+	std::map<int, std::string> LoadModels(std::string aModelPathFile);
 	std::vector<ObjectData> LoadGameObjectsBinary(const std::string& aGameObjectFile);
 	std::vector<ObjectData> LoadGameObjectsASCII(const std::string& aGameObjectFile);
 
-	std::map<int, std::string> myModelPaths;
 	bool myModelPathsFetched = false;
 };
 

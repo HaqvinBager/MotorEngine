@@ -18,7 +18,7 @@ CCapsuleColliderComponent::~CCapsuleColliderComponent()
 
 void CCapsuleColliderComponent::Awake()
 {
-	myBase = GetParent().GetComponent<CTransformComponent>()->Position();
+	myBase = GameObject().GetComponent<CTransformComponent>()->Position();
 	myTip = myBase;
 	if (myHeight < (myRadius * 2)) {
 		myHeight = myRadius * 2;
@@ -34,7 +34,7 @@ void CCapsuleColliderComponent::Start()
 
 void CCapsuleColliderComponent::Update()
 {
-	myBase = GetParent().GetComponent<CTransformComponent>()->Position();
+	myBase = GameObject().GetComponent<CTransformComponent>()->Position();
 	myTip = myBase;
 	if (myHeight < (myRadius * 2))
 	{

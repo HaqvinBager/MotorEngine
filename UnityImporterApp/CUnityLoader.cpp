@@ -17,20 +17,21 @@ CUnityLoader::CUnityLoader()
 
 }
 
-void CUnityLoader::LoadModels(std::string aModelPathFile)
+std::map<int, std::string> CUnityLoader::LoadModels(std::string aModelPathFile)
 {
-	std::ifstream modelFile(aModelPathFile);
+	std::ifstream modelFile(aModelPathFile + "_bin_modelPaths.txt");
 	std::string s;
 	int index = -1;
+	std::map<int, std::string> modelPaths;
 	while (std::getline(modelFile, s))
 	{
 		index++;
 		std::replace(s.begin(), s.end(), '/', '\\');
-		myModelPaths[index] = s;
+		modelPaths[index] = s;
 	}
 
 	myModelPathsFetched = true;
-
+	return modelPaths;
 }
 
 //Returns a copy
@@ -52,10 +53,13 @@ std::vector<ObjectData> CUnityLoader::LoadGameObjectsBinary(const std::string& a
 
 	unsigned int count = 0;
 	memcpy(&count, &str[0], sizeof(int));
-
 	assert(count != 0);
+
+	CameraDataRaw cameraRaw;
+	memcpy(&cameraRaw, &str[sizeof(int)], sizeof(CameraDataRaw));
+
 	char* ptr = &str[0];
-	ptr += sizeof(int);
+	ptr += sizeof(int) + sizeof(CameraDataRaw);
 
 	ObjectDataBin* data = new ObjectDataBin[count];
 	memcpy(data, ptr, sizeof(ObjectDataBin) * count);
@@ -63,15 +67,58 @@ std::vector<ObjectData> CUnityLoader::LoadGameObjectsBinary(const std::string& a
 	std::vector<ObjectData> returnedData;
 	for (size_t i=0; i< count; i++)
 	{
+		
 		returnedData.push_back(ObjectData());
 		ObjectData& object = returnedData.back();
 
 		memcpy(&object, &data[i], sizeof(ObjectDataRaw)); // Memcpy all the essential data
-		object.myRelativePath = myModelPaths[data[i].myModelIndex];
+		//object.myRelativePath = myModelPaths[data[i].myModelIndex];
 	}
 	delete[] data;
 	t.close();
 	return returnedData;
+}
+
+LevelData* CUnityLoader::LoadLevelBinary(const std::string& aGameObjectFile)
+{
+	LevelData* levelData = new LevelData();
+	levelData->myModelPaths = LoadModels(aGameObjectFile);
+
+	std::ifstream t(aGameObjectFile + "_bin.bin", std::ios::binary);
+	assert(t.is_open());
+
+	std::string binaryFile((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
+
+	char* ptr = &binaryFile[0];
+
+	CameraDataRaw cameraRaw;
+	memcpy(&cameraRaw, ptr, sizeof(CameraDataRaw));
+	levelData->myCameraData = cameraRaw;
+	ptr += sizeof(CameraDataRaw);
+
+	EnviromentDataRaw enviromentRaw;
+	memcpy(&enviromentRaw, ptr, sizeof(EnviromentDataRaw));
+	levelData->myEnviromentData = enviromentRaw;
+	ptr += sizeof(EnviromentDataRaw);
+
+	unsigned int totalAssetData = 0;
+	memcpy(&totalAssetData, ptr, sizeof(int));
+	assert(totalAssetData != 0);
+	ptr += sizeof(int);
+
+	AssetDataRaw* data = new AssetDataRaw[totalAssetData];
+	memcpy(data, ptr, sizeof(AssetDataRaw) * totalAssetData);
+
+	for (size_t i = 0; i < totalAssetData; i++)
+	{
+		levelData->myModelData.emplace_back(AssetDataRaw());
+		AssetDataRaw& asset = levelData->myModelData.back();
+
+		memcpy(&asset, &data[i], sizeof(AssetDataRaw)); // Memcpy all the essential data
+	}
+	delete[] data;
+	t.close();
+	return levelData;
 }
 
 // Use only for debugging, terribly slow, stringcomparison hell
