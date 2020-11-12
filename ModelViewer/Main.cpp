@@ -14,6 +14,7 @@
 #include <TransformComponent.h>
 #include <ModelComponent.h>
 #include <AnimationComponent.h>
+#include <CameraComponent.h>
 
 #include <LightFactory.h>
 #include <EnvironmentLight.h>
@@ -199,26 +200,26 @@ bool CheckForIncorrectModelNumber(const size_t& aLoadModelNumber, const size_t& 
 	return (static_cast<int>(aLoadModelNumber) > -1 && aLoadModelNumber < aMax);
 }
 
-void Update(std::vector<std::string>& aModelFilePathList, CGameObject* aCurrentGameObject,CCamera* aCamera)
+void Update(std::vector<std::string>& aModelFilePathList, CGameObject* aCurrentGameObject,CGameObject* aCamera)
 {
 	float dt = CTimer::Dt();
 
-	float cameraMoveSpeed = 5.0f;
+	float cameraMoveSpeed = 500.0f;
 	if (Input::GetInstance()->IsKeyDown(VK_UP))
 	{
-		aCamera->Move({ 0.0f, 0.0f, cameraMoveSpeed * dt });
+		aCamera->myTransform->MoveLocal({ 0.0f, 0.0f, cameraMoveSpeed * dt});
 	}
 	if (Input::GetInstance()->IsKeyDown(VK_DOWN))
 	{
-		aCamera->Move({ 0.0f, 0.0f, -cameraMoveSpeed * dt });
+		aCamera->myTransform->MoveLocal({ 0.0f, 0.0f, -cameraMoveSpeed * dt });
 	}
 	if (Input::GetInstance()->IsKeyDown(VK_RIGHT))
 	{
-		aCamera->Move({ cameraMoveSpeed * dt, 0.0f, 0.0f });
+		aCamera->myTransform->MoveLocal({ cameraMoveSpeed * dt, 0.0f, 0.0f });
 	}
 	if (Input::GetInstance()->IsKeyDown(VK_LEFT))
 	{
-		aCamera->Move({ -cameraMoveSpeed * dt, 0.0f, 0.0f });
+		aCamera->myTransform->MoveLocal({ -cameraMoveSpeed * dt, 0.0f, 0.0f });
 	}
 
 	// Rotation functions
@@ -303,8 +304,8 @@ void Update(std::vector<std::string>& aModelFilePathList, CGameObject* aCurrentG
 	}
 	if (Input::GetInstance()->IsKeyDown('C'))
 	{
-		aCamera->SetRotation({ 33.f,-45.f,0.f });
-		aCamera->SetPosition({ 3.0f,4.0f,-3.5f });
+		aCamera->myTransform->Rotation({ 33.f,-45.f,0.f });
+		aCamera->myTransform->Position({ 3.0f,4.0f,-3.5f });
 	}
 
 	// ! Reset function
@@ -440,16 +441,37 @@ bool ChangeModel(CGameObject* aCurrentGameObject, std::vector<std::string>& aMod
 
 	return true;
 }
-void UpdateAnimationTest(CGameObject* aCurrentGameObject,CCamera* /*aCamera*/, std::vector<std::string>& aModelFilePathList)
+void UpdateAnimationTest(CGameObject* aCurrentGameObject,CGameObject* /*aCamera*/, std::vector<std::string>& aModelFilePathList)
 {
 	const auto animComp = aCurrentGameObject->GetComponent<CAnimationComponent>();
 	if (animComp)
 	{
 		if (animComp->Enabled())
 		{
-			/*aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(0, 1, 1.0f);*/
+			aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(0, 1, sinf(CTimer::Time()));
 			aCurrentGameObject->GetComponent<CAnimationComponent>()->Update();
-			
+
+			float current = floor(aCurrentGameObject->GetComponent<CAnimationComponent>()->GetBlend());
+			if (Input::GetInstance()->IsKeyPressed(VK_LEFT))
+			{
+				//current = (current > 0.0f ? current - 1.0f : current );
+				current = 0.0f;
+			}
+			if (Input::GetInstance()->IsKeyPressed(VK_RIGHT))
+			{
+				//current = (current < static_cast<float>(aCurrentGameObject->GetComponent<CAnimationComponent>()->GetMyAnimation()->GetNrOfAnimations()) ? current + 1.0f : current);
+				current = 1.0f;
+			}
+			//int other = (current - 1.0f < 0.0f ? static_cast<int>(current) + 1 : static_cast<int>(current) - 1);
+			//aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(other, static_cast<int>(current), current);
+			aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(0, 1, current);
+			//std::cout << " c " << current << std::endl;
+			//std::cout << " o " << other << std::endl;
+			//std::cout << " NrOfAnims " << static_cast<int>(aCurrentGameObject->GetComponent<CAnimationComponent>()->GetMyAnimation()->GetNrOfAnimations()) << std::endl;
+			/*aCurrentGameObject->GetComponent<CAnimationComponent>()->GetMyAnimation()->GetNrOfAnimations();
+			aCurrentGameObject->GetComponent<CAnimationComponent>()->GetBlend();*/
+
+			//aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(static_cast<int>(current), static_cast<int>(aCurrentGameObject->GetComponent<CAnimationComponent>()->GetMyAnimation()->GetNrOfAnimations()), current);
 		}
 	}
 
@@ -460,31 +482,6 @@ void UpdateAnimationTest(CGameObject* aCurrentGameObject,CCamera* /*aCamera*/, s
 			// oh no. How could this even happen :o?
 		}
 	}
-
-	if (Input::GetInstance()->IsKeyPressed(VK_LEFT))
-	{
-		float current = aCurrentGameObject->GetComponent<CAnimationComponent>()->GetBlend();
-		current = (current > 0.0f ? current - 1.0f : current );
-		aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(static_cast<int>(current), static_cast<int>(aCurrentGameObject->GetComponent<CAnimationComponent>()->GetMyAnimation()->GetNrOfAnimations()), current);
-		std::cout << " " << current << std::endl;
-
-	}
-
-	if (Input::GetInstance()->IsKeyPressed(VK_RIGHT))
-	{
-		float current = aCurrentGameObject->GetComponent<CAnimationComponent>()->GetBlend();
-		current = (current < static_cast<float>(aCurrentGameObject->GetComponent<CAnimationComponent>()->GetMyAnimation()->GetNrOfAnimations()) ? current + 1.0f : current);
-		aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(static_cast<int>(current), static_cast<int>(aCurrentGameObject->GetComponent<CAnimationComponent>()->GetMyAnimation()->GetNrOfAnimations()), current);
-		std::cout << " " << current << std::endl;
-	}
-
-	/*aCurrentGameObject->GetComponent<CAnimationComponent>()->GetMyAnimation()->GetNrOfAnimations();
-	aCurrentGameObject->GetComponent<CAnimationComponent>()->GetBlend();*/
-
-	//aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(static_cast<int>(current), static_cast<int>(aCurrentGameObject->GetComponent<CAnimationComponent>()->GetMyAnimation()->GetNrOfAnimations()), current);
-
-
-
 }
 
 
@@ -520,11 +517,13 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
 
 // CAMERA
-	CCamera* camera = CCameraFactory::GetInstance()->CreateCamera(65.0f, 5000.0f);
-		camera->SetRotation({ 33.f,-45.f,0.f });
-		camera->SetPosition({ 1.5f,2.0f,-1.5f });
-		CScene::GetInstance()->AddInstance(camera);
-		CScene::GetInstance()->SetMainCamera(camera);
+	CGameObject* camera = new CGameObject();
+	/*CCameraComponent* camComp = */camera->AddComponent<CCameraComponent>(*camera);
+	//CCamera* camera = CCameraFactory::GetInstance()->CreateCamera(65.0f, 5000.0f);
+		camera->myTransform->Rotation({ 33.f,-45.f,0.f });
+		camera->myTransform->Position({ 1.5f,2.0f,-1.5f });
+		//CScene::GetInstance()->AddInstance(camera);
+		CScene::GetInstance()->SetMainCamera(camera->GetComponent<CCameraComponent>());
 // ENV LIGHT
 	CEnvironmentLight* environmentLight = CLightFactory::GetInstance()->CreateEnvironmentLight("Yokohama2.dds");
 		environmentLight->SetDirection(SM::Vector3(0, 0, -1));
