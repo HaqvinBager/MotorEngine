@@ -11,7 +11,9 @@ public:
 	bool Init(CDirectXFramework* aFramework);
 
 	CSprite* LoadSprite(std::string aTexturePath);
+	//CSprite* LoadVFXSprite(std::string aTexturePath);
 	CSprite* GetSprite(std::string aTexturePath);
+	//CSprite* GetVFXSprite(std::string aTexturePath);
 
 	static CSpriteFactory* GetInstance();
 
@@ -25,6 +27,7 @@ private:
 private:
 	static CSpriteFactory* ourInstance;
 	std::map<std::string, CSprite*> mySpriteMap;
+	//std::map<std::string, CSprite*> myVFXSpriteMap;
 	CDirectXFramework* myFramework;
 
 	ID3D11VertexShader* myVertexShader;

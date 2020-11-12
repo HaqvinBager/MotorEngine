@@ -11,6 +11,7 @@
 #include "VFXInstance.h"
 #include "LineInstance.h"
 #include "SpriteInstance.h"
+#include "AnimatedUIElement.h"
 #include "Component.h"
 #include "Debug.h"
 #include <algorithm>
@@ -129,7 +130,7 @@ const std::vector<CLineInstance*>& CScene::CullLineInstances() const
 	return myLineInstances;
 }
 
-std::vector<CSpriteInstance*> CScene::CullSprites(CCameraComponent* /*aMainCamera*/)
+std::vector<CSpriteInstance*> CScene::CullSprites()
 {
 	std::vector<CSpriteInstance*> spritesToRender;
 	for (auto& sprite : mySprites) {
@@ -138,6 +139,17 @@ std::vector<CSpriteInstance*> CScene::CullSprites(CCameraComponent* /*aMainCamer
 		}
 	}
 	return spritesToRender;
+}
+
+std::vector<CAnimatedUIElement*> CScene::CullAnimatedUI()
+{
+	std::vector<CAnimatedUIElement*> elementsToRender;
+	for (auto& element : myAnimatedUIElements) {
+		if (element->GetInstance()->GetShouldRender()) {
+			elementsToRender.emplace_back(element);
+		}
+	}
+	return elementsToRender;
 }
 
 std::vector<CTextInstance*> CScene::GetTexts()
@@ -189,6 +201,15 @@ bool CScene::AddInstance(CSpriteInstance* aSprite) {
 		return false;
 	}
 	mySprites.emplace_back(aSprite);
+	return true;
+}
+
+bool CScene::AddInstance(CAnimatedUIElement* anAnimatedUIElement)
+{
+	if (!anAnimatedUIElement) {
+		return false;
+	}
+	myAnimatedUIElements.emplace_back(anAnimatedUIElement);
 	return true;
 }
 
