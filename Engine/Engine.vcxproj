@@ -131,11 +131,8 @@
     <ClInclude Include="CircleColliderComponent.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Component.h" />
-<<<<<<< HEAD
     <ClInclude Include="FModWrapper.h" />
-=======
     <ClInclude Include="EnviromentLightComponent.h" />
->>>>>>> f7652e0... Overhaul of everything
     <ClInclude Include="MainSingleton.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="MessageType.h" />
@@ -229,11 +226,8 @@
     <ClCompile Include="DL_Debug.cpp" />
     <ClCompile Include="DL_StackWalker.cpp" />
     <ClCompile Include="EnemyFactory.cpp" />
-<<<<<<< HEAD
     <ClCompile Include="FModWrapper.cpp" />
-=======
     <ClCompile Include="EnviromentLightComponent.cpp" />
->>>>>>> f7652e0... Overhaul of everything
     <ClCompile Include="InputMapper.cpp" />
     <ClCompile Include="MainSingleton.cpp" />
     <ClCompile Include="MenuState.cpp" />
