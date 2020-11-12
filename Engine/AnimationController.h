@@ -9,6 +9,7 @@
 #include <fstream>
 
 #include "MathFunc.h"
+#include "Timer.h"
 
 // Note 2020 11 12 Refactoring to use TGA code standard.
 
@@ -78,7 +79,7 @@ private:
 	std::string myModelPath;
 
 	aiVector3D myRotation;
-	long long myLastTime			= 0;
+	
 	float myAnimationTimePrev		= 0;
 	float myAnimationTimeCurrent	= 0;
 	float myBlendingTime			= 0;
@@ -89,22 +90,22 @@ private:
 	float myPlayTime				= 0;
 
 
-	std::vector<Assimp::Importer*> _importers;
-	std::vector<const aiScene*> _scenes;
-	int _curScene;
-	aiMatrix4x4 m_GlobalInverseTransform;
-	std::map<std::string, uint> m_BoneMapping;
-	std::vector<MeshEntry> m_Entries;
-	std::vector<BoneInfoAnim> m_BoneInfo;
-	uint m_NumBones;
-	std::vector<VertexBoneDataAnim> m_Mass;
+	std::vector<Assimp::Importer*> myImporters;
+	std::vector<const aiScene*> myScenes;
+	int myCurSceneIndex;
+	aiMatrix4x4 myGlobalInverseTransform;
+	std::map<std::string, uint> myBoneMapping;
+	std::vector<MeshEntry> myEntries;
+	std::vector<BoneInfoAnim> myBoneInfo;
+	uint myNumOfBones;
+	std::vector<VertexBoneDataAnim> myMass;
 
 public:
 
 	void SetRotation(const aiVector3D& aRotation) { myRotation = aRotation; }
 	aiVector3D GetRotation() { return myRotation; }
 
-	const size_t GetNrOfAnimations() const { return _scenes.size() - 1; }
+	const size_t GetNrOfAnimations() const { return myScenes.size() - 1; }
 
 	~AnimationController()
 	{
@@ -114,16 +115,16 @@ public:
 	void Release()
 	{
 		// *** cleanup ***
-		for (uint i = 0; i < _importers.size(); ++i)
+		for (uint i = 0; i < myImporters.size(); ++i)
 		{
-			delete _importers[i];
+			delete myImporters[i];
 		}
-		_importers.clear();
+		myImporters.clear();
 	}
 
 	AnimationController(const char* aModelPath)
-		: m_NumBones(0)
-		, _curScene(NULL)
+		: myNumOfBones(0)
+		, myCurSceneIndex(NULL)
 		, myModelPath(aModelPath)
 		, myRotation(0.f)
 		, myPrevAnimIndex(0)
@@ -177,10 +178,10 @@ public:
 
 		aiMatrix4x4 GlobalTransformation = aParentTransform * NodeTransformation;
 
-		if (m_BoneMapping.find(nodeName) != m_BoneMapping.end())
+		if (myBoneMapping.find(nodeName) != myBoneMapping.end())
 		{
-			uint BoneIndex = m_BoneMapping[nodeName];
-			m_BoneInfo[BoneIndex].myFinalTransformation = m_GlobalInverseTransform * GlobalTransformation * m_BoneInfo[BoneIndex].myBoneOffset;
+			uint BoneIndex = myBoneMapping[nodeName];
+			myBoneInfo[BoneIndex].myFinalTransformation = myGlobalInverseTransform * GlobalTransformation * myBoneInfo[BoneIndex].myBoneOffset;
 		}
 
 		for (uint i = 0; i < aNode->mNumChildren; i++)
@@ -189,23 +190,23 @@ public:
 		}
 	}
 
-	void ReadNodeHeirarchy(	  const aiScene* scene0, const aiScene* scene1
-							, float AnimationTime0, float AnimationTime1
-							, const aiNode* pNode0, const aiNode* pNode1
-							, const aiMatrix4x4& ParentTransform, int stopAnimLevel)
+	void ReadNodeHeirarchy(	  const aiScene* aFromScene, const aiScene* aToScene
+							, float anAnimationTimeFrom, float anAnimationTimeTo
+							, const aiNode* aStartNodeFrom, const aiNode* aStartNodeTo
+							, const aiMatrix4x4& aParentTransform, int aStopAnimAtLevel)
 	{
-		float time0(AnimationTime0);// Why is AnimationTime0 made into a local variable?
-		float time1(AnimationTime1);// Why is AnimationTime1 made into a local variable?
+		float time0(anAnimationTimeFrom);// Why is AnimationTime0 made into a local variable?
+		float time1(anAnimationTimeTo);// Why is AnimationTime1 made into a local variable?
 
-		std::string NodeName0(pNode0->mName.data);// rename pNode0/1 is the previous animations data. pNode0 is pointerToPreviousAnimNode
-		std::string NodeName1(pNode1->mName.data);// pointerToCurrentAnimNode
+		std::string NodeName0(aStartNodeFrom->mName.data);// rename pNode0/1 is the previous animations data. pNode0 is pointerToPreviousAnimNode
+		std::string NodeName1(aStartNodeTo->mName.data);// pointerToCurrentAnimNode
 		assert(NodeName0 == NodeName1);// their first node should be the same, roots must be equal
 
-		const aiAnimation* pAnimation0 = scene0->mAnimations[0];
-		const aiAnimation* pAnimation1 = scene1->mAnimations[0];
+		const aiAnimation* pAnimation0 = aFromScene->mAnimations[0];
+		const aiAnimation* pAnimation1 = aToScene->mAnimations[0];
 
-		aiMatrix4x4 NodeTransformation0(pNode0->mTransformation);
-		aiMatrix4x4 NodeTransformation1(pNode1->mTransformation);
+		aiMatrix4x4 NodeTransformation0(aStartNodeFrom->mTransformation);
+		aiMatrix4x4 NodeTransformation1(aStartNodeTo->mTransformation);
 
 		const aiNodeAnim* pNodeAnim0 = FindNodeAnim(pAnimation0, NodeName0);
 		const aiNodeAnim* pNodeAnim1 = FindNodeAnim(pAnimation1, NodeName0);
@@ -233,12 +234,12 @@ public:
 			// Interpolate translation and generate translation transformation matrix
 			aiVector3D Translation0;
 			{
-				float time(stopAnimLevel <= 0 ? AnimationTime0 : 0.f);
+				float time(aStopAnimAtLevel <= 0 ? anAnimationTimeFrom : 0.f);
 				CalcInterpolatedPosition(Translation0, time, pNodeAnim0);
 			}
 			aiVector3D Translation1;
 			{
-				float time(stopAnimLevel <= 0 ? AnimationTime1 : 0.f);
+				float time(aStopAnimAtLevel <= 0 ? anAnimationTimeTo : 0.f);
 				CalcInterpolatedPosition(Translation1, time, pNodeAnim1);
 			}
 			aiMatrix4x4 TranslationM;
@@ -248,27 +249,27 @@ public:
 			NodeTransformation0 = TranslationM * RotationM * ScalingM;
 		}
 
-		stopAnimLevel--;
+		aStopAnimAtLevel--;
 
-		aiMatrix4x4 GlobalTransformation = ParentTransform * NodeTransformation0;
+		aiMatrix4x4 GlobalTransformation = aParentTransform * NodeTransformation0;
 
-		if (m_BoneMapping.find(NodeName0) != m_BoneMapping.end())
+		if (myBoneMapping.find(NodeName0) != myBoneMapping.end())
 		{
-			uint BoneIndex = m_BoneMapping[NodeName0];
-			m_BoneInfo[BoneIndex].myFinalTransformation = 
-				  m_GlobalInverseTransform 
+			uint BoneIndex = myBoneMapping[NodeName0];
+			myBoneInfo[BoneIndex].myFinalTransformation = 
+				  myGlobalInverseTransform 
 				* GlobalTransformation 
-				* m_BoneInfo[BoneIndex].myBoneOffset;
+				* myBoneInfo[BoneIndex].myBoneOffset;
 		}
 
-		uint n = min(pNode0->mNumChildren, pNode1->mNumChildren); // Does one movement for all the children
+		uint n = min(aStartNodeFrom->mNumChildren, aStartNodeTo->mNumChildren); // Does one movement for all the children
 		for (uint i = 0; i < n; i++)
 		{
-			ReadNodeHeirarchy(scene0, scene1, AnimationTime0, AnimationTime1, pNode0->mChildren[i], pNode1->mChildren[i], GlobalTransformation, stopAnimLevel);
+			ReadNodeHeirarchy(aFromScene, aToScene, anAnimationTimeFrom, anAnimationTimeTo, aStartNodeFrom->mChildren[i], aStartNodeTo->mChildren[i], GlobalTransformation, aStopAnimAtLevel);
 		}
 	}
 
-	void BoneTransform(std::vector<aiMatrix4x4>& Transforms)
+	void BoneTransform(std::vector<aiMatrix4x4>& aTransformsVector)
 	{
 		aiMatrix4x4 Identity;// Used for ReadNodeHierarchy
 		InitIdentityM4(Identity);
@@ -278,79 +279,79 @@ public:
 			// Animation time for the first anim ( 0 ) (Previous?)
 			// Ticks == Frames
 			float TicksPerSecond = 
-				static_cast<float>(_scenes[myPrevAnimIndex]->mAnimations[0]->mTicksPerSecond) != 0 
+				static_cast<float>(myScenes[myPrevAnimIndex]->mAnimations[0]->mTicksPerSecond) != 0 
 				? 
-				static_cast<float>(_scenes[myPrevAnimIndex]->mAnimations[0]->mTicksPerSecond) : 25.0f;
+				static_cast<float>(myScenes[myPrevAnimIndex]->mAnimations[0]->mTicksPerSecond) : 25.0f;
 
 			// How many frames are we into the animation?
 			float TimeInTicks = myAnimationTimePrev * TicksPerSecond;
 			// Where are we in the animation, on which frame?
-			float AnimationTime0 = fmodf(TimeInTicks, static_cast<float>(_scenes[myPrevAnimIndex]->mAnimations[0]->mDuration));
+			float AnimationTime0 = fmodf(TimeInTicks, static_cast<float>(myScenes[myPrevAnimIndex]->mAnimations[0]->mDuration));
 			// !  Animation time for the first anim ( 0 )
 
 			// Animation time for the second anim ( 1 ) (Current?)
 			TicksPerSecond = 
-				static_cast<float>(_scenes[_curScene]->mAnimations[0]->mTicksPerSecond) != 0 
+				static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mTicksPerSecond) != 0 
 				?
-				static_cast<float>(_scenes[_curScene]->mAnimations[0]->mTicksPerSecond) : 25.0f;
+				static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mTicksPerSecond) : 25.0f;
 
 			TimeInTicks = myAnimationTimeCurrent * TicksPerSecond;
-			float AnimationTime1 = fmodf(TimeInTicks, static_cast<float>(_scenes[_curScene]->mAnimations[0]->mDuration));
+			float AnimationTime1 = fmodf(TimeInTicks, static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration));
 			// ! Animation time for the second anim ( 1 )
 
-			ReadNodeHeirarchy(	_scenes[myPrevAnimIndex], _scenes[_curScene]
+			ReadNodeHeirarchy(	myScenes[myPrevAnimIndex], myScenes[myCurSceneIndex]
 								, AnimationTime0, AnimationTime1
-								, _scenes[myPrevAnimIndex]->mRootNode, _scenes[_curScene]->mRootNode
+								, myScenes[myPrevAnimIndex]->mRootNode, myScenes[myCurSceneIndex]->mRootNode
 								, Identity, /*stopAnimLevel=*/2);
 			// Using identity matrix since there is no parent. Means there is no transformation being made on the matrix for the animation.
 		}
 		else// There is only one animation to play. No blending.
 		{
 			float TicksPerSecond = 
-				static_cast<float>(_scenes[_curScene]->mAnimations[0]->mTicksPerSecond) != 0 
+				static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mTicksPerSecond) != 0 
 				? 
-				static_cast<float>(_scenes[_curScene]->mAnimations[0]->mTicksPerSecond) : 25.0f;
+				static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mTicksPerSecond) : 25.0f;
 			float TimeInTicks = myAnimationTimePrev * TicksPerSecond;
-			float AnimationTime = fmodf(TimeInTicks, static_cast<float>(_scenes[_curScene]->mAnimations[0]->mDuration));
+			float AnimationTime = fmodf(TimeInTicks, static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration));
 
-			ReadNodeHeirarchy(_scenes[_curScene], AnimationTime, _scenes[_curScene]->mRootNode, Identity, 2);
+			ReadNodeHeirarchy(myScenes[myCurSceneIndex], AnimationTime, myScenes[myCurSceneIndex]->mRootNode, Identity, 2);
 		}
 
-		Transforms.resize(m_NumBones);
+		aTransformsVector.resize(myNumOfBones);
 
-		for (uint i = 0; i < m_NumBones; i++)
+		for (uint i = 0; i < myNumOfBones; i++)
 		{
-			Transforms[i] = m_BoneInfo[i].myFinalTransformation;
+			aTransformsVector[i] = myBoneInfo[i].myFinalTransformation;
 		}
 	}
 
-	void LoadBones(uint MeshIndex, const aiMesh* pMesh)
+	void LoadBones(uint aMeshIndex, const aiMesh* aMesh)
 	{
-		for (uint i = 0; i < pMesh->mNumBones; i++)
+		for (uint i = 0; i < aMesh->mNumBones; i++)
 		{
 			uint BoneIndex = 0;
-			std::string BoneName(pMesh->mBones[i]->mName.data);
+			std::string BoneName(aMesh->mBones[i]->mName.data);
 
-			if (m_BoneMapping.find(BoneName) == m_BoneMapping.end())
+			if (myBoneMapping.find(BoneName) == myBoneMapping.end())
 			{
-				BoneIndex = m_NumBones;
-				m_NumBones++;
+				BoneIndex = myNumOfBones;
+				myNumOfBones++;
 				BoneInfoAnim bi;
-				m_BoneInfo.push_back(bi);
+				myBoneInfo.push_back(bi);
 			}
 			else
 			{
-				BoneIndex = m_BoneMapping[BoneName];
+				BoneIndex = myBoneMapping[BoneName];
 			}
 
-			m_BoneMapping[BoneName] = BoneIndex;
-			m_BoneInfo[BoneIndex].myBoneOffset = pMesh->mBones[i]->mOffsetMatrix;
+			myBoneMapping[BoneName] = BoneIndex;
+			myBoneInfo[BoneIndex].myBoneOffset = aMesh->mBones[i]->mOffsetMatrix;
 
-			for (uint j = 0; j < pMesh->mBones[i]->mNumWeights; j++)
+			for (uint j = 0; j < aMesh->mBones[i]->mNumWeights; j++)
 			{
-				uint VertexID = m_Entries[MeshIndex].myBaseVertex + pMesh->mBones[i]->mWeights[j].mVertexId;
-				float Weight = pMesh->mBones[i]->mWeights[j].mWeight;
-				m_Mass[VertexID].AddBoneData(BoneIndex, Weight);
+				uint VertexID = myEntries[aMeshIndex].myBaseVertex + aMesh->mBones[i]->mWeights[j].mVertexId;
+				float Weight = aMesh->mBones[i]->mWeights[j].mWeight;
+				myMass[VertexID].AddBoneData(BoneIndex, Weight);
 			}
 		}
 
@@ -358,27 +359,27 @@ public:
 
 	bool InitFromScene(const aiScene* pScene)
 	{
-		myLastTime = -1;
+		
 		myAnimationTimePrev = 0.f;
 
-		m_Entries.resize(pScene->mNumMeshes);
+		myEntries.resize(pScene->mNumMeshes);
 
 		uint NumVertices = 0;
 		uint NumIndices = 0;
 
 		// Count the number of vertices and indices
-		for (uint i = 0; i < m_Entries.size(); i++)
+		for (uint i = 0; i < myEntries.size(); i++)
 		{
-			m_Entries[i].myMaterialIndex = pScene->mMeshes[i]->mMaterialIndex;
-			m_Entries[i].myNumIndices = pScene->mMeshes[i]->mNumFaces * 3;
-			m_Entries[i].myBaseVertex = NumVertices;
-			m_Entries[i].myBaseIndex = NumIndices;
+			myEntries[i].myMaterialIndex = pScene->mMeshes[i]->mMaterialIndex;
+			myEntries[i].myNumIndices = pScene->mMeshes[i]->mNumFaces * 3;
+			myEntries[i].myBaseVertex = NumVertices;
+			myEntries[i].myBaseIndex = NumIndices;
 
 			NumVertices += pScene->mMeshes[i]->mNumVertices;
-			NumIndices += m_Entries[i].myNumIndices;
+			NumIndices += myEntries[i].myNumIndices;
 		}
 
-		m_Mass.resize(NumVertices);
+		myMass.resize(NumVertices);
 
 		for (uint i = 0; i < pScene->mNumMeshes; ++i)
 		{
@@ -405,42 +406,35 @@ public:
 			return false;
 		}
 
-		_curScene = static_cast<int>(_importers.size());
-		_importers.push_back(new Assimp::Importer);
-		_scenes.push_back(_importers[_curScene]->ReadFile(myModelPath, aiProcessPreset_TargetRealtime_Quality | aiProcess_ConvertToLeftHanded));
+		myCurSceneIndex = static_cast<int>(myImporters.size());
+		myImporters.push_back(new Assimp::Importer);
+		myScenes.push_back(myImporters[myCurSceneIndex]->ReadFile(myModelPath, aiProcessPreset_TargetRealtime_Quality | aiProcess_ConvertToLeftHanded));
 		//_curScene = importer.ReadFile( m_ModelPath, aiProcess_Triangulate | aiProcess_GenSmoothNormals );
 
 		bool ret = false;
 		// If the import failed, report it
-		if (_scenes[_curScene])
+		if (myScenes[myCurSceneIndex])
 		{
-			m_GlobalInverseTransform = _scenes[_curScene]->mRootNode->mTransformation;
-			m_GlobalInverseTransform.Inverse();
-			ret = InitFromScene(_scenes[_curScene]);
+			myGlobalInverseTransform = myScenes[myCurSceneIndex]->mRootNode->mTransformation;
+			myGlobalInverseTransform.Inverse();
+			ret = InitFromScene(myScenes[myCurSceneIndex]);
 			// Now we can access the file's contents.
 			logInfo("Import of _curScene " + myModelPath + " succeeded.");
 		}
 		else
 		{
-			logInfo(_importers[_curScene]->GetErrorString());
+			logInfo(myImporters[myCurSceneIndex]->GetErrorString());
 		}
 
 		// We're done. Everything will be cleaned up by the importer destructor
 		return ret;
 	}
 
-	void Update(/*float dt*/)
+	void Update()
 	{
-		// using engine dt removes this if case
-		if (myLastTime == -1)
-		{
-			myLastTime = GetCurrentTimeMillis();// 0?
-		}
-		long long newTime = GetCurrentTimeMillis();
-		float dt = (float)((double)newTime - (double)myLastTime) / 1000.0f;// replace with engine dt?
-		myLastTime = newTime;
-		// using engine dt removes this if case
 
+		float dt = CTimer::Dt();
+		
 		myAnimationTimePrev += dt;
 		if (myBlendingTime > 0.f)
 		{
@@ -484,13 +478,13 @@ public:
 			return false;
 		}
 
-		_curScene = static_cast<int>(_importers.size());
-		_importers.push_back(new Assimp::Importer);
-		_scenes.push_back(_importers[_curScene]->ReadFile(fileName, aiProcessPreset_TargetRealtime_Quality | aiProcess_ConvertToLeftHanded));
+		myCurSceneIndex = static_cast<int>(myImporters.size());
+		myImporters.push_back(new Assimp::Importer);
+		myScenes.push_back(myImporters[myCurSceneIndex]->ReadFile(fileName, aiProcessPreset_TargetRealtime_Quality | aiProcess_ConvertToLeftHanded));
 		// If the import failed, report it
-		if (!_scenes[_curScene])
+		if (!myScenes[myCurSceneIndex])
 		{
-			logInfo(_importers[_curScene]->GetErrorString());
+			logInfo(myImporters[myCurSceneIndex]->GetErrorString());
 			return false;
 		}
 		return true;
@@ -498,12 +492,12 @@ public:
 
 	bool SetAnimIndex(uint index, bool updateBoth = true, float blendDuration = 0.3f, bool temporary = false, float time = 0.f)
 	{
-		if (index == static_cast<uint>(_curScene) || index >= static_cast<uint>(_scenes.size()))
+		if (index == static_cast<uint>(myCurSceneIndex) || index >= static_cast<uint>(myScenes.size()))
 		{
 			return false;
 		}
-		myPrevAnimIndex = _curScene;
-		_curScene = index;
+		myPrevAnimIndex = myCurSceneIndex;
+		myCurSceneIndex = index;
 		myBlendingTime = 1.f;
 		myBlendingTimeMul = blendDuration > 0.0f ? 1.0f / blendDuration : 1.0f;
 		myAnimationTimeCurrent = 0.f;
@@ -521,7 +515,7 @@ public:
 
 	uint GetMaxIndex()
 	{
-		return static_cast<uint>(_scenes.size());
+		return static_cast<uint>(myScenes.size());
 	}
 
 	bool IsDoneBlending()

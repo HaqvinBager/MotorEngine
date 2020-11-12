@@ -448,7 +448,7 @@ void UpdateAnimationTest(CGameObject* aCurrentGameObject,CGameObject* /*aCamera*
 	{
 		if (animComp->Enabled())
 		{
-			aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(0, 1, sinf(CTimer::Time()));
+			/*aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(0, 1, sinf(CTimer::Time()));*/
 			aCurrentGameObject->GetComponent<CAnimationComponent>()->Update();
 
 			float current = floor(aCurrentGameObject->GetComponent<CAnimationComponent>()->GetBlend());
