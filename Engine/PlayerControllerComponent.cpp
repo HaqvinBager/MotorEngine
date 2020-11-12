@@ -16,6 +16,7 @@ CPlayerControllerComponent::~CPlayerControllerComponent()
 
 void CPlayerControllerComponent::Awake()
 {
+	
 }
 
 void CPlayerControllerComponent::Start()

@@ -9,6 +9,7 @@
 #include "ModelComponent.h"
 #include "CameraComponent.h"
 #include "EnviromentLightComponent.h"
+#include "PlayerControllerComponent.h"
 
 #include <rapidjson\document.h>
 
@@ -68,6 +69,13 @@ void CLevelLoader::CreateLevel(const std::string& aPath)
 	//maybe problemo in forwardrenderer - 20-11-11
 	myScene->AddInstance(environmentLight);
 	myScene->AddInstance(environmentLightComponent->GetEnviromentLight());
+
+	CGameObject* playerGameObject = new CGameObject();
+	playerGameObject->myTransform->Position({ levelData->myPlayerData.myPosX, levelData->myPlayerData.myPosY,levelData->myPlayerData.myPosZ });
+	playerGameObject->myTransform->Rotation({ levelData->myPlayerData.myRotX, levelData->myPlayerData.myRotX, levelData->myPlayerData.myRotX });
+	playerGameObject->AddComponent<CModelComponent>(*playerGameObject, levelData->myModelPaths[levelData->myPlayerData.myModelIndex]);
+	playerGameObject->AddComponent<CPlayerControllerComponent>(*playerGameObject);
+	myScene->AddInstance(playerGameObject);
 
 	for (const auto &object : levelData->myModelData)
 	{

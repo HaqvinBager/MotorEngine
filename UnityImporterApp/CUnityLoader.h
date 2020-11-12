@@ -3,7 +3,19 @@
 #include <vector>
 #include <map>
 
-class EnviromentDataRaw {
+class CameraDataRaw {
+public:
+	float myRotX;
+	float myRotY;
+	float myRotZ;
+	float myPosX;
+	float myPosY;
+	float myPosZ;
+	float myFieldOfView;
+};
+
+class EnviromentDataRaw
+{
 public:
 	float myDirectionX;
 	float myDirectionY;
@@ -14,15 +26,20 @@ public:
 	float myIntensity;
 };
 
-class CameraDataRaw {
+class PlayerDataRaw
+{
 public:
+	int instanceID;
 	float myRotX;
 	float myRotY;
 	float myRotZ;
 	float myPosX;
 	float myPosY;
 	float myPosZ;
-	float myFieldOfView;
+	float myScaleX;
+	float myScaleY;
+	float myScaleZ;
+	int myModelIndex;
 };
 
 class AssetDataRaw {
@@ -85,6 +102,7 @@ class LevelData {
 public:
 	CameraDataRaw myCameraData;
 	EnviromentDataRaw myEnviromentData;
+	PlayerDataRaw myPlayerData;
 	std::vector<AssetDataRaw> myModelData;
 	std::map<int, std::string> myModelPaths;
 };

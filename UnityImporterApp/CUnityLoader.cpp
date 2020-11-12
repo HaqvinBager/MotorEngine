@@ -101,6 +101,11 @@ LevelData* CUnityLoader::LoadLevelBinary(const std::string& aGameObjectFile)
 	levelData->myEnviromentData = enviromentRaw;
 	ptr += sizeof(EnviromentDataRaw);
 
+	PlayerDataRaw playerRaw;
+	memcpy(&playerRaw, ptr, sizeof(PlayerDataRaw));
+	levelData->myPlayerData = playerRaw;
+	ptr += sizeof(PlayerDataRaw);
+
 	unsigned int totalAssetData = 0;
 	memcpy(&totalAssetData, ptr, sizeof(int));
 	assert(totalAssetData != 0);
