@@ -1,3 +1,6 @@
+2020 11 12
+Refactoring Animation and AnimationController
+
 2020 11 11 
 http://ogldev.atspace.co.uk/www/tutorial38/tutorial38.html
 
