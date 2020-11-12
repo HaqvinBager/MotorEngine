@@ -2,12 +2,11 @@
 #include "Animation.h"
 #include "AnimationController.h"
 
-
 CAnimation::~CAnimation()
 {
 	delete controller;
 	controller = nullptr;
-	myActiveAnimations.clear();
+	//myActiveAnimations.clear();
 }
 
 void CAnimation::Init(const char* aRig, std::vector<std::string>& somePathsToAnimations)
@@ -21,6 +20,8 @@ void CAnimation::Init(const char* aRig, std::vector<std::string>& somePathsToAni
 
 	controller->SetAnimIndex(1, true, 0.0f);
 	controller->SetAnimIndex(2, true, 5.0f);
+	//controller->SetAnimIndex(3, true, 0.0f);
+	//controller->SetAnimIndex(4, true, 5.0f);
 }
 //
 //void CAnimation::BoneTransform(SlimMatrix44* Transforms)

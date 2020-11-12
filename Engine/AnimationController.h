@@ -188,17 +188,17 @@ public:
 		}
 	}
 
-	void ReadNodeHeirarchy(const aiScene* scene0, const aiScene* scene1
-		, float AnimationTime0, float AnimationTime1
-		, const aiNode* pNode0, const aiNode* pNode1
-		, const aiMatrix4x4& ParentTransform, int stopAnimLevel)
+	void ReadNodeHeirarchy(	  const aiScene* scene0, const aiScene* scene1
+							, float AnimationTime0, float AnimationTime1
+							, const aiNode* pNode0, const aiNode* pNode1
+							, const aiMatrix4x4& ParentTransform, int stopAnimLevel)
 	{
-		float time0(AnimationTime0);
-		float time1(AnimationTime1);
+		float time0(AnimationTime0);// Why is AnimationTime0 made into a local variable?
+		float time1(AnimationTime1);// Why is AnimationTime1 made into a local variable?
 
-		std::string NodeName0(pNode0->mName.data);
-		std::string NodeName1(pNode1->mName.data);
-		assert(NodeName0 == NodeName1);
+		std::string NodeName0(pNode0->mName.data);// rename pNode0/1 is the previous animations data. pNode0 is pointerToPreviousAnimNode
+		std::string NodeName1(pNode1->mName.data);// pointerToCurrentAnimNode
+		assert(NodeName0 == NodeName1);// their first node should be the same, roots must be equal
 
 		const aiAnimation* pAnimation0 = scene0->mAnimations[0];
 		const aiAnimation* pAnimation1 = scene1->mAnimations[0];
@@ -254,11 +254,13 @@ public:
 		if (m_BoneMapping.find(NodeName0) != m_BoneMapping.end())
 		{
 			uint BoneIndex = m_BoneMapping[NodeName0];
-			m_BoneInfo[BoneIndex].FinalTransformation = m_GlobalInverseTransform * GlobalTransformation *
-				m_BoneInfo[BoneIndex].BoneOffset;
+			m_BoneInfo[BoneIndex].FinalTransformation = 
+				  m_GlobalInverseTransform 
+				* GlobalTransformation 
+				* m_BoneInfo[BoneIndex].BoneOffset;
 		}
 
-		uint n = min(pNode0->mNumChildren, pNode1->mNumChildren);
+		uint n = min(pNode0->mNumChildren, pNode1->mNumChildren); // Does one movement for all the children
 		for (uint i = 0; i < n; i++)
 		{
 			ReadNodeHeirarchy(scene0, scene1, AnimationTime0, AnimationTime1, pNode0->mChildren[i], pNode1->mChildren[i], GlobalTransformation, stopAnimLevel);
@@ -267,29 +269,46 @@ public:
 
 	void BoneTransform(std::vector<aiMatrix4x4>& Transforms)
 	{
-		aiMatrix4x4 Identity;
+		aiMatrix4x4 Identity;// Used for ReadNodeHierarchy
 		InitIdentityM4(Identity);
 
-		if (_blendingTime > 0.f)
+		if (_blendingTime > 0.f)// There are 2 animations that we are blending between
 		{
-			float TicksPerSecond = static_cast<float>(_scenes[_prevAnimIndex]->mAnimations[0]->mTicksPerSecond) != 0 ?
+			// Animation time for the first anim ( 0 ) (Previous?)
+			// Ticks == Frames
+			float TicksPerSecond = 
+				static_cast<float>(_scenes[_prevAnimIndex]->mAnimations[0]->mTicksPerSecond) != 0 
+				? 
 				static_cast<float>(_scenes[_prevAnimIndex]->mAnimations[0]->mTicksPerSecond) : 25.0f;
-			float TimeInTicks = _animationTime0 * TicksPerSecond;
-			float AnimationTime0 = fmodf(TimeInTicks, static_cast<float>(_scenes[_prevAnimIndex]->mAnimations[0]->mDuration));
 
-			TicksPerSecond = static_cast<float>(_scenes[_curScene]->mAnimations[0]->mTicksPerSecond) != 0 ?
+			// How many frames are we into the animation?
+			float TimeInTicks = _animationTime0 * TicksPerSecond;
+			// Where are we in the animation, on which frame?
+			float AnimationTime0 = fmodf(TimeInTicks, static_cast<float>(_scenes[_prevAnimIndex]->mAnimations[0]->mDuration));
+			// !  Animation time for the first anim ( 0 )
+
+			// Animation time for the second anim ( 1 ) (Current?)
+			TicksPerSecond = 
+				static_cast<float>(_scenes[_curScene]->mAnimations[0]->mTicksPerSecond) != 0 
+				?
 				static_cast<float>(_scenes[_curScene]->mAnimations[0]->mTicksPerSecond) : 25.0f;
+
 			TimeInTicks = _animationTime1 * TicksPerSecond;
 			float AnimationTime1 = fmodf(TimeInTicks, static_cast<float>(_scenes[_curScene]->mAnimations[0]->mDuration));
+			// ! Animation time for the second anim ( 1 )
 
-			ReadNodeHeirarchy(_scenes[_prevAnimIndex], _scenes[_curScene]
-				, AnimationTime0, AnimationTime1
-				, _scenes[_prevAnimIndex]->mRootNode, _scenes[_curScene]->mRootNode
-				, Identity, 2);
+			ReadNodeHeirarchy(	_scenes[_prevAnimIndex], _scenes[_curScene]
+								, AnimationTime0, AnimationTime1
+								, _scenes[_prevAnimIndex]->mRootNode, _scenes[_curScene]->mRootNode
+								, Identity, /*stopAnimLevel=*/2);
+			// Using identity matrix since there is no parent. Means there is no transformation being made on the matrix for the animation.
 		}
-		else
+		else// There is only one animation to play. No blending.
 		{
-			float TicksPerSecond = static_cast<float>(_scenes[_curScene]->mAnimations[0]->mTicksPerSecond) != 0 ? static_cast<float>(_scenes[_curScene]->mAnimations[0]->mTicksPerSecond) : 25.0f;
+			float TicksPerSecond = 
+				static_cast<float>(_scenes[_curScene]->mAnimations[0]->mTicksPerSecond) != 0 
+				? 
+				static_cast<float>(_scenes[_curScene]->mAnimations[0]->mTicksPerSecond) : 25.0f;
 			float TimeInTicks = _animationTime0 * TicksPerSecond;
 			float AnimationTime = fmodf(TimeInTicks, static_cast<float>(_scenes[_curScene]->mAnimations[0]->mDuration));
 
@@ -409,17 +428,17 @@ public:
 		return ret;
 	}
 
-
 	void Update(/*float dt*/)
 	{
+		// using engine dt removes this if case
 		if (m_lastTime == -1)
 		{
-			m_lastTime = GetCurrentTimeMillis();
+			m_lastTime = GetCurrentTimeMillis();// 0?
 		}
 		long long newTime = GetCurrentTimeMillis();
-		float dt = (float)((double)newTime - (double)m_lastTime) / 1000.0f;
+		float dt = (float)((double)newTime - (double)m_lastTime) / 1000.0f;// replace with engine dt?
 		m_lastTime = newTime;
-
+		// using engine dt removes this if case
 
 		_animationTime0 += dt;
 		if (_blendingTime > 0.f)
