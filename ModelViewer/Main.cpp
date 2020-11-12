@@ -204,22 +204,22 @@ void Update(std::vector<std::string>& aModelFilePathList, CGameObject* aCurrentG
 {
 	float dt = CTimer::Dt();
 
-	float cameraMoveSpeed = 5.0f;
+	float cameraMoveSpeed = 500.0f;
 	if (Input::GetInstance()->IsKeyDown(VK_UP))
 	{
-		aCamera->myTransform->Move({ 0.0f, 0.0f, cameraMoveSpeed * dt });
+		aCamera->myTransform->MoveLocal({ 0.0f, 0.0f, cameraMoveSpeed * dt});
 	}
 	if (Input::GetInstance()->IsKeyDown(VK_DOWN))
 	{
-		aCamera->myTransform->Move({ 0.0f, 0.0f, -cameraMoveSpeed * dt });
+		aCamera->myTransform->MoveLocal({ 0.0f, 0.0f, -cameraMoveSpeed * dt });
 	}
 	if (Input::GetInstance()->IsKeyDown(VK_RIGHT))
 	{
-		aCamera->myTransform->Move({ cameraMoveSpeed * dt, 0.0f, 0.0f });
+		aCamera->myTransform->MoveLocal({ cameraMoveSpeed * dt, 0.0f, 0.0f });
 	}
 	if (Input::GetInstance()->IsKeyDown(VK_LEFT))
 	{
-		aCamera->myTransform->Move({ -cameraMoveSpeed * dt, 0.0f, 0.0f });
+		aCamera->myTransform->MoveLocal({ -cameraMoveSpeed * dt, 0.0f, 0.0f });
 	}
 
 	// Rotation functions
@@ -448,7 +448,7 @@ void UpdateAnimationTest(CGameObject* aCurrentGameObject,CGameObject* /*aCamera*
 	{
 		if (animComp->Enabled())
 		{
-			/*aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(0, 1, 1.0f);*/
+			aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(0, 1, sinf(CTimer::Time()));
 			aCurrentGameObject->GetComponent<CAnimationComponent>()->Update();
 
 			float current = floor(aCurrentGameObject->GetComponent<CAnimationComponent>()->GetBlend());

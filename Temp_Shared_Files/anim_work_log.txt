@@ -1,0 +1,10 @@
+2020 11 11 
+http://ogldev.atspace.co.uk/www/tutorial38/tutorial38.html
+
+4 bones in shader: a vertex can only be affected by 4 bones.
+"The aiScene contains an array of aiMesh objects."
+". A single aiAnimation object represents a sequence of animation frames such as "walk", "run", "shoot", etc."
+aiAnimation can be found in AnimationController.h :: ReadNodeHierarchy
+AnimationController is using its own dt. ? Does that make it independent from actual engine time?
+
+AnimationController.h::BoneTransform is a hard to read mess
