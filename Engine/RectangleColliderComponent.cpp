@@ -18,7 +18,7 @@ CRectangleColliderComponent::~CRectangleColliderComponent() {
 void CRectangleColliderComponent::Awake() {
 	//TODO Fix after Merge Conflicts Resolved
 
-	/*DirectX::SimpleMath::Vector3 vector = GameObject().GetComponent<CTransformComponent>()->Position() + GameObject().GetComponent<CTransformComponent>()->Position().Forward * (myHeight / 2.0f);
+	DirectX::SimpleMath::Vector3 vector = GameObject().GetComponent<CTransformComponent>()->Position() + GameObject().GetComponent<CTransformComponent>()->Position().Forward * (myHeight / 2.0f);
 
 	myPosition = GameObject().GetComponent<CTransformComponent>()->Position();
 	myVertices.emplace_back(vector - GameObject().GetComponent<CTransformComponent>()->Position().Right * (myWidth / 2.0f));
@@ -27,7 +27,7 @@ void CRectangleColliderComponent::Awake() {
 	vector = GameObject().GetComponent<CTransformComponent>()->Position() - GameObject().GetComponent<CTransformComponent>()->Position().Forward * (myHeight / 2.0f);
 
 	myVertices.emplace_back(vector - GameObject().GetComponent<CTransformComponent>()->Position().Right * (myWidth / 2.0f));
-	myVertices.emplace_back(vector + GameObject().GetComponent<CTransformComponent>()->Position().Right * (myWidth / 2.0f));*/
+	myVertices.emplace_back(vector + GameObject().GetComponent<CTransformComponent>()->Position().Right * (myWidth / 2.0f));
 }
 
 void CRectangleColliderComponent::Start() {
