@@ -11,6 +11,7 @@ class CParticleInstance;
 class CVFXInstance;
 class CLineInstance;
 class CSpriteInstance;
+class CAnimatedUIElement;
 class CTextInstance;
 class CCameraComponent;
 struct SLineTime;
@@ -32,7 +33,8 @@ public:
 	std::vector<CVFXInstance*> CullVFX(CCameraComponent* aMainCamera);
 	const std::vector<SLineTime>& CullLines() const;
 	const std::vector<CLineInstance*>& CullLineInstances() const;
-	std::vector<CSpriteInstance*> CullSprites(CCameraComponent* aMainCamera);
+	std::vector<CSpriteInstance*> CullSprites();
+	std::vector<CAnimatedUIElement*> CullAnimatedUI();
 	std::vector<CTextInstance*> GetTexts();
 
 	CGameObject* GetModelToOutline() const { return myModelToOutline; }
@@ -45,6 +47,7 @@ public:
 	bool AddInstance(CVFXInstance* aVFXInstance);
 	bool AddInstance(CLineInstance* aLineInstance);
 	bool AddInstance(CSpriteInstance* aSprite);
+	bool AddInstance(CAnimatedUIElement* anAnimatedUIElement);
 	bool AddInstance(CTextInstance* aText);
 
 	bool RemoveInstance(CGameObject* aGameObject);
@@ -71,6 +74,7 @@ private:
 	std::vector<CVFXInstance*> myVFXInstances;
 	std::vector<CLineInstance*> myLineInstances;
 	std::vector<CSpriteInstance*> mySprites;
+	std::vector<CAnimatedUIElement*> myAnimatedUIElements;
 	std::vector<CTextInstance*> myTexts;
 	CCollisionManager* myCollisionManager;
 	static CScene* ourInstance;

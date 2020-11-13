@@ -535,7 +535,11 @@ ID3D11ShaderResourceView* CModelFactory::GetShaderResourceView(ID3D11Device* aDe
 	HRESULT result;
 	result = DirectX::CreateDDSTextureFromFile(aDevice, widePath, nullptr, &shaderResourceView);
 	if (FAILED(result))
-		DirectX::CreateDDSTextureFromFile(aDevice, L"ErrorTexture.dds", nullptr, &shaderResourceView);
+	{
+		std::string errorTexturePath = aTexturePath.substr(aTexturePath.length() - 6);
+		errorTexturePath = "CheckBoard_128x128" + errorTexturePath;
+		DirectX::CreateDDSTextureFromFile(aDevice, L"Checkboard_128x128.dds", nullptr, &shaderResourceView);
+	}
 		//return nullptr;
 	//================================
 

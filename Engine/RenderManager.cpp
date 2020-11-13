@@ -8,6 +8,7 @@
 #include "ModelFactory.h"
 #include "CameraComponent.h"
 
+
 CRenderManager::CRenderManager() : myScene(*CScene::GetInstance())
 {
 }
@@ -126,8 +127,11 @@ void CRenderManager::Render()
 
 	myParticleRenderer.Render(maincamera, gameObjects);
 
-	std::vector<CSpriteInstance*> sprites = myScene.CullSprites(maincamera);
+	std::vector<CSpriteInstance*> sprites = myScene.CullSprites();
 	mySpriteRenderer.Render(sprites);
+
+	std::vector<CAnimatedUIElement*> animatedUIElements = myScene.CullAnimatedUI();
+	mySpriteRenderer.Render(animatedUIElements);
 
 	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_DISABLE);
 	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_DEFAULT);
