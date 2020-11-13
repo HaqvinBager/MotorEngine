@@ -206,6 +206,7 @@ CGameObject* InitAnimation(const std::string& aFilePath)
 		animComp->GetMyAnimation()->Init(aFilePath.c_str(), somePathsToAnimations);
 		animComp->SetBlend(0, 1, 1.0f);
 		gameObject->GetComponent<CModelComponent>()->GetMyModel()->AddAnimation(animComp->GetMyAnimation());
+		animComp->Awake();
 	}
 
 	CScene::GetInstance()->AddInstance(gameObject);
@@ -257,6 +258,7 @@ bool ChangeModel(CGameObject* aCurrentGameObject, std::vector<std::string>& aMod
 		animComp->GetMyAnimation()->Init(aModelFilePathList[loadModelNumber].c_str(), somePathsToAnimations);
 		animComp->SetBlend(0, 1, 1.0f);
 		aCurrentGameObject->GetComponent<CModelComponent>()->GetMyModel()->AddAnimation(animComp->GetMyAnimation());
+		animComp->Awake();
 	}
 
 	std::cout << "\nInstructions" << std::endl 
@@ -273,7 +275,8 @@ void UpdateAnimationTest(CGameObject* aCurrentGameObject,CGameObject* /*aCamera*
 		if (animComp->Enabled())
 		{
 			/*aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(0, 1, sinf(CTimer::Time()));*/
-			aCurrentGameObject->GetComponent<CAnimationComponent>()->Update();
+		
+			//aCurrentGameObject->GetComponent<CAnimationComponent>()->Update();
 
 			float current = floor(aCurrentGameObject->GetComponent<CAnimationComponent>()->GetBlend());
 			if (Input::GetInstance()->IsKeyPressed(VK_LEFT))
