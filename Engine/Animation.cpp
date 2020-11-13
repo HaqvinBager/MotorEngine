@@ -30,10 +30,16 @@ void CAnimation::BoneTransformWithBlend(SlimMatrix44* Transforms, float aBlendFa
 	memcpy(&Transforms[0], &trans[0], (sizeof(float) * 16) * trans.size());
 }
 
+void CAnimation::BlendStep(float aDelta)
+{
+	myTotalAnimationTime += aDelta;
+	myController->UpdateBlendFrame();
+}
+
 void CAnimation::Step(float aDelta)
 {
 	myTotalAnimationTime += aDelta;
-	myController->Update();
+	myController->UpdateFrame();
 }
 
 const size_t CAnimation::GetNrOfAnimations() const

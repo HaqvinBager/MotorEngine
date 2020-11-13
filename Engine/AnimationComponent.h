@@ -34,6 +34,7 @@ public:
 	std::array<SlimMatrix44, 64> GetBones() { return myBones; }
 	void GetAnimatedTransforms(float dt, SlimMatrix44* transforms);
 	void SetBlend(int anAnimationIndex, int anAnimationIndexTwo, float aBlend);
+	void PlayAnimation(const int anAnimationIndex, bool aIsLooping = false);
 
 private:
 	void SetBonesToIdentity();

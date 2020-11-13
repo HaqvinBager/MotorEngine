@@ -62,6 +62,22 @@ void CAnimationComponent::SetBlend(int anAnimationIndex, int anAnimationIndexTwo
 	myBlend.myBlendLerp = aBlend;
 }
 
+void CAnimationComponent::PlayAnimation(const int anAnimationIndex, bool aIsLooping)
+{
+
+
+
+	float dt = CTimer::Dt();
+	for (CAnimation* anim : GameObject().GetComponent<CModelComponent>()->GetMyModel()->GetAnimations())
+	{
+		anim->Step(dt);
+	}
+
+	SetBonesToIdentity();
+
+	GetAnimatedTransforms(dt, myBones.data());
+}
+
 void CAnimationComponent::SetBonesToIdentity()
 {
 	for (int i = 0; i < 64; i++)
