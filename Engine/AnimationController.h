@@ -104,7 +104,7 @@ public:
 
 	void SetRotation(const aiVector3D& aRotation) { myRotation = aRotation; }
 	aiVector3D GetRotation() { return myRotation; }
-
+	void SetCurSceneIndex(int aCurSceneIndex) { myCurSceneIndex = aCurSceneIndex; }
 	const size_t GetNrOfAnimations() const { return myScenes.size() - 1; }
 
 	~AnimationController()
@@ -333,6 +333,7 @@ public:
 		aiMatrix4x4 identity;// Used for ReadNodeHierarchy
 		InitIdentityM4(identity);
 
+		
 		float TicksPerSecond = 
 			static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mTicksPerSecond) != 0 
 			? 
@@ -495,6 +496,7 @@ public:
 		
 		//myAnimationTimeCurrent += dt;
 		//myAnimationTimePrev += dt;
+
 
 		myAnimationTimePrev += dt;
 

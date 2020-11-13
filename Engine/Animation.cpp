@@ -45,6 +45,7 @@ void CAnimation::BlendStep(float aDelta)
 
 void CAnimation::Step(float aDelta)
 {
+
 	myTotalAnimationTime += aDelta;
 	myController->UpdateFrame();
 }
@@ -52,6 +53,11 @@ void CAnimation::Step(float aDelta)
 const size_t CAnimation::GetNrOfAnimations() const
 {
 	return myController->GetNrOfAnimations(); 
+}
+
+void CAnimation::SetCurAnimationScene(const int aCurAnimScene)
+{
+	myController->SetCurSceneIndex(aCurAnimScene);
 }
 
 // Old: before 2020 11 13

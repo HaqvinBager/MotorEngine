@@ -19,6 +19,10 @@ public:
 
 	const size_t GetNrOfAnimations() const;
 
+public: 
+
+	void SetCurAnimationScene(const int aCurAnimScene);
+
 private:
 	float myTotalAnimationTime = 0;
 	AnimationController* myController;
