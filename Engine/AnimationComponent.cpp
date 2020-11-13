@@ -26,29 +26,21 @@ void CAnimationComponent::Start()
 
 void CAnimationComponent::Update()
 {
-	float dt = CTimer::Dt();
-	for (CAnimation* anim : GameObject().GetComponent<CModelComponent>()->GetMyModel()->GetAnimations())
-	{
-		anim->Step(dt);
-	}
+	//float dt = CTimer::Dt();
+	//for (CAnimation* anim : GameObject().GetComponent<CModelComponent>()->GetMyModel()->GetAnimations())
+	//{
+	//	//anim->Step(dt);
+	//}
 
-	for (int i = 0; i < 64; i++)
-	{
-		myBones[i].SetIdentity();
-	}
+	SetBonesToIdentity();
 
-	GetAnimatedTransforms(dt, myBones.data());	
+	//GetAnimatedTransforms(dt, myBones.data());	
 }
 
 void CAnimationComponent::OnEnable()
-{
-
-}
-
+{}
 void CAnimationComponent::OnDisable()
-{
-
-}
+{}
 
 void CAnimationComponent::GetAnimatedTransforms(float dt, SlimMatrix44 * transforms)
 {
@@ -63,7 +55,15 @@ void CAnimationComponent::GetAnimatedTransforms(float dt, SlimMatrix44 * transfo
 
 void CAnimationComponent::SetBlend(int anAnimationIndex, int anAnimationIndexTwo, float aBlend)
 {
-	myBlend.myFirst = anAnimationIndex;
-	myBlend.mySecond = anAnimationIndexTwo;
+	myBlend.myFirst		= anAnimationIndex;
+	myBlend.mySecond	= anAnimationIndexTwo;
 	myBlend.myBlendLerp = aBlend;
+}
+
+void CAnimationComponent::SetBonesToIdentity()
+{
+	for (int i = 0; i < 64; i++)
+	{
+		myBones[i].SetIdentity();
+	}
 }

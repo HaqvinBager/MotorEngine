@@ -1,3 +1,6 @@
+2020 11 13
+If we dont step the animation it is  in its t / civ pose.
+
 2020 11 12
 Refactoring Animation and AnimationController
 
