@@ -52,12 +52,12 @@ private:
 		float uvScale3;
 		float uvScale4;
 		float scrollTimer;
-		float opacityStrength;
-		DirectX::SimpleMath::Vector2 padding;
+		float level;
+		bool verticalDirectionOfChange;
+		float padding;
 	} myTextureScrollingData;
 
 private:
-	ID3D11Device* myDevice;
 	ID3D11DeviceContext* myContext;
 	ID3D11Buffer* myObjectBuffer;
 	ID3D11Buffer* myTextureScrollingBuffer;

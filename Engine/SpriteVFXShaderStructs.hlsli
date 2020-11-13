@@ -44,12 +44,14 @@ cbuffer TextureScrollBuffer : register(b1)
     float uvScale3;
     float uvScale4;
     float scrollTimer;
-    float opacityStrength;
-    float2 textureScrollPadding;
+    float level;
+    bool verticalDirectionOfChange;
+    float textureScrollPadding;
 }
 
 Texture2D instanceTexture1 : register(t0);
 Texture2D instanceTexture2 : register(t1);
 Texture2D instanceTexture3 : register(t2);
 Texture2D instanceTexture4 : register(t3);
+Texture2D levelTexture     : register(t4);
 SamplerState defaultSampler : register(s0);

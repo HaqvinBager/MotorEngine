@@ -5,31 +5,23 @@
 #include "Engine.h"
 #include "WindowHandler.h"
 
+#include "rapidjson\document.h"
+#include "rapidjson\istreamwrapper.h"
+
 CAnimatedUIElement::CAnimatedUIElement() : mySpriteInstance(nullptr), myLevel(1.0f)
 {
     mySpriteInstance = new CSpriteInstance();
-    mySpriteInstance->Init(CSpriteFactory::GetInstance()->GetSprite("Assets/3D/UI/Ingame/UI_IN_OrbBase.dds"));
+    mySpriteInstance->Init(CSpriteFactory::GetInstance()->GetSprite("Assets/3D/VFX/Fog_texture.dds"));
     UINT windowWidth = CEngine::GetInstance()->GetWindowHandler()->GetWidth();
-    mySpriteInstance->SetSize({ 128.0f / windowWidth, 128.0f / windowWidth });
-    mySpriteInstance->SetPosition({ -0.45f, -0.80f });
-
-    myTexturePaths[0] = L"VFXCloud.dds";
-    myTexturePaths[1] = L"VFXCloud.dds";
-    myTexturePaths[2] = L"VFXCloud.dds";
-    myTexturePaths[3] = L"MaskWithoutAlpha.dds";
+    mySpriteInstance->SetSize({ 200.0f / windowWidth, 200.0f / windowWidth });
+    mySpriteInstance->SetPosition({ -0.45f, -0.50f });
+    myData = CSpriteFactory::GetInstance()->GetVFXSprite("VFXData_UI_HealthOrb.json");
 }
 
 CAnimatedUIElement::~CAnimatedUIElement()
 {
     delete mySpriteInstance;
     mySpriteInstance = nullptr;
-
-    //for (auto& texture : myTextures) 
-    //{
-    //    texture->Release();
-    //}
-
-    //myTextures.clear();
 }
 
 void CAnimatedUIElement::Level(float aLevel)
@@ -45,4 +37,9 @@ float CAnimatedUIElement::Level() const
 CSpriteInstance* CAnimatedUIElement::GetInstance() const
 {
     return mySpriteInstance;
+}
+
+SAnimatedSpriteData* CAnimatedUIElement::GetVFXBaseData()
+{
+    return myData;
 }

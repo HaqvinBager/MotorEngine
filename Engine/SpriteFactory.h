@@ -3,6 +3,7 @@
 
 class CDirectXFramework;
 class CSprite;
+struct SAnimatedSpriteData;
 
 class CSpriteFactory
 {
@@ -10,10 +11,10 @@ class CSpriteFactory
 public:
 	bool Init(CDirectXFramework* aFramework);
 
-	CSprite* LoadSprite(std::string aTexturePath);
-	//CSprite* LoadVFXSprite(std::string aTexturePath);
-	CSprite* GetSprite(std::string aTexturePath);
-	//CSprite* GetVFXSprite(std::string aTexturePath);
+	CSprite* LoadSprite(std::string aFilePath);
+	SAnimatedSpriteData* LoadVFXSprite(std::string aTexturePath);
+	CSprite* GetSprite(std::string aFilePath);
+	SAnimatedSpriteData* GetVFXSprite(std::string aTexturePath);
 
 	static CSpriteFactory* GetInstance();
 
@@ -27,7 +28,7 @@ private:
 private:
 	static CSpriteFactory* ourInstance;
 	std::map<std::string, CSprite*> mySpriteMap;
-	//std::map<std::string, CSprite*> myVFXSpriteMap;
+	std::map<std::string, SAnimatedSpriteData*> myVFXSpriteMap;
 	CDirectXFramework* myFramework;
 
 	ID3D11VertexShader* myVertexShader;
