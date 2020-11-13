@@ -30,8 +30,12 @@
 #include <iostream>
 #include <map>
 
+#include "helpers.h"
+#include "loadAssetsFromDirectory.h"
+
 using namespace CommonUtilities;
 namespace SM = DirectX::SimpleMath;
+namespace MW = ModelViewer;
 
 #define USE_CONSOLE_COMMAND
 void InitConsole()
@@ -60,126 +64,6 @@ void CloseConsole()
 #pragma warning( pop )
 }
 
-// Returns the _NN part of the string ex CH_NPC_Boss_Attack_AN.fbx returns _AN
-std::string GetSuffixFromString(const std::string& aString)
-{
-	//ex: CH_NPC_Boss_Attack_AN.fbx 7 from last
-	return std::move(aString.substr(aString.length() - 7, 3));
-}
-
-std::size_t number_of_files_in_directory(std::filesystem::path path)
-{//https://stackoverflow.com/questions/41304891/how-to-count-the-number-of-files-in-a-directory-using-standard/41305019
-	using std::filesystem::directory_iterator;
-	return std::distance(directory_iterator(path), directory_iterator{});
-}
-void LoadModelPaths(const std::string& aStartFolderPath, std::vector<std::string>& aFBXFilePaths)
-{
-	struct SFileInfo// Used for directories.
-	{
-		short myNumItems = 0;
-		std::string myFullPath;
-	};
-
-	std::filesystem::path p(aStartFolderPath);
-
-	std::filesystem::recursive_directory_iterator start(p);
-	std::filesystem::recursive_directory_iterator end;
-
-	std::map<std::string, SFileInfo> folders;
-	std::vector<std::string> prevFolders;// Keys to use for std::map folders.
-
-	/// Description of how <prevFolders> works
-
-	///		prevFolders[depth]
-	///		"Assets" depth = 0
-	///			"3D" depth = 1
-	///				"Character" depth = 2
-	///					"Boss" depth = 3
-	///						1 file(s) when all have been checked go up 1 depth.
-	///					"MainCharacter" depth = 3
-	///  
-	/// Example =>	we are on depth 3, "Boss":
-	///		folders[prevFolders[depth]].myFullPath = "Assets/3D/Character/Boss"
-	///		folders[prevFolders[depth]].mySize = 1
-	///		If we find an FBX inside of ../Boss: then aFBXFilePath = folders[prevFolders[depth]].myFullPath + / +"fbxFileName"
-	///		(so when size = 0 we go up 1 depth)
-	/// 
-	/// </prevFolders>
-
-	int depth = 0;// Key for prevFolders
-
-	std::string folderPath = aStartFolderPath;
-	std::map<std::string, short> foldersWithSize;
-
-	prevFolders.emplace_back(aStartFolderPath);
-
-	SFileInfo fileInfo;
-	fileInfo.myNumItems		= static_cast<short>( number_of_files_in_directory(start->path()));
-	fileInfo.myFullPath		= aStartFolderPath;
-
-	folders.emplace(prevFolders[depth], fileInfo);
-
-	for (auto i = start; i != end; ++i)
-	{
-		std::string filePath = i->path().filename().string();
-
-		if (folders[prevFolders[depth]].myNumItems > 0)
-		{
-			folders[prevFolders[depth]].myNumItems -= 1;
-		}
-		else if (folders[prevFolders[depth]].myNumItems == 0)
-		{
-			if (depth != 0)
-			{
-				--depth;
-				prevFolders.pop_back();
-
-			}
-			folderPath = folders[prevFolders[depth]].myFullPath;
-
-			folders[prevFolders[depth]].myNumItems -= 1;
-			if (folders[prevFolders[depth]].myNumItems <= 0)
-			{
-				if (depth != 0)
-				{
-					--depth;
-					prevFolders.pop_back();
-				}
-
-				folderPath = folders[prevFolders[depth]].myFullPath;
-			}
-		}
-
-		if (i->is_directory())
-		{
-			++depth;
-			prevFolders.emplace_back(filePath);
-
-			folderPath.append("/" + filePath);
-
-			fileInfo.myNumItems	= static_cast<short>(number_of_files_in_directory(i->path()));
-			fileInfo.myFullPath = folderPath;
-
-			folders.emplace(filePath, fileInfo);
-		}
-		else
-		{
-			const size_t checkForDot = filePath.find(".");
-			std::string fileExtension = filePath.substr(checkForDot, ((4 + checkForDot) < filePath.length() ? 4 : filePath.length() - 1 ));
-			// todo filesystem::path has a function to check if it is a directory.
-			if (fileExtension == ".fbx")
-			{
-				//ex: CH_NPC_Boss_Attack_AN.fbx 7 from last
-				std::string suffix = GetSuffixFromString(filePath);
-				if (suffix != "_AN")
-				{
-					aFBXFilePaths.emplace_back(folders[prevFolders[depth]].myFullPath + "/" + filePath);
-				}
-			}
-		}
-	}
-}
-
 CGameObject* InitModels(const std::string& aModelPath)
 {
 	CScene* scene = CScene::GetInstance();
@@ -195,10 +79,6 @@ CGameObject* InitModels(const std::string& aModelPath)
 }
 
 // Reminder: Vem tar hand om delete av CModel? CModelFactory verkar inte ta hand om det och inte CModelInstance?
-bool CheckForIncorrectModelNumber(const size_t& aLoadModelNumber, const size_t& aMax)
-{
-	return (static_cast<int>(aLoadModelNumber) > -1 && aLoadModelNumber < aMax);
-}
 
 void Update(std::vector<std::string>& aModelFilePathList, CGameObject* aCurrentGameObject,CGameObject* aCamera)
 {
@@ -317,7 +197,7 @@ void Update(std::vector<std::string>& aModelFilePathList, CGameObject* aCurrentG
 		size_t loadModelNumber = aModelFilePathList.size();
 		std::cout << "Which model do you wish to load Give a number between: 0 and " << aModelFilePathList.size() - 1 << "\nL> ";
 		std::cin >> loadModelNumber;
-		while (!CheckForIncorrectModelNumber(loadModelNumber, aModelFilePathList.size()))
+		while (!MW::CheckForIncorrectModelNumber(loadModelNumber, aModelFilePathList.size()))
 		{
 			std::cin.clear();
 			std::cout << "Try again: Which model do you wish to load Give a number between: 0 and " << aModelFilePathList.size() - 1 << std::endl;
@@ -335,7 +215,6 @@ void Update(std::vector<std::string>& aModelFilePathList, CGameObject* aCurrentG
 
 	}
 }
-
 
 
 /// <Data driven animations test notes>
@@ -356,7 +235,7 @@ CGameObject* InitAnimation(const std::string& aFilePath)
 	gameObject->AddComponent<CModelComponent>(CModelComponent(*gameObject, aFilePath));
 	gameObject->myTransform->Position({ 0.0f,0.0f,0.0f });
 
-	if (GetSuffixFromString(aFilePath) == "_SK")
+	if (MW::GetSuffixFromString(aFilePath) == "_SK")
 	{
 		const size_t lastSlashIndex		= aFilePath.find_last_of("\\/");
 		const std::string folderPath	= aFilePath.substr(0, lastSlashIndex + 1);
@@ -371,7 +250,7 @@ CGameObject* InitAnimation(const std::string& aFilePath)
 			if (it->path().extension() == ".fbx")
 			{
 				const std::string filePath = it->path().filename().string();
-				if (GetSuffixFromString(filePath) == "_AN")
+				if (MW::GetSuffixFromString(filePath) == "_AN")
 				{
 					somePathsToAnimations.emplace_back(folderPath + filePath);
 				}
@@ -395,7 +274,7 @@ bool ChangeModel(CGameObject* aCurrentGameObject, std::vector<std::string>& aMod
 	size_t loadModelNumber = aModelFilePathList.size();
 	std::cout << "Which model do you wish to load Give a number between: 0 and " << aModelFilePathList.size() - 1 << "\nL> ";
 	std::cin >> loadModelNumber;
-	while (!CheckForIncorrectModelNumber(loadModelNumber, aModelFilePathList.size()))
+	while (!MW::CheckForIncorrectModelNumber(loadModelNumber, aModelFilePathList.size()))
 	{
 		std::cin.clear();
 		std::cout << "Try again: Which model do you wish to load Give a number between: 0 and " << aModelFilePathList.size() - 1 << std::endl;
@@ -407,7 +286,7 @@ bool ChangeModel(CGameObject* aCurrentGameObject, std::vector<std::string>& aMod
 	aCurrentGameObject->GetComponent<CModelComponent>()->SetModel(aModelFilePathList[loadModelNumber]);
 	aCurrentGameObject->GetComponent<CTransformComponent>()->Transform({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
 
-	if (GetSuffixFromString(aModelFilePathList[loadModelNumber]) == "_SK")
+	if (MW::GetSuffixFromString(aModelFilePathList[loadModelNumber]) == "_SK")
 	{
 		const size_t lastSlashIndex		= aModelFilePathList[loadModelNumber].find_last_of("\\/");
 		const std::string folderPath	= aModelFilePathList[loadModelNumber].substr(0, lastSlashIndex + 1);
@@ -417,12 +296,12 @@ bool ChangeModel(CGameObject* aCurrentGameObject, std::vector<std::string>& aMod
 		std::filesystem::directory_iterator end;
 
 		std::vector<std::string> somePathsToAnimations;
-		for (auto it = start; it != end; ++it)
+		for (auto& it = start; it != end; ++it)
 		{
 			if (it->path().extension() == ".fbx")
 			{
 				const std::string filePath = it->path().filename().string();
-				if (GetSuffixFromString(filePath) == "_AN")
+				if (MW::GetSuffixFromString(filePath) == "_AN")
 				{
 					somePathsToAnimations.emplace_back(folderPath + filePath);
 				}
@@ -488,7 +367,7 @@ void UpdateAnimationTest(CGameObject* aCurrentGameObject,CGameObject* /*aCamera*
 
 //////////////////////////////////// MAIN STARTS HERE ///////////////////////////////////////////////////////////////////
 
-#define RUNNING_ANIMATIONS_TEST
+//#define RUNNING_ANIMATIONS_TEST
 
 #define ASSET_ROOT "Assets"
 #define ASSET_ROOT_ANIMATION_TEST "Assets/3D/Datadriven_Animation_Test"
@@ -545,13 +424,13 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
 #ifdef RUNNING_ANIMATIONS_TEST
 	std::vector<std::string> filePaths;
-	LoadModelPaths(ASSET_ROOT_ANIMATION_TEST, filePaths);
+	MW::LoadModelPaths(ASSET_ROOT_ANIMATION_TEST, filePaths);
 
 	currentGameObject = InitAnimation(filePaths[0]);
 
 #else
 	std::vector<std::string> filePaths;
-	LoadModelPaths(ASSET_ROOT, filePaths);
+	MW::LoadModelPaths(ASSET_ROOT, filePaths);
 	currentGameObject = InitModels(filePaths[0]);
 
 #endif // ! RUNNING_ANIMATIONS
