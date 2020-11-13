@@ -296,15 +296,15 @@ void UpdateAnimationTest(CGameObject* aCurrentGameObject,CGameObject* /*aCamera*
 				aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(2);
 			}
 
-			if (Input::GetInstance()->IsKeyPressed('3'))
-			{
-				aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(3);
-			}
-
-			if (Input::GetInstance()->IsKeyPressed('4'))
-			{
-				aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(4);
-			}
+			//if (Input::GetInstance()->IsKeyPressed('3'))
+			//{
+			//	aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(3);
+			//}
+			//
+			//if (Input::GetInstance()->IsKeyPressed('4'))
+			//{
+			//	aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(4);
+			//}
 
 			aCurrentGameObject->GetComponent<CAnimationComponent>()->Update();
 
