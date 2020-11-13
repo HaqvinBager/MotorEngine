@@ -10,6 +10,7 @@
 #include "CameraComponent.h"
 #include "EnviromentLightComponent.h"
 #include "PlayerControllerComponent.h"
+#include "PointLightComponent.h"
 
 #include <rapidjson\document.h>
 
@@ -56,7 +57,7 @@ void CLevelLoader::CreateLevel(const std::string& aPath)
 	myScene->AddInstance(camera);
 
 	CGameObject* environmentLight = new CGameObject();
-	CEnviromentLightComponent* environmentLightComponent = environmentLight->AddComponent<CEnviromentLightComponent>(*environmentLight, 
+	environmentLight->AddComponent<CEnviromentLightComponent>(*environmentLight, 
 		DirectX::SimpleMath::Vector4(
 			levelData->myEnviromentData.myColorR, 
 			levelData->myEnviromentData.myColorG, 
@@ -68,13 +69,19 @@ void CLevelLoader::CreateLevel(const std::string& aPath)
 			levelData->myEnviromentData.myDirectionZ));
 	//maybe problemo in forwardrenderer - 20-11-11
 	myScene->AddInstance(environmentLight);
-	myScene->AddInstance(environmentLightComponent->GetEnviromentLight());
 
 	std::vector<PointLightDataRaw>& pointLights = levelData->myPointLightData;
 	for (unsigned int i = 0; i < pointLights.size(); ++i)
 	{
-		//CGameObject* pointLightGameObject = new CGameObject();
-		//pointLightGameObject->AddComponent<CPointLightComponent>();
+		CGameObject* pointLightGameObject = new CGameObject();
+		pointLightGameObject->myTransform->Position({levelData->myPointLightData[i].myPosX, levelData->myPointLightData[i].myPosY, levelData->myPointLightData[i].myPosZ});
+		pointLightGameObject->AddComponent<CPointLightComponent>(*pointLightGameObject,
+			levelData->myPointLightData[i].myRange,
+			DirectX::SimpleMath::Vector4(levelData->myPointLightData[i].myColorR,
+			levelData->myPointLightData[i].myColorG, 
+			levelData->myPointLightData[i].myColorB, 
+			levelData->myPointLightData[i].myIntensity));
+		myScene->AddInstance(pointLightGameObject);
 	}
 
 	CGameObject* playerGameObject = new CGameObject();

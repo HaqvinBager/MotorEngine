@@ -4,6 +4,7 @@
 #include "EnvironmentLight.h"
 #include "LightFactory.h"
 #include "TransformComponent.h"
+#include "Scene.h"
 
 CEnviromentLightComponent::CEnviromentLightComponent(CGameObject& aParent, DirectX::SimpleMath::Vector4 aColorAndIntensity, DirectX::SimpleMath::Vector3 aDirection)
 	: CComponent(aParent)
@@ -14,6 +15,7 @@ CEnviromentLightComponent::CEnviromentLightComponent(CGameObject& aParent, Direc
 	//not sure if this work! We want to set the direction of this transform!
 	aParent.myTransform->Transform().Forward(aDirection);
 	myEnvironmentLight->SetDirection(aParent.myTransform->Transform().Forward());
+	CScene::GetInstance()->AddInstance(myEnvironmentLight);
 }
 
 CEnviromentLightComponent::~CEnviromentLightComponent()

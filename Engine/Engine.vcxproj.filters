@@ -109,6 +109,7 @@
     <ClCompile Include="WindowHandler.cpp" />
     <ClCompile Include="AnimatedUIElement.cpp" />
     <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="PointLightComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -204,6 +205,7 @@
     <ClInclude Include="WinInclude.h" />
     <ClInclude Include="AnimatedUIElement.h" />
     <ClInclude Include="Collider.h" />
+    <ClInclude Include="PointLightComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CubeShaderStructs.hlsli" />

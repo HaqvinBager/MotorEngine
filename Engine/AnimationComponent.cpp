@@ -62,7 +62,7 @@ void CAnimationComponent::SetBlend(int anAnimationIndex, int anAnimationIndexTwo
 	myBlend.myBlendLerp = aBlend;
 }
 
-void CAnimationComponent::PlayAnimation(const int anAnimationIndex, bool aIsLooping)
+void CAnimationComponent::PlayAnimation(const int /*anAnimationIndex*/, bool /*aIsLooping*/)
 {
 
 

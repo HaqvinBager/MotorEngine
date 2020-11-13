@@ -117,8 +117,6 @@ LevelData* CUnityLoader::LoadLevelBinary(const std::string& aGameObjectFile)
 	delete[] pointLightData;
 	pointLightData = nullptr;
 
-
-
 	PlayerDataRaw playerRaw;
 	memcpy(&playerRaw, ptr, sizeof(PlayerDataRaw));
 	levelData->myPlayerData = playerRaw;
