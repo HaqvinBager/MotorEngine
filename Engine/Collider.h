@@ -5,7 +5,7 @@
 class CCollider : public CBehaviour
 {
 public:
-	CCollider(CGameObject& aParent) : CBehaviour(aParent), myCollisionLayer(ECollisionLayer::NONE) {}
+	CCollider(CGameObject& aParent, ECollisionLayer aCollisionLayer, uint64_t someCollisionFlags);
 	virtual bool Collided(CCircleColliderComponent* aCollidedGameObject) = 0;
 	virtual bool Collided(CTriangleColliderComponent* aCollidedGameObject) = 0;
 	virtual bool Collided(CRectangleColliderComponent* aCollidedGameObject) = 0;
@@ -14,12 +14,15 @@ public:
 	void OnDisable() override;
 	
 public:
-	const ECollisionLayer GetCollisionLayer() const { return myCollisionLayer;}
+	const ECollisionLayer GetCollisionLayer() const;
 	void SetCollisionLayer(ECollisionLayer aCollisionLayer);
-	const DirectX::SimpleMath::Vector3 GetPosition() const { return myPosition;}
+	const DirectX::SimpleMath::Vector3 GetPosition() const;
 	void SetPosition(DirectX::SimpleMath::Vector3 aPosition);
+	const uint64_t GetCollidesWith() const;
+	void SetCollidesWith(uint64_t someCollisionFlags);
 
 private:
+	uint64_t myCollisionFlags;
 	ECollisionLayer myCollisionLayer;
 	DirectX::SimpleMath::Vector3 myPosition;
 };
