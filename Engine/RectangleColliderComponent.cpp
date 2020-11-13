@@ -4,6 +4,7 @@
 #include "CircleColliderComponent.h"
 #include "CollisionManager.h"
 #include "TransformComponent.h"
+#include "Debug.h"
 
 CRectangleColliderComponent::CRectangleColliderComponent(CGameObject& aParent, float aWidth, float aHeight, ECollisionLayer aCollisionLayer, uint64_t someCollisionFlags) :
 	CCollider(aParent, aCollisionLayer, someCollisionFlags),
@@ -19,44 +20,46 @@ CRectangleColliderComponent::~CRectangleColliderComponent() {
 
 void CRectangleColliderComponent::Awake() {
 
-	DirectX::SimpleMath::Vector3 vector = GameObject().GetComponent<CTransformComponent>()->Position() + GameObject().GetComponent<CTransformComponent>()->Transform().Forward() * (myHeight / 2.0f);
+	DirectX::SimpleMath::Vector3 vector = GameObject().GetComponent<CTransformComponent>()->Position() + GameObject().GetComponent<CTransformComponent>()->Transform().Forward() * (myHeight / 2.0f) * 100.0f;
 
 	SetPosition(GameObject().GetComponent<CTransformComponent>()->Position());
 	
 	//TODO Fix after Merge Conflicts Resolved
-	myMin = vector - GameObject().GetComponent<CTransformComponent>()->Position().Right * (myWidth / 2.0f);
+	myMin = vector - GameObject().GetComponent<CTransformComponent>()->Transform().Right() * (myWidth / 2.0f) * 100.0f;
 	//myMin.z = vector + GameObject().GetComponent<CTransformComponent>()->Position().Right * (myWidth / 2.0f));
 	
-	vector = GameObject().GetComponent<CTransformComponent>()->Position() - GameObject().GetComponent<CTransformComponent>()->Transform().Forward() * (myHeight / 2.0f);
+	vector = GameObject().GetComponent<CTransformComponent>()->Position() - GameObject().GetComponent<CTransformComponent>()->Transform().Forward() * (myHeight / 2.0f) * 100.0f;
 	
 	//TODO Fix after Merge Conflicts Resolved
 	//myVertices.emplace_back(vector - GameObject().GetComponent<CTransformComponent>()->Position().Right * (myWidth / 2.0f));
-	myMax = vector + GameObject().GetComponent<CTransformComponent>()->Position().Right * (myWidth / 2.0f);
+	myMax = vector + GameObject().GetComponent<CTransformComponent>()->Transform().Right() * (myWidth / 2.0f) * 100.0f;
 }
 
 void CRectangleColliderComponent::Start() {
 }
 
-#include "Debug.h"
 void CRectangleColliderComponent::Update() {
 	
 	
-	DirectX::SimpleMath::Vector3 vector = GameObject().GetComponent<CTransformComponent>()->Position() + GameObject().GetComponent<CTransformComponent>()->Transform().Forward() * (myHeight / 2.0f);
+	DirectX::SimpleMath::Vector3 vector = GameObject().GetComponent<CTransformComponent>()->Position() + GameObject().GetComponent<CTransformComponent>()->Transform().Forward() * (myHeight / 2.0f) * 100.0f;
 
 	SetPosition(GameObject().GetComponent<CTransformComponent>()->Position());
 
 	//TODO Fix after Merge Conflicts Resolved
-	myMin = vector - GameObject().GetComponent<CTransformComponent>()->Position().Right * (myWidth / 2.0f);
+	myMin = vector - GameObject().GetComponent<CTransformComponent>()->Transform().Right() * (myWidth / 2.0f) * 100.0f;
 	//myMin.z = vector + GameObject().GetComponent<CTransformComponent>()->Position().Right * (myWidth / 2.0f));
 
-	vector = GameObject().GetComponent<CTransformComponent>()->Position() - GameObject().GetComponent<CTransformComponent>()->Transform().Forward() * (myHeight / 2.0f);
+	vector = GameObject().GetComponent<CTransformComponent>()->Position() - GameObject().GetComponent<CTransformComponent>()->Transform().Forward() * (myHeight / 2.0f) * 100.0f;
 
 	//TODO Fix after Merge Conflicts Resolved
 	//myVertices.emplace_back(vector - GameObject().GetComponent<CTransformComponent>()->Position().Right * (myWidth / 2.0f));
-	myMax = vector + GameObject().GetComponent<CTransformComponent>()->Position().Right * (myWidth / 2.0f);
+	myMax = vector + GameObject().GetComponent<CTransformComponent>()->Transform().Right() * (myWidth / 2.0f) * 100.0f;
 
 	if (GetAsyncKeyState('C')) {
-		CDebug::GetInstance()->DrawLine(myMin, myMax);
+		CDebug::GetInstance()->DrawLine(myMin, { myMax.x, 0.0f, myMin.z });
+		CDebug::GetInstance()->DrawLine(myMin, { myMin.x, 0.0f, myMax.z });
+		CDebug::GetInstance()->DrawLine({ myMax.x, 0.0f, myMin.z }, myMax);
+		CDebug::GetInstance()->DrawLine({ myMin.x, 0.0f, myMax.z }, myMax);
 	}
 }
 

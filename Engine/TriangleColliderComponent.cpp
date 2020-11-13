@@ -1,10 +1,10 @@
 #include "stdafx.h"
-#include "Debug.h"
 #include "TriangleColliderComponent.h"
 #include "CircleColliderComponent.h"
 #include "RectangleColliderComponent.h"
 #include "CollisionManager.h"
 #include "TransformComponent.h"
+#include "Debug.h"
 
 CTriangleColliderComponent::CTriangleColliderComponent(CGameObject& aParent, float aWidth, float aHeight, ECollisionLayer aCollisionLayer, uint64_t someCollisionFlags) :
 	CCollider(aParent, aCollisionLayer, someCollisionFlags),
@@ -20,21 +20,21 @@ CTriangleColliderComponent::~CTriangleColliderComponent() {
 
 
 void CTriangleColliderComponent::Awake() {
-	DirectX::SimpleMath::Vector3 vector = GameObject().GetComponent<CTransformComponent>()->Position() + GameObject().GetComponent<CTransformComponent>()->Transform().Forward() * myHeight;
+	DirectX::SimpleMath::Vector3 vector = GameObject().GetComponent<CTransformComponent>()->Position() + GameObject().GetComponent<CTransformComponent>()->Transform().Forward() * myHeight * 100.0f;
 
 	SetPosition(GameObject().GetComponent<CTransformComponent>()->Position()); //Verex 0
-	myLeftVertex = (vector - GameObject().GetComponent<CTransformComponent>()->Transform().Right() * (myWidth / 2.0f)); //Verex 1
-	myRightVertex = (vector + GameObject().GetComponent<CTransformComponent>()->Transform().Right() * (myWidth / 2.0f)); //Verex 2
+	myLeftVertex = (vector - GameObject().GetComponent<CTransformComponent>()->Transform().Right() * (myWidth / 2.0f) * 100.0f); //Verex 1
+	myRightVertex = (vector + GameObject().GetComponent<CTransformComponent>()->Transform().Right() * (myWidth / 2.0f) * 100.0f); //Verex 2
 }
 
 void CTriangleColliderComponent::Start() {
 }
 
 void CTriangleColliderComponent::Update() {
-	DirectX::SimpleMath::Vector3 vector = GameObject().GetComponent<CTransformComponent>()->Position() + GameObject().GetComponent<CTransformComponent>()->Transform().Forward() * myHeight;
+	DirectX::SimpleMath::Vector3 vector = GameObject().GetComponent<CTransformComponent>()->Position() + GameObject().GetComponent<CTransformComponent>()->Transform().Forward() * myHeight * 100.0f;
 	SetPosition(GameObject().GetComponent<CTransformComponent>()->Position());
-	myLeftVertex = vector - GameObject().GetComponent<CTransformComponent>()->Transform().Right() * (myWidth / 2.0f);
-	myRightVertex = vector + GameObject().GetComponent<CTransformComponent>()->Transform().Right() * (myWidth / 2.0f);
+	myLeftVertex = vector - GameObject().GetComponent<CTransformComponent>()->Transform().Right() * (myWidth / 2.0f) * 100.0f;
+	myRightVertex = vector + GameObject().GetComponent<CTransformComponent>()->Transform().Right() * (myWidth / 2.0f) * 100.0f;
 
 	if (GetAsyncKeyState('C')) {
 
