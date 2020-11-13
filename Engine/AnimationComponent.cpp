@@ -19,22 +19,24 @@ CAnimationComponent::~CAnimationComponent()
 }
 
 void CAnimationComponent::Awake()
-{}
+{
+	SetBonesToIdentity();
+}
 
 void CAnimationComponent::Start()
 {}
 
 void CAnimationComponent::Update()
 {
-	//float dt = CTimer::Dt();
-	//for (CAnimation* anim : GameObject().GetComponent<CModelComponent>()->GetMyModel()->GetAnimations())
-	//{
-	//	//anim->Step(dt);
-	//}
+	float dt = CTimer::Dt();
+	for (CAnimation* anim : GameObject().GetComponent<CModelComponent>()->GetMyModel()->GetAnimations())
+	{
+		anim->Step(dt);
+	}
 
 	SetBonesToIdentity();
 
-	//GetAnimatedTransforms(dt, myBones.data());	
+	GetAnimatedTransforms(dt, myBones.data());	
 }
 
 void CAnimationComponent::OnEnable()
