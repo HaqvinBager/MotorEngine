@@ -278,6 +278,8 @@ void UpdateAnimationTest(CGameObject* aCurrentGameObject,CGameObject* /*aCamera*
 		
 			//aCurrentGameObject->GetComponent<CAnimationComponent>()->Update();
 
+			aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(1);
+
 			float current = floor(aCurrentGameObject->GetComponent<CAnimationComponent>()->GetBlend());
 			if (Input::GetInstance()->IsKeyPressed(VK_LEFT))
 			{

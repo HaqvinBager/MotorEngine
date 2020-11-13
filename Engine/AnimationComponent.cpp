@@ -31,12 +31,12 @@ void CAnimationComponent::Update()
 	float dt = CTimer::Dt();
 	for (CAnimation* anim : GameObject().GetComponent<CModelComponent>()->GetMyModel()->GetAnimations())
 	{
-		anim->Step(dt);
+		anim->BlendStep(dt);
 	}
 
 	SetBonesToIdentity();
 
-	GetAnimatedTransforms(dt, myBones.data());	
+	GetAnimatedBlendTransforms(dt, myBones.data());	
 }
 
 void CAnimationComponent::OnEnable()
@@ -44,6 +44,16 @@ void CAnimationComponent::OnEnable()
 void CAnimationComponent::OnDisable()
 {}
 
+void CAnimationComponent::GetAnimatedBlendTransforms(float dt, SlimMatrix44 * transforms)
+{
+	dt;
+	CModel* model = GameObject().GetComponent<CModelComponent>()->GetMyModel();
+	if(model->GetAnimations().size() > 0)
+	{
+		CAnimation* first = model->GetAnimations()[0];
+		first->BoneTransformsWithBlend(transforms, myBlend.myBlendLerp);
+	}
+}
 void CAnimationComponent::GetAnimatedTransforms(float dt, SlimMatrix44 * transforms)
 {
 	dt;
@@ -51,7 +61,7 @@ void CAnimationComponent::GetAnimatedTransforms(float dt, SlimMatrix44 * transfo
 	if(model->GetAnimations().size() > 0)
 	{
 		CAnimation* first = model->GetAnimations()[0];
-		first->BoneTransformWithBlend(transforms, myBlend.myBlendLerp);
+		first->BoneTransforms(transforms);
 	}
 }
 
@@ -64,8 +74,12 @@ void CAnimationComponent::SetBlend(int anAnimationIndex, int anAnimationIndexTwo
 
 void CAnimationComponent::PlayAnimation(const int anAnimationIndex, bool aIsLooping)
 {
+	aIsLooping;
 
+	GameObject().GetComponent<CModelComponent>()->GetMyModel()->GetAnimations();
 
+	myBlend.mySecond = anAnimationIndex;
+	myBlend.myFirst = anAnimationIndex;
 
 	float dt = CTimer::Dt();
 	for (CAnimation* anim : GameObject().GetComponent<CModelComponent>()->GetMyModel()->GetAnimations())

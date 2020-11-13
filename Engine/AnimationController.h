@@ -136,7 +136,11 @@ public:
 	{
 	}
 
-	void ReadNodeHeirarchy(const aiScene* aScene, float anAnimationTime, const aiNode* aNode, const aiMatrix4x4& aParentTransform, int aStopAnimAtLevel)
+	void ReadNodeHeirarchy(	const aiScene* aScene
+							, float anAnimationTime
+							, const aiNode* aNode
+							, const aiMatrix4x4& aParentTransform
+							, int aStopAnimAtLevel)
 	{
 		float animationTime(anAnimationTime);
 
@@ -269,7 +273,7 @@ public:
 		}
 	}
 
-	void BoneTransform(std::vector<aiMatrix4x4>& aTransformsVector)
+	void BoneTransformWithBlend(std::vector<aiMatrix4x4>& aTransformsVector)
 	{
 		aiMatrix4x4 Identity;// Used for ReadNodeHierarchy
 		InitIdentityM4(Identity);
@@ -300,9 +304,9 @@ public:
 			// ! Animation time for the second anim ( 1 )
 
 			ReadNodeHeirarchy(	myScenes[myPrevAnimIndex], myScenes[myCurSceneIndex]
-								, AnimationTime0, AnimationTime1
-								, myScenes[myPrevAnimIndex]->mRootNode, myScenes[myCurSceneIndex]->mRootNode
-								, Identity, /*stopAnimLevel=*/2);
+							  , AnimationTime0, AnimationTime1
+							  , myScenes[myPrevAnimIndex]->mRootNode, myScenes[myCurSceneIndex]->mRootNode
+							  , Identity, /*stopAnimLevel=*/2);
 			// Using identity matrix since there is no parent. Means there is no transformation being made on the matrix for the animation.
 		}
 		else// There is only one animation to play. No blending.
@@ -324,6 +328,28 @@ public:
 			aTransformsVector[i] = myBoneInfo[i].myFinalTransformation;
 		}
 	}
+	void BoneTransform(std::vector<aiMatrix4x4>& aTransformsVector)
+	{
+		aiMatrix4x4 identity;// Used for ReadNodeHierarchy
+		InitIdentityM4(identity);
+
+		float TicksPerSecond = 
+			static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mTicksPerSecond) != 0 
+			? 
+			static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mTicksPerSecond) : 25.0f;
+		float TimeInTicks = myAnimationTimePrev * TicksPerSecond;
+		float AnimationTime = fmodf(TimeInTicks, static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration));
+
+		ReadNodeHeirarchy(myScenes[myCurSceneIndex], AnimationTime, myScenes[myCurSceneIndex]->mRootNode, identity, 2);
+
+		aTransformsVector.resize(myNumOfBones);
+
+		for (uint i = 0; i < myNumOfBones; i++)
+		{
+			aTransformsVector[i] = myBoneInfo[i].myFinalTransformation;
+		}
+	}
+
 
 	void LoadBones(uint aMeshIndex, const aiMesh* aMesh)
 	{
@@ -463,25 +489,24 @@ public:
 		}
 	}
 
-
 	void UpdateFrame()
 	{
 		float dt = CTimer::Dt();
 		
-		
-		
-		myAnimationTimeCurrent += dt;
-		
+		//myAnimationTimeCurrent += dt;
+		//myAnimationTimePrev += dt;
 
-		/*if (myTemporary)
-		{
-			myPlayTime -= dt;
-			if (myPlayTime <= 0.f)
-			{
-				myTemporary = false;
-				SetAnimIndex(myPrevAnimIndex);
-			}
-		}*/
+		myAnimationTimePrev += dt;
+
+		//if (myTemporary)
+		//{
+		//	myPlayTime -= dt;
+		//	if (myPlayTime <= 0.f)
+		//	{
+		//		myTemporary = false;
+		//		SetAnimIndex(myPrevAnimIndex);
+		//	}
+		//}
 	}
 
 	bool Add3DAnimFromFile(const std::string& fileName)

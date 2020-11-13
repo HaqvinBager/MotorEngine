@@ -21,11 +21,18 @@ void CAnimation::Init(const char* aRig, std::vector<std::string>& somePathsToAni
 	myController->SetAnimIndex(1, true, 0.0f);
 	myController->SetAnimIndex(2, true, 5.0f);
 }
-void CAnimation::BoneTransformWithBlend(SlimMatrix44* Transforms, float aBlendFactor)
+void CAnimation::BoneTransformsWithBlend(SlimMatrix44* Transforms, float aBlendFactor)
+{
+	std::vector<aiMatrix4x4> trans;
+	myController->BoneTransformWithBlend(trans);
+	myController->SetBlendTime(aBlendFactor);
+
+	memcpy(&Transforms[0], &trans[0], (sizeof(float) * 16) * trans.size());
+}
+void CAnimation::BoneTransforms(SlimMatrix44* Transforms)
 {
 	std::vector<aiMatrix4x4> trans;
 	myController->BoneTransform(trans);
-	myController->SetBlendTime(aBlendFactor);
 
 	memcpy(&Transforms[0], &trans[0], (sizeof(float) * 16) * trans.size());
 }
