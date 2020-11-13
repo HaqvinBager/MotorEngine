@@ -101,6 +101,24 @@ LevelData* CUnityLoader::LoadLevelBinary(const std::string& aGameObjectFile)
 	levelData->myEnviromentData = enviromentRaw;
 	ptr += sizeof(EnviromentDataRaw);
 
+	unsigned int lightCount = 0;
+	memcpy(&lightCount, ptr, sizeof(int));
+	ptr += sizeof(int);
+
+	PointLightDataRaw* pointLightData = new PointLightDataRaw[lightCount];
+	memcpy(pointLightData, ptr, sizeof(PointLightDataRaw) * lightCount);
+	ptr += sizeof(PointLightDataRaw) * lightCount;
+
+	levelData->myPointLightData.reserve(lightCount);
+	for (unsigned int i = 0; i < lightCount; ++i)
+	{
+		levelData->myPointLightData.emplace_back(pointLightData[i]);
+	}
+	delete[] pointLightData;
+	pointLightData = nullptr;
+
+
+
 	PlayerDataRaw playerRaw;
 	memcpy(&playerRaw, ptr, sizeof(PlayerDataRaw));
 	levelData->myPlayerData = playerRaw;

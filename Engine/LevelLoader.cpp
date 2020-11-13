@@ -70,6 +70,13 @@ void CLevelLoader::CreateLevel(const std::string& aPath)
 	myScene->AddInstance(environmentLight);
 	myScene->AddInstance(environmentLightComponent->GetEnviromentLight());
 
+	std::vector<PointLightDataRaw>& pointLights = levelData->myPointLightData;
+	for (unsigned int i = 0; i < pointLights.size(); ++i)
+	{
+		//CGameObject* pointLightGameObject = new CGameObject();
+		//pointLightGameObject->AddComponent<CPointLightComponent>();
+	}
+
 	CGameObject* playerGameObject = new CGameObject();
 	playerGameObject->myTransform->Position({ levelData->myPlayerData.myPosX, levelData->myPlayerData.myPosY,levelData->myPlayerData.myPosZ });
 	playerGameObject->myTransform->Rotation({ levelData->myPlayerData.myRotX, levelData->myPlayerData.myRotX, levelData->myPlayerData.myRotX });

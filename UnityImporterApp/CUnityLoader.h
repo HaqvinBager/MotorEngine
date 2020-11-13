@@ -26,6 +26,20 @@ public:
 	float myIntensity;
 };
 
+class PointLightDataRaw
+{
+public:
+	int myInstanceID;
+	float myPosX;
+	float myPosY;
+	float myPosZ;
+	float myRange;
+	float myColorR;
+	float myColorG;
+	float myColorB;
+	float myIntensity;
+};
+
 class PlayerDataRaw
 {
 public:
@@ -102,9 +116,12 @@ class LevelData {
 public:
 	CameraDataRaw myCameraData;
 	EnviromentDataRaw myEnviromentData;
+	std::vector<PointLightDataRaw> myPointLightData;
 	PlayerDataRaw myPlayerData;
 	std::vector<AssetDataRaw> myModelData;
 	std::map<int, std::string> myModelPaths;
+	
+
 };
 
 enum EReadMode
