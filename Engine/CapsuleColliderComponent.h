@@ -1,5 +1,5 @@
 #pragma once
-#include "Behaviour.h"
+#include "Collider.h"
 
 namespace DirectX {
 	namespace SimpleMath {
@@ -7,19 +7,22 @@ namespace DirectX {
 	}
 }
 
-class CCapsuleColliderComponent : public CBehaviour
+class CCapsuleColliderComponent : public CCollider
 {
 	friend class CIntersectionManager;
 
 public:
-	CCapsuleColliderComponent(CGameObject& aParent, float aRadius, float aHeight);
+	CCapsuleColliderComponent(CGameObject& aParent, float aRadius, float aHeight, ECollisionLayer aCollisionLayer);
 	~CCapsuleColliderComponent() override;
 
 	void Awake() override;
 	void Start() override;
 	void Update()override;
 
-	void Collided(CGameObject* aCollidedGameObject) override;
+	bool Collided(CCircleColliderComponent* aCollidedGameObject) override;
+	bool Collided(CTriangleColliderComponent* aCollidedGameObject) override;
+	bool Collided(CRectangleColliderComponent* aCollidedGameObject) override;
+	bool Collided(CCollider* aCollidedGameObject) override;
 
 	void OnEnable() override;
 	void OnDisable() override;
@@ -27,7 +30,6 @@ public:
 private:
 	float myRadius;
 	float myHeight;
-	DirectX::SimpleMath::Vector3 myBase;
-	DirectX::SimpleMath::Vector3 myTip;
+	DirectX::SimpleMath::Vector3 myTop;
 };
 
