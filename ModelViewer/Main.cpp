@@ -85,56 +85,24 @@ void Update(std::vector<std::string>& aModelFilePathList, CGameObject* aCurrentG
 	float dt = CTimer::Dt();
 
 	float cameraMoveSpeed = 500.0f;
-	if (Input::GetInstance()->IsKeyDown(VK_UP))
-	{
-		aCamera->myTransform->MoveLocal({ 0.0f, 0.0f, cameraMoveSpeed * dt});
-	}
-	if (Input::GetInstance()->IsKeyDown(VK_DOWN))
-	{
-		aCamera->myTransform->MoveLocal({ 0.0f, 0.0f, -cameraMoveSpeed * dt });
-	}
-	if (Input::GetInstance()->IsKeyDown(VK_RIGHT))
-	{
-		aCamera->myTransform->MoveLocal({ cameraMoveSpeed * dt, 0.0f, 0.0f });
-	}
-	if (Input::GetInstance()->IsKeyDown(VK_LEFT))
-	{
-		aCamera->myTransform->MoveLocal({ -cameraMoveSpeed * dt, 0.0f, 0.0f });
-	}
+	if (Input::GetInstance()->IsKeyDown(VK_UP)) {		aCamera->myTransform->MoveLocal({ 0.0f, 0.0f, cameraMoveSpeed * dt}); }
+	if (Input::GetInstance()->IsKeyDown(VK_DOWN)) {		aCamera->myTransform->MoveLocal({ 0.0f, 0.0f, -cameraMoveSpeed * dt }); }
+	if (Input::GetInstance()->IsKeyDown(VK_RIGHT)) {	aCamera->myTransform->MoveLocal({ cameraMoveSpeed * dt, 0.0f, 0.0f }); }
+	if (Input::GetInstance()->IsKeyDown(VK_LEFT)) {		aCamera->myTransform->MoveLocal({ -cameraMoveSpeed * dt, 0.0f, 0.0f }); }
 
 	// Rotation functions
 	float rotationSpeed = 1.0f;
 	// X axis
-	if (Input::GetInstance()->IsKeyDown('R'))
-	{
-		aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ rotationSpeed * dt,0.0f,0.0f });
-	}
-
-	if (Input::GetInstance()->IsKeyDown('F'))
-	{
-		aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ -rotationSpeed * dt,0.0f,0.0f });
-	}
-
-	// Y axis
-	if (Input::GetInstance()->IsKeyDown('T'))
-	{
-		aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ 0.0f, rotationSpeed * dt,0.0f });
-	}
-
-	if (Input::GetInstance()->IsKeyDown('G'))
-	{
-		aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ 0.0f, -rotationSpeed * dt,0.0f });
-	}
-
-	// Z axis
-	if (Input::GetInstance()->IsKeyDown('Y'))
-	{
-		aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ 0.0f,0.0f,rotationSpeed * dt });
-	}
-	if (Input::GetInstance()->IsKeyDown('H'))
-	{
-		aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ 0.0f,0.0f,-rotationSpeed * dt });
-	}
+	if (Input::GetInstance()->IsKeyDown('R')){	aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ rotationSpeed * dt,0.0f,0.0f });	}
+	if (Input::GetInstance()->IsKeyDown('F')){	aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ -rotationSpeed * dt,0.0f,0.0f }); }
+											   
+	// Y axis								   
+	if (Input::GetInstance()->IsKeyDown('T')){	aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ 0.0f, rotationSpeed * dt,0.0f });	 }
+	if (Input::GetInstance()->IsKeyDown('G')){	aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ 0.0f, -rotationSpeed * dt,0.0f }); }
+											   
+	// Z axis								   
+	if (Input::GetInstance()->IsKeyDown('Y')) { aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ 0.0f,0.0f,rotationSpeed * dt });	}
+	if (Input::GetInstance()->IsKeyDown('H')){	aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ 0.0f,0.0f,-rotationSpeed * dt }); }
 
 	// ! Rotation Functions 
 
@@ -142,38 +110,16 @@ void Update(std::vector<std::string>& aModelFilePathList, CGameObject* aCurrentG
 	float moveSpeed = 5.0f;
 	// X axis
 
-	if (Input::GetInstance()->IsKeyDown('A'))
-	{
-		aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ moveSpeed * dt, 0.0f, 0.0f });
-	}
-
-	if (Input::GetInstance()->IsKeyDown('D'))
-	{
-		aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ -moveSpeed * dt, 0.0f, 0.0f });
-	}
+	if (Input::GetInstance()->IsKeyDown('A')){	aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ moveSpeed * dt, 0.0f, 0.0f });	}
+	if (Input::GetInstance()->IsKeyDown('D')){	aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ -moveSpeed * dt, 0.0f, 0.0f });	}
 
 	// Y axis
-	if (Input::GetInstance()->IsKeyDown('Q'))
-	{
-		aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ 0.0f, moveSpeed * dt, 0.0f });
-	}
-
-	if (Input::GetInstance()->IsKeyDown('E'))
-	{
-		aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ 0.0f, -moveSpeed * dt, 0.0f });
-	}
+	if (Input::GetInstance()->IsKeyDown('Q')){	aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ 0.0f, moveSpeed * dt, 0.0f });	}
+	if (Input::GetInstance()->IsKeyDown('E')){	aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ 0.0f, -moveSpeed * dt, 0.0f }); }
 
 	// Z axis
-
-	if (Input::GetInstance()->IsKeyDown('W'))
-	{
-		aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ 0.0f, 0.0f, -moveSpeed * dt });
-	}
-
-	if (Input::GetInstance()->IsKeyDown('S'))
-	{
-		aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ 0.0f, 0.0f, moveSpeed * dt });
-	}
+	if (Input::GetInstance()->IsKeyDown('W')){	aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ 0.0f, 0.0f, -moveSpeed * dt }); }
+	if (Input::GetInstance()->IsKeyDown('S')){	aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ 0.0f, 0.0f, moveSpeed * dt });	}
 	// ! Zoom/ move functions
 
 	// Reset function
@@ -215,7 +161,6 @@ void Update(std::vector<std::string>& aModelFilePathList, CGameObject* aCurrentG
 
 	}
 }
-
 
 /// <Data driven animations test notes>
 /// 
@@ -364,10 +309,9 @@ void UpdateAnimationTest(CGameObject* aCurrentGameObject,CGameObject* /*aCamera*
 }
 
 
-
 //////////////////////////////////// MAIN STARTS HERE ///////////////////////////////////////////////////////////////////
 
-//#define RUNNING_ANIMATIONS_TEST
+#define RUNNING_ANIMATIONS_TEST
 
 #define ASSET_ROOT "Assets"
 #define ASSET_ROOT_ANIMATION_TEST "Assets/3D/Datadriven_Animation_Test"
@@ -394,7 +338,6 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	if (!shouldRun)
 		return 1;
 
-
 // CAMERA
 	CGameObject* camera = new CGameObject();
 	/*CCameraComponent* camComp = */camera->AddComponent<CCameraComponent>(*camera);
@@ -405,7 +348,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		CScene::GetInstance()->SetMainCamera(camera->GetComponent<CCameraComponent>());
 // ENV LIGHT
 	CEnvironmentLight* environmentLight = CLightFactory::GetInstance()->CreateEnvironmentLight("Yokohama2.dds");
-		environmentLight->SetDirection(SM::Vector3(0, 0, -1));
+		environmentLight->SetDirection(SM::Vector3(0, -1, -1));
 		environmentLight->SetColor(SM::Vector3(1.0f, 1.0f, 1.0f));
 		environmentLight->SetIntensity(1.0f);
 		CScene::GetInstance()->AddInstance(environmentLight);
