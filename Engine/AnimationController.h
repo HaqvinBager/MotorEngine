@@ -432,7 +432,6 @@ public:
 
 	void Update()
 	{
-
 		float dt = CTimer::Dt();
 		
 		myAnimationTimePrev += dt;

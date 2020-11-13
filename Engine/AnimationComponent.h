@@ -29,7 +29,6 @@ public:
 public:
 	CAnimation* GetMyAnimation() { return myAnimation; }
 	const float GetBlend() const { return myBlend.myBlendLerp; }
-	
 
 public:
 	std::array<SlimMatrix44, 64> GetBones() { return myBones; }
@@ -37,6 +36,8 @@ public:
 	void SetBlend(int anAnimationIndex, int anAnimationIndexTwo, float aBlend);
 
 private:
+	void SetBonesToIdentity();
+
 	CAnimation* myAnimation;
 	std::array<SlimMatrix44, 64> myBones { };
 	SAnimationBlend myBlend;
