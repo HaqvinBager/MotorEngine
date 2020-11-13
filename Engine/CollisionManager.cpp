@@ -1,10 +1,11 @@
 #include "stdafx.h"
 #include "CollisionManager.h"
 #include "IntersectionManager.h"
-#include "CapsuleColliderComponent.h"
-#include "TriangleColliderComponent.h"
-#include "CircleColliderComponent.h"
-#include "RectangleColliderComponent.h"
+//#include "CapsuleColliderComponent.h"
+//#include "TriangleColliderComponent.h"
+//#include "CircleColliderComponent.h"
+//#include "RectangleColliderComponent.h"
+#include "Collider.h"
 #include "TransformComponent.h"
 #include <SimpleMath.h>
 

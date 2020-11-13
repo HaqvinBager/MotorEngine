@@ -108,6 +108,7 @@
     <ClCompile Include="VFXRenderer.cpp" />
     <ClCompile Include="WindowHandler.cpp" />
     <ClCompile Include="AnimatedUIElement.cpp" />
+    <ClCompile Include="Collider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -202,6 +203,7 @@
     <ClInclude Include="WindowHandler.h" />
     <ClInclude Include="WinInclude.h" />
     <ClInclude Include="AnimatedUIElement.h" />
+    <ClInclude Include="Collider.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CubeShaderStructs.hlsli" />
