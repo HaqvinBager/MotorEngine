@@ -21,11 +21,18 @@ void CAnimation::Init(const char* aRig, std::vector<std::string>& somePathsToAni
 	myController->SetAnimIndex(1, true, 0.0f);
 	myController->SetAnimIndex(2, true, 5.0f);
 }
-void CAnimation::BoneTransformWithBlend(SlimMatrix44* Transforms, float aBlendFactor)
+void CAnimation::BoneTransformsWithBlend(SlimMatrix44* Transforms, float aBlendFactor)
+{
+	std::vector<aiMatrix4x4> trans;
+	myController->BoneTransformWithBlend(trans);
+	myController->SetBlendTime(aBlendFactor);
+
+	memcpy(&Transforms[0], &trans[0], (sizeof(float) * 16) * trans.size());
+}
+void CAnimation::BoneTransforms(SlimMatrix44* Transforms)
 {
 	std::vector<aiMatrix4x4> trans;
 	myController->BoneTransform(trans);
-	myController->SetBlendTime(aBlendFactor);
 
 	memcpy(&Transforms[0], &trans[0], (sizeof(float) * 16) * trans.size());
 }
@@ -38,6 +45,7 @@ void CAnimation::BlendStep(float aDelta)
 
 void CAnimation::Step(float aDelta)
 {
+
 	myTotalAnimationTime += aDelta;
 	myController->UpdateFrame();
 }
@@ -45,6 +53,11 @@ void CAnimation::Step(float aDelta)
 const size_t CAnimation::GetNrOfAnimations() const
 {
 	return myController->GetNrOfAnimations(); 
+}
+
+void CAnimation::SetCurAnimationScene(const int aCurAnimScene)
+{
+	myController->SetCurSceneIndex(aCurAnimScene);
 }
 
 // Old: before 2020 11 13

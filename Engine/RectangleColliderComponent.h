@@ -12,7 +12,7 @@ class CRectangleColliderComponent : public CCollider
 	friend class CIntersectionManager;
 
 public:
-	CRectangleColliderComponent(CGameObject& aParent, float aWidth, float aHeight, ECollisionLayer aCollisionLayer);
+	CRectangleColliderComponent(CGameObject& aParent, float aWidth, float aHeight, ECollisionLayer aCollisionLayer, uint64_t someCollisionFlags);
 	~CRectangleColliderComponent() override;
 
 	void Awake() override;

@@ -278,20 +278,44 @@ void UpdateAnimationTest(CGameObject* aCurrentGameObject,CGameObject* /*aCamera*
 		
 			//aCurrentGameObject->GetComponent<CAnimationComponent>()->Update();
 
-			float current = floor(aCurrentGameObject->GetComponent<CAnimationComponent>()->GetBlend());
-			if (Input::GetInstance()->IsKeyPressed(VK_LEFT))
+			
+			
+			
+			if (Input::GetInstance()->IsKeyPressed('0'))
 			{
-				//current = (current > 0.0f ? current - 1.0f : current );
-				current = 0.0f;
+				aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(0);
+				
 			}
-			if (Input::GetInstance()->IsKeyPressed(VK_RIGHT))
+			if (Input::GetInstance()->IsKeyPressed('1'))
 			{
-				//current = (current < static_cast<float>(aCurrentGameObject->GetComponent<CAnimationComponent>()->GetMyAnimation()->GetNrOfAnimations()) ? current + 1.0f : current);
-				current = 1.0f;
+				aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(1);
 			}
+
+			if (Input::GetInstance()->IsKeyPressed('2'))
+			{
+				aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(2);
+			}
+
+			if (Input::GetInstance()->IsKeyPressed('3'))
+			{
+				aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(3);
+			}
+
+			if (Input::GetInstance()->IsKeyPressed('4'))
+			{
+				aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(4);
+			}
+
+			aCurrentGameObject->GetComponent<CAnimationComponent>()->Update();
+
+
+
+
+
+
 			//int other = (current - 1.0f < 0.0f ? static_cast<int>(current) + 1 : static_cast<int>(current) - 1);
 			//aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(other, static_cast<int>(current), current);
-			aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(0, 1, current);
+			/*aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(0, 1, current);*/
 			//std::cout << " c " << current << std::endl;
 			//std::cout << " o " << other << std::endl;
 			//std::cout << " NrOfAnims " << static_cast<int>(aCurrentGameObject->GetComponent<CAnimationComponent>()->GetMyAnimation()->GetNrOfAnimations()) << std::endl;

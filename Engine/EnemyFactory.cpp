@@ -36,7 +36,9 @@ CGameObject& CEnemyFactory::CreateEnemy(DirectX::SimpleMath::Vector3 aPosition, 
 	enemy->myTransform->Position(aPosition);
 	enemy->myTransform->Rotation({ 0.0f, 0.0f, 0.0f });
 
-	enemy->AddComponent<CCircleColliderComponent>(*enemy, 0.5f, ECollisionLayer::ENEMY);
+
+	enemy->AddComponent<CCircleColliderComponent>(*enemy, 0.5f, ECollisionLayer::ENEMY, static_cast<int>(ECollisionLayer::ENEMY) | static_cast<int>(ECollisionLayer::FLOOR));
+
 	/*auto modelComponent =*/ enemy->AddComponent<CModelComponent>(*enemy, "Assets/3D/Character/CH_NPC_enemy_01_19G4_1_19/CH_NPC_enemy_01_19G4_1_19.fbx");
 
 	enemy->AddComponent<CStatsComponent>(*enemy, aHealth, aDamage, aMoveSpeed, aCooldown);

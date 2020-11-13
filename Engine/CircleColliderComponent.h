@@ -12,7 +12,7 @@ class CCircleColliderComponent : public CCollider
 	friend class CIntersectionManager;
 
 public:
-	CCircleColliderComponent(CGameObject& aParent, float aRadius, ECollisionLayer aCollisionLayer);
+	CCircleColliderComponent(CGameObject& aParent, float aRadius, ECollisionLayer aCollisionLayer, uint64_t someCollisionFlags);
 	~CCircleColliderComponent() override;
 
 	void Awake() override;

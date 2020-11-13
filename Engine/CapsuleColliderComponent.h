@@ -12,7 +12,7 @@ class CCapsuleColliderComponent : public CCollider
 	friend class CIntersectionManager;
 
 public:
-	CCapsuleColliderComponent(CGameObject& aParent, float aRadius, float aHeight, ECollisionLayer aCollisionLayer);
+	CCapsuleColliderComponent(CGameObject& aParent, float aRadius, float aHeight, ECollisionLayer aCollisionLayer, uint64_t someCollisionFlags);
 	~CCapsuleColliderComponent() override;
 
 	void Awake() override;

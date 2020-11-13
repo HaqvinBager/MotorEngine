@@ -6,8 +6,8 @@
 #include "TransformComponent.h"
 #include "Debug.h"
 
-CCircleColliderComponent::CCircleColliderComponent(CGameObject& aParent, float aRadius, ECollisionLayer aCollisionLayer) :
-	CCollider(aParent),
+CCircleColliderComponent::CCircleColliderComponent(CGameObject& aParent, float aRadius, ECollisionLayer aCollisionLayer, uint64_t someCollisionFlags) :
+	CCollider(aParent, aCollisionLayer, someCollisionFlags),
 	myRadius(aRadius)
 {
 	CCollisionManager::GetInstance()->RegisterCollider(this);

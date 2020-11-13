@@ -3,8 +3,8 @@
 #include "TransformComponent.h"
 #include "CollisionManager.h"
 
-CCapsuleColliderComponent::CCapsuleColliderComponent(CGameObject& aParent, float aRadius, float aHeight, ECollisionLayer aCollisionLayer) 
-	: CCollider(aParent)
+CCapsuleColliderComponent::CCapsuleColliderComponent(CGameObject& aParent, float aRadius, float aHeight, ECollisionLayer aCollisionLayer, uint64_t someCollisionFlags)
+	: CCollider(aParent, aCollisionLayer, someCollisionFlags)
 	, myRadius(aRadius)
 	, myHeight(aHeight) 
 {

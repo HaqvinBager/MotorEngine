@@ -5,8 +5,8 @@
 #include "CollisionManager.h"
 #include "TransformComponent.h"
 
-CRectangleColliderComponent::CRectangleColliderComponent(CGameObject& aParent, float aWidth, float aHeight, ECollisionLayer aCollisionLayer) :
-	CCollider(aParent),
+CRectangleColliderComponent::CRectangleColliderComponent(CGameObject& aParent, float aWidth, float aHeight, ECollisionLayer aCollisionLayer, uint64_t someCollisionFlags) :
+	CCollider(aParent, aCollisionLayer, someCollisionFlags),
 	myWidth(aWidth),
 	myHeight(aHeight)
 {

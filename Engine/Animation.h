@@ -12,11 +12,16 @@ public:
 
 	void Init(const char* aRig, std::vector<std::string>& somePathsToAnimations);
 
-	void BoneTransformWithBlend(SlimMatrix44* Transforms, float aBlendFactor);
+	void BoneTransformsWithBlend(SlimMatrix44* Transforms, float aBlendFactor);
+	void BoneTransforms(SlimMatrix44* Transforms);
 	void BlendStep(float aDelta);
 	void Step(float aDelta);
 
 	const size_t GetNrOfAnimations() const;
+
+public: 
+
+	void SetCurAnimationScene(const int aCurAnimScene);
 
 private:
 	float myTotalAnimationTime = 0;

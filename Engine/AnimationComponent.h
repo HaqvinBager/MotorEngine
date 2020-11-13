@@ -4,6 +4,8 @@
 #include "SimpleMath.h"
 #include "ModelMath.h"
 
+// REMINDER: CANIMATION IS UNUSED, CMODELCOMPONENT HAS ITS OWN CANIMATION THAT IT USES
+
 struct SAnimationBlend
 {
 	int myFirst = -1;
@@ -32,15 +34,18 @@ public:
 
 public:
 	std::array<SlimMatrix44, 64> GetBones() { return myBones; }
+	void GetAnimatedBlendTransforms(float dt, SlimMatrix44* transforms);
 	void GetAnimatedTransforms(float dt, SlimMatrix44* transforms);
 	void SetBlend(int anAnimationIndex, int anAnimationIndexTwo, float aBlend);
 	void PlayAnimation(const int anAnimationIndex, bool aIsLooping = false);
-
+	
 private:
 	void SetBonesToIdentity();
 
 	CAnimation* myAnimation;
 	std::array<SlimMatrix44, 64> myBones { };
 	SAnimationBlend myBlend;
+	bool myIsLooping;
+
 
 };
