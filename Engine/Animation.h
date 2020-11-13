@@ -13,6 +13,7 @@ public:
 	void Init(const char* aRig, std::vector<std::string>& somePathsToAnimations);
 
 	void BoneTransformWithBlend(SlimMatrix44* Transforms, float aBlendFactor);
+	void BlendStep(float aDelta);
 	void Step(float aDelta);
 
 	const size_t GetNrOfAnimations() const;

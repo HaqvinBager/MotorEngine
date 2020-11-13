@@ -430,11 +430,10 @@ public:
 		return ret;
 	}
 
-	void Update()
+	void UpdateBlendFrame()
 	{
-
 		float dt = CTimer::Dt();
-		
+
 		myAnimationTimePrev += dt;
 		if (myBlendingTime > 0.f)
 		{
@@ -462,6 +461,27 @@ public:
 				SetAnimIndex(myPrevAnimIndex);
 			}
 		}
+	}
+
+
+	void UpdateFrame()
+	{
+		float dt = CTimer::Dt();
+		
+		
+		
+		myAnimationTimeCurrent += dt;
+		
+
+		/*if (myTemporary)
+		{
+			myPlayTime -= dt;
+			if (myPlayTime <= 0.f)
+			{
+				myTemporary = false;
+				SetAnimIndex(myPrevAnimIndex);
+			}
+		}*/
 	}
 
 	bool Add3DAnimFromFile(const std::string& fileName)

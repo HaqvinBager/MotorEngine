@@ -30,20 +30,36 @@ void CAnimation::BoneTransformWithBlend(SlimMatrix44* Transforms, float aBlendFa
 	memcpy(&Transforms[0], &trans[0], (sizeof(float) * 16) * trans.size());
 }
 
+void CAnimation::BlendStep(float aDelta)
+{
+	myTotalAnimationTime += aDelta;
+	myController->UpdateBlendFrame();
+}
+
 void CAnimation::Step(float aDelta)
 {
-	// commented 2020 11 12 - The if check is used for nothing. The commented contents were already not in use.
-	//if (myController->IsDoneBlending())
-	//{
-	//	//myController->SetAnimIndex();
-	//	//myController->SetAnimIndex(2, true, 5);
-	//}
-
 	myTotalAnimationTime += aDelta;
-	myController->Update();
+	myController->UpdateFrame();
 }
 
 const size_t CAnimation::GetNrOfAnimations() const
 {
 	return myController->GetNrOfAnimations(); 
 }
+
+// Old: before 2020 11 13
+/*
+	void CAnimation::Step(float aDelta)
+	{
+		// commented 2020 11 12 - The if check is used for nothing. The commented contents were already not in use.
+		//if (myController->IsDoneBlending())
+		//{
+		//	//myController->SetAnimIndex();
+		//	//myController->SetAnimIndex(2, true, 5);
+		//}
+		
+		myTotalAnimationTime += aDelta;
+		myController->Update();
+	}
+
+*/
