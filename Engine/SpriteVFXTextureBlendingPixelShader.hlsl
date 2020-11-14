@@ -3,7 +3,7 @@
 PixelOutput main(GeometryToPixel input)
 {
     float diff = (1.0f - level);
-    if ((input.myUV.y < diff && verticalDirectionOfChange) || (input.myUV.x > level && !verticalDirectionOfChange))
+    if (verticalDirectionOfChange && (input.myUV.y < diff) || (!verticalDirectionOfChange && input.myUV.x > level))
     {
         discard;
     }
@@ -23,21 +23,22 @@ PixelOutput main(GeometryToPixel input)
     //textureColor.b = lerp(0.0f, 0.5f, textureColor.a);
     //textureColor.a = 1.0f;
     
-    //if ((input.myUV.y < (diff + 0.1f) && verticalDirectionOfChange))
-    //{
-    //    float factor = ((diff + 0.1f) - input.myUV.y) / (0.1f);
-    //    textureColor.r = lerp(textureColor.r, 1.0f, input.myUV.y);
-    //    textureColor.g = lerp(textureColor.g, 1.0f, input.myUV.y);
-    //    textureColor.b = lerp(textureColor.b, 1.0f, input.myUV.y);
-    //}
-
-    //else if (input.myUV.x > (level - 0.1f) && !verticalDirectionOfChange)
-    //{
-    //    float factor = ((level - 0.1f) - input.myUV.x) / (0.1f);
-    //    textureColor.r = lerp(textureColor.r, 1.0f, input.myUV.x);
-    //    textureColor.g = lerp(textureColor.g, 1.0f, input.myUV.x);
-    //    textureColor.b = lerp(textureColor.b, 1.0f, input.myUV.x);
-    //}
+    //float glowWidth = 0.1f;
+    //float3 glowColor = { 1.0f, 0.45f, 0.45f };
+    if (verticalDirectionOfChange && (input.myUV.y < (diff + glowWidth)))
+    {
+        float factor = ((diff + glowWidth) - input.myUV.y) / (glowWidth);
+        textureColor.r = lerp(textureColor.r, glowColor.r, factor);
+        textureColor.g = lerp(textureColor.g, glowColor.g, factor);
+        textureColor.b = lerp(textureColor.b, glowColor.b, factor);
+    }
+    else if (!verticalDirectionOfChange && (input.myUV.x > (level - glowWidth)))
+    {
+        float factor = ((level - glowWidth) - input.myUV.x) / (glowWidth);
+        textureColor.r = lerp(textureColor.r, glowColor.r, factor);
+        textureColor.g = lerp(textureColor.g, glowColor.g, factor);
+        textureColor.b = lerp(textureColor.b, glowColor.b, factor);
+    }
     
     returnValue.myColor = textureColor;
 

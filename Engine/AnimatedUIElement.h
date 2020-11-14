@@ -17,6 +17,9 @@ struct SAnimatedSpriteData
 	float uvScale3;
 	float uvScale4;
 
+	DirectX::SimpleMath::Vector3 glowColor;
+	float glowWidth;
+
 	bool verticalDirectionOfChange;
 };
 

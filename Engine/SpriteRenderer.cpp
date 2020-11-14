@@ -37,7 +37,7 @@ bool CSpriteRenderer::Init(CDirectXFramework* aFramework)
     bufferDescription.ByteWidth = sizeof(SObjectBufferData);
     ENGINE_HR_BOOL_MESSAGE(device->CreateBuffer(&bufferDescription, nullptr, &myObjectBuffer), "Object Buffer could not be created.");
 
-    bufferDescription.ByteWidth = sizeof(SObjectBufferData);
+    bufferDescription.ByteWidth = sizeof(STextureScrollingData);
     ENGINE_HR_BOOL_MESSAGE(device->CreateBuffer(&bufferDescription, nullptr, &myTextureScrollingBuffer), "Texture Scrolling Buffer could not be created.");
 
     std::ifstream vsFile;
@@ -132,6 +132,8 @@ void CSpriteRenderer::Render(std::vector<CAnimatedUIElement*>& someAnimatedEleme
         myTextureScrollingData.uvScale2 = data->uvScale2;
         myTextureScrollingData.uvScale3 = data->uvScale3;
         myTextureScrollingData.uvScale4 = data->uvScale4;
+        myTextureScrollingData.glowColor = data->glowColor;
+        myTextureScrollingData.glowWidth = data->glowWidth;
         myTextureScrollingData.scrollTimer = CTimer::Time() * scrollingScale; //..is now!
         myTextureScrollingData.level = someAnimatedElements[0]->myLevel;
         myTextureScrollingData.verticalDirectionOfChange = data->verticalDirectionOfChange;
@@ -164,6 +166,10 @@ void CSpriteRenderer::Render(std::vector<CAnimatedUIElement*>& someAnimatedEleme
         myContext->PSSetShaderResources(2, 1, &nullView);
         myContext->PSSetShaderResources(3, 1, &nullView);
         myContext->PSSetShaderResources(4, 1, &nullView);
+        myContext->PSSetShaderResources(5, 1, &nullView);
+        myContext->PSSetShaderResources(6, 1, &nullView);
+        myContext->PSSetShaderResources(7, 1, &nullView);
+        myContext->PSSetShaderResources(8, 1, &nullView);
 
         myContext->GSSetShader(nullptr, nullptr, 0);
     }

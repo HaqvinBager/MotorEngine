@@ -103,6 +103,8 @@ SAnimatedSpriteData* CSpriteFactory::LoadVFXSprite(std::string aFilePath)
 	spriteData->uvScale2 = document["UV Scale 2"].GetFloat();
 	spriteData->uvScale3 = document["UV Scale 3"].GetFloat();
 	spriteData->uvScale4 = document["UV Scale 4"].GetFloat();
+	spriteData->glowColor = { document["Glow Color R"].GetFloat(), document["Glow Color G"].GetFloat(), document["Glow Color B"].GetFloat() };
+	spriteData->glowWidth = { document["Glow Width"].GetFloat() };
 	spriteData->verticalDirectionOfChange = document["Vertical Direction Of Change"].GetBool();
 
 	std::ifstream psFile;

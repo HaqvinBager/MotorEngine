@@ -45,16 +45,20 @@ private:
 		DirectX::SimpleMath::Vector2 scrollSpeed1;
 		DirectX::SimpleMath::Vector2 scrollSpeed2;
 		DirectX::SimpleMath::Vector2 scrollSpeed3;
-		DirectX::SimpleMath::Vector2 scrollSpeed4;
+		DirectX::SimpleMath::Vector2 scrollSpeed4; // 4 * 8 = 32
 
 		float uvScale1;
 		float uvScale2;
 		float uvScale3;
-		float uvScale4;
+		float uvScale4; // 4 * 4 = 16
+
+		DirectX::SimpleMath::Vector3 glowColor;
+		float glowWidth; // 4 * 4 = 16
+
 		float scrollTimer;
 		float level;
 		bool verticalDirectionOfChange;
-		float padding;
+		float padding; // 4 * 4 = 16
 	} myTextureScrollingData;
 
 private:

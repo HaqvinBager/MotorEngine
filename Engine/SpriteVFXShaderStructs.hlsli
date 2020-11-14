@@ -43,6 +43,10 @@ cbuffer TextureScrollBuffer : register(b1)
     float uvScale2;
     float uvScale3;
     float uvScale4;
+    
+    float3 glowColor;
+    float glowWidth;
+    
     float scrollTimer;
     float level;
     bool verticalDirectionOfChange;
