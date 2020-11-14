@@ -160,6 +160,10 @@ void CSpriteRenderer::Render(std::vector<CAnimatedUIElement*>& someAnimatedEleme
         //Reset Resources
         ID3D11ShaderResourceView* nullView = NULL;
         myContext->PSSetShaderResources(0, 1, &nullView);
+        myContext->PSSetShaderResources(1, 1, &nullView);
+        myContext->PSSetShaderResources(2, 1, &nullView);
+        myContext->PSSetShaderResources(3, 1, &nullView);
+        myContext->PSSetShaderResources(4, 1, &nullView);
 
         myContext->GSSetShader(nullptr, nullptr, 0);
     }

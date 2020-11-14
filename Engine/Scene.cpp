@@ -69,14 +69,12 @@ std::vector<CGameObject*> CScene::CullGameObjects(CCameraComponent* aMainCamera)
 	std::vector<CGameObject*> culledGameObjects;
 	for (auto& gameObject : myGameObjects)
 	{
-		//Backup
-		//if (!gameObject->Enabled()) {
 		if (!gameObject->Active()) {
 			continue;
 		}
 
 		float distanceToCameraSquared = Vector3::DistanceSquared(gameObject->GetComponent<CTransformComponent>()->Position(), cameraPosition);
-		if (distanceToCameraSquared < 5000.0f)
+		if (distanceToCameraSquared < 500.0f)
 		{
 			culledGameObjects.emplace_back(gameObject);
 		}
@@ -141,12 +139,13 @@ std::vector<CSpriteInstance*> CScene::CullSprites()
 	return spritesToRender;
 }
 
-std::vector<CAnimatedUIElement*> CScene::CullAnimatedUI()
+std::vector<CAnimatedUIElement*> CScene::CullAnimatedUI(std::vector<CSpriteInstance*>& someFramesToReturn)
 {
 	std::vector<CAnimatedUIElement*> elementsToRender;
 	for (auto& element : myAnimatedUIElements) {
 		if (element->GetInstance()->GetShouldRender()) {
 			elementsToRender.emplace_back(element);
+			someFramesToReturn.emplace_back(element->GetInstance());
 		}
 	}
 	return elementsToRender;

@@ -64,5 +64,4 @@ private:
 	ID3D11VertexShader* mySpriteVertexShader;
 	ID3D11GeometryShader* mySpriteGeometryShader;
 	ID3D11PixelShader* mySpritePixelShader;
-	ID3D11PixelShader* myAnimatedUIPixelShader;
 };

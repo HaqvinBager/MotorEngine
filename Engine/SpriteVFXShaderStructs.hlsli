@@ -53,5 +53,5 @@ Texture2D instanceTexture1 : register(t0);
 Texture2D instanceTexture2 : register(t1);
 Texture2D instanceTexture3 : register(t2);
 Texture2D instanceTexture4 : register(t3);
-Texture2D levelTexture     : register(t4);
+Texture2D instanceTexture5 : register(t4);
 SamplerState defaultSampler : register(s0);
