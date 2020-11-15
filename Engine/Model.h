@@ -30,9 +30,17 @@ public:
 	void Init(SModelData data);
 	SModelData& GetModelData();
 
-	int AddAnimation(CAnimation* anAnimation);
-	const std::vector<CAnimation*>& GetAnimations() const { return myAnimations; }
 private:
-	std::vector<CAnimation*> myAnimations;
 	SModelData myModelData;
 };
+
+	// CAnimation is only used in CAnimationComponent
+	//int AddAnimation(CAnimation* anAnimation);
+	//int CModel::AddAnimation(CAnimation* aAnimation)
+	//{
+	//	myAnimations.push_back(aAnimation);
+	//	return static_cast<int>(myAnimations.size());
+	//}
+	//const std::vector<CAnimation*>& GetAnimations() const { return myAnimations; }
+	//private:
+	//std::vector<CAnimation*> myAnimations;

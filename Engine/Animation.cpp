@@ -3,6 +3,10 @@
 #include "AnimationController.h"
 
 
+CAnimation::CAnimation()
+	: myController(nullptr)
+	, myTotalAnimationTime(0)
+{}
 CAnimation::~CAnimation()
 {
 	delete myController;

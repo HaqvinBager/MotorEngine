@@ -53,7 +53,6 @@ void InitConsole()
 	setbuf(stderr, NULL);
 #pragma warning( pop )
 }
-
 void CloseConsole()
 {
 #pragma warning( push )
@@ -94,12 +93,10 @@ void Update(std::vector<std::string>& aModelFilePathList, CGameObject* aCurrentG
 	float rotationSpeed = 1.0f;
 	// X axis
 	if (Input::GetInstance()->IsKeyDown('R')){	aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ rotationSpeed * dt,0.0f,0.0f });	}
-	if (Input::GetInstance()->IsKeyDown('F')){	aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ -rotationSpeed * dt,0.0f,0.0f }); }
-											   
+	if (Input::GetInstance()->IsKeyDown('F')){	aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ -rotationSpeed * dt,0.0f,0.0f }); }									   
 	// Y axis								   
 	if (Input::GetInstance()->IsKeyDown('T')){	aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ 0.0f, rotationSpeed * dt,0.0f });	 }
-	if (Input::GetInstance()->IsKeyDown('G')){	aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ 0.0f, -rotationSpeed * dt,0.0f }); }
-											   
+	if (Input::GetInstance()->IsKeyDown('G')){	aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ 0.0f, -rotationSpeed * dt,0.0f }); }									   
 	// Z axis								   
 	if (Input::GetInstance()->IsKeyDown('Y')) { aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ 0.0f,0.0f,rotationSpeed * dt });	}
 	if (Input::GetInstance()->IsKeyDown('H')){	aCurrentGameObject->GetComponent<CTransformComponent>()->Rotate({ 0.0f,0.0f,-rotationSpeed * dt }); }
@@ -109,21 +106,17 @@ void Update(std::vector<std::string>& aModelFilePathList, CGameObject* aCurrentG
 	// Zoom/ move Camera functions
 	float moveSpeed = 5.0f;
 	// X axis
-
 	if (Input::GetInstance()->IsKeyDown('A')){	aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ moveSpeed * dt, 0.0f, 0.0f });	}
 	if (Input::GetInstance()->IsKeyDown('D')){	aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ -moveSpeed * dt, 0.0f, 0.0f });	}
-
 	// Y axis
 	if (Input::GetInstance()->IsKeyDown('Q')){	aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ 0.0f, moveSpeed * dt, 0.0f });	}
 	if (Input::GetInstance()->IsKeyDown('E')){	aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ 0.0f, -moveSpeed * dt, 0.0f }); }
-
 	// Z axis
 	if (Input::GetInstance()->IsKeyDown('W')){	aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ 0.0f, 0.0f, -moveSpeed * dt }); }
 	if (Input::GetInstance()->IsKeyDown('S')){	aCurrentGameObject->GetComponent<CTransformComponent>()->Move({ 0.0f, 0.0f, moveSpeed * dt });	}
 	// ! Zoom/ move functions
 
-	// Reset function
-
+	// Reset functions
 	if (Input::GetInstance()->IsKeyDown('K'))
 	{
 		aCurrentGameObject->GetComponent<CTransformComponent>()->Transform({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
@@ -133,7 +126,6 @@ void Update(std::vector<std::string>& aModelFilePathList, CGameObject* aCurrentG
 		aCamera->myTransform->Rotation({ 33.f,-45.f,0.f });
 		aCamera->myTransform->Position({ 3.0f,4.0f,-3.5f });
 	}
-
 	// ! Reset function
 
 	if (Input::GetInstance()->IsKeyPressed(VK_ESCAPE))
@@ -161,17 +153,6 @@ void Update(std::vector<std::string>& aModelFilePathList, CGameObject* aCurrentG
 
 	}
 }
-
-/// <Data driven animations test notes>
-/// 
-/// std::vector<std::string> pathsToAnimations;
-/// When loading model:
-/// If fbx has_SK in name before .fbx
-///		check its folder for files with _AN
-///			if file_AN == .fbx
-///				Add to pathsToAnimations
-/// 
-/// </Data driven animations test notes>
 
 CGameObject* InitAnimation(const std::string& aFilePath)
 {
@@ -205,7 +186,6 @@ CGameObject* InitAnimation(const std::string& aFilePath)
 		CAnimationComponent* animComp = gameObject->AddComponent<CAnimationComponent>(*gameObject);
 		animComp->GetMyAnimation()->Init(aFilePath.c_str(), somePathsToAnimations);
 		animComp->SetBlend(0, 1, 1.0f);
-		gameObject->GetComponent<CModelComponent>()->GetMyModel()->AddAnimation(animComp->GetMyAnimation());
 		animComp->Awake();
 	}
 
@@ -254,11 +234,16 @@ bool ChangeModel(CGameObject* aCurrentGameObject, std::vector<std::string>& aMod
 			}
 		}
 
-		CAnimationComponent* animComp = aCurrentGameObject->AddComponent<CAnimationComponent>(*aCurrentGameObject);
-		animComp->GetMyAnimation()->Init(aModelFilePathList[loadModelNumber].c_str(), somePathsToAnimations);
-		animComp->SetBlend(0, 1, 1.0f);
-		aCurrentGameObject->GetComponent<CModelComponent>()->GetMyModel()->AddAnimation(animComp->GetMyAnimation());
-		animComp->Awake();
+		if (!aCurrentGameObject->GetComponent<CAnimationComponent>())
+		{
+			CAnimationComponent* animComp = aCurrentGameObject->AddComponent<CAnimationComponent>(*aCurrentGameObject);
+			animComp->GetMyAnimation()->Init(aModelFilePathList[loadModelNumber].c_str(), somePathsToAnimations);
+			animComp->Awake();
+		}
+		else
+		{
+			aCurrentGameObject->GetComponent<CAnimationComponent>()->ReplaceAnimation(aModelFilePathList[loadModelNumber].c_str(), somePathsToAnimations);
+		}
 	}
 
 	std::cout << "\nInstructions" << std::endl 
@@ -274,55 +259,11 @@ void UpdateAnimationTest(CGameObject* aCurrentGameObject,CGameObject* /*aCamera*
 	{
 		if (animComp->Enabled())
 		{
-			/*aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(0, 1, sinf(CTimer::Time()));*/
-		
-			//aCurrentGameObject->GetComponent<CAnimationComponent>()->Update();
-
-			
-			
-			
-			if (Input::GetInstance()->IsKeyPressed('0'))
-			{
-				aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(0);
-				
-			}
-			if (Input::GetInstance()->IsKeyPressed('1'))
-			{
-				aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(1);
-			}
-
-			if (Input::GetInstance()->IsKeyPressed('2'))
-			{
-				aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(2);
-			}
-
-			//if (Input::GetInstance()->IsKeyPressed('3'))
-			//{
-			//	aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(3);
-			//}
-			//
-			//if (Input::GetInstance()->IsKeyPressed('4'))
-			//{
-			//	aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(4);
-			//}
+			if (Input::GetInstance()->IsKeyPressed('0')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(0); }
+			if (Input::GetInstance()->IsKeyPressed('1')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(1); }
+			if (Input::GetInstance()->IsKeyPressed('2')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(2); }
 
 			aCurrentGameObject->GetComponent<CAnimationComponent>()->Update();
-
-
-
-
-
-
-			//int other = (current - 1.0f < 0.0f ? static_cast<int>(current) + 1 : static_cast<int>(current) - 1);
-			//aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(other, static_cast<int>(current), current);
-			/*aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(0, 1, current);*/
-			//std::cout << " c " << current << std::endl;
-			//std::cout << " o " << other << std::endl;
-			//std::cout << " NrOfAnims " << static_cast<int>(aCurrentGameObject->GetComponent<CAnimationComponent>()->GetMyAnimation()->GetNrOfAnimations()) << std::endl;
-			/*aCurrentGameObject->GetComponent<CAnimationComponent>()->GetMyAnimation()->GetNrOfAnimations();
-			aCurrentGameObject->GetComponent<CAnimationComponent>()->GetBlend();*/
-
-			//aCurrentGameObject->GetComponent<CAnimationComponent>()->SetBlend(static_cast<int>(current), static_cast<int>(aCurrentGameObject->GetComponent<CAnimationComponent>()->GetMyAnimation()->GetNrOfAnimations()), current);
 		}
 	}
 
@@ -334,7 +275,6 @@ void UpdateAnimationTest(CGameObject* aCurrentGameObject,CGameObject* /*aCamera*
 		}
 	}
 }
-
 
 //////////////////////////////////// MAIN STARTS HERE ///////////////////////////////////////////////////////////////////
 

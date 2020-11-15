@@ -73,7 +73,6 @@
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="LineFactory.cpp" />
     <ClCompile Include="LineInstance.cpp" />
-    <ClCompile Include="MathFunc.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelComponent.cpp" />
     <ClCompile Include="ModelFactory.cpp" />
@@ -110,6 +109,7 @@
     <ClCompile Include="AnimatedUIElement.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="PointLightComponent.cpp" />
+    <ClCompile Include="AnimMathFunc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -165,7 +165,6 @@
     <ClInclude Include="Line.h" />
     <ClInclude Include="LineFactory.h" />
     <ClInclude Include="LineInstance.h" />
-    <ClInclude Include="MathFunc.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelComponent.h" />
     <ClInclude Include="ModelFactory.h" />
@@ -206,6 +205,7 @@
     <ClInclude Include="AnimatedUIElement.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="PointLightComponent.h" />
+    <ClInclude Include="AnimMathFunc.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CubeShaderStructs.hlsli" />
