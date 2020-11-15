@@ -29,12 +29,15 @@ class CAnimatedUIElement
 public:
 
 public:
-	CAnimatedUIElement();
+	CAnimatedUIElement(std::string aFilePath);
 	~CAnimatedUIElement();
 
 	void Level(float aLevel);
 	float Level() const;
 	
+	void SetPosition(DirectX::SimpleMath::Vector2 aPosition);
+
+public:
 	CSpriteInstance* GetInstance() const;
 	SAnimatedSpriteData* GetVFXBaseData();
 

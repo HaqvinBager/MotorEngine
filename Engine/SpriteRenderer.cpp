@@ -135,7 +135,7 @@ void CSpriteRenderer::Render(std::vector<CAnimatedUIElement*>& someAnimatedEleme
         myTextureScrollingData.glowColor = data->glowColor;
         myTextureScrollingData.glowWidth = data->glowWidth;
         myTextureScrollingData.scrollTimer = CTimer::Time() * scrollingScale; //..is now!
-        myTextureScrollingData.level = someAnimatedElements[0]->myLevel;
+        myTextureScrollingData.level = someAnimatedElements[instanceIndex]->myLevel;
         myTextureScrollingData.verticalDirectionOfChange = data->verticalDirectionOfChange;
         BindBuffer<STextureScrollingData>(myTextureScrollingBuffer, myTextureScrollingData, "Texture Scrolling Buffer");
 
