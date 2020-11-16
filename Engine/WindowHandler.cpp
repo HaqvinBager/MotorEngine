@@ -89,3 +89,8 @@ UINT CWindowHandler::GetHeight() const {
     }
     return myWindowData.myHeight;
 }
+
+void CWindowHandler::SetWindowTitle(std::string aString)
+{
+    SetWindowTextA(myWindowHandle, aString.c_str());
+}
