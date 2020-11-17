@@ -18,8 +18,8 @@ public:
 	void SetCollisionLayer(ECollisionLayer aCollisionLayer);
 	const DirectX::SimpleMath::Vector3 GetPosition() const;
 	void SetPosition(DirectX::SimpleMath::Vector3 aPosition);
-	const uint64_t GetCollidesWith() const;
-	void SetCollidesWith(uint64_t someCollisionFlags);
+	const uint64_t GetCollisionFlags() const;
+	void SetCollisionFlags(uint64_t someCollisionFlags);
 
 private:
 	uint64_t myCollisionFlags;

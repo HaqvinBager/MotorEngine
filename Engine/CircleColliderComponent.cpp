@@ -6,12 +6,25 @@
 #include "TransformComponent.h"
 #include "Debug.h"
 
+CCircleColliderComponent::CCircleColliderComponent(CGameObject& aParent) :
+	CCollider(aParent, ECollisionLayer::NONE, static_cast<int>(ECollisionLayer::NONE)),
+	myRadius(0.5f)
+{
+	CCollisionManager::GetInstance()->RegisterCollider(this);
+}
+
+CCircleColliderComponent::CCircleColliderComponent(CGameObject& aParent, float aRadius) :
+	CCollider(aParent, ECollisionLayer::NONE, static_cast<int>(ECollisionLayer::NONE)),
+	myRadius(aRadius)
+{
+	CCollisionManager::GetInstance()->RegisterCollider(this);
+}
+
 CCircleColliderComponent::CCircleColliderComponent(CGameObject& aParent, float aRadius, ECollisionLayer aCollisionLayer, uint64_t someCollisionFlags) :
 	CCollider(aParent, aCollisionLayer, someCollisionFlags),
 	myRadius(aRadius)
 {
 	CCollisionManager::GetInstance()->RegisterCollider(this);
-	SetCollisionLayer(aCollisionLayer);
 }
 
 CCircleColliderComponent::~CCircleColliderComponent() {
@@ -169,4 +182,14 @@ void CCircleColliderComponent::OnEnable()
 void CCircleColliderComponent::OnDisable()
 {
 
+}
+
+float const CCircleColliderComponent::GetRadius() const
+{
+	return myRadius;
+}
+
+void CCircleColliderComponent::SetRadius(float aRadius)
+{
+	myRadius = aRadius;
 }

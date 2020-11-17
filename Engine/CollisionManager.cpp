@@ -40,7 +40,7 @@ void CCollisionManager::Update()
         for (unsigned int inner = outer + 1; inner < myColliders.size(); ++inner)
         {
             if (myColliders[outer]->GameObject().Active() && myColliders[inner]->GameObject().Active() && myColliders[outer]->Enabled() && myColliders[inner]->Enabled()) {
-                if (static_cast<uint64_t>(myColliders[outer]->GetCollidesWith()) & static_cast<uint64_t>(myColliders[inner]->GetCollisionLayer())) {
+                if (static_cast<uint64_t>(myColliders[outer]->GetCollisionLayer()) & static_cast<uint64_t>(myColliders[inner]->GetCollisionLayer())) {
                     if (myColliders[outer]->Collided(myColliders[inner]))
                     {
                         myColliders[outer]->GameObject().Collided(myColliders[inner]->GameObject());

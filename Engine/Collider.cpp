@@ -33,12 +33,12 @@ void CCollider::SetPosition(DirectX::SimpleMath::Vector3 aPosition)
 	myPosition = aPosition;
 }
 
-const uint64_t CCollider::GetCollidesWith() const
+const uint64_t CCollider::GetCollisionFlags() const
 {
 	return myCollisionFlags;
 }
 
-void CCollider::SetCollidesWith(uint64_t someCollisionFlags)
+void CCollider::SetCollisionFlags(uint64_t someCollisionFlags)
 {
 	myCollisionFlags = someCollisionFlags;
 }

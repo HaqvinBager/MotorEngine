@@ -76,3 +76,23 @@ void CCapsuleColliderComponent::OnEnable()
 void CCapsuleColliderComponent::OnDisable()
 {
 }
+
+float const CCapsuleColliderComponent::GetRadius() const
+{
+	return myRadius;
+}
+
+void CCapsuleColliderComponent::SetRadius(float aRadius)
+{
+	myRadius = aRadius;
+}
+
+float const CCapsuleColliderComponent::GetHeight() const
+{
+	return myHeight;
+}
+
+void CCapsuleColliderComponent::SetHeight(float aHeight)
+{
+	myHeight = aHeight;
+}

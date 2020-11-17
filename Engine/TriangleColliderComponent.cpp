@@ -6,13 +6,28 @@
 #include "TransformComponent.h"
 #include "Debug.h"
 
+CTriangleColliderComponent::CTriangleColliderComponent(CGameObject& aParent) :
+	CCollider(aParent, ECollisionLayer::NONE, static_cast<int>(ECollisionLayer::NONE)),
+	myWidth(0.5f),
+	myHeight(0.5f)
+{
+	CCollisionManager::GetInstance()->RegisterCollider(this);
+}
+
+CTriangleColliderComponent::CTriangleColliderComponent(CGameObject& aParent, float aWidth, float aHeight) :
+	CCollider(aParent, ECollisionLayer::NONE, static_cast<int>(ECollisionLayer::NONE)),
+	myWidth(aWidth),
+	myHeight(aHeight)
+{
+	CCollisionManager::GetInstance()->RegisterCollider(this);
+}
+
 CTriangleColliderComponent::CTriangleColliderComponent(CGameObject& aParent, float aWidth, float aHeight, ECollisionLayer aCollisionLayer, uint64_t someCollisionFlags) :
 	CCollider(aParent, aCollisionLayer, someCollisionFlags),
 	myWidth(aWidth),
 	myHeight(aHeight)
 {
 	CCollisionManager::GetInstance()->RegisterCollider(this);
-	SetCollisionLayer(aCollisionLayer);
 }
 
 CTriangleColliderComponent::~CTriangleColliderComponent() {
@@ -155,4 +170,24 @@ void CTriangleColliderComponent::OnEnable()
 
 void CTriangleColliderComponent::OnDisable()
 {
+}
+
+float const CTriangleColliderComponent::GetHeight() const
+{
+	return myHeight;
+}
+
+void CTriangleColliderComponent::SetHeight(float aHeight)
+{
+	myHeight = aHeight;
+}
+
+float const CTriangleColliderComponent::GetWidth() const
+{
+	return myWidth;
+}
+
+void CTriangleColliderComponent::SetWidth(float aWidth)
+{
+	myWidth = aWidth;
 }
