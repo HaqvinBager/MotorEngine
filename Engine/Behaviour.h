@@ -12,6 +12,10 @@ public:
 
 	void Enabled(bool aEnabled) { myEnabled = aEnabled; }
 	const bool Enabled() const { return myEnabled; }
+
+protected:
+	bool myEnabled;
+
 private:
 };
 
