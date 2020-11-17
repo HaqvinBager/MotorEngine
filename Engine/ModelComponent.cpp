@@ -10,21 +10,16 @@ CModelComponent::CModelComponent(CGameObject& aParent, std::string aFBXPath) : C
 }
 
 CModelComponent::~CModelComponent()
-{
-
-}
+{}
 
 void CModelComponent::Awake()
-{
-}
+{}
 
 void CModelComponent::Start()
-{
-}
+{}
 
 void CModelComponent::Update()
-{
-}
+{}
 
 void CModelComponent::SetModel(const std::string& aFBXPath)
 {
@@ -37,9 +32,7 @@ CModel* CModelComponent::GetMyModel() const
 }
 
 void CModelComponent::OnEnable()
-{
-}
+{}
 
 void CModelComponent::OnDisable()
-{
-}
+{}

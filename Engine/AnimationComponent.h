@@ -6,6 +6,14 @@
 
 // REMINDER: CANIMATION IS UNUSED, CMODELCOMPONENT HAS ITS OWN CANIMATION THAT IT USES
 
+//#define USING_BLENDED_ANIMATIONS
+
+/// <To do>
+/// Model Viewer part complete.
+/// 1 - Can stop looping animation using myIsLooping = false
+/// 2 - Using string IDs to load animations map<int,int> <string id, index to my animation>
+/// </To do>
+
 struct SAnimationBlend
 {
 	int myFirst = -1;
@@ -37,10 +45,16 @@ public:
 	void GetAnimatedBlendTransforms(float dt, SlimMatrix44* transforms);
 	void GetAnimatedTransforms(float dt, SlimMatrix44* transforms);
 	void SetBlend(int anAnimationIndex, int anAnimationIndexTwo, float aBlend);
-	void PlayAnimation(const int anAnimationIndex, bool aIsLooping = false);
+	void PlayAnimation(const int anAnimationIndex, bool anIsLooping = false);
+
+public:
+	//Intended use is in Model viewer. Careful using it anywhere else. Deletes the previous myAnimation, news and inits a new CAnimation.
+	bool ReplaceAnimation(const char* aRig, std::vector<std::string>& somePathsToAnimations);
 	
 private:
 	void SetBonesToIdentity();
+	void UpdateBlended(const float dt);
+	void UpdateNonBlended(const float dt);
 
 	CAnimation* myAnimation;
 	std::array<SlimMatrix44, 64> myBones { };

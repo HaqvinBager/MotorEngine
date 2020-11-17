@@ -1,224 +1,712 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <FxCompile Include="AnimatedVertexShader.hlsl" />
-    <FxCompile Include="CubePixelShader.hlsl" />
-    <FxCompile Include="CubeVertexShader.hlsl" />
-    <FxCompile Include="FullscreenPixelShader_Bloom.hlsl" />
-    <FxCompile Include="FullscreenPixelShader_Copy.hlsl" />
-    <FxCompile Include="FullscreenPixelShader_GaussianBlurHorizontal.hlsl" />
-    <FxCompile Include="FullscreenPixelShader_GaussianBlurVertical.hlsl" />
-    <FxCompile Include="FullscreenPixelShader_Luminance.hlsl" />
-    <FxCompile Include="FullscreenPixelShader_Vignette.hlsl" />
-    <FxCompile Include="FullscreenVertexShader.hlsl" />
-    <FxCompile Include="LinePixelShader.hlsl" />
-    <FxCompile Include="LineVertexShader.hlsl" />
-    <FxCompile Include="OutlinePixelShader.hlsl" />
-    <FxCompile Include="OutlineVertexShader.hlsl" />
-    <FxCompile Include="ParticleGeometryShader.hlsl" />
-    <FxCompile Include="ParticlePixelShader.hlsl" />
-    <FxCompile Include="ParticleVertexShader.hlsl" />
-    <FxCompile Include="PBRPixelShader.hlsl" />
-    <FxCompile Include="PixelShader.hlsl" />
-    <FxCompile Include="SpriteGeometryShader.hlsl" />
-    <FxCompile Include="SpritePixelShader.hlsl" />
-    <FxCompile Include="SpriteVertexShader.hlsl" />
-    <FxCompile Include="VertexShader.hlsl" />
-    <FxCompile Include="VFXTextureBlendPixelShader.hlsl" />
-    <FxCompile Include="VFXTextureBlendVertexShader.hlsl" />
-    <FxCompile Include="SpriteVFXTextureBlendingPixelShader.hlsl" />
+    <FxCompile Include="AnimatedVertexShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="PixelShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="PBRPixelShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="VertexShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="CubePixelShader.hlsl">
+      <Filter>Shaders\Cube</Filter>
+    </FxCompile>
+    <FxCompile Include="CubeVertexShader.hlsl">
+      <Filter>Shaders\Cube</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_Bloom.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_Copy.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_GaussianBlurHorizontal.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_GaussianBlurVertical.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_Luminance.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPixelShader_Vignette.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenVertexShader.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticleGeometryShader.hlsl">
+      <Filter>Shaders\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticlePixelShader.hlsl">
+      <Filter>Shaders\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticleVertexShader.hlsl">
+      <Filter>Shaders\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="SpriteVertexShader.hlsl">
+      <Filter>Shaders\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="SpritePixelShader.hlsl">
+      <Filter>Shaders\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="SpriteGeometryShader.hlsl">
+      <Filter>Shaders\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="SpriteVFXTextureBlendingPixelShader.hlsl">
+      <Filter>Shaders\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="VFXTextureBlendVertexShader.hlsl">
+      <Filter>Shaders\VFX</Filter>
+    </FxCompile>
+    <FxCompile Include="VFXTextureBlendPixelShader.hlsl">
+      <Filter>Shaders\VFX</Filter>
+    </FxCompile>
+    <FxCompile Include="OutlinePixelShader.hlsl">
+      <Filter>Shaders\Outline</Filter>
+    </FxCompile>
+    <FxCompile Include="OutlineVertexShader.hlsl">
+      <Filter>Shaders\Outline</Filter>
+    </FxCompile>
+    <FxCompile Include="LinePixelShader.hlsl">
+      <Filter>Shaders\Line</Filter>
+    </FxCompile>
+    <FxCompile Include="LineVertexShader.hlsl">
+      <Filter>Shaders\Line</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Animation.cpp" />
-    <ClCompile Include="AnimationComponent.cpp" />
     <ClCompile Include="AStar.cpp" />
-    <ClCompile Include="Audio.cpp" />
-    <ClCompile Include="AudioChannel.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="CameraComponent.cpp" />
-    <ClCompile Include="CameraFactory.cpp" />
-    <ClCompile Include="CapsuleColliderComponent.cpp" />
-    <ClCompile Include="FMod.cpp" />
-    <ClCompile Include="CircleColliderComponent.cpp" />
-    <ClCompile Include="CollisionManager.cpp" />
-    <ClCompile Include="Component.cpp" />
-    <ClCompile Include="Debug.cpp" />
-    <ClCompile Include="DL_Debug.cpp" />
-    <ClCompile Include="DL_StackWalker.cpp" />
     <ClCompile Include="EnemyFactory.cpp" />
-    <ClCompile Include="FModWrapper.cpp" />
-    <ClCompile Include="EnviromentLightComponent.cpp" />
-    <ClCompile Include="InputMapper.cpp" />
-    <ClCompile Include="MainSingleton.cpp" />
-    <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="ObjectPool.cpp" />
-    <ClCompile Include="ParticleEmitterComponent.cpp" />
-    <ClCompile Include="PlayerControllerComponent.cpp" />
-    <ClCompile Include="PostMaster.cpp" />
-    <ClCompile Include="RectangleColliderComponent.cpp" />
-    <ClCompile Include="StackWalker.cpp" />
-    <ClCompile Include="State.cpp" />
-    <ClCompile Include="DirectXFramework.cpp" />
-    <ClCompile Include="Engine.cpp" />
-    <ClCompile Include="EnvironmentLight.cpp" />
-    <ClCompile Include="ForwardRenderer.cpp" />
-    <ClCompile Include="FullscreenRenderer.cpp" />
-    <ClCompile Include="FullscreenTexture.cpp" />
-    <ClCompile Include="FullscreenTextureFactory.cpp" />
-    <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="Input.cpp" />
-    <ClCompile Include="IntersectionManager.cpp" />
     <ClCompile Include="LevelLoader.cpp" />
-    <ClCompile Include="LightFactory.cpp" />
-    <ClCompile Include="Line.cpp" />
-    <ClCompile Include="LineFactory.cpp" />
-    <ClCompile Include="LineInstance.cpp" />
-    <ClCompile Include="MathFunc.cpp" />
-    <ClCompile Include="Model.cpp" />
-    <ClCompile Include="ModelComponent.cpp" />
-    <ClCompile Include="ModelFactory.cpp" />
     <ClCompile Include="NavmeshLoader.cpp" />
-    <ClCompile Include="Particle.cpp" />
-    <ClCompile Include="ParticleFactory.cpp" />
-    <ClCompile Include="ParticleInstance.cpp" />
-    <ClCompile Include="ParticleRenderer.cpp" />
-    <ClCompile Include="PointLight.cpp" />
-    <ClCompile Include="RenderManager.cpp" />
-    <ClCompile Include="RenderStateManager.cpp" />
-    <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="Sprite.cpp" />
-    <ClCompile Include="SpriteFactory.cpp" />
-    <ClCompile Include="SpriteInstance.cpp" />
-    <ClCompile Include="SpriteRenderer.cpp" />
-    <ClCompile Include="StateStack.cpp" />
-    <ClCompile Include="StatsComponent.cpp" />
-    <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="Text.cpp" />
-    <ClCompile Include="TextFactory.cpp" />
-    <ClCompile Include="TextInstance.cpp" />
-    <ClCompile Include="TextRenderer.cpp" />
-    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TokenPool.cpp" />
-    <ClCompile Include="TransformComponent.cpp" />
-    <ClCompile Include="TriangleColliderComponent.cpp" />
-    <ClCompile Include="VFXBase.cpp" />
-    <ClCompile Include="VFXComponent.cpp" />
-    <ClCompile Include="VFXFactory.cpp" />
-    <ClCompile Include="VFXInstance.cpp" />
-    <ClCompile Include="VFXRenderer.cpp" />
-    <ClCompile Include="WindowHandler.cpp" />
     <ClCompile Include="AnimatedUIElement.cpp" />
-    <ClCompile Include="Collider.cpp" />
-    <ClCompile Include="PointLightComponent.cpp" />
+    <ClCompile Include="AnimationComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="CapsuleColliderComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="CircleColliderComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimMathFunc.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioChannel.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="EnviromentLightComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="FMod.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="FModWrapper.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="DL_Debug.cpp">
+      <Filter>Debug Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="DL_StackWalker.cpp">
+      <Filter>Debug Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug.cpp">
+      <Filter>Debug Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="ForwardRenderer.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="FullscreenRenderer.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="FullscreenTexture.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="FullscreenTextureFactory.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>GameObject and Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraFactory.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider.cpp">
+      <Filter>Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionManager.cpp">
+      <Filter>Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="IntersectionManager.cpp">
+      <Filter>Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="LightFactory.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironmentLight.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Line.cpp">
+      <Filter>Debug Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="LineFactory.cpp">
+      <Filter>Debug Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="LineInstance.cpp">
+      <Filter>Debug Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelFactory.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleFactory.cpp">
+      <Filter>Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleInstance.cpp">
+      <Filter>Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleRenderer.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEmitterComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerControllerComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLightComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="RectangleColliderComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderManager.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderStateManager.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteInstance.cpp">
+      <Filter>Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteFactory.cpp">
+      <Filter>Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Text</Filter>
+    </ClCompile>
+    <ClCompile Include="TextFactory.cpp">
+      <Filter>Text</Filter>
+    </ClCompile>
+    <ClCompile Include="TextInstance.cpp">
+      <Filter>Text</Filter>
+    </ClCompile>
+    <ClCompile Include="TextRenderer.cpp">
+      <Filter>Text</Filter>
+    </ClCompile>
+    <ClCompile Include="VFXBase.cpp">
+      <Filter>VFX</Filter>
+    </ClCompile>
+    <ClCompile Include="VFXComponent.cpp">
+      <Filter>VFX</Filter>
+    </ClCompile>
+    <ClCompile Include="VFXFactory.cpp">
+      <Filter>VFX</Filter>
+    </ClCompile>
+    <ClCompile Include="VFXInstance.cpp">
+      <Filter>VFX</Filter>
+    </ClCompile>
+    <ClCompile Include="StatsComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="TriangleColliderComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>GameObject and Component</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="StackWalker.cpp">
+      <Filter>Debug Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuState.cpp">
+      <Filter>State Stack</Filter>
+    </ClCompile>
+    <ClCompile Include="State.cpp">
+      <Filter>State Stack</Filter>
+    </ClCompile>
+    <ClCompile Include="StateStack.cpp">
+      <Filter>State Stack</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="InputMapper.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="PostMaster.cpp">
+      <Filter>Post Master</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowHandler.cpp">
+      <Filter>Engine Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Engine Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Engine Core</Filter>
+    </ClCompile>
+    <ClCompile Include="MainSingleton.cpp">
+      <Filter>Engine Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine.cpp">
+      <Filter>Engine Core</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXFramework.cpp">
+      <Filter>Engine Core</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteRenderer.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="VFXRenderer.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Animation.h" />
-    <ClInclude Include="AnimationComponent.h" />
-    <ClInclude Include="AnimationController.h" />
     <ClInclude Include="AStar.h" />
-    <ClInclude Include="Audio.h" />
-    <ClInclude Include="AudioChannel.h" />
-    <ClInclude Include="Behaviour.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="CameraComponent.h" />
-    <ClInclude Include="CameraFactory.h" />
-    <ClInclude Include="CapsuleColliderComponent.h" />
-    <ClInclude Include="FMod.h" />
-    <ClInclude Include="CircleColliderComponent.h" />
-    <ClInclude Include="CollisionManager.h" />
-    <ClInclude Include="Component.h" />
-    <ClInclude Include="FModWrapper.h" />
-    <ClInclude Include="EnviromentLightComponent.h" />
-    <ClInclude Include="MainSingleton.h" />
-    <ClInclude Include="Message.h" />
-    <ClInclude Include="MessageType.h" />
-    <ClInclude Include="Observer.h" />
-    <ClInclude Include="PostMaster.h" />
-    <ClInclude Include="Debug.h" />
-    <ClInclude Include="DL_Debug.h" />
-    <ClInclude Include="DL_StackWalker.h" />
     <ClInclude Include="EnemyFactory.h" />
-    <ClInclude Include="InputMapper.h" />
-    <ClInclude Include="InputObserver.h" />
-    <ClInclude Include="MenuState.h" />
     <ClInclude Include="ObjectPool.h" />
-    <ClInclude Include="ParticleEmitterComponent.h" />
-    <ClInclude Include="PlayerControllerComponent.h" />
-    <ClInclude Include="RectangleColliderComponent.h" />
-    <ClInclude Include="StackWalker.h" />
-    <ClInclude Include="State.h" />
-    <ClInclude Include="DebugTimerUtility.h" />
-    <ClInclude Include="DirectXFramework.h" />
-    <ClInclude Include="Engine.h" />
-    <ClInclude Include="EngineException.h" />
-    <ClInclude Include="EnvironmentLight.h" />
-    <ClInclude Include="ForwardRenderer.h" />
-    <ClInclude Include="FullscreenRenderer.h" />
-    <ClInclude Include="FullscreenTexture.h" />
-    <ClInclude Include="FullscreenTextureFactory.h" />
-    <ClInclude Include="GameObject.h" />
-    <ClInclude Include="Heap.h" />
-    <ClInclude Include="Input.h" />
-    <ClInclude Include="IntersectionManager.h" />
     <ClInclude Include="LevelLoader.h" />
-    <ClInclude Include="LightFactory.h" />
-    <ClInclude Include="Line.h" />
-    <ClInclude Include="LineFactory.h" />
-    <ClInclude Include="LineInstance.h" />
-    <ClInclude Include="MathFunc.h" />
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="ModelComponent.h" />
-    <ClInclude Include="ModelFactory.h" />
-    <ClInclude Include="ModelMath.h" />
     <ClInclude Include="MouseTracker.h" />
     <ClInclude Include="NavmeshLoader.h" />
-    <ClInclude Include="Particle.h" />
-    <ClInclude Include="ParticleFactory.h" />
-    <ClInclude Include="ParticleInstance.h" />
-    <ClInclude Include="ParticleRenderer.h" />
-    <ClInclude Include="PointLight.h" />
-    <ClInclude Include="RandomNumberGenerator.h" />
-    <ClInclude Include="RenderManager.h" />
-    <ClInclude Include="RenderStateManager.h" />
-    <ClInclude Include="Scene.h" />
-    <ClInclude Include="Sprite.h" />
-    <ClInclude Include="SpriteFactory.h" />
-    <ClInclude Include="SpriteInstance.h" />
-    <ClInclude Include="SpriteRenderer.h" />
-    <ClInclude Include="StateStack.h" />
-    <ClInclude Include="StatsComponent.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="Text.h" />
-    <ClInclude Include="TextFactory.h" />
-    <ClInclude Include="TextInstance.h" />
-    <ClInclude Include="TextRenderer.h" />
-    <ClInclude Include="Timer.h" />
     <ClInclude Include="TokenPool.h" />
-    <ClInclude Include="TransformComponent.h" />
-    <ClInclude Include="TriangleColliderComponent.h" />
-    <ClInclude Include="VFXBase.h" />
-    <ClInclude Include="VFXComponent.h" />
-    <ClInclude Include="VFXFactory.h" />
-    <ClInclude Include="VFXInstance.h" />
-    <ClInclude Include="VFXRenderer.h" />
-    <ClInclude Include="WindowHandler.h" />
-    <ClInclude Include="WinInclude.h" />
     <ClInclude Include="AnimatedUIElement.h" />
-    <ClInclude Include="Collider.h" />
-    <ClInclude Include="PointLightComponent.h" />
+    <ClInclude Include="AnimationComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="CapsuleColliderComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="CircleColliderComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationController.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimMathFunc.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioChannel.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="EnviromentLightComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="FMod.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="FModWrapper.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="DL_Debug.h">
+      <Filter>Debug Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="DL_StackWalker.h">
+      <Filter>Debug Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug.h">
+      <Filter>Debug Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="ForwardRenderer.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="FullscreenRenderer.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="FullscreenTexture.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="FullscreenTextureFactory.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>GameObject and Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour.h">
+      <Filter>GameObject and Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraFactory.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionManager.h">
+      <Filter>Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="IntersectionManager.h">
+      <Filter>Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugTimerUtility.h">
+      <Filter>Debug Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="LightFactory.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvironmentLight.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Line.h">
+      <Filter>Debug Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="LineFactory.h">
+      <Filter>Debug Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="LineInstance.h">
+      <Filter>Debug Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelMath.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelFactory.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleFactory.h">
+      <Filter>Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleInstance.h">
+      <Filter>Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleRenderer.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitterComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerControllerComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLightComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="RectangleColliderComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderManager.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderStateManager.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteInstance.h">
+      <Filter>Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteFactory.h">
+      <Filter>Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Text</Filter>
+    </ClInclude>
+    <ClInclude Include="TextFactory.h">
+      <Filter>Text</Filter>
+    </ClInclude>
+    <ClInclude Include="TextInstance.h">
+      <Filter>Text</Filter>
+    </ClInclude>
+    <ClInclude Include="TextRenderer.h">
+      <Filter>Text</Filter>
+    </ClInclude>
+    <ClInclude Include="VFXBase.h">
+      <Filter>VFX</Filter>
+    </ClInclude>
+    <ClInclude Include="VFXComponent.h">
+      <Filter>VFX</Filter>
+    </ClInclude>
+    <ClInclude Include="VFXFactory.h">
+      <Filter>VFX</Filter>
+    </ClInclude>
+    <ClInclude Include="VFXInstance.h">
+      <Filter>VFX</Filter>
+    </ClInclude>
+    <ClInclude Include="StatsComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="TriangleColliderComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>GameObject and Component</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="StackWalker.h">
+      <Filter>Debug Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="RandomNumberGenerator.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Heap.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuState.h">
+      <Filter>State Stack</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>State Stack</Filter>
+    </ClInclude>
+    <ClInclude Include="StateStack.h">
+      <Filter>State Stack</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="InputMapper.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="InputObserver.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="PostMaster.h">
+      <Filter>Post Master</Filter>
+    </ClInclude>
+    <ClInclude Include="Message.h">
+      <Filter>Post Master</Filter>
+    </ClInclude>
+    <ClInclude Include="Observer.h">
+      <Filter>Post Master</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageType.h">
+      <Filter>Post Master</Filter>
+    </ClInclude>
+    <ClInclude Include="WinInclude.h">
+      <Filter>Engine Core</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowHandler.h">
+      <Filter>Engine Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Engine Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Engine Core</Filter>
+    </ClInclude>
+    <ClInclude Include="MainSingleton.h">
+      <Filter>Engine Core</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineException.h">
+      <Filter>Engine Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>Engine Core</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXFramework.h">
+      <Filter>Engine Core</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteRenderer.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="VFXRenderer.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="CubeShaderStructs.hlsli" />
-    <None Include="FullscreenShaderStructs.hlsli" />
-    <None Include="LineShaderStructs.hlsli" />
-    <None Include="MathHelpers.hlsli" />
-    <None Include="ParticleShaderStructs.hlsli" />
-    <None Include="PBRAmbience.hlsli" />
-    <None Include="PBRDirectionalLight.hlsli" />
-    <None Include="SamplingFunctions.hlsli" />
-    <None Include="ShaderStructs.hlsli" />
-    <None Include="SpriteShaderStructs.hlsli" />
-    <None Include="VFXShaderStructs.hlsli" />
-    <None Include="SpriteVFXShaderStructs.hlsli" />
+    <None Include="PBRDirectionalLight.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="PBRAmbience.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="MathHelpers.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="ShaderStructs.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="SamplingFunctions.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="CubeShaderStructs.hlsli">
+      <Filter>Shaders\Cube</Filter>
+    </None>
+    <None Include="FullscreenShaderStructs.hlsli">
+      <Filter>Shaders\Fullscreen</Filter>
+    </None>
+    <None Include="ParticleShaderStructs.hlsli">
+      <Filter>Shaders\Particle</Filter>
+    </None>
+    <None Include="SpriteShaderStructs.hlsli">
+      <Filter>Shaders\Sprite</Filter>
+    </None>
+    <None Include="SpriteVFXShaderStructs.hlsli">
+      <Filter>Shaders\Sprite</Filter>
+    </None>
+    <None Include="VFXShaderStructs.hlsli">
+      <Filter>Shaders\VFX</Filter>
+    </None>
+    <None Include="LineShaderStructs.hlsli">
+      <Filter>Shaders\Line</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{b8ff449c-90a2-412d-8c8f-11aa9df3ed7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files">
+      <UniqueIdentifier>{25b97a06-cfe1-44e4-80b9-da0950fe6fd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files">
+      <UniqueIdentifier>{4ce50fad-fc5f-4be2-abe5-4a737d5a6717}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animation">
+      <UniqueIdentifier>{6d737178-fa98-4199-8590-3c2c9525d9c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{60d76b97-725c-468b-8184-451a8f7df169}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Debug Tools">
+      <UniqueIdentifier>{f3c45a4a-ba76-429d-a437-b60f2160ab0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject and Component">
+      <UniqueIdentifier>{7de73c83-8238-4c49-b7b8-4cd8ba3b4f31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject and Component\Component">
+      <UniqueIdentifier>{02ffc32a-0ffc-4212-ac60-501fe5c4f812}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{d2f468fd-4d8f-4bc0-8383-4c2ea8ca84ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collision">
+      <UniqueIdentifier>{c0487e25-2768-4381-81cd-e7180461866e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Light">
+      <UniqueIdentifier>{31d7a35e-0ed4-42cc-bb2a-0d7f9bc2c78e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{12ecd6ab-d23c-4df9-9e11-b2d59f34eb4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Particles">
+      <UniqueIdentifier>{cb6066cf-24a2-4f78-b1eb-a8c7aae1a535}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sprite">
+      <UniqueIdentifier>{aaaccb51-9afb-425c-9df1-e1bea8537179}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Text">
+      <UniqueIdentifier>{426fb3da-8ad2-4cf1-9531-2eb1357ecc59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VFX">
+      <UniqueIdentifier>{6edff376-2918-4d3c-8d13-9e8f6e3fc501}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Precompiled">
+      <UniqueIdentifier>{875f9d24-ebc4-4125-9483-d42ed6ab8585}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{5c00f0f2-c35d-4d1a-afc5-0073457db6b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="State Stack">
+      <UniqueIdentifier>{7e3d61a4-a177-4bd6-bf15-028199f8bc5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{4c3b644f-8786-4eab-9932-57a1bf6e5c99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Post Master">
+      <UniqueIdentifier>{5d9eea20-29ac-4f72-8f34-dc1241467fc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Core">
+      <UniqueIdentifier>{e819af97-a99f-494d-8aa1-47511d4fd45e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Cube">
+      <UniqueIdentifier>{6d3c3161-2c19-43fb-bc75-c309067df938}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Fullscreen">
+      <UniqueIdentifier>{4d21d2bd-0ebf-463b-8b72-815baedba604}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Particle">
+      <UniqueIdentifier>{381ed3b8-9aae-4868-bace-03a49f2c229e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Sprite">
+      <UniqueIdentifier>{38b8cc25-e0c2-405a-b976-6f181cf06819}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\VFX">
+      <UniqueIdentifier>{341f3a55-486c-48c7-a77e-70d923abe202}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Outline">
+      <UniqueIdentifier>{c2001b22-a421-41b8-bff6-6c64f61bef03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Line">
+      <UniqueIdentifier>{6f5472e4-bf51-43eb-a65f-4cdb78bf9112}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderers">
+      <UniqueIdentifier>{804ee6d8-8119-47c7-b01f-f228842feb9e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

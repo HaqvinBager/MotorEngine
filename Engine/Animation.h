@@ -7,7 +7,7 @@ class AnimationController;
 class CAnimation
 {
 public:
-	CAnimation() = default;
+	CAnimation();
 	~CAnimation();
 
 	void Init(const char* aRig, std::vector<std::string>& somePathsToAnimations);
@@ -20,11 +20,10 @@ public:
 	const size_t GetNrOfAnimations() const;
 
 public: 
-
 	void SetCurAnimationScene(const int aCurAnimScene);
 
 private:
-	float myTotalAnimationTime = 0;
+	float myTotalAnimationTime;
 	AnimationController* myController;
 
 #pragma region COMMENTED 2020_11_11 UNUSED No defintions exist
@@ -53,5 +52,5 @@ private:
 	//int myAnimSpeed = 60;
 	//float myAnimTime = 0;
 
-#pragma endregion ! COMMENTED 2020_11_11 UNUSED
+#pragma endregion ! 2020_11_11 UNUSED
 };

@@ -34,7 +34,7 @@ public:
 	const std::vector<SLineTime>& CullLines() const;
 	const std::vector<CLineInstance*>& CullLineInstances() const;
 	std::vector<CSpriteInstance*> CullSprites();
-	std::vector<CAnimatedUIElement*> CullAnimatedUI();
+	std::vector<CAnimatedUIElement*> CullAnimatedUI(std::vector<CSpriteInstance*>& someFramesToReturn);
 	std::vector<CTextInstance*> GetTexts();
 
 	CGameObject* GetModelToOutline() const { return myModelToOutline; }

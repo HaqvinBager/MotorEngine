@@ -56,8 +56,6 @@ public:
 
 	CGameObject& GameObject() const;
 
-protected:
-	bool myEnabled;
 private:
 	CGameObject& myParent;
 };

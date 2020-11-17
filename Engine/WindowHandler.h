@@ -1,6 +1,6 @@
 #pragma once
 #include "WinInclude.h"
-
+#include <string>
 
 class CWindowHandler
 {
@@ -24,6 +24,7 @@ public:
 	UINT GetWidth() const;
 	UINT GetHeight() const;
 
+	void SetWindowTitle(std::string aString);
 	//void HandleInput(float dt);
 
 private:

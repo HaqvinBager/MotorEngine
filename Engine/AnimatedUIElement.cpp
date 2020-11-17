@@ -5,31 +5,29 @@
 #include "Engine.h"
 #include "WindowHandler.h"
 
-CAnimatedUIElement::CAnimatedUIElement() : mySpriteInstance(nullptr), myLevel(1.0f)
-{
-    mySpriteInstance = new CSpriteInstance();
-    mySpriteInstance->Init(CSpriteFactory::GetInstance()->GetSprite("Assets/3D/UI/Ingame/UI_IN_OrbBase.dds"));
-    UINT windowWidth = CEngine::GetInstance()->GetWindowHandler()->GetWidth();
-    mySpriteInstance->SetSize({ 128.0f / windowWidth, 128.0f / windowWidth });
-    mySpriteInstance->SetPosition({ -0.45f, -0.80f });
+#include "rapidjson\document.h"
+#include "rapidjson\istreamwrapper.h"
 
-    myTexturePaths[0] = L"VFXCloud.dds";
-    myTexturePaths[1] = L"VFXCloud.dds";
-    myTexturePaths[2] = L"VFXCloud.dds";
-    myTexturePaths[3] = L"MaskWithoutAlpha.dds";
+CAnimatedUIElement::CAnimatedUIElement(std::string aFilePath) : mySpriteInstance(nullptr), myLevel(1.0f)
+{
+    using namespace rapidjson;
+
+    std::ifstream input_stream(aFilePath);
+    IStreamWrapper input_wrapper(input_stream);
+    Document document;
+    document.ParseStream(input_wrapper);
+
+    mySpriteInstance = new CSpriteInstance();
+    mySpriteInstance->Init(CSpriteFactory::GetInstance()->GetSprite(document["Texture Overlay"].GetString()));
+    UINT windowWidth = CEngine::GetInstance()->GetWindowHandler()->GetWidth();
+    mySpriteInstance->SetSize({ document["Sprite Size X"].GetFloat() * (16.0f / 9.0f) / windowWidth, document["Sprite Size Y"].GetFloat() * (16.0f / 9.0f) / windowWidth });
+    myData = CSpriteFactory::GetInstance()->GetVFXSprite(aFilePath);
 }
 
 CAnimatedUIElement::~CAnimatedUIElement()
 {
     delete mySpriteInstance;
     mySpriteInstance = nullptr;
-
-    //for (auto& texture : myTextures) 
-    //{
-    //    texture->Release();
-    //}
-
-    //myTextures.clear();
 }
 
 void CAnimatedUIElement::Level(float aLevel)
@@ -42,7 +40,17 @@ float CAnimatedUIElement::Level() const
     return myLevel;
 }
 
+void CAnimatedUIElement::SetPosition(DirectX::SimpleMath::Vector2 aPosition)
+{
+    mySpriteInstance->SetPosition(aPosition);
+}
+
 CSpriteInstance* CAnimatedUIElement::GetInstance() const
 {
     return mySpriteInstance;
+}
+
+SAnimatedSpriteData* CAnimatedUIElement::GetVFXBaseData()
+{
+    return myData;
 }

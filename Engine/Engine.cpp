@@ -26,6 +26,7 @@
 #include "EnemyFactory.h"
 #include "DL_Debug.h"
 #include "MainSingleton.h"
+#include <string>
 
 #pragma comment(lib, "runtimeobject.lib")
 #pragma comment(lib, "d3d11.lib")
@@ -168,6 +169,13 @@ bool CEngine::Init(CWindowHandler::SWindowData& someWindowData)
 
 float CEngine::BeginFrame()
 {
+#ifdef _DEBUG
+	std::string fpsString = std::to_string((1.0f / CTimer::Dt()));
+	size_t decimalIndex = fpsString.find_first_of('.');
+	fpsString = fpsString.substr(0, decimalIndex);
+	myWindowHandler->SetWindowTitle("IronWrought | FPS: " + fpsString);
+#endif // _DEBUG
+
 	std::array<float, 4> clearColor = { 0.5f, 0.5f, 0.5f, 1.0f };
 	myFramework->BeginFrame(clearColor);
 

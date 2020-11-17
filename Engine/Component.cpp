@@ -3,8 +3,7 @@
 #include "GameObject.h"
 
 CComponent::CComponent(CGameObject& aParent)
-	: myParent(aParent),
-	myEnabled(true)
+	: myParent(aParent)
 {}
 
 CComponent::~CComponent()

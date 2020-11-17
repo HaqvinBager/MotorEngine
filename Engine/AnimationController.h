@@ -8,7 +8,7 @@
 #include "assimp/LogStream.hpp"
 #include <fstream>
 
-#include "MathFunc.h"
+#include "AnimMathFunc.h"
 #include "Timer.h"
 
 // Note 2020 11 12 Refactoring to use TGA code standard.
@@ -333,7 +333,6 @@ public:
 		aiMatrix4x4 identity;// Used for ReadNodeHierarchy
 		InitIdentityM4(identity);
 
-		
 		float TicksPerSecond = 
 			static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mTicksPerSecond) != 0 
 			? 

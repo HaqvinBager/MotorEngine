@@ -122,16 +122,15 @@ void CRenderManager::Render()
 	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_ALPHABLEND);
 	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_ONLYREAD);
 
-
 	myVFXRenderer.Render(maincamera, gameObjects);
 
 	myParticleRenderer.Render(maincamera, gameObjects);
 
-	std::vector<CSpriteInstance*> sprites = myScene.CullSprites();
-	mySpriteRenderer.Render(sprites);
+	//std::vector<CSpriteInstance*> sprites = myScene.CullSprites();
+	//mySpriteRenderer.Render(sprites);
 
-	std::vector<CAnimatedUIElement*> animatedUIElements = myScene.CullAnimatedUI();
-	mySpriteRenderer.Render(animatedUIElements);
+	//std::vector<CAnimatedUIElement*> animatedUIElements = myScene.CullAnimatedUI();
+	//mySpriteRenderer.Render(animatedUIElements);
 
 	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_DISABLE);
 	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_DEFAULT);
@@ -185,6 +184,20 @@ void CRenderManager::Render()
 	myVignetteTexture.SetAsResourceOnSlot(0);
 	myHalfSizeTexture.SetAsResourceOnSlot(1);
 	myFullscreenRenderer.Render(CFullscreenRenderer::FullscreenShader::FULLSCREENSHADER_BLOOM);
+
+	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_ALPHABLEND);
+	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_ONLYREAD);
+
+	std::vector<CSpriteInstance*> sprites = myScene.CullSprites();
+	mySpriteRenderer.Render(sprites);
+
+	std::vector<CSpriteInstance*> animatedUIFrames;
+	std::vector<CAnimatedUIElement*> animatedUIElements = myScene.CullAnimatedUI(animatedUIFrames);
+	mySpriteRenderer.Render(animatedUIElements);
+	mySpriteRenderer.Render(animatedUIFrames);
+
+	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_DISABLE);
+	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_DEFAULT);
 
 	std::vector<CTextInstance*> textsToRender = myScene.GetTexts();
 	myTextRenderer.Render(textsToRender);

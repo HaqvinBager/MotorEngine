@@ -172,7 +172,7 @@
     <ClInclude Include="Line.h" />
     <ClInclude Include="LineFactory.h" />
     <ClInclude Include="LineInstance.h" />
-    <ClInclude Include="MathFunc.h" />
+    <ClInclude Include="AnimMathFunc.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelComponent.h" />
     <ClInclude Include="ModelFactory.h" />
@@ -259,7 +259,7 @@
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="LineFactory.cpp" />
     <ClCompile Include="LineInstance.cpp" />
-    <ClCompile Include="MathFunc.cpp" />
+    <ClCompile Include="AnimMathFunc.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelComponent.cpp" />
     <ClCompile Include="ModelFactory.cpp" />
