@@ -22,10 +22,12 @@
     <ClCompile Include="loadAssetsFromDirectory.cpp" />
     <ClCompile Include="helpers.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="spriteViewer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helpers.h" />
     <ClInclude Include="loadAssetsFromDirectory.h" />
+    <ClInclude Include="spriteViewer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

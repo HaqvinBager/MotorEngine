@@ -32,6 +32,7 @@
 
 #include "helpers.h"
 #include "loadAssetsFromDirectory.h"
+#include "spriteViewer.h"
 
 using namespace CommonUtilities;
 namespace SM = DirectX::SimpleMath;
@@ -257,14 +258,14 @@ void UpdateAnimationTest(CGameObject* aCurrentGameObject,CGameObject* /*aCamera*
 	const auto animComp = aCurrentGameObject->GetComponent<CAnimationComponent>();
 	if (animComp)
 	{
-		if (animComp->Enabled())
-		{
-			if (Input::GetInstance()->IsKeyPressed('0')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(0); }
-			if (Input::GetInstance()->IsKeyPressed('1')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(1); }
-			if (Input::GetInstance()->IsKeyPressed('2')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(2); }
+		if (Input::GetInstance()->IsKeyPressed('0')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(0); }
+		if (Input::GetInstance()->IsKeyPressed('1')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(1); }
+		if (Input::GetInstance()->IsKeyPressed('2')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(2); }
 
-			aCurrentGameObject->GetComponent<CAnimationComponent>()->Update();
-		}
+		aCurrentGameObject->GetComponent<CAnimationComponent>()->Update();
+
+		if (animComp->Enabled())
+		{}
 	}
 
 	if (Input::GetInstance()->IsKeyPressed(VK_ESCAPE))
@@ -363,9 +364,10 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		<< "   Y/H..................Rotate Model around its Z axis\n"
 		<< "   K....................Reset Model\n"
 		<< "   C....................Reset Camera\n"
+		<< "   I....................Show InGame - HUD (Group 4)\n"
 		<< std::endl;
 
-	
+	bool showUI = false;
 	
 	MSG windowMessage = { 0 };
 	while (shouldRun)
@@ -387,6 +389,18 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 #else
 		Update(filePaths, currentGameObject, camera);
 #endif // ! RUNNING_ANIMATIONS_TEST
+		if (showUI)
+		{
+			SpriteViewer::Update();
+		}
+		else
+		{
+			if (Input::GetInstance()->IsKeyPressed('I'))
+			{
+				SpriteViewer::Init();
+				showUI = true;
+			}
+		}
 
 		engine.RenderFrame();
 		engine.EndFrame();
