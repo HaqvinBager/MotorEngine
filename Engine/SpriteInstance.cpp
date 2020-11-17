@@ -2,6 +2,9 @@
 #include "SpriteInstance.h"
 #include "Sprite.h"
 
+#include "Engine.h"
+#include "WindowHandler.h"
+
 CSpriteInstance::CSpriteInstance()
 {
 	mySprite = nullptr;
@@ -18,13 +21,18 @@ bool CSpriteInstance::Init(CSprite* aSprite)
 	}
 
 	mySprite = aSprite;
+	this->SetSize({ 1.0f, 1.0f });
 
 	return true;
 }
 
 void CSpriteInstance::SetSize(DirectX::SimpleMath::Vector2 aSize)
 {
-	mySize = aSize;
+	UINT windowHeight = CEngine::GetInstance()->GetWindowHandler()->GetHeight();
+	CSprite::SSpriteData mySpriteData = mySprite->GetSpriteData();
+	mySize = mySpriteData.myDimensions;
+	mySize /= static_cast<float>(windowHeight);
+	mySize *= aSize;
 }
 
 void CSpriteInstance::SetShouldRender(bool aBool)

@@ -18,6 +18,9 @@ class CInputMapper;
 class CDebug;
 class CEnemyFactory;
 class CMainSingleton;
+class CForwardRenderer;
+class CVFXFactory;
+class CLineFactory;
 
 class CEngine
 {

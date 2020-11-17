@@ -11,7 +11,11 @@ PixelOutput main(GeometryToPixel input)
     PixelOutput returnValue;
     
     float2 uv;
-    uv = input.myUV.xy;
+    float2 centeredUV = input.myUV.xy * 2.0 - 1.0;
+    float z = sqrt(1.0 - saturate(dot(centeredUV.xy, centeredUV.xy)));
+    float2 spherifiedUV = centeredUV / (z + 1.0);
+    uv = spherifiedUV * 0.5 + 0.5;
+    //uv = input.myUV.xy;
     
     float4 textureColor = instanceTexture1.Sample(defaultSampler, (uv * uvScale1) + scrollSpeed1 * scrollTimer).rgba;
     float4 textureTwoColor = instanceTexture2.Sample(defaultSampler, (uv * uvScale2) + scrollSpeed2 * scrollTimer).rgba;
