@@ -1,7 +1,16 @@
-#include "stdafx.h"
 #include "Button.h"
+#include "stdafx.h"
 
-CButton::CButton()
+void CButton::OnHover()
+{
+}
+
+void CButton::OnLeave()
+{
+}
+
+CButton::CButton(std::function<void()> aFunction) :
+	myFunction(aFunction)
 {
 }
 
