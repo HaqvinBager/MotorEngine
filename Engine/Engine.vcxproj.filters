@@ -316,6 +316,9 @@
     <ClCompile Include="Button.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="Canvas.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AStar.h" />
@@ -585,6 +588,9 @@
       <Filter>Renderers</Filter>
     </ClInclude>
     <ClInclude Include="Button.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Canvas.h">
       <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
