@@ -32,6 +32,7 @@
 
 #include "helpers.h"
 #include "loadAssetsFromDirectory.h"
+#include "spriteViewer.h"
 
 using namespace CommonUtilities;
 namespace SM = DirectX::SimpleMath;
@@ -243,6 +244,7 @@ bool ChangeModel(CGameObject* aCurrentGameObject, std::vector<std::string>& aMod
 		else
 		{
 			aCurrentGameObject->GetComponent<CAnimationComponent>()->ReplaceAnimation(aModelFilePathList[loadModelNumber].c_str(), somePathsToAnimations);
+			aCurrentGameObject->GetComponent<CAnimationComponent>()->Awake();
 		}
 	}
 
@@ -257,14 +259,14 @@ void UpdateAnimationTest(CGameObject* aCurrentGameObject,CGameObject* /*aCamera*
 	const auto animComp = aCurrentGameObject->GetComponent<CAnimationComponent>();
 	if (animComp)
 	{
-		if (animComp->Enabled())
-		{
-			if (Input::GetInstance()->IsKeyPressed('0')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(0); }
-			if (Input::GetInstance()->IsKeyPressed('1')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(1); }
-			if (Input::GetInstance()->IsKeyPressed('2')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(2); }
+		if (Input::GetInstance()->IsKeyPressed('0')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(0); }
+		if (Input::GetInstance()->IsKeyPressed('1')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(1); }
+		if (Input::GetInstance()->IsKeyPressed('2')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(2); }
 
-			aCurrentGameObject->GetComponent<CAnimationComponent>()->Update();
-		}
+		aCurrentGameObject->GetComponent<CAnimationComponent>()->Update();
+
+		//if (animComp->Enabled())
+		//{}
 	}
 
 	if (Input::GetInstance()->IsKeyPressed(VK_ESCAPE))
@@ -278,7 +280,13 @@ void UpdateAnimationTest(CGameObject* aCurrentGameObject,CGameObject* /*aCamera*
 
 //////////////////////////////////// MAIN STARTS HERE ///////////////////////////////////////////////////////////////////
 
-#define RUNNING_ANIMATIONS_TEST
+/// Play animations in Model Viewer:
+///		Either choose on startup whether to play animations or show models
+/// In Update: Play animations using 0-1 Check for max nr of anims on a model!
+/// What happens if an SK fbx does not have AN files in its folder (error checking)
+/// 
+
+//#define RUNNING_ANIMATIONS_TEST
 
 #define ASSET_ROOT "Assets"
 #define ASSET_ROOT_ANIMATION_TEST "Assets/3D/Datadriven_Animation_Test"
@@ -332,6 +340,21 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
 	CGameObject* currentGameObject = nullptr;
 
+
+	bool viewAnimations = false;
+	SetForegroundWindow(GetConsoleWindow());
+	std::cout << "Show models or show animations? M for models, A for animations" << std::endl;
+	char input = 'o';
+	std::cin >> input;
+	while (input != 'A' && input != 'M')
+	{
+		std::cin.clear();
+		std::cout << "Show models or show animations? M for models, A for animations" << std::endl;
+		std::cin >> input;
+	}
+	viewAnimations = (input == 'A' ? false : true);
+	std::cout << input << std::endl;
+
 #ifdef RUNNING_ANIMATIONS_TEST
 	std::vector<std::string> filePaths;
 	MW::LoadModelPaths(ASSET_ROOT_ANIMATION_TEST, filePaths);
@@ -363,9 +386,11 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		<< "   Y/H..................Rotate Model around its Z axis\n"
 		<< "   K....................Reset Model\n"
 		<< "   C....................Reset Camera\n"
+		<< "   I....................Show InGame - HUD (Group 4)\n"
+		<< "   1-0..................Play Animations for SK model\n"
 		<< std::endl;
 
-	
+	bool showUI = false;
 	
 	MSG windowMessage = { 0 };
 	while (shouldRun)
@@ -387,6 +412,18 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 #else
 		Update(filePaths, currentGameObject, camera);
 #endif // ! RUNNING_ANIMATIONS_TEST
+		if (showUI)
+		{
+			SpriteViewer::Update();
+		}
+		else
+		{
+			if (Input::GetInstance()->IsKeyPressed('I'))
+			{
+				SpriteViewer::Init();
+				showUI = true;
+			}
+		}
 
 		engine.RenderFrame();
 		engine.EndFrame();

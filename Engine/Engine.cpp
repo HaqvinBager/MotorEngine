@@ -249,3 +249,8 @@ void CEngine::SetActiveScene(int sceneIndex)
 {
 	myActiveScene = sceneIndex;
 }
+
+CScene& CEngine::GetActiveScene()
+{
+	return *myScenes[myActiveScene];
+}

@@ -20,6 +20,7 @@ public:
 
 private:
 	ID3D11ShaderResourceView* GetShaderResourceView(ID3D11Device* aDevice, std::string aTexturePath);
+	DirectX::SimpleMath::Vector2 GetTextureDimensions(ID3D11ShaderResourceView* texture) const;
 
 private:
 	CSpriteFactory();

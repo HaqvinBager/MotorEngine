@@ -79,6 +79,9 @@
     <FxCompile Include="LineVertexShader.hlsl">
       <Filter>Shaders\Line</Filter>
     </FxCompile>
+    <FxCompile Include="SpriteVFXSphericalTextureBlendingPixelShader.hlsl">
+      <Filter>Shaders\Sprite</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AStar.cpp" />

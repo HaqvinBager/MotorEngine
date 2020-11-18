@@ -19,8 +19,6 @@ CAnimatedUIElement::CAnimatedUIElement(std::string aFilePath) : mySpriteInstance
 
     mySpriteInstance = new CSpriteInstance();
     mySpriteInstance->Init(CSpriteFactory::GetInstance()->GetSprite(document["Texture Overlay"].GetString()));
-    UINT windowWidth = CEngine::GetInstance()->GetWindowHandler()->GetWidth();
-    mySpriteInstance->SetSize({ document["Sprite Size X"].GetFloat() * (16.0f / 9.0f) / windowWidth, document["Sprite Size Y"].GetFloat() * (16.0f / 9.0f) / windowWidth });
     myData = CSpriteFactory::GetInstance()->GetVFXSprite(aFilePath);
 }
 

@@ -8,8 +8,10 @@ public:
 		ID3D11PixelShader* myPixelShader = nullptr;
 		ID3D11GeometryShader* myGeometryShader = nullptr;
 		ID3D11SamplerState* mySampler = nullptr;
-		D3D11_PRIMITIVE_TOPOLOGY myPrimitiveTopology;
-		ID3D11ShaderResourceView* myTexture;
+		D3D11_PRIMITIVE_TOPOLOGY myPrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		ID3D11ShaderResourceView* myTexture = nullptr;
+
+		DirectX::SimpleMath::Vector2 myDimensions;
 	};
 
 public:

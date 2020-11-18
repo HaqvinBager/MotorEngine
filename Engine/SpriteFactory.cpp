@@ -65,6 +65,7 @@ CSprite* CSpriteFactory::LoadSprite(std::string aTexturePath)
 	//End Sampler
 
 	ID3D11ShaderResourceView* shaderResourceView = GetShaderResourceView(myFramework->GetDevice(), aTexturePath);
+	DirectX::SimpleMath::Vector2 spriteDimensions = GetTextureDimensions(shaderResourceView);
 
 	CSprite* sprite = new CSprite();
 	if (!sprite) {
@@ -79,6 +80,7 @@ CSprite* CSpriteFactory::LoadSprite(std::string aTexturePath)
 	spriteData.mySampler = sampler;
 	spriteData.myPrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
 	spriteData.myTexture = shaderResourceView;
+	spriteData.myDimensions = spriteDimensions;
 
 	sprite->Init(spriteData);
 	return sprite;
@@ -108,7 +110,7 @@ SAnimatedSpriteData* CSpriteFactory::LoadVFXSprite(std::string aFilePath)
 	spriteData->verticalDirectionOfChange = document["Vertical Direction Of Change"].GetBool();
 
 	std::ifstream psFile;
-	psFile.open("SpriteVFXTextureBlendingPixelShader.cso", std::ios::binary);
+	psFile.open(document["Pixel Shader Path"].GetString(), std::ios::binary);
 	std::string psData = { std::istreambuf_iterator<char>(psFile), std::istreambuf_iterator<char>() };
 	ID3D11PixelShader* pixelShader;
 	ENGINE_HR_BOOL_MESSAGE(myFramework->GetDevice()->CreatePixelShader(psData.data(), psData.size(), nullptr, &pixelShader), "Pixel Shader could not be created.");
@@ -176,6 +178,26 @@ ID3D11ShaderResourceView* CSpriteFactory::GetShaderResourceView(ID3D11Device* aD
 
 	delete[] widePath;
 	return shaderResourceView;
+}
+
+DirectX::SimpleMath::Vector2 CSpriteFactory::GetTextureDimensions(ID3D11ShaderResourceView* texture) const
+{
+	ID3D11Resource* res = nullptr;
+	texture->GetResource(&res);
+
+	ID3D11Texture2D* texture2d = nullptr;
+	ENGINE_HR_MESSAGE(res->QueryInterface(&texture2d), "Texture could not be found while querying sprite.");
+
+	DirectX::SimpleMath::Vector2 dimensions(0, 0);
+	D3D11_TEXTURE2D_DESC desc;
+	texture2d->GetDesc(&desc);
+	dimensions.x = static_cast<float>(desc.Width);
+	dimensions.y = static_cast<float>(desc.Height);
+
+	if (texture2d) texture2d->Release();
+	if (res) res->Release();
+
+	return dimensions;
 }
 
 CSpriteFactory* CSpriteFactory::GetInstance()

@@ -19,6 +19,9 @@ class CInputMapper;
 class CDebug;
 class CEnemyFactory;
 class CMainSingleton;
+class CForwardRenderer;
+class CVFXFactory;
+class CLineFactory;
 
 class CEngine
 {
@@ -43,6 +46,7 @@ public:
 
 	void AddScene(CScene* aScene);
 	void SetActiveScene(int sceneIndex);
+	CScene& GetActiveScene();
 
 private:
 	static CEngine* ourInstance;
