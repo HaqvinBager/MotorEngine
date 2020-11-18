@@ -17,18 +17,20 @@ namespace SpriteViewer
 	{
 		CSpriteInstance* spriteInstance = new CSpriteInstance();
 		spriteInstance->Init(CSpriteFactory::GetInstance()->GetSprite("Assets/3D/UI/Ingame/UI_test.dds"/*"tempUI.dds"*/));
-		spriteInstance->SetSize({ 1024.0f / 1000.0f, 256.0f / 1000.0f });
+		//spriteInstance->SetSize({ 1024.0f / 1000.0f, 256.0f / 1000.0f });
 		//spriteInstance->SetSize({ 1024.0f / CEngine::GetInstance()->GetWindowHandler()->GetWidth(), 256.0f / CEngine::GetInstance()->GetWindowHandler()->GetWidth() });
 		//spriteInstance->SetSize({ 2.0f, 2.0f });
 		//spriteInstance->SetPosition({ 0.0f,-0.85f });
 		spriteInstance->SetPosition({ 0.0f,-0.82f });
+		spriteInstance->SetSize({ 0.75f, 0.75f });
+
 		CScene::GetInstance()->AddInstance(spriteInstance);
 
 		CAnimatedUIElement* uiElement = new CAnimatedUIElement("VFXData_UI_HealthOrb.json");
-		uiElement->SetPosition({ -0.47f, -0.82f });
+		uiElement->SetPosition({ -0.52f, -0.82f });
 		CScene::GetInstance()->AddInstance(uiElement);
 		CAnimatedUIElement* uiElement2 = new CAnimatedUIElement("VFXData_UI_ResourceOrb.json");
-		uiElement2->SetPosition({ 0.47f, -0.82f });
+		uiElement2->SetPosition({ 0.52f, -0.82f });
 		CScene::GetInstance()->AddInstance(uiElement2);
 		CAnimatedUIElement* uiElement3 = new CAnimatedUIElement("VFXData_UI_ExperienceBar.json");
 		uiElement3->SetPosition({ 0.0f, -0.735f });
