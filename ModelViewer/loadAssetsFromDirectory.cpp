@@ -12,7 +12,47 @@ namespace ModelViewer
 		using std::filesystem::directory_iterator;
 		return std::distance(directory_iterator(path), directory_iterator{});
 	}
-	void LoadModelPaths(const std::string& aStartFolderPath, std::vector<std::string>& aFBXFilePaths)
+
+	void LoadModelPaths(const std::string& aStartFolderPath, std::vector<std::string>& aFBXFilePaths, const bool aLoadSK)
+	{
+		std::filesystem::path p(aStartFolderPath);
+
+		std::filesystem::recursive_directory_iterator start(p);
+		std::filesystem::recursive_directory_iterator end;
+
+		for (auto& it = start; it != end; ++it)
+		{
+			//std::string parentPath		= it->path().parent_path().string();	//Gets the folder before it
+			//std::string relativePath		= it->path().relative_path().string();	// Gets the path up to root_path (the path used to init the std::filesystem::path)
+
+			if (!it->is_directory())
+			{
+				std::string filePath		= it->path().filename().string();
+				const size_t checkForDot	= filePath.find(".");
+				std::string fileExtension	= filePath.substr(checkForDot, ((4 + checkForDot) < filePath.length() ? 4 : filePath.length() - 1 ));
+				//it->path() has a file extension function, but it only returns true or false
+				if (fileExtension == ".fbx")
+				{
+					//ex: CH_NPC_Boss_Attack_AN.fbx 7 from last
+					std::string suffix = GetSuffixFromString(filePath);
+					if (!aLoadSK)
+						if (suffix == "_SK")
+							continue;
+
+					if (suffix != "_AN")
+					{
+						if (aLoadSK)
+							if (suffix != "_SK")
+								continue;
+
+						aFBXFilePaths.emplace_back(it->path().relative_path().string());
+					}
+				}
+			}
+		}
+	}
+
+	void LoadModelPathsOverEngineeredButCool(const std::string& aStartFolderPath, std::vector<std::string>& aFBXFilePaths, const bool aLoadSK)
 	{
 		struct SFileInfo// Used for directories.
 		{
@@ -62,6 +102,15 @@ namespace ModelViewer
 		for (auto i = start; i != end; ++i)
 		{
 			std::string filePath = i->path().filename().string();
+			std::string parentPath = i->path().parent_path().string();
+			std::string relativePath = i->path().relative_path().string();
+			std::cout << "p " << parentPath << std::endl;
+			std::cout << "r " << relativePath << std::endl;
+			if (filePath == "DatadrivenAnimationTest")
+			{
+				int a = 0;
+				a = 5;
+			}
 	
 			if (folders[prevFolders[depth]].myNumItems > 0)
 			{
@@ -89,6 +138,7 @@ namespace ModelViewer
 					folderPath = folders[prevFolders[depth]].myFullPath;
 				}
 			}
+			//std::cout << "n " << folders[prevFolders[depth]].myNumItems << " " << folderPath << std::endl;
 	
 			if (i->is_directory())
 			{
@@ -107,16 +157,26 @@ namespace ModelViewer
 				const size_t checkForDot = filePath.find(".");
 				std::string fileExtension = filePath.substr(checkForDot, ((4 + checkForDot) < filePath.length() ? 4 : filePath.length() - 1 ));
 				// todo filesystem::path has a function to check if it is a directory.
+				
 				if (fileExtension == ".fbx")
 				{
 					//ex: CH_NPC_Boss_Attack_AN.fbx 7 from last
 					std::string suffix = GetSuffixFromString(filePath);
+					if (!aLoadSK)
+						if (suffix == "_SK")
+							continue;
+
 					if (suffix != "_AN")
 					{
+						if (aLoadSK)
+							if (suffix != "_SK")
+								continue;
+
 						aFBXFilePaths.emplace_back(folders[prevFolders[depth]].myFullPath + "/" + filePath);
 					}
 				}
 			}
 		}
 	}
+	
 }

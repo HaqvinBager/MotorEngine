@@ -6,5 +6,5 @@
 namespace SpriteViewer
 {
 	void Init();
-	void Update();
+	void Update(bool aShouldUpdate);
 }
