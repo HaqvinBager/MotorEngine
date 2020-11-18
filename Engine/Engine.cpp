@@ -55,6 +55,8 @@ CEngine::CEngine()
 	myRenderManager = nullptr;
 	myEnemyFactory = new CEnemyFactory();
 	myMainSingleton = new CMainSingleton();
+
+	myActiveScene = 0; //muc bad
 }
 
 CEngine::~CEngine()

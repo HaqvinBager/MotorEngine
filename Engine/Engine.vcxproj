@@ -124,6 +124,7 @@
     <ClInclude Include="Audio.h" />
     <ClInclude Include="AudioChannel.h" />
     <ClInclude Include="Behaviour.h" />
+    <ClInclude Include="Button.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CameraFactory.h" />
@@ -218,6 +219,7 @@
     <ClCompile Include="AStar.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="AudioChannel.cpp" />
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="CameraFactory.cpp" />

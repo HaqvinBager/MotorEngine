@@ -313,6 +313,9 @@
     <ClCompile Include="VFXRenderer.cpp">
       <Filter>Renderers</Filter>
     </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AStar.h" />
@@ -581,6 +584,9 @@
     <ClInclude Include="VFXRenderer.h">
       <Filter>Renderers</Filter>
     </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="PBRDirectionalLight.hlsli">
@@ -710,6 +716,9 @@
     </Filter>
     <Filter Include="Renderers">
       <UniqueIdentifier>{804ee6d8-8119-47c7-b01f-f228842feb9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{a7555d10-6cc0-4364-a51b-aef3693f1ac2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
