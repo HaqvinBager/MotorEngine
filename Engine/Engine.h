@@ -2,6 +2,7 @@
 #include "WindowHandler.h"
 #include "DirectXFramework.h"
 #include <string>
+#include <vector>
 
 class CWindowHandler;
 class CDirextXFramework;
@@ -40,6 +41,9 @@ public:
 
 	static CEngine* GetInstance();
 
+	void AddScene(CScene* aScene);
+	void SetActiveScene(int sceneIndex);
+
 private:
 	static CEngine* ourInstance;
 	
@@ -50,6 +54,9 @@ private:
 	CScene* myScene;
 	CTimer* myTimer;
 	CDebug* myDebug;
+
+	unsigned int myActiveScene;
+	std::vector<CScene*> myScenes;
 
 	CModelFactory* myModelFactory;
 	CCameraFactory* myCameraFactory;

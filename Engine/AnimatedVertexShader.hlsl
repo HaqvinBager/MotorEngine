@@ -6,7 +6,7 @@ VertexToPixel main(VertexInput input)
      
     returnValue.myPosition = input.myPosition;
 
-  
+
     float4 vWeights = input.myBoneWeight;
     uint4 vBones = uint4((uint) input.myBoneID.x, (uint) input.myBoneID.y, (uint) input.myBoneID.z, (uint) input.myBoneID.w);
     returnValue.myPosition = mul(returnValue.myPosition, toWorld);

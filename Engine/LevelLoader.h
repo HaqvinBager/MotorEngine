@@ -12,7 +12,7 @@ public:
 	CLevelLoader();
 	~CLevelLoader() = default;
 
-	bool Init();
+	bool Init(const unsigned int alevelIndex = 0);
 
 	void CreateLevel(const std::string& aPath);
 
@@ -20,7 +20,8 @@ public:
 
 private:
 	CUnityLoader* myUnityLoader;
-	CScene* myScene;
+	//CScene* myScene;
 	std::vector<ObjectData> objectData;
+	std::vector<CScene*> myScenes;
 };
 

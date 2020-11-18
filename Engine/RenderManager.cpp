@@ -9,7 +9,7 @@
 #include "CameraComponent.h"
 
 
-CRenderManager::CRenderManager() : myScene(*CScene::GetInstance())
+CRenderManager::CRenderManager() /*: myScene(*CScene::GetInstance())*/
 {
 }
 
@@ -78,8 +78,11 @@ bool CRenderManager::Init(CDirectXFramework* aFramework, CWindowHandler* aWindow
 	return true;
 }
 
-void CRenderManager::Render()
+void CRenderManager::Render(CScene& aScene)
 {
+	//if (CScene::GetInstance()->Ready() == false)
+	//	return;
+
 	myRenderStateManager.SetAllDefault();
 	myBackbuffer.ClearTexture({ 0.5f,0.5f,0.5f,1.0f });
 	myIntermediateTexture.ClearTexture({ 0.5f,0.5f,0.5f,1.0f });
@@ -87,20 +90,20 @@ void CRenderManager::Render()
 
 	myIntermediateTexture.SetAsActiveTarget(&myIntermediateDepth);
 
-	CEnvironmentLight* environmentlight = myScene.GetEnvironmentLight();
-	CCameraComponent* maincamera = myScene.GetMainCamera();
+	CEnvironmentLight* environmentlight = aScene.GetEnvironmentLight();
+	CCameraComponent* maincamera = aScene.GetMainCamera();
 	//std::vector<CModelComponent*> modelsToRender = myScene.CullGameObjects(maincamera);
-	std::vector<CGameObject*> gameObjects = myScene.CullGameObjects(maincamera);
+	std::vector<CGameObject*> gameObjects = aScene.CullGameObjects(maincamera);
 	std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> pointlights;
 	for (CGameObject* instance : gameObjects)
 	{
-		pointlights.push_back(myScene.CullLights(instance));
+		pointlights.push_back(aScene.CullLights(instance));
 	}
 	myForwardRenderer.Render(environmentlight, pointlights, maincamera, gameObjects);
 
-	auto modelToOutline = myScene.GetModelToOutline();
+	auto modelToOutline = aScene.GetModelToOutline();
 	if (modelToOutline) {
-		pointlights.emplace_back(myScene.CullLights(modelToOutline));
+		pointlights.emplace_back(aScene.CullLights(modelToOutline));
 		std::vector<CGameObject*> interimVector;
 		interimVector.emplace_back(modelToOutline);
 		myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_STENCILWRITE, 0xFF);
@@ -112,8 +115,8 @@ void CRenderManager::Render()
 		modelToOutline->GetComponent<CTransformComponent>()->ResetScale();
 	}
 
-	const std::vector<CLineInstance*>& lineInstances = myScene.CullLineInstances();
-	const std::vector<SLineTime>& lines = myScene.CullLines();
+	const std::vector<CLineInstance*>& lineInstances = aScene.CullLineInstances();
+	const std::vector<SLineTime>& lines = aScene.CullLines();
 
 	myForwardRenderer.RenderLines(maincamera, lines);
 	myForwardRenderer.RenderLineInstances(maincamera, lineInstances);
@@ -188,17 +191,17 @@ void CRenderManager::Render()
 	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_ALPHABLEND);
 	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_ONLYREAD);
 
-	std::vector<CSpriteInstance*> sprites = myScene.CullSprites();
+	std::vector<CSpriteInstance*> sprites = aScene.CullSprites();
 	mySpriteRenderer.Render(sprites);
 
 	std::vector<CSpriteInstance*> animatedUIFrames;
-	std::vector<CAnimatedUIElement*> animatedUIElements = myScene.CullAnimatedUI(animatedUIFrames);
+	std::vector<CAnimatedUIElement*> animatedUIElements = aScene.CullAnimatedUI(animatedUIFrames);
 	mySpriteRenderer.Render(animatedUIElements);
 	mySpriteRenderer.Render(animatedUIFrames);
 
 	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_DISABLE);
 	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_DEFAULT);
 
-	std::vector<CTextInstance*> textsToRender = myScene.GetTexts();
+	std::vector<CTextInstance*> textsToRender = aScene.GetTexts();
 	myTextRenderer.Render(textsToRender);
 }

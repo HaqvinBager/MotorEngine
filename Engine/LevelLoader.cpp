@@ -14,16 +14,18 @@
 
 #include <rapidjson\document.h>
 
+#include "Engine.h"
+
 CLevelLoader::CLevelLoader()
 	: myUnityLoader(nullptr)
-	, myScene(nullptr)
+	//, myScene(nullptr)
 {
 }
 
-bool CLevelLoader::Init()
+bool CLevelLoader::Init(const unsigned int alevelIndex)
 {
 	myUnityLoader = new CUnityLoader();
-	myScene = CScene::GetInstance();
+	//myScene = CScene::GetInstance();
 
 	std::ifstream t("Levels/json.txt");
 	assert(t.is_open());
@@ -37,7 +39,9 @@ bool CLevelLoader::Init()
 
 	rapidjson::Value& results = document["Levels"];
 
-	std::string s = results[0]["LevelName"].GetString();
+	std::string s = results[alevelIndex]["LevelName"].GetString();
+	
+	myScenes.emplace_back(new CScene());
 
 	LoadNewLevel("Levels/" + s);
 
@@ -53,8 +57,8 @@ void CLevelLoader::CreateLevel(const std::string& aPath)
 	CTransformComponent* cameraTransform = camera->myTransform;
 	cameraTransform->Position({ levelData->myCameraData.myPosX, levelData->myCameraData.myPosY, levelData->myCameraData.myPosZ});
 	cameraTransform->Rotation({ levelData->myCameraData.myRotX, levelData->myCameraData.myRotY, levelData->myCameraData.myRotZ });
-	myScene->SetMainCamera(cameraComponent);
-	myScene->AddInstance(camera);
+	myScenes.back()->SetMainCamera(cameraComponent);
+	myScenes.back()->AddInstance(camera);
 
 	CGameObject* environmentLight = new CGameObject();
 	environmentLight->AddComponent<CEnviromentLightComponent>(*environmentLight, 
@@ -68,7 +72,7 @@ void CLevelLoader::CreateLevel(const std::string& aPath)
 			levelData->myEnviromentData.myDirectionY, 
 			levelData->myEnviromentData.myDirectionZ));
 	//maybe problemo in forwardrenderer - 20-11-11
-	myScene->AddInstance(environmentLight);
+	myScenes.back()->AddInstance(environmentLight);
 
 	std::vector<PointLightDataRaw>& pointLights = levelData->myPointLightData;
 	for (unsigned int i = 0; i < pointLights.size(); ++i)
@@ -81,7 +85,7 @@ void CLevelLoader::CreateLevel(const std::string& aPath)
 			levelData->myPointLightData[i].myColorG, 
 			levelData->myPointLightData[i].myColorB, 
 			levelData->myPointLightData[i].myIntensity));
-		myScene->AddInstance(pointLightGameObject);
+		myScenes.back()->AddInstance(pointLightGameObject);
 	}
 
 	CGameObject* playerGameObject = new CGameObject();
@@ -89,7 +93,7 @@ void CLevelLoader::CreateLevel(const std::string& aPath)
 	playerGameObject->myTransform->Rotation({ levelData->myPlayerData.myRotX, levelData->myPlayerData.myRotX, levelData->myPlayerData.myRotX });
 	playerGameObject->AddComponent<CModelComponent>(*playerGameObject, levelData->myModelPaths[levelData->myPlayerData.myModelIndex]);
 	playerGameObject->AddComponent<CPlayerControllerComponent>(*playerGameObject);
-	myScene->AddInstance(playerGameObject);
+	myScenes.back()->AddInstance(playerGameObject);
 
 	for (const auto &object : levelData->myModelData)
 	{
@@ -99,15 +103,17 @@ void CLevelLoader::CreateLevel(const std::string& aPath)
 		gameObject->myTransform->Position({ object.myPosX, object.myPosY, object.myPosZ });
 		gameObject->AddComponent<CModelComponent>(*gameObject, levelData->myModelPaths[object.myModelIndex]);
 
-		myScene->AddInstance(gameObject);
+		myScenes.back()->AddInstance(gameObject);
 	}
+
+	CEngine::GetInstance()->AddScene(myScenes.back());
 }
 
 void CLevelLoader::LoadNewLevel(const std::string& aPath)
 {
 	//Fix 2020-11-11
 	if (objectData.size() > 0) {
-		myScene->ClearScene();
+		//myScene->ClearScene();
 		objectData.clear();
 	}
 	CreateLevel(aPath);

@@ -58,9 +58,14 @@ public:
 
 	void SetModelToOutline(CGameObject* aGameObject);
 
-private:
+	const bool Ready() const { return myIsReadyToRender; }
+	void Ready(bool aReady) { myIsReadyToRender = aReady; }
+
 	CScene();
 	~CScene();
+
+private:
+
 
 private:
 	std::vector<CGameObject*> myGameObjects;
@@ -77,6 +82,9 @@ private:
 	std::vector<CAnimatedUIElement*> myAnimatedUIElements;
 	std::vector<CTextInstance*> myTexts;
 	CCollisionManager* myCollisionManager;
+
+	bool myIsReadyToRender;
+
 	static CScene* ourInstance;
 
 	CGameObject* myModelToOutline;

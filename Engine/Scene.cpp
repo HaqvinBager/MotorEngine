@@ -27,6 +27,7 @@ CScene* CScene::GetInstance()
 
 CScene::CScene()
 {
+	myIsReadyToRender = false;
 	ourInstance = this;
 	myMainCamera = nullptr;
 	myCollisionManager = new CCollisionManager();
@@ -74,7 +75,7 @@ std::vector<CGameObject*> CScene::CullGameObjects(CCameraComponent* aMainCamera)
 		}
 
 		float distanceToCameraSquared = Vector3::DistanceSquared(gameObject->GetComponent<CTransformComponent>()->Position(), cameraPosition);
-		if (distanceToCameraSquared < 500.0f)
+		if (distanceToCameraSquared < 1500.0f)
 		{
 			culledGameObjects.emplace_back(gameObject);
 		}

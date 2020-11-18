@@ -18,10 +18,10 @@ public:
 	CRenderManager();
 	~CRenderManager();
 	bool Init(CDirectXFramework* aFramework, CWindowHandler* aWindowHandler);
-	void Render();
+	void Render(CScene& aScene);
 
 private:
-	CScene& myScene;
+	//CScene& myScene;
 	CRenderStateManager myRenderStateManager;
 	CForwardRenderer myForwardRenderer;
 	CFullscreenRenderer myFullscreenRenderer;
@@ -41,4 +41,3 @@ private:
 	CFullscreenTexture myBlurTexture2;
 	CFullscreenTexture myVignetteTexture;
 };
-

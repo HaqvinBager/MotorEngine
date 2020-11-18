@@ -189,7 +189,7 @@ float CEngine::BeginFrame()
 
 void CEngine::RenderFrame()
 {
-	myRenderManager->Render();
+	myRenderManager->Render(*myScenes[myActiveScene]);
 }
 
 void CEngine::EndFrame()
@@ -238,4 +238,14 @@ void CEngine::CrashWithScreenShot(std::wstring &aSubPath)
 CEngine* CEngine::GetInstance()
 {
 	return ourInstance;
+}
+
+void CEngine::AddScene(CScene* aScene)
+{
+	myScenes.emplace_back(aScene);
+}
+
+void CEngine::SetActiveScene(int sceneIndex)
+{
+	myActiveScene = sceneIndex;
 }
