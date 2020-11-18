@@ -64,16 +64,16 @@ void CloseConsole()
 #pragma warning( pop )
 }
 
-CGameObject* InitModels(const std::string& aModelPath)
+CGameObject* InitModels(const std::string& aModelPath, CScene& aScene)
 {
-	CScene* scene = CScene::GetInstance();
+	//CScene* scene = CScene::GetInstance();
 
 	CGameObject* gameobject = new CGameObject();
 
 	gameobject->AddComponent<CModelComponent>(CModelComponent(*gameobject, aModelPath));
 	gameobject->myTransform->Position({ 0.0f,0.0f,0.0f });
 	
-	scene->AddInstance(gameobject);
+	aScene.AddInstance(gameobject);
 
 	return gameobject;
 }
@@ -155,7 +155,7 @@ void Update(std::vector<std::string>& aModelFilePathList, CGameObject* aCurrentG
 	}
 }
 
-CGameObject* InitAnimation(const std::string& aFilePath)
+CGameObject* InitAnimation(const std::string& aFilePath, CScene& aScene)
 {
 	CGameObject* gameObject = new CGameObject();
 
@@ -190,7 +190,7 @@ CGameObject* InitAnimation(const std::string& aFilePath)
 		animComp->Awake();
 	}
 
-	CScene::GetInstance()->AddInstance(gameObject);
+	aScene.AddInstance(gameObject);
 
 	return gameObject;
 }
@@ -262,6 +262,13 @@ void UpdateAnimationTest(CGameObject* aCurrentGameObject,CGameObject* /*aCamera*
 		if (Input::GetInstance()->IsKeyPressed('0')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(0); }
 		if (Input::GetInstance()->IsKeyPressed('1')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(1); }
 		if (Input::GetInstance()->IsKeyPressed('2')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(2); }
+		if (Input::GetInstance()->IsKeyPressed('3')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(3); }
+		if (Input::GetInstance()->IsKeyPressed('4')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(4); }
+		if (Input::GetInstance()->IsKeyPressed('5')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(5); }
+		if (Input::GetInstance()->IsKeyPressed('6')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(6); }
+		if (Input::GetInstance()->IsKeyPressed('7')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(7); }
+		if (Input::GetInstance()->IsKeyPressed('8')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(8); }
+		if (Input::GetInstance()->IsKeyPressed('9')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(9); }
 
 		aCurrentGameObject->GetComponent<CAnimationComponent>()->Update();
 
@@ -286,7 +293,7 @@ void UpdateAnimationTest(CGameObject* aCurrentGameObject,CGameObject* /*aCamera*
 /// What happens if an SK fbx does not have AN files in its folder (error checking)
 /// 
 
-//#define RUNNING_ANIMATIONS_TEST
+#define RUNNING_ANIMATIONS_TEST
 
 #define ASSET_ROOT "Assets"
 #define ASSET_ROOT_ANIMATION_TEST "Assets/3D/Datadriven_Animation_Test"
@@ -313,6 +320,10 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	if (!shouldRun)
 		return 1;
 
+	CScene* scene = new CScene();
+
+	//CEngine::GetInstance()
+
 // CAMERA
 	CGameObject* camera = new CGameObject();
 	/*CCameraComponent* camComp = */camera->AddComponent<CCameraComponent>(*camera);
@@ -320,46 +331,47 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		camera->myTransform->Rotation({ 33.f,-45.f,0.f });
 		camera->myTransform->Position({ 1.5f,2.0f,-1.5f });
 		//CScene::GetInstance()->AddInstance(camera);
-		CScene::GetInstance()->SetMainCamera(camera->GetComponent<CCameraComponent>());
+		scene->SetMainCamera(camera->GetComponent<CCameraComponent>());
 // ENV LIGHT
 	CEnvironmentLight* environmentLight = CLightFactory::GetInstance()->CreateEnvironmentLight("Yokohama2.dds");
 		environmentLight->SetDirection(SM::Vector3(0, -1, -1));
 		environmentLight->SetColor(SM::Vector3(1.0f, 1.0f, 1.0f));
 		environmentLight->SetIntensity(1.0f);
-		CScene::GetInstance()->AddInstance(environmentLight);
+		scene->AddInstance(environmentLight);
 // GRID
 	CLineInstance* grid = new CLineInstance();
 		grid->Init(CLineFactory::GetInstance()->CreateGrid({ 0.33f,0.33f,0.33f, 1.0f }));
 		grid->SetPosition({ 0.0f,-0.01f,0.0f });
-		CScene::GetInstance()->AddInstance(grid);
+		scene->AddInstance(grid);
 // AXIS ORIGIN MARKER
 	CLineInstance* origin = new CLineInstance();
 		origin->Init(CLineFactory::GetInstance()->CreateAxisMarker());
 		origin->SetPosition({ 0.0f,0.01f,0.0f });
-		CScene::GetInstance()->AddInstance(origin);
+		scene->AddInstance(origin);
 
+	CEngine::GetInstance()->AddScene(scene);
+	CEngine::GetInstance()->SetActiveScene(0);
 	CGameObject* currentGameObject = nullptr;
 
-
-	bool viewAnimations = false;
-	SetForegroundWindow(GetConsoleWindow());
-	std::cout << "Show models or show animations? M for models, A for animations" << std::endl;
-	char input = 'o';
-	std::cin >> input;
-	while (input != 'A' && input != 'M')
-	{
-		std::cin.clear();
-		std::cout << "Show models or show animations? M for models, A for animations" << std::endl;
-		std::cin >> input;
-	}
-	viewAnimations = (input == 'A' ? false : true);
-	std::cout << input << std::endl;
+	//bool viewAnimations = false;
+	//SetForegroundWindow(GetConsoleWindow());
+	//std::cout << "Show models or show animations? M for models, A for animations" << std::endl;
+	//char input = 'o';
+	//std::cin >> input;
+	//while (input != 'A' && input != 'M')
+	//{
+	//	std::cin.clear();
+	//	std::cout << "Show models or show animations? M for models, A for animations" << std::endl;
+	//	std::cin >> input;
+	//}
+	//viewAnimations = (input == 'A' ? false : true);
+	//std::cout << input << std::endl;
 
 #ifdef RUNNING_ANIMATIONS_TEST
 	std::vector<std::string> filePaths;
 	MW::LoadModelPaths(ASSET_ROOT_ANIMATION_TEST, filePaths);
 
-	currentGameObject = InitAnimation(filePaths[0]);
+	currentGameObject = InitAnimation(filePaths[0], *scene);
 
 #else
 	std::vector<std::string> filePaths;

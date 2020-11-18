@@ -3,6 +3,8 @@
 #include <vector>
 #include <filesystem>
 
+#include <Scene.h>
+
 namespace ModelViewer
 {
 	std::size_t number_of_files_in_directory(const std::filesystem::path& path);

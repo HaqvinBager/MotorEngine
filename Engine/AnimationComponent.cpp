@@ -21,7 +21,7 @@ CAnimationComponent::~CAnimationComponent()
 void CAnimationComponent::Awake()
 {
 	SetBonesToIdentity();
-	myAnimation->SetCurAnimationScene(0);
+	myAnimation->SetCurAnimationScene(1);
 }
 
 void CAnimationComponent::Start()
