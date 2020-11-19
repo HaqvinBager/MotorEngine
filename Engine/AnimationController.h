@@ -90,22 +90,39 @@ private:
 	float myPlayTime				= 0;
 
 
-	std::vector<Assimp::Importer*> myImporters;
-	std::vector<const aiScene*> myScenes;
-	int myCurSceneIndex;
-	aiMatrix4x4 myGlobalInverseTransform;
-	std::map<std::string, uint> myBoneMapping;
-	std::vector<MeshEntry> myEntries;
-	std::vector<BoneInfoAnim> myBoneInfo;
-	uint myNumOfBones;
-	std::vector<VertexBoneDataAnim> myMass;
+	int myCurSceneIndex		= 0;// we use this
+	int myPrevSceneIndex	= 0;
+	int myLoopingSceneIndex	= 0;// we also use this
+	float myAnimationTimeLooping = 0.0f;
+	std::vector<Assimp::Importer*>		myImporters;
+	std::vector<const aiScene*>			myScenes;
+	aiMatrix4x4							myGlobalInverseTransform;
+	std::map<std::string, uint>			myBoneMapping;
+	std::vector<MeshEntry>				myEntries;
+	std::vector<BoneInfoAnim>			myBoneInfo;
+	uint								myNumOfBones;
+	std::vector<VertexBoneDataAnim>		myMass;
 
 public:
 
 	void SetRotation(const aiVector3D& aRotation) { myRotation = aRotation; }
 	aiVector3D GetRotation() { return myRotation; }
 	void SetCurSceneIndex(int aCurSceneIndex) { myCurSceneIndex = aCurSceneIndex; }
+	void SetLoopingSceneIndex(int aSceneIndex) { myLoopingSceneIndex = aSceneIndex; }
 	const size_t GetNrOfAnimations() const { return myScenes.size(); }
+	void ResetAnimationTimeCurrent(/*const bool anIsLooping*/) 
+	{ 
+		// anIsLooping was if we wished to continue the loopinbg animation on the exact frame it started... i think.
+		//if (anIsLooping) 
+		//{
+		//	myAnimationTimeLooping = myAnimationTimePrev;
+		//}
+		myAnimationTimeCurrent = 0.0f; 
+	}
+
+	//  Was if we wished to continue the loopinbg animation on the exact frame it started... i think.
+	//void AnimationTimePrevToLooping() { myAnimationTimePrev = myAnimationTimeLooping; }
+	//void AnimationTimeLoopingToPrev() { myAnimationTimeLooping = myAnimationTimePrev; }
 
 	~AnimationController()
 	{
@@ -328,27 +345,35 @@ public:
 			aTransformsVector[i] = myBoneInfo[i].myFinalTransformation;
 		}
 	}
-	void BoneTransform(std::vector<aiMatrix4x4>& aTransformsVector)
+
+	/// PlayAnim(animIndex, anIsLoop)
+	/// 
+	/// AnimationTime is the current frame of the animation between 0.0f to mDuration
+	/// Once anim is almost mDuration the animation resets.
+	/// (ceil(AnimationTime) >= static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration))
+	/// returns 1 if the animation is complete.
+	/// if 1 set myAnimationTimeCurrent = 0.0f
+	/// set myCurSceneIndex to myLoopingSceneIndex
+
+	void  BoneTransform(std::vector<aiMatrix4x4>& aTransformsVector)
 	{
 		aiMatrix4x4 identity;// Used for ReadNodeHierarchy
 		InitIdentityM4(identity);
 
+		bool switchBackToLooping = false;
 		float AnimationTime = 0.0f;
-
 		if (myScenes[myCurSceneIndex]->mAnimations != nullptr)
 		{
-
-
 			float TicksPerSecond = 
 				static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mTicksPerSecond) != 0 
 				? 
 				static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mTicksPerSecond) : 25.0f;
-			float TimeInTicks = myAnimationTimePrev * TicksPerSecond;
+			float TimeInTicks = myAnimationTimeCurrent * TicksPerSecond;
 			AnimationTime = fmodf(TimeInTicks, static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration));
 			
 			ReadNodeHeirarchy(myScenes[myCurSceneIndex], AnimationTime, myScenes[myCurSceneIndex]->mRootNode, identity, 2);
 
-			//std::cout << TimeInTicks << std::endl;
+			switchBackToLooping = (ceil(AnimationTime) >= static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration));
 		}
 
 		aTransformsVector.resize(myNumOfBones);
@@ -358,29 +383,11 @@ public:
 			aTransformsVector[i] = myBoneInfo[i].myFinalTransformation;
 		}
 
-		std::cout << (ceil(AnimationTime) >= static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration)) << std::endl;
-
-
-		//   AKI SOLUTION
-
-		//bool
-		//  return static_cast bool(floor(AnimationTime));
-		//
-		//
-
-
-
-		// MANNE SOLUTION
-		//
-		// bool play single animation
-		//  play bonetransform single time
-		// bool sets to false
-		// continue bonetransform looping
-
+		if (switchBackToLooping)
+		{
+			myCurSceneIndex = myLoopingSceneIndex;
+		}
 	}
-
-	
-
 
 	void LoadBones(uint aMeshIndex, const aiMesh* aMesh)
 	{
@@ -526,12 +533,13 @@ public:
 		
 		//myAnimationTimeCurrent += dt;
 		//myAnimationTimePrev += dt;
+		if (myCurSceneIndex != myPrevSceneIndex)
+		{
+			myBlendingTime = 0.0f;
+		}
+		myAnimationTimeCurrent += dt;
 
-
-		myAnimationTimePrev += dt;
-
-		
-
+	
 		//if (myTemporary)
 		//{
 		//	myPlayTime -= dt;

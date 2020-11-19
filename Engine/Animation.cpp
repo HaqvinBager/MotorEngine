@@ -54,8 +54,6 @@ void CAnimation::Step()
 {
 	//THIS DOES NOTHING WTF
 	/*myTotalAnimationTime += aDelta;*/
-
-
 	myController->UpdateFrame();
 }
 

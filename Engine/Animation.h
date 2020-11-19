@@ -21,6 +21,7 @@ public:
 
 public: 
 	void SetCurAnimationScene(const int aCurAnimScene);
+	AnimationController& GetMyController() { return *myController; }
 
 private:
 	float myTotalAnimationTime;
