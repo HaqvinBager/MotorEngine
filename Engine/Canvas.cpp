@@ -6,8 +6,9 @@
 #include "SpriteInstance.h"
 #include "TextInstance.h"
 #include "AnimatedUIElement.h"
+#include "InputMapper.h"
 
-CCanvas::CCanvas(std::vector<EMessageType> someMessageTypes) : myMessageTypes(someMessageTypes), myBackground(nullptr)
+CCanvas::CCanvas(std::vector<EMessageType> someMessageTypes, std::vector<IInputObserver::EInputEvent> someInputEvents) : myMessageTypes(someMessageTypes), myInputEvents(someInputEvents), myBackground(nullptr)
 {
 	SubscribeToMessages();
 }
@@ -16,6 +17,12 @@ CCanvas::~CCanvas()
 {
 	UnsubscribeToMessages();
 	myMessageTypes.clear();
+	delete myBackground;
+	myBackground = nullptr;
+	myAnimatedUIs.clear();
+	myButtons.clear();
+	mySprites.clear();
+	myTexts.clear();
 }
 
 void CCanvas::Init()
@@ -50,12 +57,31 @@ void CCanvas::SubscribeToMessages()
 	for (auto messageType : myMessageTypes) {
 		CMainSingleton::PostMaster().Subscribe(messageType, this);
 	}
+
+	for (auto inputEvent : myInputEvents) {
+		CInputMapper::GetInstance()->AddObserver(inputEvent, this);
+	}
 }
 
 void CCanvas::UnsubscribeToMessages()
 {
 	for (auto messageType : myMessageTypes) {
 		CMainSingleton::PostMaster().Unsubscribe(messageType, this);
+	}
+
+	for (auto inputEvent : myInputEvents) {
+		CInputMapper::GetInstance()->RemoveObserver(inputEvent, this);
+	}
+}
+
+void CCanvas::RecieveEvent(const IInputObserver::EInputEvent aEvent)
+{
+	switch (aEvent)
+	{
+	case IInputObserver::EInputEvent::AttackClick:
+		break;
+	default:
+		break;
 	}
 }
 
@@ -91,7 +117,18 @@ std::vector<CTextInstance*> CCanvas::GetTexts()
 
 void CCanvas::SetEnabled(bool isEnabled)
 {
-	myIsEnabled = isEnabled;
+	//assert(myIsEnabled == isEnabled, "Enable is already the same as the input");
+	if (myIsEnabled != isEnabled) {
+		myIsEnabled = isEnabled;
+
+		for (auto button : myButtons) {
+			button->myEnabled = myIsEnabled;
+		}
+
+		for (auto sprite : mySprites) {
+			sprite->SetShouldRender(myIsEnabled);
+		}
+	}
 }
 
 void CCanvas::SetBackground(CSpriteInstance* aBackground)

@@ -35,7 +35,7 @@ void CPlayerControllerComponent::OnDisable()
 {
 }
 
-void CPlayerControllerComponent::RecieveEvent(const IInputObserver::EInputEvent aEvent, const float /*aValue*/)
+void CPlayerControllerComponent::RecieveEvent(const IInputObserver::EInputEvent aEvent)
 {
 	switch (aEvent)
 	{

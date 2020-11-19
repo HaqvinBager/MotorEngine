@@ -28,5 +28,5 @@ public:
 public:
 	IInputObserver() = default;
 	virtual ~IInputObserver() = default;
-	virtual void RecieveEvent(const EInputEvent aEvent, const float aValue) = 0;
+	virtual void RecieveEvent(const EInputEvent aEvent) = 0;
 };

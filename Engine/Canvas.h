@@ -8,7 +8,7 @@ class CAnimatedUIElement;
 class CCanvas : public IObserver, public IInputObserver
 {
 public:
-	CCanvas(std::vector<EMessageType> someMessageTypes);
+	CCanvas(std::vector<EMessageType> someMessageTypes, std::vector<IInputObserver::EInputEvent> someInputEvents);
 	~CCanvas();
 
 public:
@@ -19,6 +19,9 @@ public:
 	void Receive(const SMessage& aMessage) override;
 	void SubscribeToMessages();
 	void UnsubscribeToMessages();
+
+public:
+	void RecieveEvent(const IInputObserver::EInputEvent aEvent) override;
 
 public:
 	bool GetEnabled();
@@ -47,4 +50,5 @@ private:
 	std::vector<CSpriteInstance*> mySprites;
 	std::vector<CTextInstance*> myTexts;
 	std::vector<EMessageType> myMessageTypes;
+	std::vector<IInputObserver::EInputEvent> myInputEvents;
 };

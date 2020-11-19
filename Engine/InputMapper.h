@@ -5,7 +5,6 @@
 class CInputMapper
 {
 	friend class CEngine;
-
 public:
 	static CInputMapper* GetInstance();
 
@@ -20,8 +19,8 @@ private:
 	CInputMapper();
 	~CInputMapper();
 
-	void RunEvent(const IInputObserver::EInputEvent aOutputEvent, const float aValue = 0);
-	void TranslateActionToEvent(const IInputObserver::EInputAction aAction, const float aValue = 0);
+	void RunEvent(const IInputObserver::EInputEvent aOutputEvent);
+	void TranslateActionToEvent(const IInputObserver::EInputAction aAction);
 	void UpdateKeyboardInput();
 	void UpdateMouseInput();
 
