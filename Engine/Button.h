@@ -9,6 +9,8 @@ struct SButtonData {
 	std::array<std::string, 3> mySpritePaths;
 	// POSITION IS IN SHADER SPACE -1 -> 1 RIGHT NOW
 	DirectX::SimpleMath::Vector2 myPosition;
+	DirectX::SimpleMath::Vector2 myDimensions;
+	std::string myText;
 };
 
 struct SUIRect {

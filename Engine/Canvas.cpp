@@ -9,6 +9,9 @@
 #include "InputMapper.h"
 #include "Input.h"
 
+#include "rapidjson\document.h"
+#include "rapidjson\istreamwrapper.h"
+
 CCanvas::CCanvas(std::vector<EMessageType> someMessageTypes, std::vector<IInputObserver::EInputEvent> someInputEvents) : myMessageTypes(someMessageTypes), myInputEvents(someInputEvents), myBackground(nullptr)
 {
 	SubscribeToMessages();
@@ -26,19 +29,35 @@ CCanvas::~CCanvas()
 	myTexts.clear();
 }
 
-void CCanvas::Init()
+void CCanvas::Init(std::string aFilePath)
 {
-	SButtonData data;
-	data.myPosition = { 0.0f, 0.0f };
-	data.mySpritePaths.at(0) = "Assets/3D/UI/idle_button.dds";
-	data.mySpritePaths.at(1) = "Assets/3D/UI/hover_button.dds";
-	data.mySpritePaths.at(2) = "Assets/3D/UI/depressed_button.dds";
-	myButtons.emplace_back(new CButton(data));
+	using namespace rapidjson;
+
+	std::ifstream inputStream(aFilePath);
+	IStreamWrapper inputWrapper(inputStream);
+	Document document;
+	document.ParseStream(inputWrapper);
+
+	if (document.HasMember("Buttons")) {
+		auto buttonDataArray = document["Buttons"].GetArray();
+		for (unsigned int i = 0; i < buttonDataArray.Size(); ++i)
+		{
+			auto buttonData = buttonDataArray[i].GetArray();
+			SButtonData data;
+			data.myText = buttonData[0]["Text"].GetString();
+			data.myPosition = { buttonData[1]["Position X"].GetFloat(), buttonData[2]["Position Y"].GetFloat() };
+			data.myDimensions = { buttonData[3]["Pixel Width"].GetFloat(), buttonData[4]["Pixel Height"].GetFloat() };
+			data.mySpritePaths.at(0) = buttonData[5]["Idle Sprite Path"].GetString();
+			data.mySpritePaths.at(1) = buttonData[6]["Hover Sprite Path"].GetString();
+			data.mySpritePaths.at(2) = buttonData[7]["Click Sprite Path"].GetString();
+			myButtons.emplace_back(new CButton(data));
+		}
+	}
 }
 
 void CCanvas::Update(float /*aDeltaTime*/)
 {
-	DirectX::SimpleMath::Vector2 mousePos = { static_cast<float>(CommonUtilities::Input::GetInstance()->MouseScreenX()) , static_cast<float>(CommonUtilities::Input::GetInstance()->MouseScreenY()) };
+	DirectX::SimpleMath::Vector2 mousePos = { static_cast<float>(CommonUtilities::Input::GetInstance()->MouseX()), static_cast<float>(CommonUtilities::Input::GetInstance()->MouseY()) };
 	for (unsigned int i = 0; i < myButtons.size(); ++i) 
 	{
 		myButtons[i]->CheckMouseCollision(mousePos);

@@ -12,7 +12,7 @@ public:
 	~CCanvas();
 
 public:
-	void Init();
+	void Init(std::string aFilePath);
 	void Update(float aDeltaTime);
 
 public:

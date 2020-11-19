@@ -40,10 +40,17 @@ void CSpriteInstance::SetShouldRender(bool aBool)
 	myShouldRender = aBool;
 }
 
+/// <summary>
+///The y-position is flipped in this function so that we go from Shader space 
+///([-1, -1] in the lower left corner) to Shader space with [-1, -1] in the 
+/// upper left corner. I think this is more intuitive, but might as well 
+/// revert this.
+/// </summary>
+/// <param name="aPosition"></param>
 void CSpriteInstance::SetPosition(DirectX::SimpleMath::Vector2 aPosition)
 {
 	myPosition.x = aPosition.x;
-	myPosition.y = aPosition.y;
+	myPosition.y -= aPosition.y;
 }
 
 void CSpriteInstance::SetColor(DirectX::SimpleMath::Vector4 aColor)

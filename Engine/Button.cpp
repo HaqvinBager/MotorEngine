@@ -37,6 +37,7 @@ void CButton::OnClickUp(void* someData)
 void CButton::OnLeave()
 {
 	myState = EButtonState::Idle;
+	mySprites.at(static_cast<size_t>(EButtonState::Click))->SetShouldRender(false);
 	mySprites.at(static_cast<size_t>(EButtonState::Hover))->SetShouldRender(false);
 	mySprites.at(static_cast<size_t>(EButtonState::Idle))->SetShouldRender(true);
 }
@@ -59,7 +60,6 @@ void CButton::Click(bool anIsPressed, void* someData)
 		}
 		break;
 	default:
-		OnLeave();
 		break;
 	}
 }
@@ -88,19 +88,17 @@ void CButton::CheckMouseCollision(DirectX::SimpleMath::Vector2 aScreenSpacePosit
 	else {
 		myIsMouseHover = false;
 
-		OnLeave();
-		//switch (myState)
-		//{
-		//case EButtonState::Hover:
-		//	OnLeave();
-		//	break;
-		//case EButtonState::Click:
-		//	OnLeave();
-		//	break;
-		//default:
-		//	OnLeave
-		//	break;
-		//}
+		switch (myState)
+		{
+		case EButtonState::Hover:
+			OnLeave();
+			break;
+		case EButtonState::Click:
+			OnLeave();
+			break;
+		default:
+			break;
+		}
 	}
 }
 
@@ -121,8 +119,6 @@ CButton::CButton(SButtonData& someData)
 	mySprites.at(static_cast<size_t>(EButtonState::Hover))->SetShouldRender(false);
 	mySprites.at(static_cast<size_t>(EButtonState::Click))->SetShouldRender(false);
 
-	DirectX::SimpleMath::Vector2 spriteDimensions = 
-		mySprites.at(static_cast<size_t>(EButtonState::Idle))->GetSprite()->GetSpriteData().myDimensions;
 
 	float windowWidth = static_cast<float>(CEngine::GetInstance()->GetWindowHandler()->GetWidth());
 	float windowHeight = static_cast<float>(CEngine::GetInstance()->GetWindowHandler()->GetHeight());
@@ -131,6 +127,8 @@ CButton::CButton(SButtonData& someData)
 	normalizedPosition /= 2.0f;
 	normalizedPosition += { 0.5f, 0.5f };
 
+	DirectX::SimpleMath::Vector2 spriteDimensions = someData.myDimensions;
+	spriteDimensions /= 2.0f;
 	myRect.myTop = normalizedPosition.y * windowHeight - spriteDimensions.y;
 	myRect.myBottom = normalizedPosition.y * windowHeight + spriteDimensions.y;
 	myRect.myLeft = normalizedPosition.x * windowWidth - spriteDimensions.x;
@@ -138,7 +136,7 @@ CButton::CButton(SButtonData& someData)
 
 	for (unsigned int i = 0; i < 3; ++i)
 	{
-		mySprites.at(i)->SetPosition(someData.myPosition);
+		mySprites.at(i)->SetPosition({ someData.myPosition.x, someData.myPosition.y });
 	}
 }
 
