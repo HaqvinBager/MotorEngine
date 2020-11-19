@@ -50,10 +50,12 @@ void CAnimation::BlendStep(float aDelta)
 	myController->UpdateBlendFrame();
 }
 
-void CAnimation::Step(float aDelta)
+void CAnimation::Step()
 {
+	//THIS DOES NOTHING WTF
+	/*myTotalAnimationTime += aDelta;*/
 
-	myTotalAnimationTime += aDelta;
+
 	myController->UpdateFrame();
 }
 

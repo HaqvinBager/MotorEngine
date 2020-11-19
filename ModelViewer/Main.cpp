@@ -367,7 +367,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	CGameObject* currentGameObject = nullptr;
 
 	bool viewAnimations = false;
-	SetForegroundWindow(GetConsoleWindow());
+	/*SetForegroundWindow(GetConsoleWindow());
 	std::cout << "Show Models or Animations? M for Models, A for Animations " << std::endl
 	<< "   Show Models: any model that does not have a rig." << std::endl
 	<< "   Show Animations: any model that has a rig." << std::endl
@@ -383,7 +383,9 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		std::cout << "Show Models or Animations? M for Models, A for Animations\n M / A: " << std::endl;
 		std::cin >> input;
 	}
-	viewAnimations = (input == 'A');
+	viewAnimations = (input == 'A');*/
+
+	viewAnimations = true;
 
 	std::vector<std::string> filePaths;
 	if (viewAnimations)

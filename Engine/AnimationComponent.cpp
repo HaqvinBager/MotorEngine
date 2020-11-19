@@ -100,7 +100,7 @@ void CAnimationComponent::UpdateBlended(const float dt)
 }
 void CAnimationComponent::UpdateNonBlended(const float dt)
 {
-	myAnimation->Step(dt);
+	myAnimation->Step();
 	SetBonesToIdentity();
 	GetAnimatedTransforms(dt, myBones.data());
 }

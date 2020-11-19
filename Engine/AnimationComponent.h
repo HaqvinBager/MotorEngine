@@ -59,7 +59,7 @@ private:
 	CAnimation* myAnimation;
 	std::array<SlimMatrix44, 64> myBones { };
 	SAnimationBlend myBlend;
-	bool myIsLooping;
+	bool myIsLooping ;
 
 
 };

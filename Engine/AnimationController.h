@@ -333,16 +333,22 @@ public:
 		aiMatrix4x4 identity;// Used for ReadNodeHierarchy
 		InitIdentityM4(identity);
 
+		float AnimationTime = 0.0f;
+
 		if (myScenes[myCurSceneIndex]->mAnimations != nullptr)
 		{
+
+
 			float TicksPerSecond = 
 				static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mTicksPerSecond) != 0 
 				? 
 				static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mTicksPerSecond) : 25.0f;
 			float TimeInTicks = myAnimationTimePrev * TicksPerSecond;
-			float AnimationTime = fmodf(TimeInTicks, static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration));
+			AnimationTime = fmodf(TimeInTicks, static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration));
 			
 			ReadNodeHeirarchy(myScenes[myCurSceneIndex], AnimationTime, myScenes[myCurSceneIndex]->mRootNode, identity, 2);
+
+			//std::cout << TimeInTicks << std::endl;
 		}
 
 		aTransformsVector.resize(myNumOfBones);
@@ -351,7 +357,29 @@ public:
 		{
 			aTransformsVector[i] = myBoneInfo[i].myFinalTransformation;
 		}
+
+		std::cout << (ceil(AnimationTime) >= static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration)) << std::endl;
+
+
+		//   AKI SOLUTION
+
+		//bool
+		//  return static_cast bool(floor(AnimationTime));
+		//
+		//
+
+
+
+		// MANNE SOLUTION
+		//
+		// bool play single animation
+		//  play bonetransform single time
+		// bool sets to false
+		// continue bonetransform looping
+
 	}
+
+	
 
 
 	void LoadBones(uint aMeshIndex, const aiMesh* aMesh)
@@ -501,6 +529,8 @@ public:
 
 
 		myAnimationTimePrev += dt;
+
+		
 
 		//if (myTemporary)
 		//{
