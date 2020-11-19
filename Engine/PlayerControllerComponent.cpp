@@ -5,8 +5,8 @@
 CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent) : CBehaviour(aParent)
 {
 	//IS PROBABLY RONG // ALEX LIVHOLTS
-	CInputMapper::GetInstance()->AddObserver(CInputObserver::EInputEvent::MoveClick, this);
-	CInputMapper::GetInstance()->AddObserver(CInputObserver::EInputEvent::AttackClick, this);
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::MoveClick, this);
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::AttackClick, this);
 
 }
 
@@ -35,15 +35,15 @@ void CPlayerControllerComponent::OnDisable()
 {
 }
 
-void CPlayerControllerComponent::RecieveEvent(const CInputObserver::EInputEvent aEvent, const float /*aValue*/)
+void CPlayerControllerComponent::RecieveEvent(const IInputObserver::EInputEvent aEvent, const float /*aValue*/)
 {
 	switch (aEvent)
 	{
-	case CInputObserver::EInputEvent::MoveClick:
+	case IInputObserver::EInputEvent::MoveClick:
 		//std::cout << "Hejsan" << std::endl;
 		//DO STUFF
 		break;
-	case CInputObserver::EInputEvent::AttackClick:
+	case IInputObserver::EInputEvent::AttackClick:
 		//ALSO DO STUFF TOO
 		break;
 	default:
