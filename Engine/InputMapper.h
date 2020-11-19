@@ -10,9 +10,9 @@ public:
 	static CInputMapper* GetInstance();
 
 	void Update();
-	void MapEvent(const CInputObserver::EInputAction aInputEvent, const CInputObserver::EInputEvent aOutputEvent);
-	bool AddObserver(const CInputObserver::EInputEvent aEventToListenFor, CInputObserver* aObserver);
-	bool RemoveObserver(const CInputObserver::EInputEvent aEventToListenFor, CInputObserver* aObserver);
+	void MapEvent(const IInputObserver::EInputAction aInputEvent, const IInputObserver::EInputEvent aOutputEvent);
+	bool AddObserver(const IInputObserver::EInputEvent aEventToListenFor, IInputObserver* aObserver);
+	bool RemoveObserver(const IInputObserver::EInputEvent aEventToListenFor, IInputObserver* aObserver);
 
 private:
 	static CInputMapper* ourInstance;
@@ -20,13 +20,13 @@ private:
 	CInputMapper();
 	~CInputMapper();
 
-	void RunEvent(const CInputObserver::EInputEvent aOutputEvent, const float aValue = 0);
-	void TranslateActionToEvent(const CInputObserver::EInputAction aAction, const float aValue = 0);
+	void RunEvent(const IInputObserver::EInputEvent aOutputEvent, const float aValue = 0);
+	void TranslateActionToEvent(const IInputObserver::EInputAction aAction, const float aValue = 0);
 	void UpdateKeyboardInput();
 	void UpdateMouseInput();
 
-	std::unordered_map<CInputObserver::EInputEvent, std::vector<CInputObserver*>> myObservers;
-	std::unordered_map<CInputObserver::EInputAction, CInputObserver::EInputEvent> myEvents;
+	std::unordered_map<IInputObserver::EInputEvent, std::vector<IInputObserver*>> myObservers;
+	std::unordered_map<IInputObserver::EInputAction, IInputObserver::EInputEvent> myEvents;
 	CommonUtilities::Input* myInput;
 };
 

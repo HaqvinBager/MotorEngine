@@ -1,6 +1,6 @@
 #pragma once
 
-class CInputObserver {
+class IInputObserver {
 public:
 	enum class EInputAction
 	{
@@ -8,6 +8,8 @@ public:
 		MouseRight,
 		MouseMiddle,
 		KeyEscape,
+		KeyEnter,
+		KeyShift,
 		Key1,
 		Key2,
 		Key3,
@@ -24,7 +26,7 @@ public:
 	};
 
 public:
-	CInputObserver() = default;
-	virtual ~CInputObserver() = default;
+	IInputObserver() = default;
+	virtual ~IInputObserver() = default;
 	virtual void RecieveEvent(const EInputEvent aEvent, const float aValue) = 0;
 };
