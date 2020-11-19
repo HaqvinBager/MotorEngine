@@ -33,13 +33,17 @@ namespace ModelViewer
 				//it->path() has a file extension function, but it only returns true or false
 				if (fileExtension == ".fbx")
 				{
+					// If it has a animation @ skip.
+					if (filePath.find_first_of("@") != std::string::npos)
+						continue;
+
 					//ex: CH_NPC_Boss_Attack_AN.fbx 7 from last
 					std::string suffix = GetSuffixFromString(filePath);
 					if (!aLoadSK)
 						if (suffix == "_SK")
 							continue;
 
-					if (suffix != "_AN")
+					if (suffix != "_AN")// Extra check to make sure we don't load animation files.
 					{
 						if (aLoadSK)
 							if (suffix != "_SK")

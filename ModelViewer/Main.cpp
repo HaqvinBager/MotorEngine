@@ -67,7 +67,7 @@ void CloseConsole()
 #define CAMERA_DEFAULT_ROT { 33.f,-45.f,0.f }
 #define CAMERA_DEFAULT_POS { 1.75f,2.0f,-1.5f }
 
-
+#pragma region TRANSFORM FUNCTIONS
 void UpdateCamera(CGameObject& aCamera, const float dt)
 {
 	float cameraMoveSpeed = 500.0f;
@@ -115,7 +115,8 @@ void ResetModelTransform(CGameObject& aCurrentGameObject)
 		aCurrentGameObject.GetComponent<CTransformComponent>()->Transform({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
 	}
 }
-
+#pragma endregion ! TRANSFORM FUNCTIONS
+#pragma region MODELS 
 CGameObject* InitModels(const std::string& aModelPath, CScene& aScene)
 {
 	//CScene* scene = CScene::GetInstance();
@@ -166,7 +167,8 @@ void UpdateModel(const std::vector<std::string>& aModelFilePathList, CGameObject
 		ChangeModel(aCurrentGameObject, aModelFilePathList);
 	}
 }
-
+#pragma endregion ! MODELS
+#pragma region ANIMATIONS
 CGameObject* InitAnimation(const std::string& aFilePath, CScene& aScene)
 {
 	CGameObject* gameObject = new CGameObject();
@@ -198,7 +200,6 @@ CGameObject* InitAnimation(const std::string& aFilePath, CScene& aScene)
 
 		CAnimationComponent* animComp = gameObject->AddComponent<CAnimationComponent>(*gameObject);
 		animComp->GetMyAnimation()->Init(aFilePath.c_str(), somePathsToAnimations);
-		animComp->SetBlend(0, 1, 1.0f);
 		animComp->Awake();
 	}
 
@@ -266,21 +267,27 @@ bool ChangeAnimationModel(CGameObject* aCurrentGameObject, const std::vector<std
 
 	return true;
 }
+bool IsLessThan(const size_t aIsLess, const size_t aThanThis)
+{
+	return (aIsLess < aThanThis);
+}
 void UpdateAnimation(CGameObject* aCurrentGameObject, CGameObject* aCamera, const std::vector<std::string>& aModelFilePathList)
 {
 	const auto animComp = aCurrentGameObject->GetComponent<CAnimationComponent>();
 	if (animComp)
 	{
-		if (Input::GetInstance()->IsKeyPressed('0')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(0); }
-		if (Input::GetInstance()->IsKeyPressed('1')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(1); }
-		if (Input::GetInstance()->IsKeyPressed('2')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(2); }
-		if (Input::GetInstance()->IsKeyPressed('3')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(3); }
-		if (Input::GetInstance()->IsKeyPressed('4')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(4); }
-		if (Input::GetInstance()->IsKeyPressed('5')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(5); }
-		if (Input::GetInstance()->IsKeyPressed('6')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(6); }
-		if (Input::GetInstance()->IsKeyPressed('7')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(7); }
-		if (Input::GetInstance()->IsKeyPressed('8')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(8); }
-		if (Input::GetInstance()->IsKeyPressed('9')) { aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(9); }
+		const size_t nrOfAnims = animComp->GetMyAnimation()->GetNrOfAnimations();
+
+		if (Input::GetInstance()->IsKeyPressed('0')) { if(IsLessThan(0, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(0); }
+		if (Input::GetInstance()->IsKeyPressed('1')) { if(IsLessThan(1, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(1); }
+		if (Input::GetInstance()->IsKeyPressed('2')) { if(IsLessThan(2, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(2); }
+		if (Input::GetInstance()->IsKeyPressed('3')) { if(IsLessThan(3, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(3); }
+		if (Input::GetInstance()->IsKeyPressed('4')) { if(IsLessThan(4, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(4); }
+		if (Input::GetInstance()->IsKeyPressed('5')) { if(IsLessThan(5, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(5); }
+		if (Input::GetInstance()->IsKeyPressed('6')) { if(IsLessThan(6, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(6); }
+		if (Input::GetInstance()->IsKeyPressed('7')) { if(IsLessThan(7, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(7); }
+		if (Input::GetInstance()->IsKeyPressed('8')) { if(IsLessThan(8, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(8); }
+		if (Input::GetInstance()->IsKeyPressed('9')) { if(IsLessThan(9, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(9); }
 
 		aCurrentGameObject->GetComponent<CAnimationComponent>()->Update();
 	}
@@ -299,17 +306,11 @@ void UpdateAnimation(CGameObject* aCurrentGameObject, CGameObject* aCamera, cons
 		}
 	}
 }
+#pragma endregion ! ANIMATIONS
+
+
 
 //////////////////////////////////// MAIN STARTS HERE ///////////////////////////////////////////////////////////////////
-
-/// Play animations in Model Viewer:
-///		Either choose on startup whether to play animations or show models
-/// In Update: Play animations using 0-1 Check for max nr of anims on a model!
-/// What happens if an SK fbx does not have AN files in its folder (error checking)
-/// 
-
-#define RUNNING_ANIMATIONS_TEST
-
 #define ASSET_ROOT "Assets/3D"
 #define ASSET_ROOT_ANIMATION_TEST "Assets/3D/Datadriven_Animation_Test"
 
@@ -395,14 +396,6 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		MW::LoadModelPaths(ASSET_ROOT, filePaths);
 		currentGameObject = InitModels(filePaths[0], *scene);
 	}
-#ifdef RUNNING_ANIMATIONS_TEST
-
-#else
-	std::vector<std::string> filePaths;
-	MW::LoadModelPaths(ASSET_ROOT, filePaths);
-	currentGameObject = InitModels(filePaths[0]);
-
-#endif // ! RUNNING_ANIMATIONS
 
 	int counter = 0;
 	for (auto& str : filePaths)
@@ -455,11 +448,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		{
 			UpdateModel(filePaths, currentGameObject, camera);
 		}
-#ifdef RUNNING_ANIMATIONS_TEST
-		
-#else
-		Update(filePaths, currentGameObject, camera);
-#endif // ! RUNNING_ANIMATIONS_TEST
+
 		if (Input::GetInstance()->IsKeyPressed('I'))
 		{
 			SpriteViewer::Init();

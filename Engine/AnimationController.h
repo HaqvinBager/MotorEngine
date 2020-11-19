@@ -105,7 +105,7 @@ public:
 	void SetRotation(const aiVector3D& aRotation) { myRotation = aRotation; }
 	aiVector3D GetRotation() { return myRotation; }
 	void SetCurSceneIndex(int aCurSceneIndex) { myCurSceneIndex = aCurSceneIndex; }
-	const size_t GetNrOfAnimations() const { return myScenes.size() - 1; }
+	const size_t GetNrOfAnimations() const { return myScenes.size(); }
 
 	~AnimationController()
 	{
