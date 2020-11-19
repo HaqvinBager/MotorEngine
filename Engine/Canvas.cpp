@@ -7,6 +7,7 @@
 #include "TextInstance.h"
 #include "AnimatedUIElement.h"
 #include "InputMapper.h"
+#include "Input.h"
 
 CCanvas::CCanvas(std::vector<EMessageType> someMessageTypes, std::vector<IInputObserver::EInputEvent> someInputEvents) : myMessageTypes(someMessageTypes), myInputEvents(someInputEvents), myBackground(nullptr)
 {
@@ -27,10 +28,35 @@ CCanvas::~CCanvas()
 
 void CCanvas::Init()
 {
+	SButtonData data;
+	data.myPosition = { 0.0f, 0.0f };
+	data.mySpritePaths.at(0) = "Assets/3D/UI/idle_button.dds";
+	data.mySpritePaths.at(1) = "Assets/3D/UI/hover_button.dds";
+	data.mySpritePaths.at(2) = "Assets/3D/UI/depressed_button.dds";
+	myButtons.emplace_back(new CButton(data));
 }
 
 void CCanvas::Update(float /*aDeltaTime*/)
 {
+	DirectX::SimpleMath::Vector2 mousePos = { static_cast<float>(CommonUtilities::Input::GetInstance()->MouseScreenX()) , static_cast<float>(CommonUtilities::Input::GetInstance()->MouseScreenY()) };
+	for (unsigned int i = 0; i < myButtons.size(); ++i) 
+	{
+		myButtons[i]->CheckMouseCollision(mousePos);
+	}
+
+	if (CommonUtilities::Input::GetInstance()->IsMousePressed(CommonUtilities::Input::MouseButton::Left)) {
+		for (unsigned int i = 0; i < myButtons.size(); ++i)
+		{
+			myButtons[i]->Click(true, nullptr);
+		}
+	}
+
+	if (CommonUtilities::Input::GetInstance()->IsMouseReleased(CommonUtilities::Input::MouseButton::Left)) {
+		for (unsigned int i = 0; i < myButtons.size(); ++i)
+		{
+			myButtons[i]->Click(false, nullptr);
+		}
+	}
 }
 
 void CCanvas::Receive(const SMessage& aMessage)

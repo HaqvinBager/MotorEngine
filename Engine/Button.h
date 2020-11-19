@@ -7,6 +7,12 @@ class CSpriteInstance;
 struct SButtonData {
 	std::vector<EMessageType> myMessagesToSend;
 	std::array<std::string, 3> mySpritePaths;
+	// POSITION IS IN SHADER SPACE -1 -> 1 RIGHT NOW
+	DirectX::SimpleMath::Vector2 myPosition;
+};
+
+struct SUIRect {
+	float myTop, myBottom, myLeft, myRight;
 };
 
 enum class EButtonState {
@@ -23,14 +29,20 @@ public:
 	void OnClickUp(void* someData);
 	void OnLeave();
 
+	void Click(bool anIsPressed, void* someData);
+	void CheckMouseCollision(DirectX::SimpleMath::Vector2 aScreenSpacePosition);
+
 private:
 	CButton(SButtonData& someData);
 	~CButton();
 
 private:
-	bool myEnabled;
-	EButtonState myState;
 	std::vector<EMessageType> myMessagesToSend;
 	std::array<CSpriteInstance*, 3> mySprites;
+	SUIRect myRect;
+	EButtonState myState;
+	bool myEnabled;
+	bool myIsMouseHover;
+	
 };
 
