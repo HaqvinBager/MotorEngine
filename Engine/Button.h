@@ -1,8 +1,13 @@
 #pragma once
-#include <functional>
+#include "PostMaster.h"
 
 class CCanvas;
-class CSpriteInstace;
+class CSpriteInstance;
+
+struct SButtonData {
+	std::vector<EMessageType> myMessagesToSend;
+	std::array<std::string, 3> mySpritePaths;
+};
 
 enum class EButtonState {
 	Idle,
@@ -14,22 +19,18 @@ class CButton {
 	friend CCanvas;
 public:
 	void OnHover();
-	template<typename...Params>
-	void OnClick(Params&&...p);
+	void OnClickDown();
+	void OnClickUp(void* someData);
 	void OnLeave();
 
-//private:
-	CButton(std::function<void()> aFunction);
+private:
+	CButton(SButtonData& someData);
 	~CButton();
 
+private:
 	bool myEnabled;
 	EButtonState myState;
-	std::function<void()> myFunction;
-	std::array<CSpriteInstace*, 3> mySprites;
+	std::vector<EMessageType> myMessagesToSend;
+	std::array<CSpriteInstance*, 3> mySprites;
 };
 
-template<typename ...Params>
-inline void CButton::OnClick(Params&& ...p)
-{
-	myFunction(std::forward<Params>(p)...);
-}

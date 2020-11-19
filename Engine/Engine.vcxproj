@@ -79,7 +79,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <FxCompile>
-      <ObjectFileOutput>$(ProjectDir)..\..\..\Bin\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput>$(ProjectDir)..\..\..\Bin\Shaders\%(Filename).cso</ObjectFileOutput>
       <ShaderModel>4.0</ShaderModel>
     </FxCompile>
     <Lib>
@@ -111,7 +111,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <FxCompile>
-      <ObjectFileOutput>$(ProjectDir)..\..\..\Bin\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput>$(ProjectDir)..\..\..\Bin\Shaders\%(Filename).cso</ObjectFileOutput>
       <ShaderModel>4.0</ShaderModel>
     </FxCompile>
   </ItemDefinitionGroup>

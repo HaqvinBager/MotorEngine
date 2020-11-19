@@ -61,7 +61,7 @@ CVFXBase* CVFXFactory::LoadVFXBase(std::string aMeshPath, std::string aFilePath)
 
     //Start Shader
     std::ifstream vsFile;
-    vsFile.open("VFXTextureBlendVertexShader.cso", std::ios::binary);
+    vsFile.open("Shaders/VFXTextureBlendVertexShader.cso", std::ios::binary);
     std::string vsData = { std::istreambuf_iterator<char>(vsFile), std::istreambuf_iterator<char>() };
     ID3D11VertexShader* vertexShader;
     ENGINE_HR_MESSAGE(myFramework->GetDevice()->CreateVertexShader(vsData.data(), vsData.size(), nullptr, &vertexShader), "Vertex Shader could not be created.");
@@ -69,7 +69,7 @@ CVFXBase* CVFXFactory::LoadVFXBase(std::string aMeshPath, std::string aFilePath)
     vsFile.close();
 
     std::ifstream psFile;
-    psFile.open("VFXTextureBlendPixelShader.cso", std::ios::binary);
+    psFile.open("Shaders/VFXTextureBlendPixelShader.cso", std::ios::binary);
     std::string psData = { std::istreambuf_iterator<char>(psFile), std::istreambuf_iterator<char>() };
     ID3D11PixelShader* pixelShader;
     ENGINE_HR_MESSAGE(myFramework->GetDevice()->CreatePixelShader(psData.data(), psData.size(), nullptr, &pixelShader), "Pixel Shader could not be created.");

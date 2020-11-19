@@ -9,7 +9,7 @@
 CEnviromentLightComponent::CEnviromentLightComponent(CGameObject& aParent, DirectX::SimpleMath::Vector4 aColorAndIntensity, DirectX::SimpleMath::Vector3 aDirection)
 	: CComponent(aParent)
 {
-	myEnvironmentLight = CLightFactory::GetInstance()->CreateEnvironmentLight("Yokohama2.dds");
+	myEnvironmentLight = CLightFactory::GetInstance()->CreateEnvironmentLight("Assets/Cubemaps/Yokohama2.dds");
 	myEnvironmentLight->SetColor({aColorAndIntensity.x, aColorAndIntensity.y, aColorAndIntensity.z});
 	myEnvironmentLight->SetIntensity(aColorAndIntensity.w);
 	//not sure if this work! We want to set the direction of this transform!
