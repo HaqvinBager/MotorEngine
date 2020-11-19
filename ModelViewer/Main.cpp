@@ -284,7 +284,7 @@ void UpdateAnimation(CGameObject* aCurrentGameObject, CGameObject* aCamera, cons
 		if (Input::GetInstance()->IsKeyPressed('3')) { if(IsLessThan(3, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(3); }
 		if (Input::GetInstance()->IsKeyPressed('4')) { if(IsLessThan(4, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(4); }
 		if (Input::GetInstance()->IsKeyPressed('5')) { if(IsLessThan(5, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(5); }
-		if (Input::GetInstance()->IsKeyPressed('6')) { if(IsLessThan(6, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(6); }
+		if (Input::GetInstance()->IsKeyPressed('6')) { if(IsLessThan(6, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(6, true); }
 		if (Input::GetInstance()->IsKeyPressed('7')) { if(IsLessThan(7, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(7); }
 		if (Input::GetInstance()->IsKeyPressed('8')) { if(IsLessThan(8, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(8); }
 		if (Input::GetInstance()->IsKeyPressed('9')) { if(IsLessThan(9, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(9); }
@@ -346,7 +346,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		//CScene::GetInstance()->AddInstance(camera);
 		scene->SetMainCamera(camera->GetComponent<CCameraComponent>());
 // ENV LIGHT
-	CEnvironmentLight* environmentLight = CLightFactory::GetInstance()->CreateEnvironmentLight("Yokohama2.dds");
+	CEnvironmentLight* environmentLight = CLightFactory::GetInstance()->CreateEnvironmentLight("Assets/Cubemaps/Yokohama2.dds");
 		environmentLight->SetDirection(SM::Vector3(0, -1, -1));
 		environmentLight->SetColor(SM::Vector3(1.0f, 1.0f, 1.0f));
 		environmentLight->SetIntensity(1.0f);
@@ -367,7 +367,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	CGameObject* currentGameObject = nullptr;
 
 	bool viewAnimations = false;
-	SetForegroundWindow(GetConsoleWindow());
+	/*SetForegroundWindow(GetConsoleWindow());
 	std::cout << "Show Models or Animations? M for Models, A for Animations " << std::endl
 	<< "   Show Models: any model that does not have a rig." << std::endl
 	<< "   Show Animations: any model that has a rig." << std::endl
@@ -383,7 +383,9 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		std::cout << "Show Models or Animations? M for Models, A for Animations\n M / A: " << std::endl;
 		std::cin >> input;
 	}
-	viewAnimations = (input == 'A');
+	viewAnimations = (input == 'A');*/
+
+	viewAnimations = true;
 
 	std::vector<std::string> filePaths;
 	if (viewAnimations)

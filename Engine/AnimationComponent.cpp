@@ -5,6 +5,7 @@
 #include "ModelComponent.h"
 #include "Model.h"
 #include "Animation.h"
+#include "AnimationController.h"//TEMP
 #include "Timer.h"
 
 CAnimationComponent::CAnimationComponent(CGameObject& aParent) 
@@ -63,7 +64,32 @@ void CAnimationComponent::SetBlend(int anAnimationIndex, int anAnimationIndexTwo
 
 void CAnimationComponent::PlayAnimation(const int anAnimationIndex, bool anIsLooping)
 {
+
+	///
+	/// myCurSceneIndex
+	/// myLoopingSceneIndex
+	/// 
+	/// if anIslooping == true
+	///		myCurSceneIndex = anAnimationIndex.
+	/// 	myLoopingSceneIndex = anAnimationIndex.
+	/// else
+	///		myCureSceneIndex = anAnimationIndex
+	/// 
+	/// Once non-looping anim is complete switch myCureSceneIndex = myLoopingSceneIndex
+	/// 
+	/// How do we check that an animation is complete?
+	/// 
+
+
 	myIsLooping = anIsLooping;
+	if (anIsLooping)
+	{
+		myAnimation->GetMyController().SetLoopingSceneIndex(anAnimationIndex);
+	}
+	else
+	{
+		myAnimation->GetMyController().ResetAnimationTimeCurrent();
+	}
 	myAnimation->SetCurAnimationScene(anAnimationIndex);
 }
 
@@ -100,7 +126,7 @@ void CAnimationComponent::UpdateBlended(const float dt)
 }
 void CAnimationComponent::UpdateNonBlended(const float dt)
 {
-	myAnimation->Step(dt);
+	myAnimation->Step();
 	SetBonesToIdentity();
 	GetAnimatedTransforms(dt, myBones.data());
 }
