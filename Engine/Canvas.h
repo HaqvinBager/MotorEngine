@@ -5,6 +5,7 @@ class CButton;
 class CSpriteInstance;
 class CTextInstance;
 class CAnimatedUIElement;
+
 class CCanvas : public IObserver, public IInputObserver
 {
 public:

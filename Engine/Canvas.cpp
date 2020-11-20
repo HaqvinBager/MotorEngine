@@ -162,17 +162,20 @@ void CCanvas::UnsubscribeToMessages()
 	}
 }
 
+#include <iostream>
 void CCanvas::RecieveEvent(const IInputObserver::EInputEvent aEvent)
 {
 	switch (aEvent)
 	{
 	case IInputObserver::EInputEvent::Ability1:
-
+		std::cout << "anbility 1\n";
 		break;
 	case IInputObserver::EInputEvent::Ability2:
+		std::cout << "anbility 2\n";
 		
 		break;
 	case IInputObserver::EInputEvent::Ability3:
+		std::cout << "anbility 3\n";
 		
 		break;
 	default:
