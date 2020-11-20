@@ -36,7 +36,7 @@ void CCameraControllerComponent::Start()
 
 void CCameraControllerComponent::Update()
 {
-	std::cout << "Camera Controller Update" << std::endl;
+	//std::cout << "Camera Controller Update" << std::endl;
 	const float dt = CTimer::Dt();
 	//float cameraMoveSpeed = 25.0f;
 	float verticalMoveSpeedModifier = 1.5f;
