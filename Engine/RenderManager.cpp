@@ -101,6 +101,7 @@ void CRenderManager::Render(CScene& aScene)
 	}
 	myForwardRenderer.Render(environmentlight, pointlights, maincamera, gameObjects);
 
+
 	auto modelToOutline = aScene.GetModelToOutline();
 	if (modelToOutline) {
 		pointlights.emplace_back(aScene.CullLights(modelToOutline));

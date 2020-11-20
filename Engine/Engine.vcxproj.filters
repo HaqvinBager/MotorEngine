@@ -314,6 +314,16 @@
     <ClCompile Include="Button.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="CameraControllerComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraControllerComponent.cpp" />
+    <ClCompile Include="SceneReader.cpp">
+      <Filter>SceneData</Filter>
+    </ClCompile>
+    <ClCompile Include="UnityFactory.cpp">
+      <Filter>SceneData</Filter>
+	</ClCompile>
     <ClCompile Include="Canvas.cpp">
       <Filter>UI</Filter>
     </ClCompile>
@@ -595,6 +605,18 @@
     <ClInclude Include="Button.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="SceneReader.h">
+      <Filter>SceneData</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneData.h">
+      <Filter>SceneData</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonReader.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="UnityFactory.h">
+      <Filter>SceneData</Filter>
+	</ClInclude>
     <ClInclude Include="Canvas.h">
       <Filter>UI</Filter>
     </ClInclude>
@@ -745,6 +767,9 @@
     </Filter>
     <Filter Include="Navmesh and Pathfinding">
       <UniqueIdentifier>{686fce43-a286-40b1-b646-57125b4da049}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SceneData">
+      <UniqueIdentifier>{65ea63e7-692e-477a-8498-52af94724067}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -19,7 +19,7 @@ public:
 		DirectX::SimpleMath::Ray ray = MouseTracker::WorldSpacePick();
 		//The picking ray is checked against the floor of the world, **ASSUMING Y TO BE 0**
 		DirectX::SimpleMath::Plane worldPlane = DirectX::SimpleMath::Plane(DirectX::SimpleMath::Vector3::Zero, DirectX::SimpleMath::Vector3::Up);
-		
+
 		float distToPlane = 0.0f;
 		DirectX::SimpleMath::Vector3 worldPos{ 0.0f, 0.0f, 0.0f };
 
@@ -39,7 +39,7 @@ public:
 
 	//	DirectX::SimpleMath::Vector4 mouseWorldPositionNear = DirectX::SimpleMath::Vector4(mouseX, mouseY, 2.0 * 1.0f - 1.0, 1.0f);
 	//	DirectX::SimpleMath::Vector4 worldPosNear = DirectX::XMVector4Transform(mouseWorldPositionNear, porjInvert);
-	//	
+	//
 	//	//DirectX::SimpleMath::Vector4 mouseWorldPositionFar = DirectX::SimpleMath::Vector4(mouseX, mouseY, 1000.0f, 1.f);
 	//	//DirectX::SimpleMath::Vector4 worldPosFar = DirectX::XMVector4Transform(mouseWorldPositionFar, porjInvert);
 
@@ -58,8 +58,8 @@ public:
 	////	worldPosFar.w = 1.f / worldPosFar.w;
 	////	worldPosFar.x *= worldPosFar.w;
 	////	worldPosFar.y *= worldPosFar.w;
-	//	
-	//	
+	//
+	//
 	//	return std::move(worldPosNear);
 	};
 
@@ -70,7 +70,7 @@ public:
 		float mouseX = static_cast<float>(CommonUtilities::Input::GetInstance()->MouseX());
 		float mouseY = static_cast<float>(CommonUtilities::Input::GetInstance()->MouseY());
 
-		CCameraComponent* cam = CScene::GetInstance()->GetMainCamera();
+		CCameraComponent* cam = CEngine::GetInstance()->GetActiveScene().GetMainCamera();
 		CTransformComponent* camTransform = cam->GameObject().myTransform;
 
 		float xV = (((2 * mouseX) / width) - 1) / cam->GetProjection()._11;
@@ -92,6 +92,3 @@ public:
 	}
 };
 //};
-
-
-

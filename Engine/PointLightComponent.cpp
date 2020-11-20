@@ -14,7 +14,6 @@ CPointLightComponent::CPointLightComponent(CGameObject& aParent, float aRange, D
 	myPointLight->SetColor({aColorAndIntensity.x, aColorAndIntensity.y, aColorAndIntensity.z});
 	myPointLight->SetIntensity(aColorAndIntensity.w);
 	myPointLight->SetRange(aRange);
-	CScene::GetInstance()->AddInstance(myPointLight);
 }
 
 CPointLightComponent::~CPointLightComponent()

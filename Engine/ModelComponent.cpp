@@ -6,7 +6,6 @@
 
 CModelComponent::CModelComponent(CGameObject& aParent, std::string aFBXPath) : CBehaviour(aParent) {
 	myModel = CModelFactory::GetInstance()->GetModelPBR(aFBXPath);
-
 }
 
 CModelComponent::~CModelComponent()

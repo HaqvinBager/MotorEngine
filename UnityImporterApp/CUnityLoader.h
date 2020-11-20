@@ -12,6 +12,9 @@ public:
 	float myPosY;
 	float myPosZ;
 	float myFieldOfView;
+	float myStartInCameraMode;
+	float myToggleFreeCamKey;
+	float myFreeCamMoveSpeed;
 };
 
 class EnviromentDataRaw
@@ -112,7 +115,7 @@ public:
 	std::string myRelativePath;
 };
 
-class LevelData {
+class SceneData {
 public:
 	CameraDataRaw myCameraData;
 	EnviromentDataRaw myEnviromentData;
@@ -120,8 +123,6 @@ public:
 	PlayerDataRaw myPlayerData;
 	std::vector<AssetDataRaw> myModelData;
 	std::map<int, std::string> myModelPaths;
-	
-
 };
 
 enum EReadMode
@@ -137,7 +138,7 @@ public:
 	CUnityLoader();
 	std::vector<ObjectData> LoadGameObjects(const std::string& aGameObjectFile, EReadMode aReadMode = EReadMode_Binary);
 public:
-	LevelData* LoadLevelBinary(const std::string& aGameObjectFile);
+	SceneData* LoadLevelBinary(const std::string& aGameObjectFile);
 private:
 	std::map<int, std::string> LoadModels(std::string aModelPathFile);
 	std::vector<ObjectData> LoadGameObjectsBinary(const std::string& aGameObjectFile);

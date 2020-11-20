@@ -8,11 +8,18 @@
 #include "AnimatedUIElement.h"
 #include "InputMapper.h"
 #include "Input.h"
-
+#include "SpriteFactory.h"
+#include "Sprite.h"
 #include "rapidjson\document.h"
 #include "rapidjson\istreamwrapper.h"
 
-CCanvas::CCanvas(std::vector<EMessageType> someMessageTypes, std::vector<IInputObserver::EInputEvent> someInputEvents) : myMessageTypes(someMessageTypes), myInputEvents(someInputEvents), myBackground(nullptr)
+CCanvas::CCanvas(std::vector<EMessageType> someMessageTypes,
+	std::vector<IInputObserver::EInputEvent> someInputEvents,
+	std::vector<IInputObserver::EInputAction> someInputActions):
+	myMessageTypes(someMessageTypes),
+	myInputEvents(someInputEvents),
+	myInputActions(someInputActions),
+	myBackground(nullptr)
 {
 	SubscribeToMessages();
 }
@@ -42,14 +49,23 @@ void CCanvas::Init(std::string aFilePath)
 		auto buttonDataArray = document["Buttons"].GetArray();
 		for (unsigned int i = 0; i < buttonDataArray.Size(); ++i)
 		{
-			auto buttonData = buttonDataArray[i].GetArray();
 			SButtonData data;
-			data.myText = buttonData[0]["Text"].GetString();
-			data.myPosition = { buttonData[1]["Position X"].GetFloat(), buttonData[2]["Position Y"].GetFloat() };
-			data.myDimensions = { buttonData[3]["Pixel Width"].GetFloat(), buttonData[4]["Pixel Height"].GetFloat() };
-			data.mySpritePaths.at(0) = buttonData[5]["Idle Sprite Path"].GetString();
-			data.mySpritePaths.at(1) = buttonData[6]["Hover Sprite Path"].GetString();
-			data.mySpritePaths.at(2) = buttonData[7]["Click Sprite Path"].GetString();
+			auto buttonData = buttonDataArray[i].GetObjectW();
+			data.myText = buttonData["Text"].GetString();
+			data.myPosition = { buttonData["Position X"].GetFloat(), buttonData["Position Y"].GetFloat() };
+			data.myDimensions = { buttonData["Pixel Width"].GetFloat(), buttonData["Pixel Height"].GetFloat() };
+			data.mySpritePaths.at(0) = buttonData["Idle Sprite Path"].GetString();
+			data.mySpritePaths.at(1) = buttonData["Hover Sprite Path"].GetString();
+			data.mySpritePaths.at(2) = buttonData["Click Sprite Path"].GetString();
+
+			auto messageDataArray = buttonData["Messages"].GetArray();
+			data.myMessagesToSend.resize(messageDataArray.Size());
+
+			for (unsigned int j = 0; j < messageDataArray.Size(); ++j) {
+
+				data.myMessagesToSend[j] = static_cast<EMessageType>(messageDataArray[j].GetInt());
+			}
+
 			myButtons.emplace_back(new CButton(data));
 		}
 	}
@@ -59,6 +75,21 @@ void CCanvas::Init(std::string aFilePath)
 		for (unsigned int i = 0; i < animatedDataArray.Size(); ++i)
 		{
 			myAnimatedUIs.emplace_back(new CAnimatedUIElement(animatedDataArray[i]["Path"].GetString()));
+			float x = animatedDataArray[i]["Position X"].GetFloat();
+			float y = animatedDataArray[i]["Position Y"].GetFloat();
+			myAnimatedUIs.back()->SetPosition({x, y});
+		}
+	}
+
+	if (document.HasMember("Sprites")) {
+		auto spriteDataArray = document["Sprites"].GetArray();
+		for (unsigned int i = 0; i < spriteDataArray.Size(); ++i) {
+			CSpriteInstance* spriteInstance = new CSpriteInstance();
+			spriteInstance->Init(CSpriteFactory::GetInstance()->GetSprite(spriteDataArray[i]["Path"].GetString()));
+			mySprites.emplace_back(spriteInstance);
+			float x = spriteDataArray[i]["Position X"].GetFloat();
+			float y = spriteDataArray[i]["Position Y"].GetFloat();
+			mySprites.back()->SetPosition({ x, y });
 		}
 	}
 }
@@ -114,6 +145,10 @@ void CCanvas::SubscribeToMessages()
 	for (auto inputEvent : myInputEvents) {
 		CInputMapper::GetInstance()->AddObserver(inputEvent, this);
 	}
+
+	for (unsigned int i = 0; i < myInputActions.size(); ++i) {
+		CInputMapper::GetInstance()->MapEvent(myInputActions[i], myInputEvents[i]);
+	}
 }
 
 void CCanvas::UnsubscribeToMessages()
@@ -131,7 +166,14 @@ void CCanvas::RecieveEvent(const IInputObserver::EInputEvent aEvent)
 {
 	switch (aEvent)
 	{
-	case IInputObserver::EInputEvent::AttackClick:
+	case IInputObserver::EInputEvent::Ability1:
+
+		break;
+	case IInputObserver::EInputEvent::Ability2:
+		
+		break;
+	case IInputObserver::EInputEvent::Ability3:
+		
 		break;
 	default:
 		break;
@@ -170,7 +212,6 @@ std::vector<CTextInstance*> CCanvas::GetTexts()
 
 void CCanvas::SetEnabled(bool isEnabled)
 {
-	//assert(myIsEnabled == isEnabled, "Enable is already the same as the input");
 	if (myIsEnabled != isEnabled) {
 		myIsEnabled = isEnabled;
 

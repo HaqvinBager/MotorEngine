@@ -1,13 +1,14 @@
 #include "stdafx.h"
 #include "SpriteInstance.h"
 #include "Sprite.h"
-
+#include "Scene.h"
 #include "Engine.h"
 #include "WindowHandler.h"
 
 CSpriteInstance::CSpriteInstance()
 {
 	mySprite = nullptr;
+	CEngine::GetInstance()->GetActiveScene().AddInstance(this);
 }
 
 CSpriteInstance::~CSpriteInstance()
