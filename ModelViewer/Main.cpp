@@ -38,6 +38,20 @@ using namespace CommonUtilities;
 namespace SM = DirectX::SimpleMath;
 namespace MW = ModelViewer;
 
+///	NOTES
+///		aiProcessPreset_TargetRealtime_MaxQuality_DontJoinIndetical 
+///			Affects performance due to aiProcess_JoinIdenticalVertices (L93). 
+/// 
+///			Todo: Create some way to toggle it, so that only destructibles use it!
+/// 
+///			This flag is found in postprocess.h for Assimp. Create the toggle so that it is only used by destructibles.
+///			Its current counterpart, aiProcessPreset_TargetRealtime_MaxQuality,  is used in:
+///			AnimationController.h :: bool Add3DAnimFromFile(const std::string& fileName)
+///			and 
+///			FBXLoaderCustom.cpp :: void* CFBXLoaderCustom::LoadModelInternal(CLoaderModel* someInput)
+///			L 603 in postprocess.h
+
+
 #define USE_CONSOLE_COMMAND
 void InitConsole()
 {
@@ -281,8 +295,8 @@ void UpdateAnimation(CGameObject* aCurrentGameObject, CGameObject* aCamera, cons
 		if (Input::GetInstance()->IsKeyPressed('0')) { if(IsLessThan(0, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(0); }
 		if (Input::GetInstance()->IsKeyPressed('1')) { if(IsLessThan(1, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(1); }
 		if (Input::GetInstance()->IsKeyPressed('2')) { if(IsLessThan(2, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(2); }
-		if (Input::GetInstance()->IsKeyPressed('3')) { if(IsLessThan(3, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(3); }
-		if (Input::GetInstance()->IsKeyPressed('4')) { if(IsLessThan(4, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(4); }
+		if (Input::GetInstance()->IsKeyPressed('3')) { if(IsLessThan(3, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(3, true); }
+		if (Input::GetInstance()->IsKeyPressed('4')) { if(IsLessThan(4, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(4, true); }
 		if (Input::GetInstance()->IsKeyPressed('5')) { if(IsLessThan(5, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(5); }
 		if (Input::GetInstance()->IsKeyPressed('6')) { if(IsLessThan(6, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(6, true); }
 		if (Input::GetInstance()->IsKeyPressed('7')) { if(IsLessThan(7, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(7); }
