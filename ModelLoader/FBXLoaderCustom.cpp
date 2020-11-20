@@ -318,6 +318,10 @@ void* CFBXLoaderCustom::LoadModelInternal(CLoaderModel* someInput)
 	}
 	//((aiSetImportPropertyFloat(scene, "UnitScaleFactor", 0.01f);
 	scene = aiImportFile(model->myModelPath.c_str(), aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_ConvertToLeftHanded);
+	
+	// aiProcessPreset_TargetRealtime_MaxQuality_DontJoinIndetical affects performance. Create someway to toggle it, so that only destructibles use it!
+	//scene = aiImportFile(model->myModelPath.c_str(), aiProcessPreset_TargetRealtime_MaxQuality_DontJoinIndetical | aiProcess_ConvertToLeftHanded);
+	
 	//aiSetImportPropertyFloat(aiprops, AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY, GlobalScale);
 
 	OutputDebugStringA(model->myModelPath.c_str());

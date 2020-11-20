@@ -614,6 +614,19 @@ enum aiPostProcessSteps
     aiProcess_FindDegenerates               |  \
     aiProcess_FindInvalidData               |  \
     0 )
+#define aiProcessPreset_TargetRealtime_Quality_DontJoinIdentical ( \
+    aiProcess_CalcTangentSpace              |  \
+    aiProcess_GenSmoothNormals              |  \
+    aiProcess_ImproveCacheLocality          |  \
+    aiProcess_LimitBoneWeights              |  \
+    aiProcess_RemoveRedundantMaterials      |  \
+    aiProcess_SplitLargeMeshes              |  \
+    aiProcess_Triangulate                   |  \
+    aiProcess_GenUVCoords                   |  \
+    aiProcess_SortByPType                   |  \
+    aiProcess_FindDegenerates               |  \
+    aiProcess_FindInvalidData               |  \
+    0 )
 
  // ---------------------------------------------------------------------------------------
  /** @def aiProcessPreset_TargetRealtime_MaxQuality
@@ -632,6 +645,12 @@ enum aiPostProcessSteps
   */
 #define aiProcessPreset_TargetRealtime_MaxQuality ( \
     aiProcessPreset_TargetRealtime_Quality   |  \
+    aiProcess_FindInstances                  |  \
+    aiProcess_ValidateDataStructure          |  \
+    aiProcess_OptimizeMeshes                 |  \
+    0 )
+#define aiProcessPreset_TargetRealtime_MaxQuality_DontJoinIndetical ( \
+    aiProcessPreset_TargetRealtime_Quality_DontJoinIdentical   |  \
     aiProcess_FindInstances                  |  \
     aiProcess_ValidateDataStructure          |  \
     aiProcess_OptimizeMeshes                 |  \

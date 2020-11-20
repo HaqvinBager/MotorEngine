@@ -137,10 +137,12 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="FModWrapper.h" />
     <ClInclude Include="EnviromentLightComponent.h" />
+    <ClInclude Include="Funneling.h" />
     <ClInclude Include="JsonReader.h" />
     <ClInclude Include="MainSingleton.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="MessageType.h" />
+    <ClInclude Include="NavMeshComponent.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="PointLightComponent.h" />
     <ClInclude Include="PostMaster.h" />
@@ -246,6 +248,7 @@
     <ClCompile Include="InputMapper.cpp" />
     <ClCompile Include="MainSingleton.cpp" />
     <ClCompile Include="MenuState.cpp" />
+    <ClCompile Include="NavMeshComponent.cpp" />
     <ClCompile Include="ObjectPool.cpp" />
     <ClCompile Include="ParticleEmitterComponent.cpp" />
     <ClCompile Include="PlayerControllerComponent.cpp" />
