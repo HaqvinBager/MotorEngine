@@ -5,6 +5,8 @@
 #include "Input.h"
 #include "CameraComponent.h"
 #include <iostream>
+#include "Engine.h"
+#include "WindowHandler.h"
 
 //namespace MouseTracker {
 
@@ -12,9 +14,9 @@ class MouseTracker
 {
 public:
 
-	static DirectX::SimpleMath::Vector3 ScreenPositionToWorldPosition(unsigned int aWidth, unsigned int aHeight/*const float aX, const float aY, float aWidth, float aHeight*/)
+	static DirectX::SimpleMath::Vector3 ScreenPositionToWorldPosition(/*const float aX, const float aY, float aWidth, float aHeight*/)
 	{
-		DirectX::SimpleMath::Ray ray = MouseTracker::WorldSpacePick(aWidth, aHeight);
+		DirectX::SimpleMath::Ray ray = MouseTracker::WorldSpacePick();
 		//The picking ray is checked against the floor of the world, **ASSUMING Y TO BE 0**
 		DirectX::SimpleMath::Plane worldPlane = DirectX::SimpleMath::Plane(DirectX::SimpleMath::Vector3::Zero, DirectX::SimpleMath::Vector3::Up);
 		
@@ -61,15 +63,18 @@ public:
 	//	return std::move(worldPosNear);
 	};
 
-	static DirectX::SimpleMath::Ray WorldSpacePick(unsigned int aWidth, unsigned int aHeight) {
+	static DirectX::SimpleMath::Ray WorldSpacePick() {
+		unsigned int width = CEngine::GetInstance()->GetWindowHandler()->GetWidth();
+		unsigned int height = CEngine::GetInstance()->GetWindowHandler()->GetHeight();
+
 		float mouseX = static_cast<float>(CommonUtilities::Input::GetInstance()->MouseX());
 		float mouseY = static_cast<float>(CommonUtilities::Input::GetInstance()->MouseY());
 
 		CCameraComponent* cam = CScene::GetInstance()->GetMainCamera();
 		CTransformComponent* camTransform = cam->GameObject().myTransform;
 
-		float xV = (((2 * mouseX) / aWidth) - 1) / cam->GetProjection()._11;
-		float yV = (-((2 * mouseY) / aHeight) + 1) / cam->GetProjection()._22;
+		float xV = (((2 * mouseX) / width) - 1) / cam->GetProjection()._11;
+		float yV = (-((2 * mouseY) / height) + 1) / cam->GetProjection()._22;
 
 		DirectX::SimpleMath::Vector3 target = camTransform->Position() - camTransform->Transform().Forward();
 
