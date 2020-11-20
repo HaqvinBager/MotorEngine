@@ -53,6 +53,14 @@ void CCanvas::Init(std::string aFilePath)
 			myButtons.emplace_back(new CButton(data));
 		}
 	}
+
+	if (document.HasMember("Animated UI Elements")) {
+		auto animatedDataArray = document["Animated UI Elements"].GetArray();
+		for (unsigned int i = 0; i < animatedDataArray.Size(); ++i)
+		{
+			myAnimatedUIs.emplace_back(new CAnimatedUIElement(animatedDataArray[i]["Path"].GetString()));
+		}
+	}
 }
 
 void CCanvas::Update(float /*aDeltaTime*/)

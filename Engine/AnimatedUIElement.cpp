@@ -4,6 +4,7 @@
 #include "SpriteInstance.h"
 #include "Engine.h"
 #include "WindowHandler.h"
+#include "Scene.h"
 
 #include "rapidjson\document.h"
 #include "rapidjson\istreamwrapper.h"
@@ -20,6 +21,8 @@ CAnimatedUIElement::CAnimatedUIElement(std::string aFilePath) : mySpriteInstance
     mySpriteInstance = new CSpriteInstance();
     mySpriteInstance->Init(CSpriteFactory::GetInstance()->GetSprite(document["Texture Overlay"].GetString()));
     myData = CSpriteFactory::GetInstance()->GetVFXSprite(aFilePath);
+    CEngine::GetInstance()->GetActiveScene().AddInstance(this);
+    CEngine::GetInstance()->GetActiveScene().AddInstance(mySpriteInstance);
 }
 
 CAnimatedUIElement::~CAnimatedUIElement()
