@@ -79,7 +79,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <FxCompile>
-      <ObjectFileOutput>$(ProjectDir)..\..\..\Bin\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput>$(ProjectDir)..\..\..\Bin\Shaders\%(Filename).cso</ObjectFileOutput>
       <ShaderModel>4.0</ShaderModel>
     </FxCompile>
     <Lib>
@@ -111,7 +111,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <FxCompile>
-      <ObjectFileOutput>$(ProjectDir)..\..\..\Bin\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput>$(ProjectDir)..\..\..\Bin\Shaders\%(Filename).cso</ObjectFileOutput>
       <ShaderModel>4.0</ShaderModel>
     </FxCompile>
   </ItemDefinitionGroup>
@@ -128,6 +128,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CameraFactory.h" />
+    <ClInclude Include="Canvas.h" />
     <ClInclude Include="CapsuleColliderComponent.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="FMod.h" />
@@ -229,6 +230,7 @@
     <ClCompile Include="CameraControllerComponent.cpp" />
     <ClCompile Include="CameraControllerComponent.h" />
     <ClCompile Include="CameraFactory.cpp" />
+    <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="CapsuleColliderComponent.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="FMod.cpp" />

@@ -15,12 +15,13 @@ public:
 	void BoneTransformsWithBlend(SlimMatrix44* Transforms, float aBlendFactor);
 	void BoneTransforms(SlimMatrix44* Transforms);
 	void BlendStep(float aDelta);
-	void Step(float aDelta);
+	void Step();
 
 	const size_t GetNrOfAnimations() const;
 
 public: 
 	void SetCurAnimationScene(const int aCurAnimScene);
+	AnimationController& GetMyController() { return *myController; }
 
 private:
 	float myTotalAnimationTime;

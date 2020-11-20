@@ -31,19 +31,19 @@ bool CSpriteFactory::Init(CDirectXFramework* aFramework)
 
 	//Start Shaders
 	std::ifstream vsFile;
-	vsFile.open("SpriteVertexShader.cso", std::ios::binary);
+	vsFile.open("Shaders/SpriteVertexShader.cso", std::ios::binary);
 	std::string vsData = { std::istreambuf_iterator<char>(vsFile), std::istreambuf_iterator<char>() };
 	ENGINE_HR_MESSAGE(myFramework->GetDevice()->CreateVertexShader(vsData.data(), vsData.size(), nullptr, &myVertexShader), "Sprite Vertex Shader could not be created.");
 	vsFile.close();
 
 	std::ifstream psFile;
-	psFile.open("SpritePixelShader.cso", std::ios::binary);
+	psFile.open("Shaders/SpritePixelShader.cso", std::ios::binary);
 	std::string psData = { std::istreambuf_iterator<char>(psFile), std::istreambuf_iterator<char>() };
 	ENGINE_HR_MESSAGE(myFramework->GetDevice()->CreatePixelShader(psData.data(), psData.size(), nullptr, &myPixelShader), "Sprite Pixel Shader could not be created.");
 	psFile.close();
 
 	std::ifstream gsFile;
-	gsFile.open("SpriteGeometryShader.cso", std::ios::binary);
+	gsFile.open("Shaders/SpriteGeometryShader.cso", std::ios::binary);
 	std::string gsData = { std::istreambuf_iterator<char>(gsFile), std::istreambuf_iterator<char>() };
 	ENGINE_HR_MESSAGE(myFramework->GetDevice()->CreateGeometryShader(gsData.data(), gsData.size(), nullptr, &myGeometryShader), "Sprite Geometry Shader could not be created.");
 	gsFile.close();

@@ -37,14 +37,17 @@ namespace SpriteViewer
 		CScene::GetInstance()->AddInstance(uiElement3);
 	}
 
-	void Update()
+	void Update(bool aShouldUpdate)
 	{
-		std::vector<CSpriteInstance*> animatedUIFrames;
-		auto animUI1 = CScene::GetInstance()->CullAnimatedUI(animatedUIFrames)[0];
-		animUI1->Level(abs(sin(CTimer::Time())));
-		auto animUI2 = CScene::GetInstance()->CullAnimatedUI(animatedUIFrames)[1];
-		animUI2->Level(abs(sin(CTimer::Time() - (3.1415f/2.0f))));
-		auto animUI3 = CScene::GetInstance()->CullAnimatedUI(animatedUIFrames)[2];
-		animUI3->Level(abs(sin(CTimer::Time() * 0.33f)));
+		if (aShouldUpdate)
+		{
+			std::vector<CSpriteInstance*> animatedUIFrames;
+			auto animUI1 = CScene::GetInstance()->CullAnimatedUI(animatedUIFrames)[0];
+			animUI1->Level(abs(sin(CTimer::Time())));
+			auto animUI2 = CScene::GetInstance()->CullAnimatedUI(animatedUIFrames)[1];
+			animUI2->Level(abs(sin(CTimer::Time() - (3.1415f/2.0f))));
+			auto animUI3 = CScene::GetInstance()->CullAnimatedUI(animatedUIFrames)[2];
+			animUI3->Level(abs(sin(CTimer::Time() * 0.33f)));
+		}
 	}
 }

@@ -325,6 +325,9 @@
     </ClCompile>
     <ClCompile Include="UnityFactory.cpp">
       <Filter>SceneData</Filter>
+	</ClCompile>
+    <ClCompile Include="Canvas.cpp">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -608,6 +611,9 @@
     </ClInclude>
     <ClInclude Include="UnityFactory.h">
       <Filter>SceneData</Filter>
+	</ClInclude>
+    <ClInclude Include="Canvas.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

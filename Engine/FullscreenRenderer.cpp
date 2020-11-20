@@ -23,7 +23,7 @@ bool CFullscreenRenderer::Init(CDirectXFramework* aFramework) {
 	HRESULT result;
 
 	std::ifstream vsFile;
-	vsFile.open("FullscreenVertexShader.cso", std::ios::binary);
+	vsFile.open("Shaders/FullscreenVertexShader.cso", std::ios::binary);
 	std::string vsData = { std::istreambuf_iterator<char>(vsFile), std::istreambuf_iterator<char>() };
 	ID3D11VertexShader* vertexShader;
 	result = device->CreateVertexShader(vsData.data(), vsData.size(), nullptr, &vertexShader);
@@ -34,12 +34,12 @@ bool CFullscreenRenderer::Init(CDirectXFramework* aFramework) {
 	myVertexShader = vertexShader;
 
 	std::array<std::string, static_cast<size_t>(FullscreenShader::FULLSCREENSHADER_COUNT)> filepaths;
-	filepaths[static_cast<size_t>(FullscreenShader::FULLSCREENSHADER_COPY)] = "FullscreenPixelShader_Copy.cso";
-	filepaths[static_cast<size_t>(FullscreenShader::FULLSCREENSHADER_LUMINANCE)] = "FullscreenPixelShader_Luminance.cso";
-	filepaths[static_cast<size_t>(FullscreenShader::FULLSCREENSHADER_GAUSSIANHORIZONTAL)] = "FullscreenPixelShader_GaussianBlurHorizontal.cso";
-	filepaths[static_cast<size_t>(FullscreenShader::FULLSCREENSHADER_GAUSSIANVERTICAL)] = "FullscreenPixelShader_GaussianBlurVertical.cso";
-	filepaths[static_cast<size_t>(FullscreenShader::FULLSCREENSHADER_BLOOM)] = "FullscreenPixelShader_Bloom.cso";
-	filepaths[static_cast<size_t>(FullscreenShader::FULLSCREENSHADER_VIGNETTE)] = "FullscreenPixelShader_Vignette.cso";
+	filepaths[static_cast<size_t>(FullscreenShader::FULLSCREENSHADER_COPY)] = "Shaders/FullscreenPixelShader_Copy.cso";
+	filepaths[static_cast<size_t>(FullscreenShader::FULLSCREENSHADER_LUMINANCE)] = "Shaders/FullscreenPixelShader_Luminance.cso";
+	filepaths[static_cast<size_t>(FullscreenShader::FULLSCREENSHADER_GAUSSIANHORIZONTAL)] = "Shaders/FullscreenPixelShader_GaussianBlurHorizontal.cso";
+	filepaths[static_cast<size_t>(FullscreenShader::FULLSCREENSHADER_GAUSSIANVERTICAL)] = "Shaders/FullscreenPixelShader_GaussianBlurVertical.cso";
+	filepaths[static_cast<size_t>(FullscreenShader::FULLSCREENSHADER_BLOOM)] = "Shaders/FullscreenPixelShader_Bloom.cso";
+	filepaths[static_cast<size_t>(FullscreenShader::FULLSCREENSHADER_VIGNETTE)] = "Shaders/FullscreenPixelShader_Vignette.cso";
 
 	for (UINT i = 0; i < static_cast<size_t>(FullscreenShader::FULLSCREENSHADER_COUNT); i++) {
 		std::ifstream psFile;

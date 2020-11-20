@@ -37,7 +37,10 @@ void CAnimation::BoneTransforms(SlimMatrix44* Transforms)
 {
 	std::vector<aiMatrix4x4> trans;
 	myController->BoneTransform(trans);
-
+	if (trans.size() == 0)
+	{
+		return;
+	}
 	memcpy(&Transforms[0], &trans[0], (sizeof(float) * 16) * trans.size());
 }
 
@@ -47,10 +50,10 @@ void CAnimation::BlendStep(float aDelta)
 	myController->UpdateBlendFrame();
 }
 
-void CAnimation::Step(float aDelta)
+void CAnimation::Step()
 {
-
-	myTotalAnimationTime += aDelta;
+	//THIS DOES NOTHING WTF
+	/*myTotalAnimationTime += aDelta;*/
 	myController->UpdateFrame();
 }
 

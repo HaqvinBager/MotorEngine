@@ -65,7 +65,7 @@ CLine* CLineFactory::CreateLine(const SM::Vector3& aFrom, const SM::Vector3& aTo
 	//Shaders
 	//	Vertex Shader
 	std::ifstream vsFile;
-	vsFile.open("LineVertexShader.cso",std::ios::binary);
+	vsFile.open("Shaders/LineVertexShader.cso",std::ios::binary);
 	std::string vsData = {std::istreambuf_iterator<char>(vsFile), std::istreambuf_iterator<char>()};
 	
 	ID3D11VertexShader* vertexShader = nullptr;
@@ -79,7 +79,7 @@ CLine* CLineFactory::CreateLine(const SM::Vector3& aFrom, const SM::Vector3& aTo
 	
 	//	Pixel Shader
 	std::ifstream psFile;
-	psFile.open("LinePixelShader.cso", std::ios::binary);
+	psFile.open("Shaders/LinePixelShader.cso", std::ios::binary);
 	std::string psData = {std::istreambuf_iterator<char>(psFile), std::istreambuf_iterator<char>()};
 	
 	ID3D11PixelShader* pixelShader = nullptr;
@@ -219,7 +219,7 @@ CLine* CLineFactory::CreateGrid(const DirectX::SimpleMath::Vector4& aColor)
 	//Shaders
 	//	Vertex Shader
 	std::ifstream vsFile;
-	vsFile.open("LineVertexShader.cso",std::ios::binary);
+	vsFile.open("Shaders/LineVertexShader.cso",std::ios::binary);
 	std::string vsData = {std::istreambuf_iterator<char>(vsFile), std::istreambuf_iterator<char>()};
 
 	ID3D11VertexShader* vertexShader = nullptr;
@@ -233,7 +233,7 @@ CLine* CLineFactory::CreateGrid(const DirectX::SimpleMath::Vector4& aColor)
 
 	//	Pixel Shader
 	std::ifstream psFile;
-	psFile.open("LinePixelShader.cso", std::ios::binary);
+	psFile.open("Shaders/LinePixelShader.cso", std::ios::binary);
 	std::string psData = {std::istreambuf_iterator<char>(psFile), std::istreambuf_iterator<char>()};
 
 	ID3D11PixelShader* pixelShader = nullptr;
@@ -327,7 +327,7 @@ CLine* CLineFactory::CreateAxisMarker()
 	//Shaders
 	//	Vertex Shader
 	std::ifstream vsFile;
-	vsFile.open("LineVertexShader.cso",std::ios::binary);
+	vsFile.open("Shaders/LineVertexShader.cso",std::ios::binary);
 	std::string vsData = {std::istreambuf_iterator<char>(vsFile), std::istreambuf_iterator<char>()};
 
 	ID3D11VertexShader* vertexShader = nullptr;
@@ -341,7 +341,7 @@ CLine* CLineFactory::CreateAxisMarker()
 
 	//	Pixel Shader
 	std::ifstream psFile;
-	psFile.open("LinePixelShader.cso", std::ios::binary);
+	psFile.open("Shaders/LinePixelShader.cso", std::ios::binary);
 	std::string psData = {std::istreambuf_iterator<char>(psFile), std::istreambuf_iterator<char>()};
 
 	ID3D11PixelShader* pixelShader = nullptr;

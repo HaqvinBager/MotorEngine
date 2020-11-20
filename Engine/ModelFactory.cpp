@@ -111,10 +111,10 @@ CModel* CModelFactory::LoadModelPBR(std::string aFilePath)
 	std::ifstream vsFile;
 	if (mesh->myModel->myNumBones > 0)
 	{
-		vsFile.open("AnimatedVertexShader.cso", std::ios::binary);
+		vsFile.open("Shaders/AnimatedVertexShader.cso", std::ios::binary);
 	}
 	else {
-		vsFile.open("VertexShader.cso", std::ios::binary);
+		vsFile.open("Shaders/VertexShader.cso", std::ios::binary);
 	}
 	
 	std::string vsData = { std::istreambuf_iterator<char>(vsFile), std::istreambuf_iterator<char>() };
@@ -126,7 +126,7 @@ CModel* CModelFactory::LoadModelPBR(std::string aFilePath)
 
 	//PixelShader
 	std::ifstream psFile;
-	psFile.open("PBRPixelShader.cso", std::ios::binary);
+	psFile.open("Shaders/PBRPixelShader.cso", std::ios::binary);
 	std::string psData = { std::istreambuf_iterator<char>(psFile), std::istreambuf_iterator<char>() };
 
 	ID3D11PixelShader* pixelShader;
@@ -265,7 +265,7 @@ CModel* CModelFactory::LoadModel(std::string aFilePath)
 
 	//VertexShader
 	std::ifstream vsFile;
-	vsFile.open("VertexShader.cso", std::ios::binary);
+	vsFile.open("Shaders/VertexShader.cso", std::ios::binary);
 	std::string vsData = { std::istreambuf_iterator<char>(vsFile), std::istreambuf_iterator<char>() };
 
 	ID3D11VertexShader* vertexShader;
@@ -275,7 +275,7 @@ CModel* CModelFactory::LoadModel(std::string aFilePath)
 
 	//PixelShader
 	std::ifstream psFile;
-	psFile.open("PixelShader.cso", std::ios::binary);
+	psFile.open("Shaders/PixelShader.cso", std::ios::binary);
 	std::string psData = { std::istreambuf_iterator<char>(psFile), std::istreambuf_iterator<char>() };
 
 	ID3D11PixelShader* pixelShader;
@@ -416,7 +416,7 @@ CModel* CModelFactory::GetCube()
 
 	//VertexShader
 	std::ifstream vsFile;
-	vsFile.open("CubeVertexShader.cso", std::ios::binary);
+	vsFile.open("Shaders/CubeVertexShader.cso", std::ios::binary);
 	std::string vsData = { std::istreambuf_iterator<char>(vsFile), std::istreambuf_iterator<char>() };
 	ID3D11VertexShader* vertexShader;
 	ENGINE_HR_MESSAGE(myEngine->myFramework->GetDevice()->CreateVertexShader(vsData.data(), vsData.size(), nullptr, &vertexShader), "Vertex Shader could not be created.");
@@ -424,7 +424,7 @@ CModel* CModelFactory::GetCube()
 
 	//PixelShader
 	std::ifstream psFile;
-	psFile.open("CubePixelShader.cso", std::ios::binary);
+	psFile.open("Shaders/CubePixelShader.cso", std::ios::binary);
 	std::string psData = { std::istreambuf_iterator<char>(psFile), std::istreambuf_iterator<char>() };
 	ID3D11PixelShader* pixelShader;
 	ENGINE_HR_MESSAGE(myEngine->myFramework->GetDevice()->CreatePixelShader(psData.data(), psData.size(), nullptr, &pixelShader), "Pixel Shader could not be created.");
@@ -482,14 +482,14 @@ CModel* CModelFactory::GetOutlineModelSubset()
 
 	//Start Shader
 	std::ifstream vsFile;
-	vsFile.open("OutlineVertexShader.cso", std::ios::binary);
+	vsFile.open("Shaders/OutlineVertexShader.cso", std::ios::binary);
 	std::string vsData = { std::istreambuf_iterator<char>(vsFile), std::istreambuf_iterator<char>() };
 	ID3D11VertexShader* vertexShader;
 	ENGINE_HR_MESSAGE(myEngine->myFramework->GetDevice()->CreateVertexShader(vsData.data(), vsData.size(), nullptr, &vertexShader), "Vertex Shader could not be created.");
 	vsFile.close();
 
 	std::ifstream psFile;
-	psFile.open("OutlinePixelShader.cso", std::ios::binary);
+	psFile.open("Shaders/OutlinePixelShader.cso", std::ios::binary);
 	std::string psData = { std::istreambuf_iterator<char>(psFile), std::istreambuf_iterator<char>() };
 	ID3D11PixelShader* pixelShader;
 	ENGINE_HR_MESSAGE(myEngine->myFramework->GetDevice()->CreatePixelShader(psData.data(), psData.size(), nullptr, &pixelShader), "Pixel Shader could not be created.");
@@ -537,8 +537,14 @@ ID3D11ShaderResourceView* CModelFactory::GetShaderResourceView(ID3D11Device* aDe
 	if (FAILED(result))
 	{
 		std::string errorTexturePath = aTexturePath.substr(aTexturePath.length() - 6);
-		errorTexturePath = "CheckBoard_128x128" + errorTexturePath;
-		DirectX::CreateDDSTextureFromFile(aDevice, L"Checkboard_128x128.dds", nullptr, &shaderResourceView);
+		errorTexturePath = "Assets/ErrorTextures/Checkboard_128x128" + errorTexturePath;
+
+		wchar_t* wideErrorPath = new wchar_t[errorTexturePath.length() + 1];
+		std::copy(errorTexturePath.begin(), errorTexturePath.end(), wideErrorPath);
+		wideErrorPath[errorTexturePath.length()] = 0;
+
+		DirectX::CreateDDSTextureFromFile(aDevice, wideErrorPath, nullptr, &shaderResourceView);
+		delete[] wideErrorPath;
 	}
 		//return nullptr;
 	//================================

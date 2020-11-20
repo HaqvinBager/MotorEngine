@@ -41,7 +41,7 @@ bool CSpriteRenderer::Init(CDirectXFramework* aFramework)
     ENGINE_HR_BOOL_MESSAGE(device->CreateBuffer(&bufferDescription, nullptr, &myTextureScrollingBuffer), "Texture Scrolling Buffer could not be created.");
 
     std::ifstream vsFile;
-    vsFile.open("SpriteVertexShader.cso", std::ios::binary);
+    vsFile.open("Shaders/SpriteVertexShader.cso", std::ios::binary);
     std::string vsData = { std::istreambuf_iterator<char>(vsFile), std::istreambuf_iterator<char>() };
     ID3D11VertexShader* vertexShader;
     ENGINE_HR_BOOL_MESSAGE(device->CreateVertexShader(vsData.data(), vsData.size(), nullptr, &vertexShader), "Vertex Shader could not be created.");
@@ -49,7 +49,7 @@ bool CSpriteRenderer::Init(CDirectXFramework* aFramework)
     mySpriteVertexShader = vertexShader;
 
     std::ifstream gsFile;
-    gsFile.open("SpriteGeometryShader.cso", std::ios::binary);
+    gsFile.open("Shaders/SpriteGeometryShader.cso", std::ios::binary);
     std::string gsData = { std::istreambuf_iterator<char>(gsFile), std::istreambuf_iterator<char>() };
     ID3D11GeometryShader* geometryShader;
     ENGINE_HR_BOOL_MESSAGE(device->CreateGeometryShader(gsData.data(), gsData.size(), nullptr, &geometryShader), "Geometry Shader could not be created.");
@@ -57,7 +57,7 @@ bool CSpriteRenderer::Init(CDirectXFramework* aFramework)
     mySpriteGeometryShader = geometryShader;
 
     std::ifstream psFile;
-    psFile.open("SpritePixelShader.cso", std::ios::binary);
+    psFile.open("Shaders/SpritePixelShader.cso", std::ios::binary);
     std::string psData = { std::istreambuf_iterator<char>(psFile), std::istreambuf_iterator<char>() };
     ID3D11PixelShader* pixelShader;
     ENGINE_HR_BOOL_MESSAGE(device->CreatePixelShader(psData.data(), psData.size(), nullptr, &pixelShader), "Pixel Shader could not be created.");

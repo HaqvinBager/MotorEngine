@@ -18,20 +18,20 @@ CInputMapper::~CInputMapper()
 {
 }
 
-void CInputMapper::RunEvent(const CInputObserver::EInputEvent aOutputEvent, const float aValue)
+void CInputMapper::RunEvent(const IInputObserver::EInputEvent aOutputEvent)
 {
 	for (int i = 0; i < myObservers[aOutputEvent].size(); ++i)
 	{
-		myObservers[aOutputEvent][i]->RecieveEvent(aOutputEvent, aValue);
+		myObservers[aOutputEvent][i]->RecieveEvent(aOutputEvent);
 	}
 }
 
-void CInputMapper::TranslateActionToEvent(const CInputObserver::EInputAction aAction, const float aValue)
+void CInputMapper::TranslateActionToEvent(const IInputObserver::EInputAction aAction)
 {
 	const auto eventIterator = myEvents.find(aAction);
 	if (eventIterator != myEvents.end())
 	{
-		RunEvent(myEvents[aAction], aValue);
+		RunEvent(myEvents[aAction]);
 	}
 }
 
@@ -39,13 +39,13 @@ void CInputMapper::UpdateKeyboardInput()
 {
 	if (myInput->IsKeyPressed(VK_ESCAPE))
 	{
-		TranslateActionToEvent(CInputObserver::EInputAction::KeyEscape, 1.0f);
+		TranslateActionToEvent(IInputObserver::EInputAction::KeyEscape);
 	} else if(myInput->IsKeyDown(VK_ESCAPE))
 	{
-		TranslateActionToEvent(CInputObserver::EInputAction::KeyEscape, 1.0f);
+		TranslateActionToEvent(IInputObserver::EInputAction::KeyEscape);
 	} else if (myInput->IsKeyReleased(VK_ESCAPE))
 	{
-		TranslateActionToEvent(CInputObserver::EInputAction::KeyEscape, 1.0f);
+		TranslateActionToEvent(IInputObserver::EInputAction::KeyEscape);
 	}
 }
 
@@ -54,15 +54,15 @@ void CInputMapper::UpdateMouseInput()
 
 	if (myInput->IsMousePressed(CommonUtilities::Input::MouseButton::Left))
 	{
-		TranslateActionToEvent(CInputObserver::EInputAction::MouseLeft, 1.0f);
+		TranslateActionToEvent(IInputObserver::EInputAction::MouseLeft);
 	}
 	else if (myInput->IsMouseDown(CommonUtilities::Input::MouseButton::Left))
 	{
-		TranslateActionToEvent(CInputObserver::EInputAction::MouseLeft, 1.0f);
+		TranslateActionToEvent(IInputObserver::EInputAction::MouseLeft);
 	}
 	else if (myInput->IsMouseReleased(CommonUtilities::Input::MouseButton::Left))
 	{
-		TranslateActionToEvent(CInputObserver::EInputAction::MouseLeft, 1.0f);
+		TranslateActionToEvent(IInputObserver::EInputAction::MouseLeft);
 	}
 }
 
@@ -73,19 +73,19 @@ void CInputMapper::Update()
 	UpdateMouseInput();
 }
 
-void CInputMapper::MapEvent(const CInputObserver::EInputAction aInputEvent, const CInputObserver::EInputEvent aOutputEvent)
+void CInputMapper::MapEvent(const IInputObserver::EInputAction aInputEvent, const IInputObserver::EInputEvent aOutputEvent)
 {
 	myEvents[aInputEvent] = aOutputEvent;
 }
 
-bool CInputMapper::AddObserver(const CInputObserver::EInputEvent aEventToListenFor, CInputObserver* aObserver)
+bool CInputMapper::AddObserver(const IInputObserver::EInputEvent aEventToListenFor, IInputObserver* aObserver)
 {
 	ENGINE_ERROR_BOOL_MESSAGE(aObserver, "InputObsever is nullptr!");
 	myObservers[aEventToListenFor].emplace_back(aObserver);
 	return true;
 }
 
-bool CInputMapper::RemoveObserver(const CInputObserver::EInputEvent aEventToListenFor, CInputObserver* aObserver)
+bool CInputMapper::RemoveObserver(const IInputObserver::EInputEvent aEventToListenFor, IInputObserver* aObserver)
 {
 	ENGINE_ERROR_BOOL_MESSAGE(aObserver, "InputObsever is nullptr!");
 	auto it = std::find(myObservers[aEventToListenFor].begin(), myObservers[aEventToListenFor].end(), aObserver);

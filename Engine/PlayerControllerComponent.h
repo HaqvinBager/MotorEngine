@@ -2,7 +2,7 @@
 #include "Behaviour.h"
 #include "InputObserver.h"
 
-class CPlayerControllerComponent : public CBehaviour, public CInputObserver
+class CPlayerControllerComponent : public CBehaviour, public IInputObserver
 {
 public:
 	CPlayerControllerComponent(CGameObject& aParent);
@@ -14,7 +14,7 @@ public:
 	void OnEnable() override;
 	void OnDisable() override;
 
-	void RecieveEvent(const CInputObserver::EInputEvent aEvent, const float aValue) override;
+	void RecieveEvent(const IInputObserver::EInputEvent aEvent) override;
 private:
 
 };
