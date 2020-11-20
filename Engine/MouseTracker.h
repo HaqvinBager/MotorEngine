@@ -5,6 +5,7 @@
 #include "Input.h"
 #include "CameraComponent.h"
 #include <iostream>
+#include "Engine.h"
 
 //namespace MouseTracker {
 
@@ -65,7 +66,7 @@ public:
 		float mouseX = static_cast<float>(CommonUtilities::Input::GetInstance()->MouseX());
 		float mouseY = static_cast<float>(CommonUtilities::Input::GetInstance()->MouseY());
 
-		CCameraComponent* cam = CScene::GetInstance()->GetMainCamera();
+		CCameraComponent* cam = CEngine::GetInstance()->GetActiveScene().GetMainCamera();
 		CTransformComponent* camTransform = cam->GameObject().myTransform;
 
 		float xV = (((2 * mouseX) / aWidth) - 1) / cam->GetProjection()._11;

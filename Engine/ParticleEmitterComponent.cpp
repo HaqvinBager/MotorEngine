@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include "RandomNumberGenerator.h"
 #include "CameraComponent.h"
+#include "Engine.h"
 
 namespace SM = DirectX::SimpleMath;
 #define ENGINE_SCALE 0.01f
@@ -32,7 +33,7 @@ void CParticleEmitterComponent::Start()
 void CParticleEmitterComponent::Update()
 {
 	SetPosition(GameObject().myTransform->Position());
-	Update(CTimer::Dt(), CScene::GetInstance()->GetMainCamera()->GameObject().myTransform->Position());
+	Update(CTimer::Dt(), CEngine::GetInstance()->GetActiveScene().GetMainCamera()->GameObject().myTransform->Position());
 }
 
 void CParticleEmitterComponent::Init(CParticle* aParticle)

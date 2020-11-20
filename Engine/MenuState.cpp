@@ -9,7 +9,7 @@ CMenuState::CMenuState(CStateStack& aStateStack) : CState(aStateStack) {
 	myBackground = new CSpriteInstance();
 	myBackground->Init(CSpriteFactory::GetInstance()->GetSprite("MenuBackground.dds"));
 	myBackground->SetSize({ 1.8f,1.0f });
-	CScene::GetInstance()->AddInstance(myBackground);
+	//CScene::GetInstance()->AddInstance(myBackground);
 }
 
 CMenuState::~CMenuState() {

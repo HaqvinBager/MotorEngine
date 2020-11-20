@@ -3,10 +3,12 @@
 #include <fstream>
 #include <streambuf>
 #include <algorithm>
+//#include "../Engine/EngineException.h"
 
 #include "rapidjson/document.h"
 #include "rapidjson/rapidjson.h"
 #include <array>
+#include <iostream>
 using namespace rapidjson;
 
 std::function<std::vector<ObjectData>(const std::string&)> myLoaderFunctions[EReadMode_MAX];
@@ -79,13 +81,19 @@ std::vector<ObjectData> CUnityLoader::LoadGameObjectsBinary(const std::string& a
 	return returnedData;
 }
 
-LevelData* CUnityLoader::LoadLevelBinary(const std::string& aGameObjectFile)
+SceneData* CUnityLoader::LoadLevelBinary(const std::string& aGameObjectFile)
 {
-	LevelData* levelData = new LevelData();
+	SceneData* levelData = new SceneData();
 	levelData->myModelPaths = LoadModels(aGameObjectFile);
 
 	std::ifstream t(aGameObjectFile + "_bin.bin", std::ios::binary);
-	assert(t.is_open());
+	
+	if (!t.is_open())
+	{
+		std::cout << "Failed to Open: " << aGameObjectFile << std::endl;
+		return nullptr;
+	}
+
 
 	std::string binaryFile((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
 
@@ -199,4 +207,3 @@ std::vector<ObjectData> CUnityLoader::LoadGameObjectsASCII(const std::string& aG
 
 	return loadedObjects;
 }
-

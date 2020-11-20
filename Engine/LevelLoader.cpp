@@ -11,7 +11,8 @@
 #include "EnviromentLightComponent.h"
 #include "PlayerControllerComponent.h"
 #include "PointLightComponent.h"
-
+#include "CameraControllerComponent.h"
+//#include "CameraControllerComponent.h"
 #include <rapidjson\document.h>
 
 #include "Engine.h"
@@ -50,29 +51,34 @@ bool CLevelLoader::Init(const unsigned int alevelIndex)
 
 void CLevelLoader::CreateLevel(const std::string& aPath)
 {	
-	LevelData* levelData = myUnityLoader->LoadLevelBinary(aPath);
+	SceneData* levelData = myUnityLoader->LoadLevelBinary(aPath);
 
 	CGameObject* camera = new CGameObject();
 	CCameraComponent* cameraComponent = camera->AddComponent<CCameraComponent>(*camera, levelData->myCameraData.myFieldOfView);
 	CTransformComponent* cameraTransform = camera->myTransform;
 	cameraTransform->Position({ levelData->myCameraData.myPosX, levelData->myCameraData.myPosY, levelData->myCameraData.myPosZ});
 	cameraTransform->Rotation({ levelData->myCameraData.myRotX, levelData->myCameraData.myRotY, levelData->myCameraData.myRotZ });
+
+	camera->AddComponent<CCameraControllerComponent>(*camera, levelData->myCameraData.myFreeCamMoveSpeed);
+
+	//camera->AddComponent<CCameraControllerComponent>(*camera, cameraComponent, static_cast<CCameraControllerComponent::ECameraMode>(levelData->myCameraData.myStartInCameraMode), levelData->myCameraData.myToggleFreeCamKey);
+
 	myScenes.back()->SetMainCamera(cameraComponent);
 	myScenes.back()->AddInstance(camera);
 
-	CGameObject* environmentLight = new CGameObject();
-	environmentLight->AddComponent<CEnviromentLightComponent>(*environmentLight, 
-		DirectX::SimpleMath::Vector4(
-			levelData->myEnviromentData.myColorR, 
-			levelData->myEnviromentData.myColorG, 
-			levelData->myEnviromentData.myColorB, 
-			levelData->myEnviromentData.myIntensity),
-		DirectX::SimpleMath::Vector3(
-			levelData->myEnviromentData.myDirectionX, 
-			levelData->myEnviromentData.myDirectionY, 
-			levelData->myEnviromentData.myDirectionZ));
-	//maybe problemo in forwardrenderer - 20-11-11
-	myScenes.back()->AddInstance(environmentLight);
+	//CGameObject* environmentLight = new CGameObject();
+	//environmentLight->AddComponent<CEnviromentLightComponent>(*environmentLight, 
+	//	DirectX::SimpleMath::Vector4(
+	//		levelData->myEnviromentData.myColorR, 
+	//		levelData->myEnviromentData.myColorG, 
+	//		levelData->myEnviromentData.myColorB, 
+	//		), levelData->myEnviromentData.myIntensity
+	//	DirectX::SimpleMath::Vector3(
+	//		levelData->myEnviromentData.myDirectionX, 
+	//		levelData->myEnviromentData.myDirectionY, 
+	//		levelData->myEnviromentData.myDirectionZ));
+	////maybe problemo in forwardrenderer - 20-11-11
+	//myScenes.back()->AddInstance(environmentLight);
 
 	std::vector<PointLightDataRaw>& pointLights = levelData->myPointLightData;
 	for (unsigned int i = 0; i < pointLights.size(); ++i)

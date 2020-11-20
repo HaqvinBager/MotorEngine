@@ -76,7 +76,7 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector
 
 	// MODELCOMPONENT
 	int modelIndex = 0;
-	for (CGameObject* gameobject : aGameObjectList)
+	for (auto& gameobject : aGameObjectList)
 	{
 		//Added this if Check because not all GameObjects Must have a CModelComponent.
 		//Refactoring suggestion: Have CModelComponents be "created" in some kind of Factory.

@@ -316,6 +316,16 @@
     <ClCompile Include="Button.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="CameraControllerComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraControllerComponent.cpp" />
+    <ClCompile Include="SceneReader.cpp">
+      <Filter>SceneData</Filter>
+    </ClCompile>
+    <ClCompile Include="UnityFactory.cpp">
+      <Filter>SceneData</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AStar.h" />
@@ -587,6 +597,18 @@
     <ClInclude Include="Button.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="SceneReader.h">
+      <Filter>SceneData</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneData.h">
+      <Filter>SceneData</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonReader.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="UnityFactory.h">
+      <Filter>SceneData</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="PBRDirectionalLight.hlsli">
@@ -719,6 +741,9 @@
     </Filter>
     <Filter Include="UI">
       <UniqueIdentifier>{a7555d10-6cc0-4364-a51b-aef3693f1ac2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SceneData">
+      <UniqueIdentifier>{65ea63e7-692e-477a-8498-52af94724067}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
