@@ -64,18 +64,18 @@ void CLevelLoader::CreateLevel(const std::string& aPath)
 	myScenes.back()->AddInstance(camera);
 
 	CGameObject* environmentLight = new CGameObject();
-	environmentLight->AddComponent<CEnviromentLightComponent>(*environmentLight, 
-		DirectX::SimpleMath::Vector4(
-			1.0f, 
+	environmentLight->AddComponent<CEnviromentLightComponent>(*environmentLight,
+		DirectX::SimpleMath::Vector3(
 			1.0f,
 			1.0f,
-			1.0f),
+			1.0f), 1.0f,
 		DirectX::SimpleMath::Vector3(
 			0.0f, 
 			0.0f,
 			0.0f));
 	//maybe problemo in forwardrenderer - 20-11-11
 	myScenes.back()->AddInstance(environmentLight);
+	myScenes.back()->SetEnvironmentLight(environmentLight->GetComponent<CEnviromentLightComponent>()->GetEnviromentLight());
 
 	cameraTransform->Position({ levelData->myCameraData.myPosX, levelData->myCameraData.myPosY, levelData->myCameraData.myPosZ});
 	cameraTransform->Rotation({ levelData->myCameraData.myRotX, levelData->myCameraData.myRotY, levelData->myCameraData.myRotZ });
