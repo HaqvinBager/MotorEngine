@@ -202,6 +202,8 @@
     <ClInclude Include="StateStack.h" />
     <ClInclude Include="StatsComponent.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="StringID.hpp" />
+    <ClInclude Include="StringIDLoader.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextFactory.h" />
     <ClInclude Include="TextInstance.h" />
@@ -296,6 +298,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="StringID.cpp" />
+    <ClCompile Include="StringIDLoader.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextFactory.cpp" />
     <ClCompile Include="TextInstance.cpp" />
