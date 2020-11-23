@@ -12,11 +12,11 @@ public:
 	CLevelLoader();
 	~CLevelLoader() = default;
 
-	bool Init(const unsigned int alevelIndex = 0);
+	bool Init(/*const unsigned int alevelIndex = 0*/);
 
-	void CreateLevel(const std::string& aPath);
+	void CreateLevel(/*const std::string& /*aPath*/);
 
-	void LoadNewLevel(const std::string& aPath);
+	void LoadNewLevel(/*const std::string& aPath*/);
 
 private:
 	CUnityLoader* myUnityLoader;

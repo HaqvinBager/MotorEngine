@@ -4,7 +4,7 @@
 class CBehaviour : public CComponent
 {
 public:
-	CBehaviour(CGameObject& aParent) : CComponent(aParent) {}
+	CBehaviour(CGameObject& aParent) : CComponent(aParent), myEnabled(true){}
 	virtual ~CBehaviour() {}
 
 	virtual void OnEnable() = 0;
