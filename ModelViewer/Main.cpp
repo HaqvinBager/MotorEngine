@@ -364,7 +364,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		environmentLight->SetDirection(SM::Vector3(0, -1, -1));
 		environmentLight->SetColor(SM::Vector3(1.0f, 1.0f, 1.0f));
 		environmentLight->SetIntensity(1.0f);
-		scene->AddInstance(environmentLight);
+		scene->SetEnvironmentLight(environmentLight);
 // GRID
 	CLineInstance* grid = new CLineInstance();
 		grid->Init(CLineFactory::GetInstance()->CreateGrid({ 0.33f,0.33f,0.33f, 1.0f }));
