@@ -36,20 +36,11 @@ void CPlayerControllerComponent::OnDisable()
 
 void CPlayerControllerComponent::RecieveEvent(const IInputObserver::EInputEvent aEvent)
 {
-	if (aEvent == IInputObserver::EInputEvent::MoveClick) {
-		std::vector<DirectX::SimpleMath::Vector3> path;
-		DirectX::SimpleMath::Vector3 finalPosition;
-		CNavMeshComponent* navMeshComp = this->GameObject().GetComponent<CNavMeshComponent>();
-		path = navMeshComp->CalculatePath(MouseTracker::WorldSpacePick(), finalPosition);
-		this->GameObject().myTransform->SetPath(path, finalPosition);
-	}
-
 	switch (aEvent)
 	{
-	//case IInputObserver::EInputEvent::MoveClick:
-	//	//std::cout << "Hejsan" << std::endl;
-	//	//DO STUFF
-	//	break;
+	case IInputObserver::EInputEvent::MoveClick:
+		this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
+		break;
 	case IInputObserver::EInputEvent::AttackClick:
 		//ALSO DO STUFF TOO
 		break;

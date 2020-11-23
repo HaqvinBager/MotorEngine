@@ -91,6 +91,7 @@ private:
 	CCollisionManager* myCollisionManager;
 
 	SNavMesh* myNavMesh;
+	CLineInstance* myNavMeshGrid;
 
 	bool myIsReadyToRender;
 

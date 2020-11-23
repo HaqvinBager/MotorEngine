@@ -22,6 +22,7 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::AStar(SNavMesh* aNavmesh, STri
 	for (int i = 0u; i < triangles.size(); ++i) {
 		triangles[i]->myG = FLT_MAX / 2.0f;
 		triangles[i]->myIndex = i;
+		triangles[i]->myStatus = EStatus::UNVISITED;
 	}
 
 	// Setup heap
