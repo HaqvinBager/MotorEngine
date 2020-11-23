@@ -4,7 +4,6 @@
 #include "TransformComponent.h"
 #include "Engine.h"
 #include "Scene.h"
-#include "GameObject.h"
 
 using namespace CommonUtilities;
 

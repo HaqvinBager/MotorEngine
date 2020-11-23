@@ -9,8 +9,12 @@
 #include "ModelComponent.h"
 #include "EnviromentLightComponent.h"
 #include "CameraControllerComponent.h"
+#include "AnimationComponent.h"
+#include "PlayerControllerComponent.h"
+#include "NavMeshComponent.h"
 
 #include "LightFactory.h"
+#include "NavmeshLoader.h"
 
 
 CUnityFactory::CUnityFactory()
@@ -48,10 +52,15 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
     //    aScene.AddInstance(CreateGameObject(pointLightData));
     //}
 
+    CGameObject* player = CreateGameObject(aData.myPlayerData, aBinModelPaths[aData.myPlayerData.myModelIndex]);
+    aScene.AddInstance(player);
+
     for (const auto& gameObjectData : aData.myGameObjects)
     {
         aScene.AddInstance(CreateGameObject(gameObjectData, aBinModelPaths[gameObjectData.myModelIndex]));
     }
+
+    aScene.InitNavMesh("Levels/NavTest_ExportedNavMesh.obj");
 
     return true;
 }
@@ -93,7 +102,14 @@ CGameObject* CUnityFactory::CreateGameObject(const SGameObjectData& aData, const
     return std::move(gameObject);
 }
 
-CGameObject* CUnityFactory::CreateGameObject(const SPlayerData& /*aData*/)
+CGameObject* CUnityFactory::CreateGameObject(const SPlayerData& aData, const std::string& aModelPath)
 {
-    return nullptr;
+    CGameObject* gameObject = new CGameObject();
+    gameObject->myTransform->Scale(aData.myScale.x);
+    gameObject->myTransform->Position(aData.myPosition);
+    gameObject->myTransform->Rotation(aData.myRotation);
+    gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
+    gameObject->AddComponent<CPlayerControllerComponent>(*gameObject);
+    gameObject->AddComponent<CNavMeshComponent>(*gameObject);
+    return gameObject;
 }

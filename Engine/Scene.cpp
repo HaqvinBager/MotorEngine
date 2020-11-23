@@ -16,7 +16,7 @@
 #include "Debug.h"
 #include <algorithm>
 #include "CameraComponent.h"
-
+#include "NavmeshLoader.h"
 
 CScene* CScene::ourInstance = nullptr;
 
@@ -49,6 +49,19 @@ bool CScene::Init()
 	return true;
 }
 
+bool CScene::InitNavMesh(std::string aPath)
+{
+	CNavmeshLoader* loader = new CNavmeshLoader();
+	myNavMesh = loader->LoadNavmesh(aPath);
+	
+	if (!myNavMesh) {
+		return false;
+	}
+
+	delete loader;
+	return true;
+}
+
 
 void CScene::SetMainCamera(CCameraComponent* aCamera)
 {
@@ -63,6 +76,11 @@ CCameraComponent* CScene::GetMainCamera()
 CEnvironmentLight* CScene::GetEnvironmentLight()
 {
 	return myEnvironmentLight;
+}
+
+SNavMesh* CScene::GetNavMesh()
+{
+	return myNavMesh;
 }
 
 std::vector<CGameObject*> CScene::CullGameObjects(CCameraComponent* aMainCamera)

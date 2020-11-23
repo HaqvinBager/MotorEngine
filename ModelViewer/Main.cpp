@@ -354,7 +354,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
 // CAMERA
 	CGameObject* camera = new CGameObject();
-		camera->AddComponent<CCameraComponent>(*camera);
+		camera->AddComponent<CCameraComponent>(*camera, 65.0f);
 		camera->myTransform->Rotation(CAMERA_DEFAULT_ROT);
 		camera->myTransform->Position(CAMERA_DEFAULT_POS);
 		//CScene::GetInstance()->AddInstance(camera);
@@ -364,7 +364,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		environmentLight->SetDirection(SM::Vector3(0, -1, -1));
 		environmentLight->SetColor(SM::Vector3(1.0f, 1.0f, 1.0f));
 		environmentLight->SetIntensity(1.0f);
-		scene->AddInstance(environmentLight);
+		scene->SetEnvironmentLight(environmentLight);
 // GRID
 	CLineInstance* grid = new CLineInstance();
 		grid->Init(CLineFactory::GetInstance()->CreateGrid({ 0.33f,0.33f,0.33f, 1.0f }));

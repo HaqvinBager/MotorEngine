@@ -323,7 +323,7 @@
     </ClCompile>
     <ClCompile Include="UnityFactory.cpp">
       <Filter>SceneData</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="Canvas.cpp">
       <Filter>UI</Filter>
     </ClCompile>
@@ -335,6 +335,12 @@
     </ClCompile>
     <ClCompile Include="NavMeshComponent.cpp">
       <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="StringID.cpp">
+      <Filter>StringID</Filter>
+    </ClCompile>
+    <ClCompile Include="StringIDLoader.cpp">
+      <Filter>StringID</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -616,7 +622,7 @@
     </ClInclude>
     <ClInclude Include="UnityFactory.h">
       <Filter>SceneData</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="Canvas.h">
       <Filter>UI</Filter>
     </ClInclude>
@@ -631,6 +637,12 @@
     </ClInclude>
     <ClInclude Include="NavMeshComponent.h">
       <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="StringID.hpp">
+      <Filter>StringID</Filter>
+    </ClInclude>
+    <ClInclude Include="StringIDLoader.h">
+      <Filter>StringID</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -770,6 +782,9 @@
     </Filter>
     <Filter Include="SceneData">
       <UniqueIdentifier>{65ea63e7-692e-477a-8498-52af94724067}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StringID">
+      <UniqueIdentifier>{d132a45d-b010-4821-b878-4b7a220fa409}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
