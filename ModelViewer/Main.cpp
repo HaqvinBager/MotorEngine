@@ -354,7 +354,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
 // CAMERA
 	CGameObject* camera = new CGameObject();
-		camera->AddComponent<CCameraComponent>(*camera);
+		camera->AddComponent<CCameraComponent>(*camera, 65.0f);
 		camera->myTransform->Rotation(CAMERA_DEFAULT_ROT);
 		camera->myTransform->Position(CAMERA_DEFAULT_POS);
 		//CScene::GetInstance()->AddInstance(camera);
