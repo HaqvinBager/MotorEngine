@@ -4,6 +4,7 @@
 #include "TransformComponent.h"
 #include "Engine.h"
 #include "Scene.h"
+#include "GameObject.h"
 
 using namespace CommonUtilities;
 
@@ -11,10 +12,6 @@ CCameraControllerComponent::CCameraControllerComponent(CGameObject& aGameObject,
 	: CComponent(aGameObject),
 	myCameraMoveSpeed(aCameraMoveSpeed),
 	myCamera(nullptr)
-
-	//myCamera(aCameraComponent),
-	//myCameraMode(aCameraMode),
-	//myToggleFreeCam(aToggleFreeCam)
 {
 	
 }
