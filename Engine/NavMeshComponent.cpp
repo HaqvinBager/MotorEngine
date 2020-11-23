@@ -5,8 +5,8 @@
 #include "TransformComponent.h"
 #include "Engine.h"
 #include "Scene.h"
+#include "MouseTracker.h"
 
-#include <iostream>
 CNavMeshComponent::CNavMeshComponent(CGameObject& aParent) 
 	: CBehaviour(aParent)
 {
@@ -47,19 +47,22 @@ std::vector<DirectX::SimpleMath::Vector3> CNavMeshComponent::CalculatePath(Direc
 	return std::move(path);
 }
 
-std::vector<DirectX::SimpleMath::Vector3> CNavMeshComponent::CalculatePath(DirectX::SimpleMath::Ray aRay, DirectX::SimpleMath::Vector3& anOutPosition)
+void CNavMeshComponent::CalculatePath()
 {
 	STriangle* triangle = nullptr;
+	DirectX::SimpleMath::Ray ray = MouseTracker::WorldSpacePick();
+
 	for (unsigned int i = 0; i < myNavMesh->myTriangles.size(); ++i) {
 		triangle = myNavMesh->myTriangles[i];
 		float dist = 0;
-		if (aRay.Intersects(triangle->myVertexPositions[0], triangle->myVertexPositions[1], triangle->myVertexPositions[2], dist)) {
-			anOutPosition = aRay.position + aRay.direction * dist;
+		if (ray.Intersects(triangle->myVertexPositions[0], triangle->myVertexPositions[1], triangle->myVertexPositions[2], dist)) {
+			DirectX::SimpleMath::Vector3 finalPosition = ray.position + ray.direction * dist;
+
+			std::vector<DirectX::SimpleMath::Vector3> path = 
+				CAStar::AStar(myNavMesh, myNavMesh->GetTriangleAtPoint(GameObject().myTransform->Position()), triangle);
+			
+			this->GameObject().myTransform->SetPath(path, finalPosition);
 			break;
 		}
 	}
-
-	std::vector<DirectX::SimpleMath::Vector3> path;
-	path = CAStar::AStar(myNavMesh, myNavMesh->GetTriangleAtPoint(GameObject().myTransform->Position()), triangle);
-	return std::move(path);
 }

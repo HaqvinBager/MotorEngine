@@ -18,8 +18,9 @@ public:
 	void OnEnable() override;
 	void OnDisable() override;
 
+	// For enemy pathfinding?
 	std::vector<DirectX::SimpleMath::Vector3> CalculatePath(DirectX::SimpleMath::Vector3 aDestination);
-	std::vector<DirectX::SimpleMath::Vector3> CalculatePath(DirectX::SimpleMath::Ray aRay, DirectX::SimpleMath::Vector3& anOutPosition);
+	void CalculatePath();
 
 private:
 	SNavMesh* myNavMesh;

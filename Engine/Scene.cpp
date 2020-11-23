@@ -17,6 +17,7 @@
 #include <algorithm>
 #include "CameraComponent.h"
 #include "NavmeshLoader.h"
+#include "LineFactory.h"
 
 CScene* CScene::ourInstance = nullptr;
 
@@ -57,6 +58,23 @@ bool CScene::InitNavMesh(std::string aPath)
 	if (!myNavMesh) {
 		return false;
 	}
+
+	std::vector<DirectX::SimpleMath::Vector3> positions;
+	positions.resize(myNavMesh->myTriangles.size() * 6);
+
+	for (UINT i = 0, j = 0; i < positions.size() && j < myNavMesh->myTriangles.size(); i += 6, j++)
+	{
+		positions[i + 0] = myNavMesh->myTriangles[j]->myVertexPositions[0];
+		positions[i + 1] = myNavMesh->myTriangles[j]->myVertexPositions[1];
+		positions[i + 2] = myNavMesh->myTriangles[j]->myVertexPositions[2];
+		positions[i + 3] = myNavMesh->myTriangles[j]->myVertexPositions[0];
+		positions[i + 4] = myNavMesh->myTriangles[j]->myVertexPositions[1];
+		positions[i + 5] = myNavMesh->myTriangles[j]->myVertexPositions[2];
+	}
+
+	myNavMeshGrid = new CLineInstance();
+	myNavMeshGrid->Init(CLineFactory::GetInstance()->CreatePolygon(positions));
+	this->AddInstance(myNavMeshGrid);
 
 	delete loader;
 	return true;
