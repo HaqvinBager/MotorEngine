@@ -20,6 +20,21 @@ CInputMapper::~CInputMapper()
 {
 }
 
+bool CInputMapper::Init()
+{
+	MapEvent(IInputObserver::EInputAction::Key1, IInputObserver::EInputEvent::Ability1);
+	MapEvent(IInputObserver::EInputAction::Key2, IInputObserver::EInputEvent::Ability2);
+	MapEvent(IInputObserver::EInputAction::Key3, IInputObserver::EInputEvent::Ability3);
+	MapEvent(IInputObserver::EInputAction::KeyA, IInputObserver::EInputEvent::Ability1);
+	MapEvent(IInputObserver::EInputAction::KeyS, IInputObserver::EInputEvent::Ability2);
+	MapEvent(IInputObserver::EInputAction::KeyD, IInputObserver::EInputEvent::Ability3);
+
+	if (this == nullptr)
+		return false;
+	else
+		return true;
+}
+
 void CInputMapper::RunEvent(const IInputObserver::EInputEvent aOutputEvent)
 {
 	for (int i = 0; i < myObservers[aOutputEvent].size(); ++i)
@@ -48,6 +63,32 @@ void CInputMapper::UpdateKeyboardInput()
 	} else if (myInput->IsKeyReleased(VK_ESCAPE))
 	{
 		TranslateActionToEvent(IInputObserver::EInputAction::KeyEscape);
+	}
+
+	if (myInput->IsKeyPressed('1'))
+	{
+		TranslateActionToEvent(IInputObserver::EInputAction::Key1);
+	}
+	if (myInput->IsKeyPressed('2'))
+	{
+		TranslateActionToEvent(IInputObserver::EInputAction::Key2);
+	}
+	if (myInput->IsKeyPressed('3'))
+	{
+		TranslateActionToEvent(IInputObserver::EInputAction::Key3);
+	}
+
+	if (myInput->IsKeyPressed('A'))
+	{
+		TranslateActionToEvent(IInputObserver::EInputAction::KeyA);
+	}
+	if (myInput->IsKeyPressed('S'))
+	{
+		TranslateActionToEvent(IInputObserver::EInputAction::KeyS);
+	}
+	if (myInput->IsKeyPressed('D'))
+	{
+		TranslateActionToEvent(IInputObserver::EInputAction::KeyD);
 	}
 }
 

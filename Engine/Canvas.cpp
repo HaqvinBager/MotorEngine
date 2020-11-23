@@ -14,11 +14,9 @@
 #include "rapidjson\istreamwrapper.h"
 
 CCanvas::CCanvas(std::vector<EMessageType> someMessageTypes,
-	std::vector<IInputObserver::EInputEvent> someInputEvents,
-	std::vector<IInputObserver::EInputAction> someInputActions):
+	std::vector<IInputObserver::EInputEvent> someInputEvents):
 	myMessageTypes(someMessageTypes),
 	myInputEvents(someInputEvents),
-	myInputActions(someInputActions),
 	myBackground(nullptr)
 {
 	SubscribeToMessages();
@@ -121,15 +119,14 @@ void CCanvas::Receive(const SMessage& aMessage)
 {
 	switch (aMessage.myMessageType)
 	{
-	case EMessageType::ColliderAdded:
+	case EMessageType::AbilityOneCooldown:
+		std::cout << "wwaaaaajhjjafa abilityyyy 1 is used!!!!" << std::endl;
 		break;
-	case EMessageType::ColliderRemoved:
+	case EMessageType::AbilityTwoCooldown:
+		std::cout << "wwaaaaajhjjafa abilityyyy 2 is used!!!!" << std::endl;
 		break;
-	case EMessageType::EnemyDied:
-		break;
-	case EMessageType::MainMenu:
-		break;
-	case EMessageType::Count:
+	case EMessageType::AbilityThreeCooldown:
+		std::cout << "wwaaaaajhjjafa abilityyyy 3 is used!!!!" << std::endl;
 		break;
 	default:
 		break;
@@ -144,10 +141,6 @@ void CCanvas::SubscribeToMessages()
 
 	for (auto inputEvent : myInputEvents) {
 		CInputMapper::GetInstance()->AddObserver(inputEvent, this);
-	}
-
-	for (unsigned int i = 0; i < myInputActions.size(); ++i) {
-		CInputMapper::GetInstance()->MapEvent(myInputActions[i], myInputEvents[i]);
 	}
 }
 

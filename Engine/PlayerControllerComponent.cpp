@@ -6,10 +6,6 @@
 
 CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent) : CBehaviour(aParent)
 {
-	//IS PROBABLY RONG // ALEX LIVHOLTS
-	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::MoveClick, this);
-	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::AttackClick, this);
-
 }
 
 CPlayerControllerComponent::~CPlayerControllerComponent()
@@ -18,7 +14,7 @@ CPlayerControllerComponent::~CPlayerControllerComponent()
 
 void CPlayerControllerComponent::Awake()
 {
-	
+
 }
 
 void CPlayerControllerComponent::Start()

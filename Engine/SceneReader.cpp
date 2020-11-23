@@ -85,6 +85,9 @@ SLoadScreenData& CSceneReader::ReadLoadScreenData()
 	myStreamPtr += Read(directionalLightData);
 	myLoadScreenData.back()->myDirectionalLight = directionalLightData;
 
+	unsigned int pointLightcount = 0;
+	myStreamPtr += Read(pointLightcount);
+
 	unsigned int isPlayerInScene = 0;
 	myStreamPtr += Read(isPlayerInScene);
 

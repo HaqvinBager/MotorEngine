@@ -19,6 +19,8 @@ private:
 	CInputMapper();
 	~CInputMapper();
 
+	bool Init();
+
 	void RunEvent(const IInputObserver::EInputEvent aOutputEvent);
 	void TranslateActionToEvent(const IInputObserver::EInputAction aAction);
 	void UpdateKeyboardInput();
