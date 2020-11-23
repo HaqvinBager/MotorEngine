@@ -26,7 +26,7 @@ std::vector<DirectX::SimpleMath::Vector3> CAStar::AStar(SNavMesh* aNavmesh, STri
 	}
 
 	// Setup heap
-	CommonUtilities::CHeap<STriangle*, DrefTriangleLessComparer> openSet;
+	CHeap<STriangle*, DrefTriangleLessComparer> openSet;
 
 	aStartTriangle->myG = 0;
 	aStartTriangle->myF = aStartTriangle->myG + CalculateH(aStartTriangle->myCenterPosition, anEndTriangle->myCenterPosition);

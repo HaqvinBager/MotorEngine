@@ -2,6 +2,8 @@
 #include "InputObserver.h"
 #include <unordered_map>
 
+class Input;
+
 class CInputMapper
 {
 	friend class CEngine;
@@ -28,6 +30,6 @@ private:
 
 	std::unordered_map<IInputObserver::EInputEvent, std::vector<IInputObserver*>> myObservers;
 	std::unordered_map<IInputObserver::EInputAction, IInputObserver::EInputEvent> myEvents;
-	CommonUtilities::Input* myInput;
+	Input* myInput;
 };
 

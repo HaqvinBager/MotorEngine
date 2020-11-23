@@ -94,20 +94,20 @@ void CCanvas::Init(std::string aFilePath)
 
 void CCanvas::Update(float /*aDeltaTime*/)
 {
-	DirectX::SimpleMath::Vector2 mousePos = { static_cast<float>(CommonUtilities::Input::GetInstance()->MouseX()), static_cast<float>(CommonUtilities::Input::GetInstance()->MouseY()) };
+	DirectX::SimpleMath::Vector2 mousePos = { static_cast<float>(Input::GetInstance()->MouseX()), static_cast<float>(Input::GetInstance()->MouseY()) };
 	for (unsigned int i = 0; i < myButtons.size(); ++i) 
 	{
 		myButtons[i]->CheckMouseCollision(mousePos);
 	}
 
-	if (CommonUtilities::Input::GetInstance()->IsMousePressed(CommonUtilities::Input::MouseButton::Left)) {
+	if (Input::GetInstance()->IsMousePressed(Input::MouseButton::Left)) {
 		for (unsigned int i = 0; i < myButtons.size(); ++i)
 		{
 			myButtons[i]->Click(true, nullptr);
 		}
 	}
 
-	if (CommonUtilities::Input::GetInstance()->IsMouseReleased(CommonUtilities::Input::MouseButton::Left)) {
+	if (Input::GetInstance()->IsMouseReleased(Input::MouseButton::Left)) {
 		for (unsigned int i = 0; i < myButtons.size(); ++i)
 		{
 			myButtons[i]->Click(false, nullptr);

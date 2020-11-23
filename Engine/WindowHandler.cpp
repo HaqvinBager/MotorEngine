@@ -1,8 +1,6 @@
 #include "WindowHandler.h"
 #include "Input.h"
 
-using namespace CommonUtilities;
-
 LRESULT CWindowHandler::WinProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)
 {
     static CWindowHandler* windowHandler = nullptr;

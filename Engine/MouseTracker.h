@@ -67,8 +67,8 @@ public:
 		unsigned int width = CEngine::GetInstance()->GetWindowHandler()->GetWidth();
 		unsigned int height = CEngine::GetInstance()->GetWindowHandler()->GetHeight();
 
-		float mouseX = static_cast<float>(CommonUtilities::Input::GetInstance()->MouseX());
-		float mouseY = static_cast<float>(CommonUtilities::Input::GetInstance()->MouseY());
+		float mouseX = static_cast<float>(Input::GetInstance()->MouseX());
+		float mouseY = static_cast<float>(Input::GetInstance()->MouseY());
 
 		CCameraComponent* cam = CEngine::GetInstance()->GetActiveScene().GetMainCamera();
 		CTransformComponent* camTransform = cam->GameObject().myTransform;

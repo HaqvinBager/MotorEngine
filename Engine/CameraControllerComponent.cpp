@@ -6,8 +6,6 @@
 #include "Scene.h"
 #include "GameObject.h"
 
-using namespace CommonUtilities;
-
 CCameraControllerComponent::CCameraControllerComponent(CGameObject& aGameObject, const float aCameraMoveSpeed /*, ECameraMode aCameraMode, char aToggleFreeCam*/) 
 	: CComponent(aGameObject),
 	myCameraMoveSpeed(aCameraMoveSpeed),
