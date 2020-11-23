@@ -8,7 +8,7 @@ class CGameObject;
 class CNavMeshComponent : public CBehaviour
 {
 public:
-	CNavMeshComponent(CGameObject& aParent, SNavMesh* aNavMesh);
+	CNavMeshComponent(CGameObject& aParent);
 	~CNavMeshComponent() override;
 
 	void Awake() override;

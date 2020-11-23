@@ -15,6 +15,7 @@ class CAnimatedUIElement;
 class CTextInstance;
 class CCameraComponent;
 struct SLineTime;
+struct SNavMesh;
 
 class CScene {
 	friend class CEngine;
@@ -27,9 +28,11 @@ public:
 
 	static CScene* GetInstance();
 	bool Init();
+	bool InitNavMesh(std::string aPath);
 	void SetMainCamera(CCameraComponent* aCamera);
 	CCameraComponent* GetMainCamera();
 	CEnvironmentLight* GetEnvironmentLight();
+	SNavMesh* GetNavMesh();
 	std::vector<CGameObject*> CullGameObjects(CCameraComponent* aMainCamera);
 	std::pair<unsigned int, std::array<CPointLight*, 8>> CullLights(CGameObject* aGameObject);
 	std::vector<CParticleInstance*> CullParticles(CCameraComponent* aMainCamera);
@@ -86,6 +89,8 @@ private:
 	std::vector<CAnimatedUIElement*> myAnimatedUIElements;
 	std::vector<CTextInstance*> myTexts;
 	CCollisionManager* myCollisionManager;
+
+	SNavMesh* myNavMesh;
 
 	bool myIsReadyToRender;
 

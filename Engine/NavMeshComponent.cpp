@@ -1,15 +1,17 @@
 #include "stdafx.h"
 #include "NavMeshComponent.h"
 #include "GameObject.h"
-//#include "NavmeshLoader.h"
 #include "AStar.h"
 #include "TransformComponent.h"
+#include "Engine.h"
+#include "Scene.h"
 
 #include <iostream>
-CNavMeshComponent::CNavMeshComponent(CGameObject& aParent, SNavMesh* aNavMesh) 
-	: CBehaviour(aParent), myNavMesh(aNavMesh)
+CNavMeshComponent::CNavMeshComponent(CGameObject& aParent) 
+	: CBehaviour(aParent)
 {
 	myEnabled = true;
+	myNavMesh = nullptr;
 }
 
 CNavMeshComponent::~CNavMeshComponent()
@@ -18,6 +20,7 @@ CNavMeshComponent::~CNavMeshComponent()
 
 void CNavMeshComponent::Awake()
 {
+	myNavMesh = CEngine::GetInstance()->GetActiveScene().GetNavMesh();
 }
 
 void CNavMeshComponent::Start()
@@ -26,9 +29,7 @@ void CNavMeshComponent::Start()
 
 void CNavMeshComponent::Update()
 {
-	if (!myNavMesh) {
-		std::cout << "navmesh gonne D:" << std::endl;
-	}
+	GameObject().myTransform->MoveAlongPath();
 }
 
 void CNavMeshComponent::OnEnable()
