@@ -34,7 +34,7 @@
 #include "loadAssetsFromDirectory.h"
 #include "spriteViewer.h"
 
-using namespace CommonUtilities;
+//using namespace CommonUtilities;
 namespace SM = DirectX::SimpleMath;
 namespace MW = ModelViewer;
 
@@ -192,25 +192,28 @@ CGameObject* InitAnimation(const std::string& aFilePath, CScene& aScene)
 
 	if (MW::GetSuffixFromString(aFilePath) == "_SK")
 	{
-		const size_t lastSlashIndex		= aFilePath.find_last_of("\\/");
-		const std::string folderPath	= aFilePath.substr(0, lastSlashIndex + 1);
 
-		std::filesystem::path p(folderPath);
-		std::filesystem::directory_iterator start(p);
-		std::filesystem::directory_iterator end;
-
-		std::vector<std::string> somePathsToAnimations;
-		for (auto it = start; it != end; ++it)
-		{
-			if (it->path().extension() == ".fbx")
-			{
-				const std::string filePath = it->path().filename().string();
-				if (MW::GetSuffixFromString(filePath) == "_AN")
-				{
-					somePathsToAnimations.emplace_back(folderPath + filePath);
-				}
-			}
-		}
+		std::vector<std::string> somePathsToAnimations = MW::Get_ANFiles(aFilePath);
+		
+		//const size_t lastSlashIndex		= aFilePath.find_last_of("\\/");
+		//const std::string folderPath	= aFilePath.substr(0, lastSlashIndex + 1);
+		//
+		//std::filesystem::path p(folderPath);
+		//std::filesystem::directory_iterator start(p);
+		//std::filesystem::directory_iterator end;
+		//
+		//std::vector<std::string> somePathsToAnimations;
+		//for (auto it = start; it != end; ++it)
+		//{
+		//	if (it->path().extension() == ".fbx")
+		//	{
+		//		const std::string filePath = it->path().filename().string();
+		//		if (MW::GetSuffixFromString(filePath) == "_AN")
+		//		{
+		//			somePathsToAnimations.emplace_back(folderPath + filePath);
+		//		}
+		//	}
+		//}
 
 		CAnimationComponent* animComp = gameObject->AddComponent<CAnimationComponent>(*gameObject);
 		animComp->GetMyAnimation()->Init(aFilePath.c_str(), somePathsToAnimations);
@@ -242,25 +245,7 @@ bool ChangeAnimationModel(CGameObject* aCurrentGameObject, const std::vector<std
 
 	if (MW::GetSuffixFromString(aModelFilePathList[loadModelNumber]) == "_SK")
 	{
-		const size_t lastSlashIndex		= aModelFilePathList[loadModelNumber].find_last_of("\\/");
-		const std::string folderPath	= aModelFilePathList[loadModelNumber].substr(0, lastSlashIndex + 1);
-
-		std::filesystem::path p(folderPath);
-		std::filesystem::directory_iterator start(p);
-		std::filesystem::directory_iterator end;
-
-		std::vector<std::string> somePathsToAnimations;
-		for (auto& it = start; it != end; ++it)
-		{
-			if (it->path().extension() == ".fbx")
-			{
-				const std::string filePath = it->path().filename().string();
-				if (MW::GetSuffixFromString(filePath) == "_AN")
-				{
-					somePathsToAnimations.emplace_back(folderPath + filePath);
-				}
-			}
-		}
+		std::vector<std::string> somePathsToAnimations = MW::Get_ANFiles(aModelFilePathList[loadModelNumber]);
 
 		if (!aCurrentGameObject->GetComponent<CAnimationComponent>())
 		{
@@ -322,7 +307,17 @@ void UpdateAnimation(CGameObject* aCurrentGameObject, CGameObject* aCamera, cons
 }
 #pragma endregion ! ANIMATIONS
 
-
+/*
+*	If loading animations outside of Model viewer:
+*		Load model as normal
+*		Check if filepath has suffix _SK
+*			Get _AN files from the filepath directory
+*			Add animComp, pass _AN files to the component.
+*		
+*	Connecting _SK models _AN files to StringID
+*	tbd
+*	
+*/
 
 //////////////////////////////////// MAIN STARTS HERE ///////////////////////////////////////////////////////////////////
 #define ASSET_ROOT "Assets/3D"
