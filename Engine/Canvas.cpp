@@ -120,13 +120,16 @@ void CCanvas::Receive(const SMessage& aMessage)
 	switch (aMessage.myMessageType)
 	{
 	case EMessageType::AbilityOneCooldown:
-		std::cout << "wwaaaaajhjjafa abilityyyy 1 is used!!!!" << std::endl;
+		myAnimatedUIs[0]->Level(*static_cast<float*>(aMessage.data));
+		std::cout << "Used ability 1 value: " << *static_cast<float*>(aMessage.data) << std::endl;
 		break;
 	case EMessageType::AbilityTwoCooldown:
-		std::cout << "wwaaaaajhjjafa abilityyyy 2 is used!!!!" << std::endl;
+		myAnimatedUIs[1]->Level(*static_cast<float*>(aMessage.data));
+		std::cout << "Used ability 2 value: " << *static_cast<float*>(aMessage.data) << std::endl;
 		break;
 	case EMessageType::AbilityThreeCooldown:
-		std::cout << "wwaaaaajhjjafa abilityyyy 3 is used!!!!" << std::endl;
+		myAnimatedUIs[2]->Level(*static_cast<float*>(aMessage.data));
+		std::cout << "Used ability 3 value: " << *static_cast<float*>(aMessage.data) << std::endl;
 		break;
 	default:
 		break;
