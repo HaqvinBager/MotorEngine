@@ -15,6 +15,7 @@ class CAnimatedUIElement;
 class CTextInstance;
 class CCameraComponent;
 struct SLineTime;
+struct SNavMesh;
 
 class CScene {
 	friend class CEngine;
@@ -22,11 +23,16 @@ class CScene {
 	friend class CMenuState;
 public:
 
+	CScene();
+	~CScene();
+
 	static CScene* GetInstance();
 	bool Init();
+	bool InitNavMesh(std::string aPath);
 	void SetMainCamera(CCameraComponent* aCamera);
 	CCameraComponent* GetMainCamera();
 	CEnvironmentLight* GetEnvironmentLight();
+	SNavMesh* GetNavMesh();
 	std::vector<CGameObject*> CullGameObjects(CCameraComponent* aMainCamera);
 	std::pair<unsigned int, std::array<CPointLight*, 8>> CullLights(CGameObject* aGameObject);
 	std::vector<CParticleInstance*> CullParticles(CCameraComponent* aMainCamera);
@@ -39,8 +45,9 @@ public:
 
 	CGameObject* GetModelToOutline() const { return myModelToOutline; }
 
+	bool AddInstances(std::vector<CGameObject*>& someGameObjects);
 	bool AddInstance(CCamera* aCamera);
-	bool AddInstance(CEnvironmentLight* anEnvironmentLight);
+	bool SetEnvironmentLight(CEnvironmentLight* anEnvironmentLight);
 	bool AddInstance(CPointLight* aPointLight);
 	bool AddInstance(CGameObject* aGameObject);
 	bool AddInstance(CParticleInstance* aParticleInstance);
@@ -61,8 +68,7 @@ public:
 	const bool Ready() const { return myIsReadyToRender; }
 	void Ready(bool aReady) { myIsReadyToRender = aReady; }
 
-	CScene();
-	~CScene();
+	const std::vector<CGameObject*>& GetActiveGameObjects() const { return myGameObjects; }
 
 private:
 
@@ -70,10 +76,11 @@ private:
 private:
 	std::vector<CGameObject*> myGameObjects;
 	CCameraComponent* myMainCamera;
+	CEnvironmentLight* myEnvironmentLight;
 
 	//Ev Remove
-	std::vector<CCamera*> myCameras;
-	std::vector<CEnvironmentLight*> myEnvironmentLights;
+	//std::vector<CCamera*> myCameras;
+	//std::vector<CEnvironmentLight*> myEnvironmentLights;
 	std::vector<CPointLight*> myPointLights;
 	std::vector<CParticleInstance*> myParticles;
 	std::vector<CVFXInstance*> myVFXInstances;
@@ -82,6 +89,8 @@ private:
 	std::vector<CAnimatedUIElement*> myAnimatedUIElements;
 	std::vector<CTextInstance*> myTexts;
 	CCollisionManager* myCollisionManager;
+
+	SNavMesh* myNavMesh;
 
 	bool myIsReadyToRender;
 

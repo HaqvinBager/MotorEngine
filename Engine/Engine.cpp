@@ -165,6 +165,7 @@ bool CEngine::Init(CWindowHandler::SWindowData& someWindowData)
 	ENGINE_ERROR_BOOL_MESSAGE(myLineFactory->Init(myFramework), "Line Factory could not be initialized.");
 	ENGINE_ERROR_BOOL_MESSAGE(mySpriteFactory->Init(myFramework), "Sprite Factory could not be initialized.");
 	ENGINE_ERROR_BOOL_MESSAGE(myTextFactory->Init(myFramework), "Text Factory could not be initialized.");
+	ENGINE_ERROR_BOOL_MESSAGE(myInputMapper->Init(), "InputMapper could not be initialized");
 	InitWindowsImaging();
 	return true;
 }
@@ -242,14 +243,27 @@ CEngine* CEngine::GetInstance()
 	return ourInstance;
 }
 
-void CEngine::AddScene(CScene* aScene)
+unsigned int CEngine::AddScene(CScene* aScene)
 {
 	myScenes.emplace_back(aScene);
+	return static_cast<unsigned int>(myScenes.size() - 1);
 }
 
 void CEngine::SetActiveScene(int sceneIndex)
 {
 	myActiveScene = sceneIndex;
+}
+
+void CEngine::SetActiveScene(CScene* aScene)
+{
+	for (unsigned int i = 0; i < myScenes.size(); ++i)
+	{
+		if (myScenes[i] == aScene)
+		{
+			myActiveScene = i;
+			std::cout << "Active Scene Index: " << i << std::endl;
+		}
+	}
 }
 
 CScene& CEngine::GetActiveScene()

@@ -568,6 +568,10 @@ public:
 		myCurSceneIndex = static_cast<int>(myImporters.size());
 		myImporters.push_back(new Assimp::Importer);
 		myScenes.push_back(myImporters[myCurSceneIndex]->ReadFile(fileName, aiProcessPreset_TargetRealtime_Quality | aiProcess_ConvertToLeftHanded));
+		
+		// aiProcessPreset_TargetRealtime_MaxQuality_DontJoinIndetical affects performance. Create someway to toggle it, so that only destructibles use it!
+		//myScenes.push_back(myImporters[myCurSceneIndex]->ReadFile(fileName, aiProcessPreset_TargetRealtime_Quality_DontJoinIdentical | aiProcess_ConvertToLeftHanded));
+		
 		// If the import failed, report it
 		if (!myScenes[myCurSceneIndex])
 		{

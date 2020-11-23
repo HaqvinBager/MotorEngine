@@ -5,10 +5,12 @@ class CButton;
 class CSpriteInstance;
 class CTextInstance;
 class CAnimatedUIElement;
+
 class CCanvas : public IObserver, public IInputObserver
 {
 public:
-	CCanvas(std::vector<EMessageType> someMessageTypes, std::vector<IInputObserver::EInputEvent> someInputEvents);
+	CCanvas(std::vector<EMessageType> someMessageTypes,
+		std::vector<IInputObserver::EInputEvent> someInputEvents);
 	~CCanvas();
 
 public:
@@ -51,4 +53,5 @@ private:
 	std::vector<CTextInstance*> myTexts;
 	std::vector<EMessageType> myMessageTypes;
 	std::vector<IInputObserver::EInputEvent> myInputEvents;
+	std::vector<IInputObserver::EInputAction> myInputActions;
 };

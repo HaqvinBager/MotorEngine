@@ -81,7 +81,6 @@ template<class T, typename... Args >
 T* CGameObject::AddComponent(Args&&... aParams)
 {
 	myComponents.emplace_back(std::move(new T(std::forward<Args>(aParams)...)));
-	//myComponents.back()->myParent = *this;
 	return dynamic_cast<T*>(myComponents.back());
 }
 

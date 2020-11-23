@@ -5,5 +5,13 @@ enum class EMessageType
 	ColliderRemoved,
 	EnemyDied,
 	MainMenu,
+	Credits,
+	Options,
+	LoadLevel,
+	LevelSelect,
+	Quit,
+	AbilityOneCooldown,
+	AbilityTwoCooldown,
+	AbilityThreeCooldown,
 	Count
 };

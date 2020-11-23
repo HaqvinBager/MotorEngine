@@ -13,25 +13,29 @@
 /// Every model it finds it adds to the list, creating an ID for it that is unique (previous ID++)
 /// 
 /// StringID.json
-///		"string1" : 2
-///		"string2" : 3
-///		"string3" : 4
-///		"myNextAvailableID" : 5
+///		"string1"
+///			id : 2
+///		"string2"
+///			id : 3
+///		"string3"
+///			id : 4
+///		"myNextAvailableID"
+///			id : 5
 /// 
-class StringID
+class CStringID
 {
 public:
-	StringID(const std::string& aString);
-	~StringID();
+	CStringID(const std::string& aString);
+	~CStringID();
 
 #ifdef  _DEBUG
 	const std::string& String() const;
 #endif
-	const unsigned int ID() const;
+	const int ID() const;
 
 private:
 #ifdef _DEBUG
 	std::string myString;
 #endif
-	unsigned int myID;
+	int myID;
 };

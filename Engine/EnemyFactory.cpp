@@ -55,7 +55,7 @@ CGameObject& CEnemyFactory::CreateEnemy(DirectX::SimpleMath::Vector3 aPosition, 
 	//animation->SetBlend(0, 1, 1.0f);
 	//------------------------------
 
-	CScene::GetInstance()->AddInstance(enemy);
+	//CScene::GetInstance()->AddInstance(enemy);
 
 	return *enemy;
 }

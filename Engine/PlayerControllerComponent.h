@@ -14,7 +14,8 @@ public:
 	void OnEnable() override;
 	void OnDisable() override;
 
-	void RecieveEvent(const IInputObserver::EInputEvent aEvent) override;
+	void RecieveEvent(const EInputEvent aEvent) override;
+
 private:
 
 };

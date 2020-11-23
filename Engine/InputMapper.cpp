@@ -12,10 +12,27 @@ CInputMapper* CInputMapper::GetInstance()
 CInputMapper::CInputMapper() : myInput(CommonUtilities::Input::GetInstance())
 {
 	ourInstance = this;
+
+	MapEvent(IInputObserver::EInputAction::MouseLeft, IInputObserver::EInputEvent::MoveClick);
 }
 
 CInputMapper::~CInputMapper()
 {
+}
+
+bool CInputMapper::Init()
+{
+	MapEvent(IInputObserver::EInputAction::Key1, IInputObserver::EInputEvent::Ability1);
+	MapEvent(IInputObserver::EInputAction::Key2, IInputObserver::EInputEvent::Ability2);
+	MapEvent(IInputObserver::EInputAction::Key3, IInputObserver::EInputEvent::Ability3);
+	MapEvent(IInputObserver::EInputAction::KeyA, IInputObserver::EInputEvent::Ability1);
+	MapEvent(IInputObserver::EInputAction::KeyS, IInputObserver::EInputEvent::Ability2);
+	MapEvent(IInputObserver::EInputAction::KeyD, IInputObserver::EInputEvent::Ability3);
+
+	if (this == nullptr)
+		return false;
+	else
+		return true;
 }
 
 void CInputMapper::RunEvent(const IInputObserver::EInputEvent aOutputEvent)
@@ -47,6 +64,32 @@ void CInputMapper::UpdateKeyboardInput()
 	{
 		TranslateActionToEvent(IInputObserver::EInputAction::KeyEscape);
 	}
+
+	if (myInput->IsKeyPressed('1'))
+	{
+		TranslateActionToEvent(IInputObserver::EInputAction::Key1);
+	}
+	if (myInput->IsKeyPressed('2'))
+	{
+		TranslateActionToEvent(IInputObserver::EInputAction::Key2);
+	}
+	if (myInput->IsKeyPressed('3'))
+	{
+		TranslateActionToEvent(IInputObserver::EInputAction::Key3);
+	}
+
+	if (myInput->IsKeyPressed('A'))
+	{
+		TranslateActionToEvent(IInputObserver::EInputAction::KeyA);
+	}
+	if (myInput->IsKeyPressed('S'))
+	{
+		TranslateActionToEvent(IInputObserver::EInputAction::KeyS);
+	}
+	if (myInput->IsKeyPressed('D'))
+	{
+		TranslateActionToEvent(IInputObserver::EInputAction::KeyD);
+	}
 }
 
 void CInputMapper::UpdateMouseInput()
@@ -56,21 +99,21 @@ void CInputMapper::UpdateMouseInput()
 	{
 		TranslateActionToEvent(IInputObserver::EInputAction::MouseLeft);
 	}
-	else if (myInput->IsMouseDown(CommonUtilities::Input::MouseButton::Left))
-	{
-		TranslateActionToEvent(IInputObserver::EInputAction::MouseLeft);
-	}
-	else if (myInput->IsMouseReleased(CommonUtilities::Input::MouseButton::Left))
-	{
-		TranslateActionToEvent(IInputObserver::EInputAction::MouseLeft);
-	}
+	//else if (myInput->IsMouseDown(CommonUtilities::Input::MouseButton::Left))
+	//{
+	//	TranslateActionToEvent(IInputObserver::EInputAction::MouseLeft);
+	//}
+	//else if (myInput->IsMouseReleased(CommonUtilities::Input::MouseButton::Left))
+	//{
+	//	TranslateActionToEvent(IInputObserver::EInputAction::MouseLeft);
+	//}
 }
 
 void CInputMapper::Update()
 {
-	myInput->update();
 	UpdateKeyboardInput();
 	UpdateMouseInput();
+	myInput->update();
 }
 
 void CInputMapper::MapEvent(const IInputObserver::EInputAction aInputEvent, const IInputObserver::EInputEvent aOutputEvent)

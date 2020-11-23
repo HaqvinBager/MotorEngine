@@ -22,7 +22,10 @@ public:
 	{
 		MoveClick,
 		AttackClick,
-		OpenMenuPress
+		OpenMenuPress,
+		Ability1,
+		Ability2,
+		Ability3
 	};
 
 public:

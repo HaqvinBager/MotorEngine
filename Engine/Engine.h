@@ -44,8 +44,9 @@ public:
 
 	static CEngine* GetInstance();
 
-	void AddScene(CScene* aScene);
+	unsigned int AddScene(CScene* aScene);
 	void SetActiveScene(int sceneIndex);
+	void SetActiveScene(CScene* aScene);
 	CScene& GetActiveScene();
 
 private:

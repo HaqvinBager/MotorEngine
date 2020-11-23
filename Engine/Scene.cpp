@@ -16,7 +16,7 @@
 #include "Debug.h"
 #include <algorithm>
 #include "CameraComponent.h"
-
+#include "NavmeshLoader.h"
 
 CScene* CScene::ourInstance = nullptr;
 
@@ -31,6 +31,8 @@ CScene::CScene()
 	ourInstance = this;
 	myMainCamera = nullptr;
 	myCollisionManager = new CCollisionManager();
+	myModelToOutline = nullptr;
+	myEnvironmentLight = nullptr;
 }
 
 CScene::~CScene()
@@ -47,6 +49,19 @@ bool CScene::Init()
 	return true;
 }
 
+bool CScene::InitNavMesh(std::string aPath)
+{
+	CNavmeshLoader* loader = new CNavmeshLoader();
+	myNavMesh = loader->LoadNavmesh(aPath);
+	
+	if (!myNavMesh) {
+		return false;
+	}
+
+	delete loader;
+	return true;
+}
+
 
 void CScene::SetMainCamera(CCameraComponent* aCamera)
 {
@@ -60,7 +75,12 @@ CCameraComponent* CScene::GetMainCamera()
 
 CEnvironmentLight* CScene::GetEnvironmentLight()
 {
-	return myEnvironmentLights[0];
+	return myEnvironmentLight;
+}
+
+SNavMesh* CScene::GetNavMesh()
+{
+	return myNavMesh;
 }
 
 std::vector<CGameObject*> CScene::CullGameObjects(CCameraComponent* aMainCamera)
@@ -75,7 +95,7 @@ std::vector<CGameObject*> CScene::CullGameObjects(CCameraComponent* aMainCamera)
 		}
 
 		float distanceToCameraSquared = Vector3::DistanceSquared(gameObject->GetComponent<CTransformComponent>()->Position(), cameraPosition);
-		if (distanceToCameraSquared < 1500.0f)
+		if (distanceToCameraSquared < 10000.0f)
 		{
 			culledGameObjects.emplace_back(gameObject);
 		}
@@ -157,15 +177,24 @@ std::vector<CTextInstance*> CScene::GetTexts()
 	return myTexts;
 }
 
-bool CScene::AddInstance(CCamera* aCamera)
+bool CScene::AddInstances(std::vector<CGameObject*>& someGameObjects)
 {
-	myCameras.emplace_back(aCamera);
+	if (someGameObjects.size() == 0)
+		return false;
+
+	for (unsigned int i = 0; i < someGameObjects.size(); ++i)
+	{
+		myGameObjects.emplace_back(someGameObjects[i]);
+	}
+
+
+	//myGameObjects.insert(myGameObjects.end(), someGameObjects.begin(), someGameObjects.end());
 	return true;
 }
 
-bool CScene::AddInstance(CEnvironmentLight* anEnvironmentLight)
+bool CScene::SetEnvironmentLight(CEnvironmentLight* anEnvironmentLight)
 {
-	myEnvironmentLights.emplace_back(anEnvironmentLight);
+	myEnvironmentLight = anEnvironmentLight;
 	return true;
 }
 

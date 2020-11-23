@@ -1,6 +1,7 @@
+#include "stdafx.h"
 #include "StringID.hpp"
 
-StringID::StringID(const std::string& /*aString*/)
+CStringID::CStringID(const std::string& aString)
 	: myID(0)
 {
 	// Get ID from file. If it does not exist in file, add it to the end of file
@@ -10,16 +11,16 @@ StringID::StringID(const std::string& /*aString*/)
 #endif
 }
 
-StringID::~StringID()
+CStringID::~CStringID()
 {}
 
-const unsigned int StringID::ID() const
+const int CStringID::ID() const
 {
 	return myID;
 }
 
 #ifdef _DEBUG
-const std::string& StringID::String() const
+const std::string& CStringID::String() const
 {
 	return myString;
 }

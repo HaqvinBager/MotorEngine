@@ -137,9 +137,12 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="FModWrapper.h" />
     <ClInclude Include="EnviromentLightComponent.h" />
+    <ClInclude Include="Funneling.h" />
+    <ClInclude Include="JsonReader.h" />
     <ClInclude Include="MainSingleton.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="MessageType.h" />
+    <ClInclude Include="NavMeshComponent.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="PointLightComponent.h" />
     <ClInclude Include="PostMaster.h" />
@@ -154,6 +157,8 @@
     <ClInclude Include="ParticleEmitterComponent.h" />
     <ClInclude Include="PlayerControllerComponent.h" />
     <ClInclude Include="RectangleColliderComponent.h" />
+    <ClInclude Include="SceneData.h" />
+    <ClInclude Include="SceneReader.h" />
     <ClInclude Include="StackWalker.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="DebugTimerUtility.h" />
@@ -197,6 +202,8 @@
     <ClInclude Include="StateStack.h" />
     <ClInclude Include="StatsComponent.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="StringID.hpp" />
+    <ClInclude Include="StringIDLoader.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextFactory.h" />
     <ClInclude Include="TextInstance.h" />
@@ -205,6 +212,7 @@
     <ClInclude Include="TokenPool.h" />
     <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="TriangleColliderComponent.h" />
+    <ClInclude Include="UnityFactory.h" />
     <ClInclude Include="VFXBase.h" />
     <ClInclude Include="VFXComponent.h" />
     <ClInclude Include="VFXFactory.h" />
@@ -223,6 +231,8 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
+    <ClCompile Include="CameraControllerComponent.cpp" />
+    <ClCompile Include="CameraControllerComponent.h" />
     <ClCompile Include="CameraFactory.cpp" />
     <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="CapsuleColliderComponent.cpp" />
@@ -240,12 +250,14 @@
     <ClCompile Include="InputMapper.cpp" />
     <ClCompile Include="MainSingleton.cpp" />
     <ClCompile Include="MenuState.cpp" />
+    <ClCompile Include="NavMeshComponent.cpp" />
     <ClCompile Include="ObjectPool.cpp" />
     <ClCompile Include="ParticleEmitterComponent.cpp" />
     <ClCompile Include="PlayerControllerComponent.cpp" />
     <ClCompile Include="PointLightComponent.cpp" />
     <ClCompile Include="PostMaster.cpp" />
     <ClCompile Include="RectangleColliderComponent.cpp" />
+    <ClCompile Include="SceneReader.cpp" />
     <ClCompile Include="StackWalker.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="DirectXFramework.cpp" />
@@ -286,6 +298,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="StringID.cpp" />
+    <ClCompile Include="StringIDLoader.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextFactory.cpp" />
     <ClCompile Include="TextInstance.cpp" />
@@ -294,6 +308,7 @@
     <ClCompile Include="TokenPool.cpp" />
     <ClCompile Include="TransformComponent.cpp" />
     <ClCompile Include="TriangleColliderComponent.cpp" />
+    <ClCompile Include="UnityFactory.cpp" />
     <ClCompile Include="VFXBase.cpp" />
     <ClCompile Include="VFXComponent.cpp" />
     <ClCompile Include="VFXFactory.cpp" />
