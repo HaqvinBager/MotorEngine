@@ -1,8 +1,7 @@
 #pragma once
 #include "Behaviour.h"
-#include "InputObserver.h"
 
-class CPlayerControllerComponent : public CBehaviour, public IInputObserver
+class CPlayerControllerComponent : public CBehaviour
 {
 public:
 	CPlayerControllerComponent(CGameObject& aParent);
@@ -14,7 +13,6 @@ public:
 	void OnEnable() override;
 	void OnDisable() override;
 
-	void RecieveEvent(const IInputObserver::EInputEvent aEvent) override;
 private:
 
 };

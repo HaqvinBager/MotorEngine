@@ -10,8 +10,7 @@ class CCanvas : public IObserver, public IInputObserver
 {
 public:
 	CCanvas(std::vector<EMessageType> someMessageTypes,
-		std::vector<IInputObserver::EInputEvent> someInputEvents,
-		std::vector<IInputObserver::EInputAction> someInputActions);
+		std::vector<IInputObserver::EInputEvent> someInputEvents);
 	~CCanvas();
 
 public:
