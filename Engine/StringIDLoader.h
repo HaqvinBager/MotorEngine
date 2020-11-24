@@ -1,5 +1,10 @@
 #pragma once
 
+#define StringID_MinModelID 1
+#define StringID_MaxModelID 5000
+#define StringID_MinAnimID 5001
+#define StringID_MaxAnimID 9999
+
 class CStringIDLoader
 {
 public:
