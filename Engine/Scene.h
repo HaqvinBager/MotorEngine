@@ -2,6 +2,7 @@
 #include <vector>
 #include "GameObject.h"
 #include "Component.h"
+#include "SpriteInstance.h"
 
 class CModelComponent;
 class CCamera;
@@ -11,7 +12,7 @@ class CPointLight;
 class CParticleInstance;
 class CVFXInstance;
 class CLineInstance;
-class CSpriteInstance;
+//class CSpriteInstance;
 class CAnimatedUIElement;
 class CTextInstance;
 class CCameraComponent;
@@ -82,9 +83,6 @@ public:
 	}
 
 private:
-
-
-private:
 	std::vector<CGameObject*> myGameObjects;
 	CCameraComponent* myMainCamera;
 	CEnvironmentLight* myEnvironmentLight;
@@ -96,9 +94,10 @@ private:
 	std::vector<CParticleInstance*> myParticles;
 	std::vector<CVFXInstance*> myVFXInstances;
 	std::vector<CLineInstance*> myLineInstances;
-	std::vector<CSpriteInstance*> mySprites;
 	std::vector<CAnimatedUIElement*> myAnimatedUIElements;
 	std::vector<CTextInstance*> myTexts;
+	std::unordered_map<ERenderOrder, std::vector<CSpriteInstance*>> mySpriteInstances;
+
 	CCollisionManager* myCollisionManager;
 
 	SNavMesh* myNavMesh;

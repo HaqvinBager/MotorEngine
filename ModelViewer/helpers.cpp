@@ -17,6 +17,11 @@ namespace ModelViewer
 		return std::move(aString.substr(aString.length() - 7, 3));
 	}
 
+	bool Has_SKSuffix(const std::string& aString)
+	{
+		return (GetSuffixFromString(aString) == "_SK");
+	}
+
 	bool CheckForIncorrectModelNumber(const size_t& aLoadModelNumber, const size_t& aMax)
 	{
 		return (static_cast<int>(aLoadModelNumber) > -1 && aLoadModelNumber < aMax);
