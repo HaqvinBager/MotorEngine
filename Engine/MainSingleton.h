@@ -1,5 +1,6 @@
 #pragma once
 #include "PostMaster.h"
+#include "StateStack.h"
 
 class CMainSingleton
 {
@@ -9,10 +10,13 @@ class CMainSingleton
 public:
 
 	static CPostMaster& PostMaster();
+	static CStateStack& StateStack();
 
 private:
 	static CMainSingleton* ourInstance;
 	CPostMaster myPostMaster;
+	CStateStack myStateStack;
+
 private:
 	CMainSingleton();
 	~CMainSingleton();

@@ -10,8 +10,10 @@
 #include "Input.h"
 #include "SpriteFactory.h"
 #include "Sprite.h"
+#include "MainSingleton.h"
 #include "rapidjson\document.h"
 #include "rapidjson\istreamwrapper.h"
+#include "..\..\Game\LoadLevelState.h"
 
 using namespace rapidjson;
 
@@ -142,6 +144,16 @@ void CCanvas::Receive(const SMessage& aMessage)
 {
 	switch (aMessage.myMessageType)
 	{
+	case EMessageType::LoadLevel:
+	{
+		CMainSingleton::StateStack().PushState(new CLoadLevelState(CMainSingleton::StateStack()));
+		CMainSingleton::StateStack().Awake();
+		CMainSingleton::StateStack().Start();
+	} break;
+	case EMessageType::Quit:
+	{
+		CMainSingleton::StateStack().PopState();
+	} break;
 	case EMessageType::AbilityOneCooldown:
 		myAnimatedUIs[0]->Level(*static_cast<float*>(aMessage.data));
 		std::cout << "Used ability 1 value: " << *static_cast<float*>(aMessage.data) << std::endl;
