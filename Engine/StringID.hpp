@@ -28,14 +28,14 @@ public:
 	CStringID(const std::string& aString);
 	~CStringID();
 
-#ifdef  _DEBUG
 	const std::string& String() const;
+#ifdef  _DEBUG
 #endif
 	const int ID() const;
 
 private:
-#ifdef _DEBUG
 	std::string myString;
+#ifdef _DEBUG
 #endif
 	int myID;
 };

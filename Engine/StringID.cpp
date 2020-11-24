@@ -6,8 +6,8 @@ CStringID::CStringID(const std::string& aString)
 {
 	// Get ID from file. If it does not exist in file, add it to the end of file
 
-#ifdef _DEBUG
 	myString = aString;
+#ifdef _DEBUG
 #endif
 }
 
@@ -19,9 +19,9 @@ const int CStringID::ID() const
 	return myID;
 }
 
-#ifdef _DEBUG
 const std::string& CStringID::String() const
 {
 	return myString;
 }
+#ifdef _DEBUG
 #endif
