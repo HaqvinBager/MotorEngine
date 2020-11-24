@@ -30,6 +30,7 @@ public:
 		std::string texturePathTwo = "";
 		std::string texturePathThree = "";
 		std::string texturePathMask = "";
+		std::string meshPath = "";
 	};
 
 	CVFXBase();

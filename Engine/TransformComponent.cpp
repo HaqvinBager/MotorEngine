@@ -51,6 +51,18 @@ void CTransformComponent::Rotation(DirectX::SimpleMath::Vector3 aRotation)
 	myTransform.Translation(tempTranslation);
 }
 
+void CTransformComponent::Rotation(DirectX::SimpleMath::Quaternion aQuaternion)
+{
+	Vector3 tempTranslation = myTransform.Translation();
+
+	Matrix tempRotation = Matrix::CreateFromQuaternion(
+		aQuaternion
+	);
+	myTransform = tempRotation;
+	myTransform *= Matrix::CreateScale(myScale * ENGINE_SCALE);
+	myTransform.Translation(tempTranslation);
+}
+
 void CTransformComponent::Scale(float aScale)
 {
 	myScale = aScale;
@@ -115,6 +127,14 @@ void CTransformComponent::Rotate(DirectX::SimpleMath::Vector3 aRotation)
 	myTransform.Translation(tempTranslation);
 }
 
+void CTransformComponent::Rotate(DirectX::SimpleMath::Quaternion aQuaternion)
+{
+	Vector3 tempTranslation = myTransform.Translation();
+	Matrix tempRotation = Matrix::CreateFromQuaternion(aQuaternion);
+	myTransform *= tempRotation;
+	myTransform.Translation(tempTranslation);
+}
+
 void CTransformComponent::MoveAlongPath()
 {
 	// Astar returns backwards path. Because we cannot swap path nodes, 
@@ -153,4 +173,9 @@ void CTransformComponent::SetPath(std::vector<DirectX::SimpleMath::Vector3>& aPa
 void CTransformComponent::ClearPath()
 {
 	myPath.clear();
+}
+
+DirectX::SimpleMath::Matrix CTransformComponent::GetMatrix() const
+{
+	return myTransform;
 }

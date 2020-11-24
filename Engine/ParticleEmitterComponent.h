@@ -19,10 +19,12 @@ public:
 	void Init(CParticle* aParticle);
 	void SetTransform(DirectX::SimpleMath::Vector3 aPosition, DirectX::SimpleMath::Vector3 aRotation);
 	void SetRotation(DirectX::SimpleMath::Vector3 aRotation);
+	void SetRotation(DirectX::SimpleMath::Quaternion aQuaternion);
 	void SetPosition(DirectX::SimpleMath::Vector3 aPosition);
 	void SetScale(float aScale);
 	void Move(DirectX::SimpleMath::Vector3 aMovement);
 	void Rotate(DirectX::SimpleMath::Vector3 aRotation);
+	void Rotate(DirectX::SimpleMath::Quaternion aQuaternion);
 
 	void Update(float aDeltaTime, DirectX::SimpleMath::Vector3 aCameraPosition);
 

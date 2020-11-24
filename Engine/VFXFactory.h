@@ -10,8 +10,8 @@ class CVFXFactory {
 public:
 	bool Init(CDirectXFramework* aFramework);
 
-	CVFXBase* LoadVFXBase(std::string aMeshPath, std::string aFilePath);
-	CVFXBase* GetVFXBase(std::string aMeshPath, std::string aFilePath);
+	CVFXBase* LoadVFXBase(std::string aFilePath);
+	CVFXBase* GetVFXBase(std::string aFilePath);
 
 	static CVFXFactory* GetInstance();
 

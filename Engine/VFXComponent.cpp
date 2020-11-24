@@ -26,6 +26,11 @@ void CVFXComponent::Update() {
 	myTextureScroll += {0.15f * CTimer::Dt(), 0.15f * CTimer::Dt()};
 	myTextureScroll2 += {0.15f * CTimer::Dt(), 0.15f * CTimer::Dt()};
 	SetPosition(GameObject().myTransform->Position());
+	DirectX::SimpleMath::Vector3 scale;
+	DirectX::SimpleMath::Quaternion quat;
+	DirectX::SimpleMath::Vector3 translation;
+	GameObject().myTransform->GetMatrix().Decompose(scale, quat, translation);
+	SetRotation(quat);
 }
 
 bool CVFXComponent::Init(CVFXBase* aVFXBase) {
@@ -48,6 +53,16 @@ void CVFXComponent::SetRotation(DirectX::SimpleMath::Vector3 aRotation) {
 		DirectX::XMConvertToRadians(aRotation.y),
 		DirectX::XMConvertToRadians(aRotation.x),
 		DirectX::XMConvertToRadians(aRotation.z)
+	);
+	myTransform *= SM::Matrix::CreateScale(myScale * ENGINE_SCALE);
+	myTransform.Translation(translation);
+}
+
+void CVFXComponent::SetRotation(DirectX::SimpleMath::Quaternion aQuaternion)
+{
+	SM::Vector3 translation = myTransform.Translation();
+	myTransform = SM::Matrix::CreateFromQuaternion(
+		aQuaternion
 	);
 	myTransform *= SM::Matrix::CreateScale(myScale * ENGINE_SCALE);
 	myTransform.Translation(translation);
@@ -77,6 +92,13 @@ void CVFXComponent::Move(DirectX::SimpleMath::Vector3 aMovement) {
 void CVFXComponent::Rotate(DirectX::SimpleMath::Vector3 aRotation) {
 	SM::Vector3 translation = myTransform.Translation();
 	myTransform *= SM::Matrix::CreateFromYawPitchRoll(aRotation.y, aRotation.x, aRotation.z);
+	myTransform.Translation(translation);
+}
+
+void CVFXComponent::Rotate(DirectX::SimpleMath::Quaternion aQuaternion)
+{
+	SM::Vector3 translation = myTransform.Translation();
+	myTransform *= SM::Matrix::CreateFromQuaternion(aQuaternion);
 	myTransform.Translation(translation);
 }
 
