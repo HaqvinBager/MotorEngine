@@ -20,3 +20,6 @@
 #include "DirectXFramework.h"
 #include "EngineException.h"
 #define SAFE_DELETE(aPointer) delete aPointer; aPointer = nullptr;
+
+//namesapce SM = DirectX::SimpleMath;
+using namespace DirectX::SimpleMath;

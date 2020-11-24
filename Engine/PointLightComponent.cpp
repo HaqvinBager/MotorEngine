@@ -6,14 +6,18 @@
 #include "TransformComponent.h"
 #include "Scene.h"
 
-CPointLightComponent::CPointLightComponent(CGameObject& aParent, float aRange, DirectX::SimpleMath::Vector4 aColorAndIntensity)
-	: CBehaviour(aParent)
+CPointLightComponent::CPointLightComponent(CGameObject& aParent, float aRange, DirectX::SimpleMath::Vector3 aColor, float anIntensity)
+    : CBehaviour(aParent),
+    myRange(aRange),
+    myColor(aColor),
+    myIntensity(anIntensity),
+    myPointLight(nullptr)
 {
-	myPointLight = CLightFactory::GetInstance()->CreatePointLight();
-	myPointLight->SetPosition(GameObject().myTransform->Position());
-	myPointLight->SetColor({aColorAndIntensity.x, aColorAndIntensity.y, aColorAndIntensity.z});
-	myPointLight->SetIntensity(aColorAndIntensity.w);
-	myPointLight->SetRange(aRange);
+    myPointLight = CLightFactory::GetInstance()->CreatePointLight();
+    myPointLight->SetPosition(GameObject().myTransform->Position());
+    myPointLight->SetColor(myColor);
+    myPointLight->SetIntensity(myIntensity);
+    myPointLight->SetRange(myRange);
 }
 
 CPointLightComponent::~CPointLightComponent()

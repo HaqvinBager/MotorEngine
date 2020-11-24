@@ -3,11 +3,11 @@
 #include "DirectXFramework.h"
 #include "Scene.h"
 #include "LineInstance.h"
+#include "ModelFactory.h"
 #include "GameObject.h"
 #include "TransformComponent.h"
-#include "ModelFactory.h"
 #include "CameraComponent.h"
-
+#include "ModelComponent.h"
 
 CRenderManager::CRenderManager() /*: myScene(*CScene::GetInstance())*/
 {
@@ -97,7 +97,8 @@ void CRenderManager::Render(CScene& aScene)
 	std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> pointlights;
 	for (CGameObject* instance : gameObjects)
 	{
-		pointlights.push_back(aScene.CullLights(instance));
+		if(instance->GetComponent<CModelComponent>())
+			pointlights.push_back(aScene.CullLights(instance));
 	}
 	myForwardRenderer.Render(environmentlight, pointlights, maincamera, gameObjects);
 

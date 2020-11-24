@@ -317,7 +317,6 @@
     <ClCompile Include="CameraControllerComponent.h">
       <Filter>GameObject and Component\Component</Filter>
     </ClCompile>
-    <ClCompile Include="CameraControllerComponent.cpp" />
     <ClCompile Include="SceneReader.cpp">
       <Filter>SceneData</Filter>
     </ClCompile>
@@ -341,6 +340,9 @@
     </ClCompile>
     <ClCompile Include="StringIDLoader.cpp">
       <Filter>StringID</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraControllerComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

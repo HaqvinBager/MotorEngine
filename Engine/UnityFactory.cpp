@@ -12,8 +12,10 @@
 #include "AnimationComponent.h"
 #include "PlayerControllerComponent.h"
 #include "NavMeshComponent.h"
+#include "PointLightComponent.h"
 
 #include "LightFactory.h"
+#include "PointLight.h"
 #include "NavmeshLoader.h"
 
 
@@ -89,6 +91,14 @@ CGameObject* CUnityFactory::CreateGameObject(const SDirectionalLightData& aData)
 {
     CGameObject* gameObject = new CGameObject();
     gameObject->AddComponent<CEnviromentLightComponent>(*gameObject, aData.myColor, aData.myIntensity, aData.myDirection);
+    return std::move(gameObject);
+}
+
+CGameObject* CUnityFactory::CreateGameObject(const SPointLightData& aData)
+{
+    CGameObject* gameObject = new CGameObject();
+    gameObject->myTransform->Position(aData.myPosition);
+    gameObject->AddComponent<CPointLightComponent>(*gameObject, aData.myRange, aData.myColor, aData.myIntensity);
     return std::move(gameObject);
 }
 
