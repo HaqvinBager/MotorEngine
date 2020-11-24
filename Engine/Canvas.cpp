@@ -5,6 +5,7 @@
 #include "Button.h"
 #include "SpriteInstance.h"
 #include "TextInstance.h"
+#include "TextFactory.h"
 #include "AnimatedUIElement.h"
 #include "InputMapper.h"
 #include "Input.h"
@@ -65,6 +66,20 @@ void CCanvas::Init(std::string aFilePath)
 			}
 
 			myButtons.emplace_back(new CButton(data));
+		}
+	}
+
+	if (document.HasMember("Texts"))
+	{
+		auto textDataArray = document["Texts"].GetArray();
+		for (unsigned int i = 0; i < textDataArray.Size(); ++i)
+		{
+			auto textData = textDataArray[i].GetObjectW();
+			myTexts.emplace_back(new CTextInstance());
+			myTexts.back()->Init(CTextFactory::GetInstance()->GetText(textData["FontAndFontSize"].GetString()));
+			myTexts.back()->SetText(textData["Text"].GetString());
+			myTexts.back()->SetColor({ textData["Color R"].GetFloat(), textData["Color G"].GetFloat(), textData["Color B"].GetFloat(), 1.0f });
+			myTexts.back()->SetPosition({ textData["Position X"].GetFloat(), textData["Position Y"].GetFloat() });
 		}
 	}
 
@@ -192,31 +207,6 @@ bool CCanvas::GetEnabled()
 	return myIsEnabled;
 }
 
-CSpriteInstance* CCanvas::GetBackground()
-{
-	return myBackground;
-}
-
-std::vector<CAnimatedUIElement*> CCanvas::GetAnimatedUIs()
-{
-	return myAnimatedUIs;
-}
-
-std::vector<CButton*> CCanvas::GetButtons()
-{
-	return myButtons;
-}
-
-std::vector<CSpriteInstance*> CCanvas::GetSprites()
-{
-	return mySprites;
-}
-
-std::vector<CTextInstance*> CCanvas::GetTexts()
-{
-	return myTexts;
-}
-
 void CCanvas::SetEnabled(bool isEnabled)
 {
 	if (myIsEnabled != isEnabled)
@@ -233,29 +223,4 @@ void CCanvas::SetEnabled(bool isEnabled)
 			sprite->SetShouldRender(myIsEnabled);
 		}
 	}
-}
-
-void CCanvas::SetBackground(CSpriteInstance* aBackground)
-{
-	myBackground = aBackground;
-}
-
-void CCanvas::AddAnimatedUI(CAnimatedUIElement* anAnimatedUIElement)
-{
-	myAnimatedUIs.emplace_back(anAnimatedUIElement);
-}
-
-void CCanvas::AddButton(CButton* aButton)
-{
-	myButtons.emplace_back(aButton);
-}
-
-void CCanvas::AddSprite(CSpriteInstance* aSprite)
-{
-	mySprites.emplace_back(aSprite);
-}
-
-void CCanvas::AddText(CTextInstance* aText)
-{
-	myTexts.emplace_back(aText);
 }

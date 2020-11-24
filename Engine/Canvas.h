@@ -23,21 +23,7 @@ public:
 
 public:
 	bool GetEnabled();
-
-	CSpriteInstance* GetBackground();
-	std::vector<CAnimatedUIElement*> GetAnimatedUIs();
-	std::vector<CButton*> GetButtons();
-	std::vector<CSpriteInstance*> GetSprites();
-	std::vector<CTextInstance*> GetTexts();
-
-public:
 	void SetEnabled(bool isEnabled);
-
-	void SetBackground(CSpriteInstance* aBackground);
-	void AddAnimatedUI(CAnimatedUIElement* anAnimatedUIElement);
-	void AddButton(CButton* aButton);
-	void AddSprite(CSpriteInstance* aSprite);
-	void AddText(CTextInstance* aText);
 
 private:
 	bool myIsEnabled;
