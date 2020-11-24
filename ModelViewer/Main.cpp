@@ -26,7 +26,6 @@
 
 #include <Animation.h>
 
-#include "../../Game/AbilityComponent.h"//  Grupp 4 stuff might break for grupp3!
 
 #include <filesystem>
 #include <iostream>
@@ -40,6 +39,7 @@
 namespace SM = DirectX::SimpleMath;
 namespace MW = ModelViewer;
 
+#include "../../Game/AbilityComponent.h"//  Grupp 4 stuff might break for grupp3!
 #pragma comment (lib, "../../../Lib/Game_Debug.lib")
 
 ///	NOTES
@@ -102,9 +102,12 @@ CGameObject* InitVFX(CScene& aScene)
 
 	return go;
 }
-void UpdateVFX(CGameObject* /*aCurrentGameObject*/,CGameObject* /*aCamera*/)
+void UpdateVFX(CGameObject* /*aCurrentGameObject*/,CGameObject* /*aCamera*/, CScene* aScene)
 {
-	//aCurrentGameObject->Update();
+	for (auto& obj : aScene->GetActiveGameObjects())
+	{
+		obj->Update();
+	}
 }
 
 #pragma region TRANSFORM FUNCTIONS
@@ -165,7 +168,6 @@ CGameObject* InitModels(const std::string& aModelPath, CScene& aScene)
 
 	gameobject->AddComponent<CModelComponent>(CModelComponent(*gameobject, aModelPath));
 	gameobject->myTransform->Position({ 0.0f,0.0f,0.0f });
-	
 	aScene.AddInstance(gameobject);
 
 	return gameobject;
@@ -456,7 +458,6 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 				shouldRun = false;
 			}
 		}
-	
 		engine.BeginFrame();
 		//if (viewAnimations)
 		//{
@@ -466,11 +467,8 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		//{
 		//	UpdateModel(filePaths, currentGameObject, camera);
 		//}
-		UpdateVFX(currentGameObject, camera);
-		for (auto& obj : scene->GetActiveGameObjects())
-		{
-			obj->Update();
-		}
+		UpdateVFX(currentGameObject, camera, scene);
+
 		if (Input::GetInstance()->IsKeyPressed('I'))
 		{
 			SpriteViewer::Init();

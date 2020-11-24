@@ -18,6 +18,8 @@
 #include "PointLight.h"
 //#include "NavmeshLoader.h"// included in NavMeshComp
 
+#include "animationLoader.h"
+
 #include "Debug.h"
 
 
@@ -31,7 +33,7 @@ CUnityFactory::~CUnityFactory()
 
 bool CUnityFactory::FillScene(const SLoadScreenData& aData, const std::vector<std::string>& someModelPaths, CScene& aScene)
 {
-    CGameObject* camera = CreateGameObject(aData.myCamera);
+    CGameObject* camera = CreateGameObject(aData.myCamera, false);
     aScene.AddInstance(camera);
     aScene.SetMainCamera(camera->GetComponent<CCameraComponent>());
     CGameObject* envLight = CreateGameObject(aData.myDirectionalLight);
@@ -65,7 +67,7 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 #endif
     }
 
-    CGameObject* player = CreateGameObject(aData.myPlayerData, aBinModelPaths[aData.myPlayerData.myModelIndex]);
+    CGameObject* player = CreateGameObject(aData.myPlayerData, "Assets\\3D\\Character\\CH_PL_Daughter_01_19G4_1_19\\CH_PL_Daughter_01_19G4_1_19_SK.fbx"/*aBinModelPaths[aData.myPlayerData.myModelIndex]*/);
     aScene.AddInstance(player);
 
     for (const auto& gameObjectData : aData.myGameObjects)
@@ -88,11 +90,13 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 //    return gameObjects;
 //}
 
-CGameObject* CUnityFactory::CreateGameObject(const SCameraData& aData)
+CGameObject* CUnityFactory::CreateGameObject(const SCameraData& aData, bool addCameraController)
 {
     CGameObject* gameObject = new CGameObject();
     gameObject->AddComponent<CCameraComponent>(*gameObject, aData.myFieldOfView);
-    gameObject->AddComponent<CCameraControllerComponent>(*gameObject, 25.0f);
+    if (addCameraController) {
+        gameObject->AddComponent<CCameraControllerComponent>(*gameObject, aData.myFreeCamMoveSpeed, static_cast<CCameraControllerComponent::ECameraMode>(aData.myStartInCameraMode), static_cast<char>(aData.myToggleFreeCamKey), aData.myOffset);
+    }
     gameObject->myTransform->Position(aData.myPosition);
     gameObject->myTransform->Rotation(aData.myRotation);
     return std::move(gameObject);
@@ -132,5 +136,6 @@ CGameObject* CUnityFactory::CreateGameObject(const SPlayerData& aData, const std
     gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
     gameObject->AddComponent<CPlayerControllerComponent>(*gameObject);
     gameObject->AddComponent<CNavMeshComponent>(*gameObject);
+    AddAnimationsToGameObject(*gameObject, aModelPath);
     return gameObject;
 }

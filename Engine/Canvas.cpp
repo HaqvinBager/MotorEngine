@@ -5,21 +5,22 @@
 #include "Button.h"
 #include "SpriteInstance.h"
 #include "TextInstance.h"
+#include "TextFactory.h"
 #include "AnimatedUIElement.h"
 #include "InputMapper.h"
 #include "Input.h"
 #include "SpriteFactory.h"
 #include "Sprite.h"
+#include "MainSingleton.h"
 #include "rapidjson\document.h"
 #include "rapidjson\istreamwrapper.h"
+#include "..\..\Game\LoadLevelState.h"
 
-CCanvas::CCanvas(std::vector<EMessageType> someMessageTypes,
-	std::vector<IInputObserver::EInputEvent> someInputEvents):
-	myMessageTypes(someMessageTypes),
-	myInputEvents(someInputEvents),
+using namespace rapidjson;
+
+CCanvas::CCanvas() :
 	myBackground(nullptr)
 {
-	SubscribeToMessages();
 }
 
 CCanvas::~CCanvas()
@@ -36,14 +37,13 @@ CCanvas::~CCanvas()
 
 void CCanvas::Init(std::string aFilePath)
 {
-	using namespace rapidjson;
-
 	std::ifstream inputStream(aFilePath);
 	IStreamWrapper inputWrapper(inputStream);
 	Document document;
 	document.ParseStream(inputWrapper);
 
-	if (document.HasMember("Buttons")) {
+	if (document.HasMember("Buttons"))
+	{
 		auto buttonDataArray = document["Buttons"].GetArray();
 		for (unsigned int i = 0; i < buttonDataArray.Size(); ++i)
 		{
@@ -59,7 +59,8 @@ void CCanvas::Init(std::string aFilePath)
 			auto messageDataArray = buttonData["Messages"].GetArray();
 			data.myMessagesToSend.resize(messageDataArray.Size());
 
-			for (unsigned int j = 0; j < messageDataArray.Size(); ++j) {
+			for (unsigned int j = 0; j < messageDataArray.Size(); ++j)
+			{
 
 				data.myMessagesToSend[j] = static_cast<EMessageType>(messageDataArray[j].GetInt());
 			}
@@ -68,20 +69,44 @@ void CCanvas::Init(std::string aFilePath)
 		}
 	}
 
-	if (document.HasMember("Animated UI Elements")) {
+	if (document.HasMember("Texts"))
+	{
+		auto textDataArray = document["Texts"].GetArray();
+		for (unsigned int i = 0; i < textDataArray.Size(); ++i)
+		{
+			auto textData = textDataArray[i].GetObjectW();
+			myTexts.emplace_back(new CTextInstance());
+			myTexts.back()->Init(CTextFactory::GetInstance()->GetText(textData["FontAndFontSize"].GetString()));
+			myTexts.back()->SetText(textData["Text"].GetString());
+			myTexts.back()->SetColor({ textData["Color R"].GetFloat(), textData["Color G"].GetFloat(), textData["Color B"].GetFloat(), 1.0f });
+			myTexts.back()->SetPosition({ textData["Position X"].GetFloat(), textData["Position Y"].GetFloat() });
+		}
+	}
+
+	if (document.HasMember("Animated UI Elements"))
+	{
 		auto animatedDataArray = document["Animated UI Elements"].GetArray();
 		for (unsigned int i = 0; i < animatedDataArray.Size(); ++i)
 		{
 			myAnimatedUIs.emplace_back(new CAnimatedUIElement(animatedDataArray[i]["Path"].GetString()));
 			float x = animatedDataArray[i]["Position X"].GetFloat();
 			float y = animatedDataArray[i]["Position Y"].GetFloat();
-			myAnimatedUIs.back()->SetPosition({x, y});
+			myAnimatedUIs.back()->SetPosition({ x, y });
 		}
 	}
 
-	if (document.HasMember("Sprites")) {
+	if (document.HasMember("Background"))
+	{
+		myBackground = new CSpriteInstance();
+		myBackground->Init(CSpriteFactory::GetInstance()->GetSprite(document["Background"]["Path"].GetString()));
+		myBackground->SetRenderOrder(ERenderOrder::BackgroundLayer);
+	}
+
+	if (document.HasMember("Sprites"))
+	{
 		auto spriteDataArray = document["Sprites"].GetArray();
-		for (unsigned int i = 0; i < spriteDataArray.Size(); ++i) {
+		for (unsigned int i = 0; i < spriteDataArray.Size(); ++i)
+		{
 			CSpriteInstance* spriteInstance = new CSpriteInstance();
 			spriteInstance->Init(CSpriteFactory::GetInstance()->GetSprite(spriteDataArray[i]["Path"].GetString()));
 			mySprites.emplace_back(spriteInstance);
@@ -90,24 +115,39 @@ void CCanvas::Init(std::string aFilePath)
 			mySprites.back()->SetPosition({ x, y });
 		}
 	}
+
+	if (document.HasMember("PostmasterEvents"))
+	{
+		auto messageDataArray = document["PostmasterEvents"]["Events"].GetArray();
+		myMessageTypes.resize(messageDataArray.Size());
+
+		for (unsigned int j = 0; j < messageDataArray.Size(); ++j)
+		{
+			myMessageTypes[j] = static_cast<EMessageType>(messageDataArray[j].GetInt());
+		}
+	}
+
+	SubscribeToMessages();
 }
 
-void CCanvas::Update(float /*aDeltaTime*/)
+void CCanvas::Update(/*float aDeltaTime*/)
 {
 	DirectX::SimpleMath::Vector2 mousePos = { static_cast<float>(Input::GetInstance()->MouseX()), static_cast<float>(Input::GetInstance()->MouseY()) };
-	for (unsigned int i = 0; i < myButtons.size(); ++i) 
+	for (unsigned int i = 0; i < myButtons.size(); ++i)
 	{
 		myButtons[i]->CheckMouseCollision(mousePos);
 	}
 
-	if (Input::GetInstance()->IsMousePressed(Input::MouseButton::Left)) {
+	if (Input::GetInstance()->IsMousePressed(Input::MouseButton::Left))
+	{
 		for (unsigned int i = 0; i < myButtons.size(); ++i)
 		{
 			myButtons[i]->Click(true, nullptr);
 		}
 	}
 
-	if (Input::GetInstance()->IsMouseReleased(Input::MouseButton::Left)) {
+	if (Input::GetInstance()->IsMouseReleased(Input::MouseButton::Left))
+	{
 		for (unsigned int i = 0; i < myButtons.size(); ++i)
 		{
 			myButtons[i]->Click(false, nullptr);
@@ -119,6 +159,16 @@ void CCanvas::Receive(const SMessage& aMessage)
 {
 	switch (aMessage.myMessageType)
 	{
+	case EMessageType::LoadLevel:
+	{
+		CMainSingleton::StateStack().PushState(new CLoadLevelState(CMainSingleton::StateStack()));
+		CMainSingleton::StateStack().Awake();
+		CMainSingleton::StateStack().Start();
+	} break;
+	case EMessageType::Quit:
+	{
+		CMainSingleton::StateStack().PopState();
+	} break;
 	case EMessageType::AbilityOneCooldown:
 		myAnimatedUIs[0]->Level(*static_cast<float*>(aMessage.data));
 		std::cout << "Used ability 1 value: " << *static_cast<float*>(aMessage.data) << std::endl;
@@ -138,44 +188,17 @@ void CCanvas::Receive(const SMessage& aMessage)
 
 void CCanvas::SubscribeToMessages()
 {
-	for (auto messageType : myMessageTypes) {
+	for (auto messageType : myMessageTypes)
+	{
 		CMainSingleton::PostMaster().Subscribe(messageType, this);
-	}
-
-	for (auto inputEvent : myInputEvents) {
-		CInputMapper::GetInstance()->AddObserver(inputEvent, this);
 	}
 }
 
 void CCanvas::UnsubscribeToMessages()
 {
-	for (auto messageType : myMessageTypes) {
-		CMainSingleton::PostMaster().Unsubscribe(messageType, this);
-	}
-
-	for (auto inputEvent : myInputEvents) {
-		CInputMapper::GetInstance()->RemoveObserver(inputEvent, this);
-	}
-}
-
-#include <iostream>
-void CCanvas::RecieveEvent(const IInputObserver::EInputEvent aEvent)
-{
-	switch (aEvent)
+	for (auto messageType : myMessageTypes)
 	{
-	case IInputObserver::EInputEvent::Ability1:
-		std::cout << "anbility 1\n";
-		break;
-	case IInputObserver::EInputEvent::Ability2:
-		std::cout << "anbility 2\n";
-		
-		break;
-	case IInputObserver::EInputEvent::Ability3:
-		std::cout << "anbility 3\n";
-		
-		break;
-	default:
-		break;
+		CMainSingleton::PostMaster().Unsubscribe(messageType, this);
 	}
 }
 
@@ -184,67 +207,20 @@ bool CCanvas::GetEnabled()
 	return myIsEnabled;
 }
 
-CSpriteInstance* CCanvas::GetBackground()
-{
-	return myBackground;
-}
-
-std::vector<CAnimatedUIElement*> CCanvas::GetAnimatedUIs()
-{
-	return myAnimatedUIs;
-}
-
-std::vector<CButton*> CCanvas::GetButtons()
-{
-	return myButtons;
-}
-
-std::vector<CSpriteInstance*> CCanvas::GetSprites()
-{
-	return mySprites;
-}
-
-std::vector<CTextInstance*> CCanvas::GetTexts()
-{
-	return myTexts;
-}
-
 void CCanvas::SetEnabled(bool isEnabled)
 {
-	if (myIsEnabled != isEnabled) {
+	if (myIsEnabled != isEnabled)
+	{
 		myIsEnabled = isEnabled;
 
-		for (auto button : myButtons) {
+		for (auto button : myButtons)
+		{
 			button->myEnabled = myIsEnabled;
 		}
 
-		for (auto sprite : mySprites) {
+		for (auto sprite : mySprites)
+		{
 			sprite->SetShouldRender(myIsEnabled);
 		}
 	}
-}
-
-void CCanvas::SetBackground(CSpriteInstance* aBackground)
-{
-	myBackground = aBackground;
-}
-
-void CCanvas::AddAnimatedUI(CAnimatedUIElement* anAnimatedUIElement)
-{
-	myAnimatedUIs.emplace_back(anAnimatedUIElement);
-}
-
-void CCanvas::AddButton(CButton* aButton)
-{
-	myButtons.emplace_back(aButton);
-}
-
-void CCanvas::AddSprite(CSpriteInstance* aSprite)
-{
-	mySprites.emplace_back(aSprite);
-}
-
-void CCanvas::AddText(CTextInstance* aText)
-{
-	myTexts.emplace_back(aText);
 }

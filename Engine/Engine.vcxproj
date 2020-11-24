@@ -120,6 +120,7 @@
     <ClInclude Include="Animation.h" />
     <ClInclude Include="AnimationComponent.h" />
     <ClInclude Include="AnimationController.h" />
+    <ClInclude Include="animationLoader.h" />
     <ClInclude Include="AStar.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="AudioChannel.h" />
@@ -225,6 +226,7 @@
     <ClCompile Include="AnimatedUIElement.cpp" />
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="AnimationComponent.cpp" />
+    <ClCompile Include="animationLoader.cpp" />
     <ClCompile Include="AStar.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="AudioChannel.cpp" />

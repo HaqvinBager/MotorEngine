@@ -15,7 +15,7 @@ public:
 	
 	void Awake();
 	void Start();
-	void Update();
+	bool Update();
 
 private:
 

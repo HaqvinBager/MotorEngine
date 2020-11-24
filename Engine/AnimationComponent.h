@@ -26,7 +26,7 @@ class CAnimation;
 class CAnimationComponent : public CBehaviour
 {
 public:
-	CAnimationComponent(CGameObject& aParent);
+	CAnimationComponent(CGameObject& aParent, const std::string& aModelFilePath, std::vector<std::string>& someAnimationPaths);
 	~CAnimationComponent() override;
 
 	void Awake() override;

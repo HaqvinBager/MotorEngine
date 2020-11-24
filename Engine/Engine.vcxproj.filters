@@ -344,6 +344,9 @@
     <ClCompile Include="CameraControllerComponent.cpp">
       <Filter>GameObject and Component\Component</Filter>
     </ClCompile>
+    <ClCompile Include="animationLoader.cpp">
+      <Filter>SceneData</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EnemyFactory.h" />
@@ -645,6 +648,9 @@
     </ClInclude>
     <ClInclude Include="StringIDLoader.h">
       <Filter>StringID</Filter>
+    </ClInclude>
+    <ClInclude Include="animationLoader.h">
+      <Filter>SceneData</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

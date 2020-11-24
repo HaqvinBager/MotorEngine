@@ -16,3 +16,8 @@ CPostMaster& CMainSingleton::PostMaster()
 {
 	return ourInstance->myPostMaster;
 }
+
+CStateStack& CMainSingleton::StateStack()
+{
+	return ourInstance->myStateStack;
+}

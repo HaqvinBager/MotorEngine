@@ -19,7 +19,6 @@ bool CStateStack::PopState() {
 	ENGINE_ERROR_BOOL_MESSAGE(!myStateStack.empty(), "Trying to pop an empty stack");
 	myStateStack.pop();
 	return true;
-
 }
 
 void CStateStack::Awake() {
@@ -30,6 +29,10 @@ void CStateStack::Start() {
 	myStateStack.top()->Start();
 }
 
-void CStateStack::Update() {
+bool CStateStack::Update() {
+	if (myStateStack.size() <= 0)
+		return false;
+
 	myStateStack.top()->Update();
+	return true;
 }

@@ -113,6 +113,7 @@ CButton::CButton(SButtonData& someData)
 	{
 		mySprites.at(i) = new CSpriteInstance();
 		mySprites.at(i)->Init(CSpriteFactory::GetInstance()->GetSprite(someData.mySpritePaths.at(i)));
+		mySprites.at(i)->SetRenderOrder(ERenderOrder::ForegroundLayer);
 		CEngine::GetInstance()->GetActiveScene().AddInstance(mySprites.at(i));
 	}
 

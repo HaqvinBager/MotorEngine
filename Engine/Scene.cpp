@@ -170,11 +170,18 @@ const std::vector<CLineInstance*>& CScene::CullLineInstances() const
 std::vector<CSpriteInstance*> CScene::CullSprites()
 {
 	std::vector<CSpriteInstance*> spritesToRender;
-	for (auto& sprite : mySprites) {
-		if (sprite->GetShouldRender()) {
-			spritesToRender.emplace_back(sprite);
+
+	for (UINT i = 0; i < mySpriteInstances.size(); ++i)
+	{
+		for (auto& sprite : mySpriteInstances[static_cast<ERenderOrder>(i)])
+		{
+			if (sprite->GetShouldRender())
+			{
+				spritesToRender.emplace_back(sprite);
+			}
 		}
 	}
+
 	return spritesToRender;
 }
 
@@ -247,7 +254,9 @@ bool CScene::AddInstance(CSpriteInstance* aSprite) {
 	if (!aSprite) {
 		return false;
 	}
-	mySprites.emplace_back(aSprite);
+
+	mySpriteInstances[aSprite->GetRenderOrder()].emplace_back(aSprite);
+
 	return true;
 }
 
@@ -304,11 +313,15 @@ bool CScene::ClearScene() {
 
 bool CScene::ClearSprites() {
 
-	for (auto  sprite : mySprites) {
-		delete sprite;
-		sprite = nullptr;
+	for (UINT i = 0; i < mySpriteInstances.size(); ++i)
+	{
+		for (auto& sprite : mySpriteInstances[static_cast<ERenderOrder>(i)])
+		{
+			delete sprite;
+			sprite = nullptr;
+		}
 	}
-	mySprites.clear();
+	mySpriteInstances.clear();
 
 	return true;
 }
