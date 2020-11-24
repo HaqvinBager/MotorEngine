@@ -43,3 +43,8 @@ void CPointLightComponent::OnEnable()
 void CPointLightComponent::OnDisable()
 {
 }
+
+CPointLight* CPointLightComponent::GetPointLight() const
+{
+    return myPointLight;
+}

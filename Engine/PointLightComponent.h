@@ -17,6 +17,8 @@ public:
 	void OnEnable() override;
 	void OnDisable() override;
 
+	CPointLight* GetPointLight() const;
+
 private:
 	CPointLight* myPointLight;
 	float myRange;

@@ -7,6 +7,7 @@
 #include "Scene.h"
 #include "MouseTracker.h"
 
+
 CNavMeshComponent::CNavMeshComponent(CGameObject& aParent) 
 	: CBehaviour(aParent)
 {

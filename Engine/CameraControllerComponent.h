@@ -12,7 +12,7 @@ public:
 	};
 
 public:
-	CCameraControllerComponent(CGameObject& gameObject, const float aCameraMoveSpeed = 25.0f/*, ECameraMode aCameraMode = ECameraMode::Player, char aToggleFreeCam = 'f'*/);
+	CCameraControllerComponent(CGameObject& gameObject, const float aCameraMoveSpeed /*= 25.0f*//*, ECameraMode aCameraMode = ECameraMode::Player, char aToggleFreeCam = 'f'*/);
 	~CCameraControllerComponent() override;
 
 	void Awake() override;

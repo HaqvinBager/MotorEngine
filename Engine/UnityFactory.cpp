@@ -16,7 +16,9 @@
 
 #include "LightFactory.h"
 #include "PointLight.h"
-#include "NavmeshLoader.h"
+//#include "NavmeshLoader.h"// included in NavMeshComp
+
+#include "Debug.h"
 
 
 CUnityFactory::CUnityFactory()
@@ -49,10 +51,19 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
     aScene.AddInstance(envLight);
     aScene.SetEnvironmentLight(envLight->GetComponent<CEnviromentLightComponent>()->GetEnviromentLight());
 
-    //for (const auto& pointLightData : aData.myPointLightData)
-    //{
-    //    aScene.AddInstance(CreateGameObject(pointLightData));
-    //}
+    for (const auto& pointLightData : aData.myPointLightData)
+    {
+        CGameObject* pointLight = CreateGameObject(pointLightData);
+        aScene.AddInstance(pointLight);
+        aScene.AddInstance(pointLight->GetComponent<CPointLightComponent>()->GetPointLight());
+
+#ifdef _DEBUG
+        //Vector3 otherPosition;
+        //otherPosition = pointLightData.myPosition;
+        //otherPosition.x += pointLightData.myRange;
+        //CDebug::GetInstance()->DrawLine(pointLightData.myPosition, otherPosition, 50.0f);
+#endif
+    }
 
     CGameObject* player = CreateGameObject(aData.myPlayerData, aBinModelPaths[aData.myPlayerData.myModelIndex]);
     aScene.AddInstance(player);

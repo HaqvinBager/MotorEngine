@@ -28,6 +28,14 @@ void CDebug::DrawLine(DirectX::SimpleMath::Vector3 aPositionA, DirectX::SimpleMa
 	myLines.emplace_back(std::move(lineData));
 }
 
+void CDebug::DrawLine(DirectX::SimpleMath::Vector3 aPositionA, DirectX::SimpleMath::Vector3 aPositionB, const float aDuration)
+{
+	SLineTime lineData = SLineTime{ };
+	lineData.myLine = std::move(CLineInstance().Init(CLineFactory::GetInstance()->CreateLine(aPositionA, aPositionB, { 0.1f, 255.0f, 0.1f, 1.0f })));
+	lineData.myTime = CTimer::Time() + aDuration;
+	myLines.emplace_back(std::move(lineData));
+}
+
 const std::vector<CLineInstance>& CDebug::GetLines() const
 {
 	return myLineInstances;
