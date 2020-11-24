@@ -21,8 +21,8 @@ void CVFXComponent::Awake() {
 void CVFXComponent::Start() {
 }
 
-void CVFXComponent::Update() {
-
+void CVFXComponent::Update() 
+{
 	myTextureScroll += {0.15f * CTimer::Dt(), 0.15f * CTimer::Dt()};
 	myTextureScroll2 += {0.15f * CTimer::Dt(), 0.15f * CTimer::Dt()};
 	SetPosition(GameObject().myTransform->Position());

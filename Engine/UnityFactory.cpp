@@ -18,6 +18,8 @@
 #include "PointLight.h"
 //#include "NavmeshLoader.h"// included in NavMeshComp
 
+#include "animationLoader.h"
+
 #include "Debug.h"
 
 
@@ -65,7 +67,7 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 #endif
     }
 
-    CGameObject* player = CreateGameObject(aData.myPlayerData, aBinModelPaths[aData.myPlayerData.myModelIndex]);
+    CGameObject* player = CreateGameObject(aData.myPlayerData, "Assets\\3D\\Character\\CH_PL_Daughter_01_19G4_1_19\\CH_PL_Daughter_01_19G4_1_19_SK.fbx"/*aBinModelPaths[aData.myPlayerData.myModelIndex]*/);
     aScene.AddInstance(player);
 
     for (const auto& gameObjectData : aData.myGameObjects)
@@ -134,5 +136,6 @@ CGameObject* CUnityFactory::CreateGameObject(const SPlayerData& aData, const std
     gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
     gameObject->AddComponent<CPlayerControllerComponent>(*gameObject);
     gameObject->AddComponent<CNavMeshComponent>(*gameObject);
+    AddAnimationsToGameObject(*gameObject, aModelPath);
     return gameObject;
 }

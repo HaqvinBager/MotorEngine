@@ -4,6 +4,8 @@
 #include "NavMeshComponent.h"
 #include "MouseTracker.h"
 
+#include "AnimationComponent.h"
+
 CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent) : CBehaviour(aParent)
 {
 }
@@ -43,6 +45,10 @@ void CPlayerControllerComponent::RecieveEvent(const IInputObserver::EInputEvent 
 	{
 	case IInputObserver::EInputEvent::MoveClick:
 		this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
+		// TEMP, Ok to remove
+		if(this->GameObject().GetComponent<CAnimationComponent>() != nullptr)
+			this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(1);
+		// ! TEMP
 		break;
 	case IInputObserver::EInputEvent::AttackClick:
 		//ALSO DO STUFF TOO
