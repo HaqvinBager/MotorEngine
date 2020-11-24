@@ -1,10 +1,11 @@
 #pragma once
 #include <vector>
+#include "GameObject.h"
+#include "Component.h"
 
 class CModelComponent;
 class CCamera;
 class CEnvironmentLight;
-class CGameObject;
 class CCollisionManager;
 class CPointLight;
 class CParticleInstance;
@@ -69,6 +70,16 @@ public:
 	void Ready(bool aReady) { myIsReadyToRender = aReady; }
 
 	const std::vector<CGameObject*>& GetActiveGameObjects() const { return myGameObjects; }
+
+	template <class T>
+	T* FindObjectOfType() {
+		for (auto& gameObject : myGameObjects) {
+			if (gameObject->GetComponent<T>() != nullptr) {
+				return gameObject->GetComponent<T>();
+			}
+		}
+		return nullptr;
+	}
 
 private:
 

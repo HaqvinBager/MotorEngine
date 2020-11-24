@@ -7,6 +7,7 @@ struct SCameraData
 	float myStartInCameraMode;
 	float myToggleFreeCamKey;
 	float myFreeCamMoveSpeed;
+	DirectX::SimpleMath::Vector3 myOffset;
 };
 
 struct SDirectionalLightData

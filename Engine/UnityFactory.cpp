@@ -31,7 +31,7 @@ CUnityFactory::~CUnityFactory()
 
 bool CUnityFactory::FillScene(const SLoadScreenData& aData, const std::vector<std::string>& someModelPaths, CScene& aScene)
 {
-    CGameObject* camera = CreateGameObject(aData.myCamera);
+    CGameObject* camera = CreateGameObject(aData.myCamera, false);
     aScene.AddInstance(camera);
     aScene.SetMainCamera(camera->GetComponent<CCameraComponent>());
     CGameObject* envLight = CreateGameObject(aData.myDirectionalLight);
@@ -88,11 +88,13 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 //    return gameObjects;
 //}
 
-CGameObject* CUnityFactory::CreateGameObject(const SCameraData& aData)
+CGameObject* CUnityFactory::CreateGameObject(const SCameraData& aData, bool addCameraController)
 {
     CGameObject* gameObject = new CGameObject();
     gameObject->AddComponent<CCameraComponent>(*gameObject, aData.myFieldOfView);
-    gameObject->AddComponent<CCameraControllerComponent>(*gameObject, 25.0f);
+    if (addCameraController) {
+        gameObject->AddComponent<CCameraControllerComponent>(*gameObject, aData.myFreeCamMoveSpeed, static_cast<CCameraControllerComponent::ECameraMode>(aData.myStartInCameraMode), static_cast<char>(aData.myToggleFreeCamKey), aData.myOffset);
+    }
     gameObject->myTransform->Position(aData.myPosition);
     gameObject->myTransform->Rotation(aData.myRotation);
     return std::move(gameObject);
