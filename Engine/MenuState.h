@@ -2,6 +2,7 @@
 #include "State.h"
 
 class CSpriteInstance;
+class CCanvas;
 
 class CMenuState : public CState {
 public:
@@ -11,7 +12,7 @@ public:
 	void Awake() override;
 	void Start() override;
 	void Update() override;
-private:
 
-	CSpriteInstance* myBackground;
+private:
+	CCanvas* myCanvas;
 };

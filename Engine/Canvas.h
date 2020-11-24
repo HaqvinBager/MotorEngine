@@ -1,29 +1,25 @@
 #pragma once
 #include "Observer.h"
-#include "InputObserver.h"
+
 class CButton;
 class CSpriteInstance;
 class CTextInstance;
 class CAnimatedUIElement;
 
-class CCanvas : public IObserver, public IInputObserver
+class CCanvas : public IObserver
 {
 public:
-	CCanvas(std::vector<EMessageType> someMessageTypes,
-		std::vector<IInputObserver::EInputEvent> someInputEvents);
+	CCanvas();
 	~CCanvas();
 
 public:
 	void Init(std::string aFilePath);
-	void Update(float aDeltaTime);
+	void Update(/*float aDeltaTime*/);
 
 public:
 	void Receive(const SMessage& aMessage) override;
 	void SubscribeToMessages();
 	void UnsubscribeToMessages();
-
-public:
-	void RecieveEvent(const IInputObserver::EInputEvent aEvent) override;
 
 public:
 	bool GetEnabled();
@@ -52,6 +48,4 @@ private:
 	std::vector<CSpriteInstance*> mySprites;
 	std::vector<CTextInstance*> myTexts;
 	std::vector<EMessageType> myMessageTypes;
-	std::vector<IInputObserver::EInputEvent> myInputEvents;
-	std::vector<IInputObserver::EInputAction> myInputActions;
 };
