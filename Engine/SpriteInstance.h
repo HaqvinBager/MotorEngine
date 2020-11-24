@@ -1,4 +1,6 @@
 #pragma once
+#include <SimpleMath.h>// Added for ModelViewer solution, gave error here... :/
+
 class CSprite;
 
 enum class ERenderOrder {

@@ -8,11 +8,11 @@
 #include "CameraComponent.h"
 #include "ModelComponent.h"
 #include "EnviromentLightComponent.h"
-#include "CameraControllerComponent.h"
 #include "AnimationComponent.h"
 #include "PlayerControllerComponent.h"
 #include "NavMeshComponent.h"
 #include "PointLightComponent.h"
+#include "CameraControllerComponent.h"//Could not compile 20201124 21:05 without this
 
 #include "LightFactory.h"
 #include "PointLight.h"
@@ -66,8 +66,8 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
         //CDebug::GetInstance()->DrawLine(pointLightData.myPosition, otherPosition, 50.0f);
 #endif
     }
-
-    CGameObject* player = CreateGameObject(aData.myPlayerData, "Assets\\3D\\Character\\CH_PL_Daughter_01_19G4_1_19\\CH_PL_Daughter_01_19G4_1_19_SK.fbx"/*aBinModelPaths[aData.myPlayerData.myModelIndex]*/);
+    // "Assets\\3D\\Character\\CH_PL_Daughter_01_19G4_1_19\\CH_PL_Daughter_01_19G4_1_19_SK.fbx" // Animated player
+    CGameObject* player = CreateGameObject(aData.myPlayerData, aBinModelPaths[aData.myPlayerData.myModelIndex]);
     aScene.AddInstance(player);
 
     for (const auto& gameObjectData : aData.myGameObjects)

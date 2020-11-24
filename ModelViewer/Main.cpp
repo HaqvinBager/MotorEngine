@@ -39,9 +39,12 @@
 namespace SM = DirectX::SimpleMath;
 namespace MW = ModelViewer;
 
+//#define VFX
+
+#ifdef VFX
 #include "../../Game/AbilityComponent.h"//  Grupp 4 stuff might break for grupp3!
 #pragma comment (lib, "../../../Lib/Game_Debug.lib")
-
+#endif
 ///	NOTES
 ///		aiProcessPreset_TargetRealtime_MaxQuality_DontJoinIndetical 
 ///			Affects performance due to aiProcess_JoinIdenticalVertices (L93). 
@@ -85,6 +88,7 @@ void CloseConsole()
 #define CAMERA_DEFAULT_ROT { 33.f,-45.f,0.f }
 #define CAMERA_DEFAULT_POS { 1.75f,2.0f,-1.5f }
 
+#ifdef VFX
 CGameObject* InitVFX(CScene& aScene)
 {
 	CGameObject* go = new CGameObject();
@@ -109,7 +113,7 @@ void UpdateVFX(CGameObject* /*aCurrentGameObject*/,CGameObject* /*aCamera*/, CSc
 		obj->Update();
 	}
 }
-
+#endif
 #pragma region TRANSFORM FUNCTIONS
 void UpdateCamera(CGameObject& aCamera, const float dt)
 {
@@ -222,8 +226,8 @@ CGameObject* InitAnimation(const std::string& aFilePath, CScene& aScene)
 	{
 		std::vector<std::string> somePathsToAnimations = MW::Get_ANFiles(aFilePath);
 		
-		CAnimationComponent* animComp = gameObject->AddComponent<CAnimationComponent>(*gameObject);
-		animComp->GetMyAnimation()->Init(aFilePath.c_str(), somePathsToAnimations);
+		CAnimationComponent* animComp = gameObject->AddComponent<CAnimationComponent>(*gameObject, aFilePath, somePathsToAnimations);
+		//animComp->GetMyAnimation()->Init(aFilePath.c_str(), somePathsToAnimations);
 		animComp->Awake();
 	}
 
@@ -256,8 +260,8 @@ bool ChangeAnimationModel(CGameObject* aCurrentGameObject, const std::vector<std
 
 		if (!aCurrentGameObject->GetComponent<CAnimationComponent>())
 		{
-			CAnimationComponent* animComp = aCurrentGameObject->AddComponent<CAnimationComponent>(*aCurrentGameObject);
-			animComp->GetMyAnimation()->Init(aModelFilePathList[loadModelNumber].c_str(), somePathsToAnimations);
+			CAnimationComponent* animComp = aCurrentGameObject->AddComponent<CAnimationComponent>(*aCurrentGameObject, aModelFilePathList[loadModelNumber].c_str(), somePathsToAnimations);
+			//animComp->GetMyAnimation()->Init(aModelFilePathList[loadModelNumber].c_str(), somePathsToAnimations);
 			animComp->Awake();
 		}
 		else
@@ -405,17 +409,21 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	viewAnimations = true;
 
 	std::vector<std::string> filePaths;
+
+
+	if (viewAnimations)
+	{
+		MW::LoadModelPaths(ASSET_ROOT, filePaths, true);
+		currentGameObject = InitAnimation(filePaths[0], *scene);
+	}
+	else
+	{
+		MW::LoadModelPaths(ASSET_ROOT, filePaths);
+		currentGameObject = InitModels(filePaths[0], *scene);
+	}
+#ifdef VFX
 	currentGameObject = InitVFX(*scene);
-	//if (viewAnimations)
-	//{
-	//	MW::LoadModelPaths(ASSET_ROOT, filePaths, true);
-	//	currentGameObject = InitAnimation(filePaths[0], *scene);
-	//}
-	//else
-	//{
-	//	MW::LoadModelPaths(ASSET_ROOT, filePaths);
-	//	currentGameObject = InitModels(filePaths[0], *scene);
-	//}
+#endif // VFX
 
 	int counter = 0;
 	for (auto& str : filePaths)
@@ -459,15 +467,20 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 			}
 		}
 		engine.BeginFrame();
-		//if (viewAnimations)
-		//{
-		//	UpdateAnimation(currentGameObject, camera, filePaths);
-		//}
-		//else
-		//{
-		//	UpdateModel(filePaths, currentGameObject, camera);
-		//}
+#ifdef VFX
 		UpdateVFX(currentGameObject, camera, scene);
+#else
+		if (viewAnimations)
+		{
+			UpdateAnimation(currentGameObject, camera, filePaths);
+		}
+		else
+		{
+			UpdateModel(filePaths, currentGameObject, camera);
+		}
+#endif
+
+		
 
 		if (Input::GetInstance()->IsKeyPressed('I'))
 		{
