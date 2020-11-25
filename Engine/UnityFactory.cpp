@@ -74,9 +74,6 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
     {
         aScene.AddInstance(CreateGameObject(gameObjectData, aBinModelPaths[gameObjectData.myModelIndex]));
     }
-
-    aScene.InitNavMesh("Levels/NavTest_ExportedNavMesh.obj");
-
     return true;
 }
 
