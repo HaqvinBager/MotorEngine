@@ -100,8 +100,8 @@ SLoadScreenData& CSceneReader::ReadLoadScreenData()
 	unsigned int isPlayerInScene = 0;
 	myStreamPtr += Read(isPlayerInScene);
 
-	unsigned int myGameObjectDataCount = 0;
-	myStreamPtr += Read(myGameObjectDataCount);
+	unsigned int eventDataCount = 0;
+	myStreamPtr += Read(eventDataCount);
 
 	unsigned int gameObjectCount = 0;
 	myStreamPtr += Read(gameObjectCount);
