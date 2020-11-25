@@ -32,7 +32,10 @@ void CTextInstance::SetText(std::string aString)
 
 void CTextInstance::SetPosition(DirectX::SimpleMath::Vector2 aPosition)
 {
-    myPosition = aPosition;
+    aPosition /= 2.0f;
+    aPosition.x += 0.5f;
+    aPosition.y += 0.5f;
+    myPosition = aPosition * CEngine::GetInstance()->GetWindowHandler()->GetResolution();
 }
 
 void CTextInstance::SetColor(DirectX::SimpleMath::Vector4 aColor)
