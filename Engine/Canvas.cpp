@@ -131,9 +131,9 @@ void CCanvas::Init(std::string aFilePath)
 		{
 			myMessageTypes[j] = static_cast<EMessageType>(messageDataArray[j].GetInt());
 		}
+		SubscribeToMessages();
 	}
 
-	SubscribeToMessages();
 }
 
 void CCanvas::Update()
@@ -165,16 +165,6 @@ void CCanvas::Receive(const SMessage& aMessage)
 {
 	switch (aMessage.myMessageType)
 	{
-	case EMessageType::LoadLevel:
-	{
-		CMainSingleton::StateStack().PushState(new CLoadLevelState(CMainSingleton::StateStack()));
-		CMainSingleton::StateStack().Awake();
-		CMainSingleton::StateStack().Start();
-	} break;
-	case EMessageType::Quit:
-	{
-		CMainSingleton::StateStack().PopState();
-	} break;
 	case EMessageType::AbilityOneCooldown:
 		myAnimatedUIs[0]->Level(*static_cast<float*>(aMessage.data));
 		std::cout << "Used ability 1 value: " << *static_cast<float*>(aMessage.data) << std::endl;

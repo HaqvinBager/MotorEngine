@@ -5,13 +5,17 @@
 #include "Scene.h"
 #include "CameraFactory.h"
 #include "Canvas.h"
-
+#include "StateStack.h"
+#include "../../Game/LoadLevelState.h"
 #include "Engine.h"
 #include "GameObject.h"
 #include "CameraComponent.h"
 #include "CameraControllerComponent.h"
 #include "EnviromentLightComponent.h"
 #include "TransformComponent.h"
+#include "Button.h"
+#include "PostMaster.h"
+#include "MainSingleton.h"
 
 CMenuState::CMenuState(CStateStack& aStateStack) :
 	CState(aStateStack)
@@ -34,6 +38,12 @@ CMenuState::CMenuState(CStateStack& aStateStack) :
 
 	myCanvas = new CCanvas();
 	myCanvas->Init("Json/UI_MainMenu_Description.json");
+
+	for (auto buttons : myCanvas->GetButtons())
+	{
+		for (auto messageType : buttons->GetMessagesToSend())
+		CMainSingleton::PostMaster().Subscribe(messageType, this);
+	}
 }
 
 CMenuState::~CMenuState() {
@@ -47,4 +57,19 @@ void CMenuState::Start() {
 
 void CMenuState::Update() {
 	myCanvas->Update();
+}
+
+void CMenuState::Receive(const SMessage& aMessage) {
+	switch (aMessage.myMessageType) {
+	case EMessageType::LoadLevel:
+	{
+		myStateStack.PushState(new CLoadLevelState(myStateStack));
+		myStateStack.Awake();
+		myStateStack.Start();
+	} break;
+	case EMessageType::Quit:
+	{
+		myStateStack.PopState();
+	} break;
+	}
 }

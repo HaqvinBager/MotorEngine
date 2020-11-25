@@ -25,6 +25,8 @@ public:
 	bool GetEnabled();
 	void SetEnabled(bool isEnabled);
 
+	std::vector<CButton*> GetButtons() { return myButtons; }
+
 private:
 	bool myIsEnabled;
 	CSpriteInstance* myBackground;

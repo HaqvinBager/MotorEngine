@@ -2,7 +2,7 @@
 
 class CStateStack;
 
-class CState {
+class CState  {
 
 public:
 	CState(CStateStack& aStateStack);

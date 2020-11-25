@@ -34,6 +34,8 @@ public:
 	void Click(bool anIsPressed, void* someData);
 	void CheckMouseCollision(DirectX::SimpleMath::Vector2 aScreenSpacePosition);
 
+	std::vector<EMessageType> GetMessagesToSend() { return myMessagesToSend; }
+
 private:
 	CButton(SButtonData& someData);
 	~CButton();
