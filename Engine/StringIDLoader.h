@@ -1,26 +1,31 @@
 #pragma once
 
-#define StringID_MinModelID 1
-#define StringID_MaxModelID 5000
-#define StringID_MinAnimID 5001
-#define StringID_MaxAnimID 9999
-
 class CStringIDLoader
 {
 public:
-	CStringIDLoader() {};
-	~CStringIDLoader() {};
-	
-	static const int GetStringID(const std::string& aString, const std::string& aStringIDFile);
+	enum class EStringIDFiles
+	{
+		ModelFile,
+		AnimFile
+	};
 
-public:
-	const static std::string ourModelStringIDFile;
-	const static std::string ourAnimationStringIDFile;
 	const static int ourErrorID = -1;
 
-private:
-	static bool CreateFile(const std::string& aStringIDFile);
+public:	
+	static const int GetStringID(const std::string& aString, const CStringIDLoader::EStringIDFiles aFileKey);
 
+private:
+	CStringIDLoader() {};
+	~CStringIDLoader() {};
+	static const int GetStringIDFromFile(const std::string& aString, const std::string& anIDFilePath, const int aMinID, const int aMaxID);
+
+private:
+	const static std::string ourModelStringIDPath;
+	const static std::string ourAnimationStringIDPath;
 	const static std::string ourNextAvailableID;
+	const static int ourMinModelID		= 2;
+	const static int ourMaxModelID		= 5000;
+	const static int ourMinAnimationID	= 5001;
+	const static int ourMaxAnimationID	= 9999;
 };
 
