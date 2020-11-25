@@ -49,7 +49,13 @@ void CCanvas::Init(std::string aFilePath)
 		{
 			SButtonData data;
 			auto buttonData = buttonDataArray[i].GetObjectW();
-			data.myText = buttonData["Text"].GetString();
+			
+			myTexts.emplace_back(new CTextInstance());
+			myTexts.back()->Init(CTextFactory::GetInstance()->GetText(buttonData["FontAndFontSize"].GetString()));
+			myTexts.back()->SetText(buttonData["Text"].GetString());
+			myTexts.back()->SetColor({ buttonData["Text Color R"].GetFloat(), buttonData["Text Color G"].GetFloat(), buttonData["Text Color B"].GetFloat(), 1.0f });
+			myTexts.back()->SetPosition({ buttonData["Position X"].GetFloat(), buttonData["Position Y"].GetFloat() });
+
 			data.myPosition = { buttonData["Position X"].GetFloat(), buttonData["Position Y"].GetFloat() };
 			data.myDimensions = { buttonData["Pixel Width"].GetFloat(), buttonData["Pixel Height"].GetFloat() };
 			data.mySpritePaths.at(0) = buttonData["Idle Sprite Path"].GetString();
@@ -130,7 +136,7 @@ void CCanvas::Init(std::string aFilePath)
 	SubscribeToMessages();
 }
 
-void CCanvas::Update(/*float aDeltaTime*/)
+void CCanvas::Update()
 {
 	DirectX::SimpleMath::Vector2 mousePos = { static_cast<float>(Input::GetInstance()->MouseX()), static_cast<float>(Input::GetInstance()->MouseY()) };
 	for (unsigned int i = 0; i < myButtons.size(); ++i)

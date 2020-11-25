@@ -30,10 +30,10 @@ bool CSpriteInstance::Init(CSprite* aSprite)
 
 void CSpriteInstance::SetSize(DirectX::SimpleMath::Vector2 aSize)
 {
-	UINT windowHeight = CEngine::GetInstance()->GetWindowHandler()->GetHeight();
+	float windowHeight = CEngine::GetInstance()->GetWindowHandler()->GetResolution().y;
 	CSprite::SSpriteData mySpriteData = mySprite->GetSpriteData();
 	mySize = mySpriteData.myDimensions;
-	mySize /= static_cast<float>(windowHeight);
+	mySize /= windowHeight;
 	mySize *= aSize;
 }
 

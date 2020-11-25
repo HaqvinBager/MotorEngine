@@ -4,7 +4,7 @@
 #include "TransformComponent.h"
 #include "Engine.h"
 #include "Scene.h"
-#include "GameObject.h"
+//#include "GameObject.h"
 #include "PlayerControllerComponent.h"
 
 CCameraControllerComponent::CCameraControllerComponent(CGameObject& aGameObject, const float aCameraMoveSpeed , ECameraMode aCameraMode, char aToggleFreeCam, Vector3 aOffset) 

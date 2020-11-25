@@ -37,8 +37,8 @@ bool CCameraFactory::Init(CWindowHandler* aWindowHandler)
 CCamera* CCameraFactory::CreateCamera(float aFieldOfView, float aFarPlane)
 {
 	CCamera* camera = new CCamera();
-	float width = static_cast<float>(myWindowHandler->GetWidth());
-	float height = static_cast<float>( myWindowHandler->GetHeight());
+	float width = myWindowHandler->GetResolution().x;
+	float height = myWindowHandler->GetResolution().y;
 	camera->Init(aFieldOfView, Vector2(width, height), aFarPlane);
 	myCameras.push_back(camera);
 	return camera;
