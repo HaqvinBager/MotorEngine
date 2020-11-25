@@ -157,6 +157,16 @@ CParticleFactory* CParticleFactory::GetInstance()
     return ourInstance;
 }
 
+std::vector<CParticle*> CParticleFactory::GetParticleSet(std::vector<std::string> someFilePaths) 
+{
+    std::vector<CParticle*> bases;
+    for (unsigned int i = 0; i < someFilePaths.size(); ++i)
+    {
+        bases.emplace_back(GetParticle(someFilePaths[i]));
+    }
+    return std::move(bases);
+}
+
 void CParticleFactory::ReadJsonValues(std::string aFilePath, CParticle::SParticleData& someParticleData)
 {
     using namespace rapidjson;

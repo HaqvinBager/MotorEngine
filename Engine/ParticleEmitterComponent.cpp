@@ -11,7 +11,7 @@
 namespace SM = DirectX::SimpleMath;
 #define ENGINE_SCALE 0.01f
 
-CParticleEmitterComponent::CParticleEmitterComponent(CGameObject& aParent) : CBehaviour(aParent), myParticle(nullptr), myEmitterTimer(0.0f)
+CParticleEmitterComponent::CParticleEmitterComponent(CGameObject& aParent) : CBehaviour(aParent)
 {
 	SetScale(1.0f);
 	myTransform.Translation(GameObject().myTransform->Position());
@@ -19,7 +19,7 @@ CParticleEmitterComponent::CParticleEmitterComponent(CGameObject& aParent) : CBe
 
 CParticleEmitterComponent::~CParticleEmitterComponent()
 {
-	myParticle = nullptr;
+	myParticles.clear();
 }
 
 void CParticleEmitterComponent::Awake()
@@ -38,15 +38,23 @@ void CParticleEmitterComponent::Update()
 	DirectX::SimpleMath::Vector3 translation;
 	GameObject().myTransform->GetMatrix().Decompose(scale, quat, translation);
 	SetRotation(quat);
-	Update(CTimer::Dt(), CEngine::GetInstance()->GetActiveScene().GetMainCamera()->GameObject().myTransform->Position());
+	Update(CEngine::GetInstance()->GetActiveScene().GetMainCamera()->GameObject().myTransform->Position());
 }
 
-void CParticleEmitterComponent::Init(CParticle* aParticle)
+void CParticleEmitterComponent::Init(std::vector<CParticle*> someParticles)
 {
-	myParticle = aParticle;
-	myParticleVertices.reserve(aParticle->GetParticleData().myNumberOfParticles);
-	for (unsigned int i = 0; i < aParticle->GetParticleData().myNumberOfParticles; ++i) {
-		myParticlePool.push(CParticle::SParticleVertex());
+	myParticles = someParticles;
+	for (unsigned int i = 0; i < myParticles.size(); ++i) {
+
+		myParticleVertices.emplace_back(std::vector<CParticle::SParticleVertex>());
+		myParticlePools.emplace_back(std::queue<CParticle::SParticleVertex>());
+
+		myParticleVertices[i].reserve(myParticles[i]->GetParticleData().myNumberOfParticles);
+		for (unsigned int j = 0; j < myParticles[i]->GetParticleData().myNumberOfParticles; ++j) {
+			myParticlePools[i].emplace(CParticle::SParticleVertex());
+		}
+		
+		myEmitterTimers.emplace_back(0.0f);
 	}
 }
 
@@ -116,19 +124,22 @@ void CParticleEmitterComponent::Rotate(DirectX::SimpleMath::Quaternion aQuaterni
 	myTransform.Translation(translation);
 }
 
-void CParticleEmitterComponent::Update(float aDeltaTime, DirectX::SimpleMath::Vector3 aCameraPosition)
+void CParticleEmitterComponent::Update(DirectX::SimpleMath::Vector3 aCameraPosition)
 {
-	CParticle::SParticleData particleData = myParticle->GetParticleData();
+	for (unsigned int i = 0; i < myParticles.size(); ++i) 
+	{
+		CParticle::SParticleData particleData = myParticles[i]->GetParticleData();
 
-	SpawnParticles(aDeltaTime, aCameraPosition, particleData);
-	UpdateParticles(aDeltaTime, aCameraPosition, particleData);
+		SpawnParticles(i, aCameraPosition, particleData);
+		UpdateParticles(i, aCameraPosition, particleData);
 
-	std::sort(myParticleVertices.begin(), myParticleVertices.end(),
-		[](const CParticle::SParticleVertex& aFirstParticle, const CParticle::SParticleVertex& aSecondParticle)
-		{
-			return aFirstParticle.mySquaredDistanceToCamera > aSecondParticle.mySquaredDistanceToCamera;
-		}
-	);
+		std::sort(myParticleVertices[i].begin(), myParticleVertices[i].end(),
+			[](const CParticle::SParticleVertex& aFirstParticle, const CParticle::SParticleVertex& aSecondParticle)
+			{
+				return aFirstParticle.mySquaredDistanceToCamera > aSecondParticle.mySquaredDistanceToCamera;
+			}
+		);
+	}
 }
 
 void CParticleEmitterComponent::OnEnable()
@@ -139,46 +150,46 @@ void CParticleEmitterComponent::OnDisable()
 {
 }
 
-void CParticleEmitterComponent::SpawnParticles(float aDeltaTime, DirectX::SimpleMath::Vector3& aCameraPosition, CParticle::SParticleData& someParticleData)
+void CParticleEmitterComponent::SpawnParticles(unsigned int anIndex, DirectX::SimpleMath::Vector3& aCameraPosition, CParticle::SParticleData& someParticleData)
 {
-	myEmitterTimer += aDeltaTime;
-	if (myEmitterTimer > (1.0f / someParticleData.mySpawnRate) && (myParticleVertices.size() < someParticleData.myNumberOfParticles)) {
-		myParticleVertices.emplace_back(myParticlePool.front());
-		myParticlePool.pop();
-		myParticleVertices.back().myLifeTime = someParticleData.myParticleLifetime + Random(someParticleData.myLifetimeLowerBound, someParticleData.myLifetimeUpperBound);
-		myParticleVertices.back().myPosition = { myTransform._41, myTransform._42, myTransform._43, 1.0f };
-		myParticleVertices.back().myMovement = someParticleData.myParticleStartDirection;
-		myParticleVertices.back().myStartMovement = someParticleData.myParticleStartDirection + Random(someParticleData.myDirectionLowerBound, someParticleData.myDirectionUpperBound, 0.0f);
-		myParticleVertices.back().myEndMovement = someParticleData.myParticleEndDirection + Random(someParticleData.myDirectionLowerBound, someParticleData.myDirectionUpperBound, 0.0f);
-		myParticleVertices.back().myColor = someParticleData.myParticleStartColor;
-		myParticleVertices.back().mySize = { someParticleData.myParticleStartSize, someParticleData.myParticleStartSize };
-		myParticleVertices.back().mySquaredDistanceToCamera = SM::Vector3::DistanceSquared({ myTransform._41, myTransform._42, myTransform._43 }, aCameraPosition);
-		myEmitterTimer -= (1.0f / someParticleData.mySpawnRate);
+	myEmitterTimers[anIndex] += CTimer::Dt();
+	if (myEmitterTimers[anIndex] > (1.0f / someParticleData.mySpawnRate) && (myParticleVertices[anIndex].size() < someParticleData.myNumberOfParticles)) {
+		myParticleVertices[anIndex].emplace_back(myParticlePools[anIndex].front());
+		myParticlePools[anIndex].pop();
+		myParticleVertices[anIndex].back().myLifeTime = someParticleData.myParticleLifetime + Random(someParticleData.myLifetimeLowerBound, someParticleData.myLifetimeUpperBound);
+		myParticleVertices[anIndex].back().myPosition = { myTransform._41, myTransform._42, myTransform._43, 1.0f };
+		myParticleVertices[anIndex].back().myMovement = someParticleData.myParticleStartDirection;
+		myParticleVertices[anIndex].back().myStartMovement = someParticleData.myParticleStartDirection + Random(someParticleData.myDirectionLowerBound, someParticleData.myDirectionUpperBound, 0.0f);
+		myParticleVertices[anIndex].back().myEndMovement = someParticleData.myParticleEndDirection + Random(someParticleData.myDirectionLowerBound, someParticleData.myDirectionUpperBound, 0.0f);
+		myParticleVertices[anIndex].back().myColor = someParticleData.myParticleStartColor;
+		myParticleVertices[anIndex].back().mySize = { someParticleData.myParticleStartSize, someParticleData.myParticleStartSize };
+		myParticleVertices[anIndex].back().mySquaredDistanceToCamera = SM::Vector3::DistanceSquared({ myTransform._41, myTransform._42, myTransform._43 }, aCameraPosition);
+		myEmitterTimers[anIndex] -= (1.0f / someParticleData.mySpawnRate);
 	}
 }
 
-void CParticleEmitterComponent::UpdateParticles(float aDeltaTime, DirectX::SimpleMath::Vector3& aCameraPosition, CParticle::SParticleData& particleData)
+void CParticleEmitterComponent::UpdateParticles(unsigned int anIndex, DirectX::SimpleMath::Vector3& aCameraPosition, CParticle::SParticleData& particleData)
 {
 	std::vector<unsigned int> indicesOfParticlesToRemove;
-	for (UINT i = 0; i < myParticleVertices.size(); ++i)
+	for (UINT i = 0; i < myParticleVertices[anIndex].size(); ++i)
 	{
-		float quotient = myParticleVertices[i].myLifeTime / particleData.myParticleLifetime;
+		float quotient = myParticleVertices[anIndex][i].myLifeTime / particleData.myParticleLifetime;
 
-		myParticleVertices[i].myColor = SM::Vector4::Lerp
+		myParticleVertices[anIndex][i].myColor = SM::Vector4::Lerp
 		(
 			particleData.myParticleEndColor,
 			particleData.myParticleStartColor,
 			quotient
 		);
 
-		myParticleVertices[i].mySize = SM::Vector2::Lerp
+		myParticleVertices[anIndex][i].mySize = SM::Vector2::Lerp
 		(
 			{ particleData.myParticleEndSize, particleData.myParticleEndSize },
 			{ particleData.myParticleStartSize, particleData.myParticleStartSize },
 			quotient
 		);
 
-		myParticleVertices[i].myMovement = SM::Vector4::Lerp
+		myParticleVertices[anIndex][i].myMovement = SM::Vector4::Lerp
 		(
 			particleData.myParticleEndDirection,
 			particleData.myParticleStartDirection,
@@ -187,31 +198,31 @@ void CParticleEmitterComponent::UpdateParticles(float aDeltaTime, DirectX::Simpl
 
 		SM::Vector4 direction = SM::Vector4::Lerp
 		(
-			myParticleVertices[i].myEndMovement,
-			myParticleVertices[i].myStartMovement,
+			myParticleVertices[anIndex][i].myEndMovement,
+			myParticleVertices[anIndex][i].myStartMovement,
 			quotient
 		);
 
-		myParticleVertices[i].mySquaredDistanceToCamera = SM::Vector3::DistanceSquared
+		myParticleVertices[anIndex][i].mySquaredDistanceToCamera = SM::Vector3::DistanceSquared
 		(
-			{ myParticleVertices[i].myPosition.x,
-			  myParticleVertices[i].myPosition.y,
-			  myParticleVertices[i].myPosition.z },
+			{ myParticleVertices[anIndex][i].myPosition.x,
+			  myParticleVertices[anIndex][i].myPosition.y,
+			  myParticleVertices[anIndex][i].myPosition.z },
 			aCameraPosition
 		);
 
-		SM::Vector4 newPosition = direction * particleData.myParticleSpeed * aDeltaTime + myParticleVertices[i].myPosition;
-		myParticleVertices[i].myPosition = newPosition;
+		SM::Vector4 newPosition = direction * particleData.myParticleSpeed * CTimer::Dt() + myParticleVertices[anIndex][i].myPosition;
+		myParticleVertices[anIndex][i].myPosition = newPosition;
 
-		if ((myParticleVertices[i].myLifeTime -= aDeltaTime) < 0.0f) {
+		if ((myParticleVertices[anIndex][i].myLifeTime -= CTimer::Dt()) < 0.0f) {
 			indicesOfParticlesToRemove.emplace_back(i);
 		}
 	}
 
 	std::sort(indicesOfParticlesToRemove.begin(), indicesOfParticlesToRemove.end(), [](UINT a, UINT b) { return a > b; });
 	for (UINT i = 0; i < indicesOfParticlesToRemove.size(); ++i) {
-		std::swap(myParticleVertices[indicesOfParticlesToRemove[i]], myParticleVertices.back());
-		myParticlePool.push(myParticleVertices.back());
-		myParticleVertices.pop_back();
+		std::swap(myParticleVertices[anIndex][indicesOfParticlesToRemove[i]], myParticleVertices[anIndex].back());
+		myParticlePools[anIndex].push(myParticleVertices[anIndex].back());
+		myParticleVertices[anIndex].pop_back();
 	}
 }

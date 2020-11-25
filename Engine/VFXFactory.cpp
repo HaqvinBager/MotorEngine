@@ -149,6 +149,16 @@ CVFXFactory* CVFXFactory::GetInstance() {
 	return ourInstance;
 }
 
+std::vector<CVFXBase*> CVFXFactory::GetVFXBaseSet(std::vector<std::string> someFilePaths)
+{
+    std::vector<CVFXBase*> bases;
+    for (unsigned int i = 0; i < someFilePaths.size(); ++i)
+    {
+        bases.emplace_back(GetVFXBase(someFilePaths[i]));
+    }
+    return std::move(bases);
+}
+
 CVFXFactory::CVFXFactory() {
 	ourInstance = this;
     myFramework = nullptr;

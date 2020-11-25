@@ -127,6 +127,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SGameObjectData& aData, const
     return std::move(gameObject);
 }
 
+#include "../../Game/AbilityComponent.h"
 CGameObject* CUnityFactory::CreateGameObject(const SPlayerData& aData, const std::string& aModelPath)
 {
     CGameObject* gameObject = new CGameObject();
@@ -136,6 +137,12 @@ CGameObject* CUnityFactory::CreateGameObject(const SPlayerData& aData, const std
     gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
     gameObject->AddComponent<CPlayerControllerComponent>(*gameObject);
     gameObject->AddComponent<CNavMeshComponent>(*gameObject);
+
+    std::pair<EAbilityType, unsigned int> ab = { EAbilityType::AbilityTest, 1 };
+    std::vector<std::pair<EAbilityType, unsigned int>> abs;
+    abs.emplace_back(ab);
+    gameObject->AddComponent<CAbilityComponent>(*gameObject, abs);
+
     AddAnimationsToGameObject(*gameObject, aModelPath);
     return gameObject;
 }

@@ -6,13 +6,13 @@
 namespace SM = DirectX::SimpleMath;
 #define ENGINE_SCALE 0.01f
 
-CVFXComponent::CVFXComponent(CGameObject& aParent): CComponent(aParent), myVFXBase(nullptr) {
+CVFXComponent::CVFXComponent(CGameObject& aParent): CComponent(aParent) {
 	SetScale(1.0f);
 	myTransform.Translation(GameObject().myTransform->Position());
 }
 
 CVFXComponent::~CVFXComponent() {
-    myVFXBase = nullptr;
+    myVFXBases.clear();
 }
 
 void CVFXComponent::Awake() {
@@ -23,8 +23,6 @@ void CVFXComponent::Start() {
 
 void CVFXComponent::Update() 
 {
-	myTextureScroll += {0.15f * CTimer::Dt(), 0.15f * CTimer::Dt()};
-	myTextureScroll2 += {0.15f * CTimer::Dt(), 0.15f * CTimer::Dt()};
 	SetPosition(GameObject().myTransform->Position());
 	DirectX::SimpleMath::Vector3 scale;
 	DirectX::SimpleMath::Quaternion quat;
@@ -33,9 +31,9 @@ void CVFXComponent::Update()
 	SetRotation(quat);
 }
 
-bool CVFXComponent::Init(CVFXBase* aVFXBase) {
-	myVFXBase = aVFXBase;
-	if (!myVFXBase) {
+bool CVFXComponent::Init(std::vector<CVFXBase*> someVFXBases) {
+	myVFXBases = someVFXBases;
+	if (someVFXBases.empty()) {
 		return false;
 	}
 
@@ -100,9 +98,4 @@ void CVFXComponent::Rotate(DirectX::SimpleMath::Quaternion aQuaternion)
 	SM::Vector3 translation = myTransform.Translation();
 	myTransform *= SM::Matrix::CreateFromQuaternion(aQuaternion);
 	myTransform.Translation(translation);
-}
-
-void CVFXComponent::Scroll(DirectX::SimpleMath::Vector2 aScrollVector1, DirectX::SimpleMath::Vector2 aScrollVector2) {
-	myTextureScroll = aScrollVector1;
-	myTextureScroll2 = aScrollVector2;
 }

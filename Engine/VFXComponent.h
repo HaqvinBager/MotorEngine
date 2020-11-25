@@ -14,7 +14,7 @@ public:
 	void Start() override;
 	void Update() override;
 
-	bool Init(CVFXBase* aVFXBase);
+	bool Init(std::vector<CVFXBase*> someVFXBases);
 	void SetTransform(DirectX::SimpleMath::Vector3 aPosition, DirectX::SimpleMath::Vector3 aRotation);
 	void SetRotation(DirectX::SimpleMath::Vector3 aRotation);
 	void SetRotation(DirectX::SimpleMath::Quaternion aQuaternion);
@@ -23,19 +23,14 @@ public:
 	void Move(DirectX::SimpleMath::Vector3 aMovement);
 	void Rotate(DirectX::SimpleMath::Vector3 aRotation);
 	void Rotate(DirectX::SimpleMath::Quaternion aQuaternion);
-	void Scroll(DirectX::SimpleMath::Vector2 aScrollVector1, DirectX::SimpleMath::Vector2 aScrollVector2);
 
 public:
-	CVFXBase* GetVFXBase() { return myVFXBase; }
+	std::vector<CVFXBase*> GetVFXBases() { return myVFXBases; }
 	DirectX::SimpleMath::Matrix GetTransform() { return myTransform; }
-	DirectX::SimpleMath::Vector2 GetTextureScroll() { return myTextureScroll; }
-	DirectX::SimpleMath::Vector2 GetTextureScroll2() { return myTextureScroll2; }
 
 private:
-	CVFXBase* myVFXBase;
+	std::vector<CVFXBase*> myVFXBases;
 	DirectX::SimpleMath::Matrix myTransform;
-	DirectX::SimpleMath::Vector2 myTextureScroll;
-	DirectX::SimpleMath::Vector2 myTextureScroll2;
 	float myScale = 1.0f;
 };
 

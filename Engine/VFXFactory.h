@@ -15,6 +15,8 @@ public:
 
 	static CVFXFactory* GetInstance();
 
+	std::vector<CVFXBase*> GetVFXBaseSet(std::vector<std::string> someFilePaths);
+
 private:
 	CVFXFactory();
 	~CVFXFactory();

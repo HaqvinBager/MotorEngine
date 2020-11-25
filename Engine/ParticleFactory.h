@@ -12,8 +12,10 @@ public:
 
 	bool Init(CDirectXFramework* aFramework);
 
-	CParticle* GetParticle(std::string aFilePath);
 	CParticle* LoadParticle(std::string aFilePath);
+	CParticle* GetParticle(std::string aFilePath);
+
+	std::vector<CParticle*> GetParticleSet(std::vector<std::string> someFilePaths);
 
 public:
 	static CParticleFactory* GetInstance();

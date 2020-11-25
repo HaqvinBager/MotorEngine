@@ -67,49 +67,51 @@ void CParticleRenderer::Render(CCameraComponent* aCamera, std::vector<CGameObjec
         CParticleEmitterComponent* component = gameObject->GetComponent<CParticleEmitterComponent>();
         if (component == nullptr)
             continue;
-
-        CParticle* particle = component->GetParticle();
-        if (particle == nullptr)
+        std::vector<CParticle*> particles = component->GetParticleSet();
+        if (particles.empty())
             continue;
 
-        if (component->GetParticleVertices().size() < 1) {
-            continue;
+        for (unsigned int i = 0; i < particles.size(); ++i) {
+            if (component->GetParticleVertices()[i].size() < 1) {
+                continue;
+            }
+
+            myObjectBufferData.myToWorld = component->GetTransform();
+            BindBuffer(myObjectBuffer, myObjectBufferData, "Object Buffer");
+
+            CParticle::SParticleData particleData = particles[i]->GetParticleData();
+
+            ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
+            ENGINE_HR_MESSAGE(myContext->Map(particleData.myParticleVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData), "Vertex Buffer could not be mapped.");
+
+            UINT numberOfVertices = (UINT)component->GetParticleVertices().size();
+
+            memcpy(bufferData.pData, &(component->GetParticleVertices()[0]), sizeof(CParticle::SParticleVertex) * numberOfVertices);
+            myContext->Unmap(particleData.myParticleVertexBuffer, 0);
+
+            myContext->IASetPrimitiveTopology(particleData.myPrimitiveTopology);
+            myContext->IASetInputLayout(particleData.myInputLayout);
+            myContext->IASetVertexBuffers(0, 1, &particleData.myParticleVertexBuffer, &particleData.myStride, &particleData.myOffset);
+
+            myContext->VSSetConstantBuffers(1, 1, &myObjectBuffer);
+            myContext->VSSetShader(particleData.myVertexShader, nullptr, 0);
+
+            myContext->GSSetShader(particleData.myGeometryShader, nullptr, 0);
+
+            myContext->PSSetSamplers(0, 1, &particleData.mySampler);
+            myContext->PSSetConstantBuffers(1, 1, &myObjectBuffer);
+            myContext->PSSetShaderResources(0, 1, &particleData.myTexture);
+            myContext->PSSetShader(particleData.myPixelShader, nullptr, 0);
+
+            myContext->Draw(numberOfVertices, 0);
+
+            //Reset Resources
+            ID3D11ShaderResourceView* nullView = NULL;
+            myContext->PSSetShaderResources(0, 1, &nullView);
+            myContext->PSSetShaderResources(1, 1, &nullView);
+
+            myContext->GSSetShader(nullptr, nullptr, 0);
         }
-
-        myObjectBufferData.myToWorld = component->GetTransform();
-        BindBuffer(myObjectBuffer, myObjectBufferData, "Object Buffer");
-
-        CParticle::SParticleData particleData = particle->GetParticleData();
-
-        ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
-        ENGINE_HR_MESSAGE(myContext->Map(particleData.myParticleVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData), "Vertex Buffer could not be mapped.");
-
-        UINT numberOfVertices = (UINT)component->GetParticleVertices().size();
-
-        memcpy(bufferData.pData, &(component->GetParticleVertices()[0]), sizeof(CParticle::SParticleVertex) * numberOfVertices);
-        myContext->Unmap(particleData.myParticleVertexBuffer, 0);
-
-        myContext->IASetPrimitiveTopology(particleData.myPrimitiveTopology);
-        myContext->IASetInputLayout(particleData.myInputLayout);
-        myContext->IASetVertexBuffers(0, 1, &particleData.myParticleVertexBuffer, &particleData.myStride, &particleData.myOffset);
-
-        myContext->VSSetConstantBuffers(1, 1, &myObjectBuffer);
-        myContext->VSSetShader(particleData.myVertexShader, nullptr, 0);
-
-        myContext->GSSetShader(particleData.myGeometryShader, nullptr, 0);
-
-        myContext->PSSetSamplers(0, 1, &particleData.mySampler);
-        myContext->PSSetConstantBuffers(1, 1, &myObjectBuffer);
-        myContext->PSSetShaderResources(0, 1, &particleData.myTexture);
-        myContext->PSSetShader(particleData.myPixelShader, nullptr, 0);
-
-        myContext->Draw(numberOfVertices, 0);
-
-        //Reset Resources
-        ID3D11ShaderResourceView* nullView = NULL;
-        myContext->PSSetShaderResources(0, 1, &nullView);
-        myContext->PSSetShaderResources(1, 1, &nullView);
-
-        myContext->GSSetShader(nullptr, nullptr, 0);
+        
     }
 }

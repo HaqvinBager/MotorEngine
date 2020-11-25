@@ -16,7 +16,7 @@ public:
 	void Start() override;
 	void Update() override;
 
-	void Init(CParticle* aParticle);
+	void Init(std::vector<CParticle*> someParticles);
 	void SetTransform(DirectX::SimpleMath::Vector3 aPosition, DirectX::SimpleMath::Vector3 aRotation);
 	void SetRotation(DirectX::SimpleMath::Vector3 aRotation);
 	void SetRotation(DirectX::SimpleMath::Quaternion aQuaternion);
@@ -26,25 +26,25 @@ public:
 	void Rotate(DirectX::SimpleMath::Vector3 aRotation);
 	void Rotate(DirectX::SimpleMath::Quaternion aQuaternion);
 
-	void Update(float aDeltaTime, DirectX::SimpleMath::Vector3 aCameraPosition);
+	void Update(DirectX::SimpleMath::Vector3 aCameraPosition);
 
 	void OnEnable() override;
 	void OnDisable() override;
 public:
-	CParticle* GetParticle() { return myParticle; }
-	std::vector<CParticle::SParticleVertex>& GetParticleVertices() { return myParticleVertices; }
+	std::vector<CParticle*> GetParticleSet() { return myParticles; }
+	std::vector<std::vector<CParticle::SParticleVertex>>& GetParticleVertices() { return myParticleVertices; }
 	DirectX::SimpleMath::Matrix GetTransform() { return myTransform; }
 
 private:
-	void SpawnParticles(float aDeltaTime, DirectX::SimpleMath::Vector3& aCameraPosition, CParticle::SParticleData& particleData);
-	void UpdateParticles(float aDeltaTime, DirectX::SimpleMath::Vector3& aCameraPosition, CParticle::SParticleData& particleData);
+	void SpawnParticles(unsigned int anIndex, DirectX::SimpleMath::Vector3& aCameraPosition, CParticle::SParticleData& particleData);
+	void UpdateParticles(unsigned int anIndex, DirectX::SimpleMath::Vector3& aCameraPosition, CParticle::SParticleData& particleData);
 
 private:
-	CParticle* myParticle;
+	std::vector<CParticle*> myParticles;
 	DirectX::SimpleMath::Matrix myTransform;
-	std::vector<CParticle::SParticleVertex> myParticleVertices;
-	std::queue<CParticle::SParticleVertex> myParticlePool;
-	float myEmitterTimer;
+	std::vector<std::vector<CParticle::SParticleVertex>> myParticleVertices;
+	std::vector<std::queue<CParticle::SParticleVertex>> myParticlePools;
+	std::vector<float> myEmitterTimers;
 	float myScale = 1.0f;
 };
 
