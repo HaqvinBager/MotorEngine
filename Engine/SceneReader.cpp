@@ -27,31 +27,40 @@ SInGameData& CSceneReader::ReadInGameData()
 
 	myInGameData.emplace_back(new SInGameData());
 
-	SCameraData cameraData;
+	SCameraData cameraData = {};
 	myStreamPtr += Read(cameraData);
 	myInGameData.back()->myCamera = cameraData;
 
-	SDirectionalLightData directionalLightData;
+	SDirectionalLightData directionalLightData = {};
 	myStreamPtr += Read(directionalLightData);
 	myInGameData.back()->myDirectionalLight = directionalLightData;
 
-	int pointLightDataCount;
+	int pointLightDataCount = 0;
 	myStreamPtr += Read(pointLightDataCount);
 	myInGameData.back()->myPointLightData.reserve(pointLightDataCount);
 	for (int i = 0; i < pointLightDataCount; ++i)
 	{
-		SPointLightData pointLightData;
+		SPointLightData pointLightData = {};
 		myStreamPtr += Read(pointLightData);
 		myInGameData.back()->myPointLightData.emplace_back(pointLightData);
 	}
 
-	int playerIsInScene;
+	int playerIsInScene = 0;
 	myStreamPtr += Read(playerIsInScene);
 	if (playerIsInScene == 1)
 	{
-		SPlayerData playerData;
+		SPlayerData playerData = {};
 		myStreamPtr += Read(playerData);
 		myInGameData.back()->myPlayerData = playerData;
+	}
+
+	int eventDataCount = 0;
+	myStreamPtr += Read(eventDataCount);
+	myInGameData.back()->myEventData.reserve(eventDataCount);
+	for (int i = 0; i < eventDataCount; ++i) {
+		SEventData evenData = {};
+		myStreamPtr += Read(evenData);
+		myInGameData.back()->myEventData.emplace_back(evenData);
 	}
 
 	int myGameObjectDataCount = 0;
@@ -77,11 +86,11 @@ SLoadScreenData& CSceneReader::ReadLoadScreenData()
 
 	myLoadScreenData.emplace_back(new SLoadScreenData());
 
-	SCameraData cameraData;
+	SCameraData cameraData = {};
 	myStreamPtr += Read(cameraData);
 	myLoadScreenData.back()->myCamera = cameraData;
 
-	SDirectionalLightData directionalLightData;
+	SDirectionalLightData directionalLightData = {};
 	myStreamPtr += Read(directionalLightData);
 	myLoadScreenData.back()->myDirectionalLight = directionalLightData;
 
@@ -94,7 +103,7 @@ SLoadScreenData& CSceneReader::ReadLoadScreenData()
 	unsigned int gameObjectCount = 0;
 	myStreamPtr += Read(gameObjectCount);
 	
-	SGameObjectData gameObjectData;
+	SGameObjectData gameObjectData = {};
 	myStreamPtr += Read(gameObjectData);
 	myLoadScreenData.back()->myGameObject = gameObjectData;
 

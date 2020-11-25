@@ -36,6 +36,12 @@ struct SPlayerData
 	//Player Health osv
 };
 
+struct SEventData {
+	DirectX::SimpleMath::Vector3 myPosition;
+	DirectX::SimpleMath::Vector2 myColliderData;
+	int myEvent;
+};
+
 struct SGameObjectData
 {
 	int myInstanceID;
@@ -44,6 +50,7 @@ struct SGameObjectData
 	DirectX::SimpleMath::Vector3 myScale;
 	int myModelIndex;
 };
+
 
 //class SData { 
 //public:
@@ -57,6 +64,7 @@ struct SInGameData
 	SDirectionalLightData myDirectionalLight;
 	std::vector<SPointLightData> myPointLightData;	
 	SPlayerData myPlayerData;
+	std::vector<SEventData> myEventData;
 	std::vector<SGameObjectData> myGameObjects;
 
 	int SizeOf()
