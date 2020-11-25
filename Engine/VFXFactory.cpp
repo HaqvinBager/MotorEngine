@@ -23,14 +23,18 @@ bool CVFXFactory::Init(CDirectXFramework* aFramework) {
     return true;
 }
 
-CVFXBase* CVFXFactory::LoadVFXBase(std::string aMeshPath, std::string aFilePath)
+CVFXBase* CVFXFactory::LoadVFXBase(std::string aFilePath)
 {
-    const size_t lastSlashIndex = aMeshPath.find_last_of("\\/");
-    std::string modelDirectory = aMeshPath.substr(0, lastSlashIndex + 1);
-    std::string modelName = aMeshPath.substr(lastSlashIndex + 1, aMeshPath.size() - lastSlashIndex - 5);
+    CVFXBase::SVFXBaseData vfxBaseData;
+    ReadJsonValues(aFilePath, vfxBaseData);
+
+    std::string meshPath = vfxBaseData.meshPath;
+    const size_t lastSlashIndex = meshPath.find_last_of("\\/");
+    std::string modelDirectory = meshPath.substr(0, lastSlashIndex + 1);
+    std::string modelName = meshPath.substr(lastSlashIndex + 1, meshPath.size() - lastSlashIndex - 5);
 
     CFBXLoaderCustom modelLoader;
-    CLoaderModel* loaderModel = modelLoader.LoadModel(aMeshPath.c_str());
+    CLoaderModel* loaderModel = modelLoader.LoadModel(meshPath.c_str());
     CLoaderMesh* mesh = loaderModel->myMeshes[0];
 
     //Start Vertex Buffer
@@ -101,9 +105,6 @@ CVFXBase* CVFXFactory::LoadVFXBase(std::string aMeshPath, std::string aFilePath)
     ENGINE_HR_MESSAGE(myFramework->GetDevice()->CreateInputLayout(layout, sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC), vsData.data(), vsData.size(), &inputLayout), "Input Layout could not be created.");
     //End Layout
 
-    CVFXBase::SVFXBaseData vfxBaseData;
-    ReadJsonValues(aFilePath, vfxBaseData);
-
     ID3D11ShaderResourceView* textureOneShaderResourceView = GetShaderResourceView(myFramework->GetDevice(), vfxBaseData.texturePathOne);
     ID3D11ShaderResourceView* textureTwoShaderResourceView = GetShaderResourceView(myFramework->GetDevice(), vfxBaseData.texturePathTwo);
     ID3D11ShaderResourceView* textureThreeShaderResourceView = GetShaderResourceView(myFramework->GetDevice(), vfxBaseData.texturePathThree);
@@ -132,16 +133,16 @@ CVFXBase* CVFXFactory::LoadVFXBase(std::string aMeshPath, std::string aFilePath)
 
     vfxBase->Init(vfxBaseData);
 
-    myVFXBaseMap.emplace(aMeshPath, vfxBase);
+    myVFXBaseMap.emplace(aFilePath, vfxBase);
 
     return vfxBase;
 }
 
-CVFXBase* CVFXFactory::GetVFXBase(std::string aMeshPath, std::string aFilePath) {
-	if (myVFXBaseMap.find(aMeshPath) == myVFXBaseMap.end()) {
-		return LoadVFXBase(aMeshPath, aFilePath);
+CVFXBase* CVFXFactory::GetVFXBase(std::string aFilePath) {
+	if (myVFXBaseMap.find(aFilePath) == myVFXBaseMap.end()) {
+		return LoadVFXBase(aFilePath);
 	}
-	return myVFXBaseMap.at(aMeshPath);
+	return myVFXBaseMap.at(aFilePath);
 }
 
 CVFXFactory* CVFXFactory::GetInstance() {
@@ -202,4 +203,5 @@ void CVFXFactory::ReadJsonValues(std::string aFilePath, CVFXBase::SVFXBaseData& 
     someVFXBaseData.texturePathTwo = document["Texture 2"].GetString();
     someVFXBaseData.texturePathThree = document["Texture 3"].GetString();
     someVFXBaseData.texturePathMask = document["Texture Mask"].GetString();
+    someVFXBaseData.meshPath = document["Mesh Path"].GetString();
 }

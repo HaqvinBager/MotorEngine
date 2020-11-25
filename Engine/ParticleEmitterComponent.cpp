@@ -33,6 +33,11 @@ void CParticleEmitterComponent::Start()
 void CParticleEmitterComponent::Update()
 {
 	SetPosition(GameObject().myTransform->Position());
+	DirectX::SimpleMath::Vector3 scale;
+	DirectX::SimpleMath::Quaternion quat;
+	DirectX::SimpleMath::Vector3 translation;
+	GameObject().myTransform->GetMatrix().Decompose(scale, quat, translation);
+	SetRotation(quat);
 	Update(CTimer::Dt(), CEngine::GetInstance()->GetActiveScene().GetMainCamera()->GameObject().myTransform->Position());
 }
 
@@ -58,6 +63,16 @@ void CParticleEmitterComponent::SetRotation(DirectX::SimpleMath::Vector3 aRotati
 		DirectX::XMConvertToRadians(aRotation.y),
 		DirectX::XMConvertToRadians(aRotation.x),
 		DirectX::XMConvertToRadians(aRotation.z)
+	);
+	myTransform *= SM::Matrix::CreateScale(myScale * ENGINE_SCALE);
+	myTransform.Translation(translation);
+}
+
+void CParticleEmitterComponent::SetRotation(DirectX::SimpleMath::Quaternion aQuaternion)
+{
+	SM::Vector3 translation = myTransform.Translation();
+	myTransform = SM::Matrix::CreateFromQuaternion(
+		aQuaternion
 	);
 	myTransform *= SM::Matrix::CreateScale(myScale * ENGINE_SCALE);
 	myTransform.Translation(translation);
@@ -91,6 +106,13 @@ void CParticleEmitterComponent::Rotate(DirectX::SimpleMath::Vector3 aRotation)
 {
 	SM::Vector3 translation = myTransform.Translation();
 	myTransform *= SM::Matrix::CreateFromYawPitchRoll(aRotation.y, aRotation.x, aRotation.z);
+	myTransform.Translation(translation);
+}
+
+void CParticleEmitterComponent::Rotate(DirectX::SimpleMath::Quaternion aQuaternion)
+{
+	SM::Vector3 translation = myTransform.Translation();
+	myTransform *= SM::Matrix::CreateFromQuaternion(aQuaternion);
 	myTransform.Translation(translation);
 }
 

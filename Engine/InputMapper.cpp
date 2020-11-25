@@ -9,7 +9,7 @@ CInputMapper* CInputMapper::GetInstance()
 	return ourInstance;
 }
 
-CInputMapper::CInputMapper() : myInput(CommonUtilities::Input::GetInstance())
+CInputMapper::CInputMapper() : myInput(Input::GetInstance())
 {
 	ourInstance = this;
 
@@ -95,15 +95,15 @@ void CInputMapper::UpdateKeyboardInput()
 void CInputMapper::UpdateMouseInput()
 {
 
-	if (myInput->IsMousePressed(CommonUtilities::Input::MouseButton::Left))
+	if (myInput->IsMousePressed(Input::MouseButton::Left))
 	{
 		TranslateActionToEvent(IInputObserver::EInputAction::MouseLeft);
 	}
-	//else if (myInput->IsMouseDown(CommonUtilities::Input::MouseButton::Left))
+	//else if (myInput->IsMouseDown(Input::MouseButton::Left))
 	//{
 	//	TranslateActionToEvent(IInputObserver::EInputAction::MouseLeft);
 	//}
-	//else if (myInput->IsMouseReleased(CommonUtilities::Input::MouseButton::Left))
+	//else if (myInput->IsMouseReleased(Input::MouseButton::Left))
 	//{
 	//	TranslateActionToEvent(IInputObserver::EInputAction::MouseLeft);
 	//}

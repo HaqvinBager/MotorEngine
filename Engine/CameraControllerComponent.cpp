@@ -4,17 +4,17 @@
 #include "TransformComponent.h"
 #include "Engine.h"
 #include "Scene.h"
+#include "GameObject.h"
+#include "PlayerControllerComponent.h"
 
-using namespace CommonUtilities;
-
-CCameraControllerComponent::CCameraControllerComponent(CGameObject& aGameObject, const float aCameraMoveSpeed /*, ECameraMode aCameraMode, char aToggleFreeCam*/) 
+CCameraControllerComponent::CCameraControllerComponent(CGameObject& aGameObject, const float aCameraMoveSpeed , ECameraMode aCameraMode, char aToggleFreeCam, Vector3 aOffset) 
 	: CComponent(aGameObject),
 	myCameraMoveSpeed(aCameraMoveSpeed),
-	myCamera(nullptr)
-
-	//myCamera(aCameraComponent),
-	//myCameraMode(aCameraMode),
-	//myToggleFreeCam(aToggleFreeCam)
+	myCamera(nullptr),
+	myCameraMode(aCameraMode),
+	myToggleFreeCam(aToggleFreeCam),
+	myPlayer(nullptr),
+	myOffset(aOffset)
 {
 	
 }
@@ -26,6 +26,7 @@ CCameraControllerComponent::~CCameraControllerComponent()
 void CCameraControllerComponent::Awake()
 {
 	myCamera = CEngine::GetInstance()->GetActiveScene().GetMainCamera();
+	myPlayer = CEngine::GetInstance()->GetActiveScene().FindObjectOfType<CPlayerControllerComponent>();
 }
 
 void CCameraControllerComponent::Start()
@@ -34,6 +35,20 @@ void CCameraControllerComponent::Start()
 }
 
 void CCameraControllerComponent::Update()
+{
+	if (Input::GetInstance()->IsKeyPressed(std::toupper(myToggleFreeCam))) {
+		myCameraMode = myCameraMode == ECameraMode::FreeCam ? ECameraMode::Player : ECameraMode::FreeCam;
+	}
+
+	if (myCameraMode == ECameraMode::FreeCam) {
+		UpdateFreeCam();
+	}
+	else {
+		GameObject().myTransform->Position(myPlayer->GameObject().myTransform->Position() + myOffset);
+	}
+}
+
+void CCameraControllerComponent::UpdateFreeCam()
 {
 	//std::cout << "Camera Controller Update" << std::endl;
 	const float dt = CTimer::Dt();
@@ -52,6 +67,6 @@ void CCameraControllerComponent::Update()
 	camera_rotation_input = Input::GetInstance()->IsKeyDown('Q') ? -rotationSpeed : camera_rotation_input;
 	camera_rotation_input = Input::GetInstance()->IsKeyDown('E') ? rotationSpeed : camera_rotation_input;
 
-	myCamera->GameObject().myTransform->MoveLocal(camera_movement_input * myCameraMoveSpeed * dt);
-	myCamera->GameObject().myTransform->Rotate({ 0, camera_rotation_input * rotationSpeed * dt, 0 });
+	GameObject().myTransform->MoveLocal(camera_movement_input * myCameraMoveSpeed * dt);
+	GameObject().myTransform->Rotate({ 0, camera_rotation_input * rotationSpeed * dt, 0 });
 }

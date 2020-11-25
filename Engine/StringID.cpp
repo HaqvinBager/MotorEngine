@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "StringID.hpp"
 
-CStringID::CStringID(const std::string& aString)
-	: myID(0)
+
+CStringID::CStringID(const std::string& aString, const CStringIDLoader::EStringIDFiles anIDFileKey)
 {
-	// Get ID from file. If it does not exist in file, add it to the end of file
+	myID = CStringIDLoader::GetStringID(aString, anIDFileKey);
 
 #ifdef _DEBUG
 	myString = aString;

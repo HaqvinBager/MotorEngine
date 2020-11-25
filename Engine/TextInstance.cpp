@@ -1,10 +1,13 @@
 #include "stdafx.h"
 #include "TextInstance.h"
+#include "Engine.h"
+#include "Scene.h"
 
 namespace SM = DirectX::SimpleMath;
 
 CTextInstance::CTextInstance() : myTextData(nullptr)
 {
+    CEngine::GetInstance()->GetActiveScene().AddInstance(this);
 }
 
 CTextInstance::~CTextInstance()

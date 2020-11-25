@@ -32,7 +32,7 @@ void CTextRenderer::Render(std::vector<CTextInstance*>& aTextInstanceList)
         CTextInstance* instance = aTextInstanceList[i];
         CText::STextData textData = instance->GetTextData()->GetTextData();
 
-        textData.mySpriteFont->DrawString(mySpriteBatch, instance->GetText().c_str(), instance->GetPosition());
+        textData.mySpriteFont->DrawString(mySpriteBatch, instance->GetText().c_str(), instance->GetPosition(), instance->GetColor());
     }
     mySpriteBatch->End();
 }

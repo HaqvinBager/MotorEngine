@@ -23,6 +23,7 @@ public:
 	static CDebug* GetInstance();
 
 	void DrawLine(DirectX::SimpleMath::Vector3 aPositionA, DirectX::SimpleMath::Vector3 aPositionB);
+	void DrawLine(DirectX::SimpleMath::Vector3 aPositionA, DirectX::SimpleMath::Vector3 aPositionB, float aDuration);
 	const std::vector<CLineInstance>& GetLines() const;
 	const std::vector<SLineTime>& GetLinesTime() const;
 

@@ -1,8 +1,6 @@
 #include "WindowHandler.h"
 #include "Input.h"
 
-using namespace CommonUtilities;
-
 LRESULT CWindowHandler::WinProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)
 {
     static CWindowHandler* windowHandler = nullptr;
@@ -59,6 +57,7 @@ bool CWindowHandler::Init(CWindowHandler::SWindowData someWindowData)
         someWindowData.myX, someWindowData.myY, someWindowData.myWidth, someWindowData.myHeight,
         nullptr, nullptr, nullptr, this);
 
+    myResolution = new Vector2();
     // //Start in fullscreen
     //myWindowHandle = CreateWindow(L"3DEngine", L"IronWrought", 
     //    WS_POPUP | WS_VISIBLE,
@@ -88,6 +87,20 @@ UINT CWindowHandler::GetHeight() const {
         return rect->bottom;
     }
     return myWindowData.myHeight;
+}
+
+DirectX::SimpleMath::Vector2 CWindowHandler::GetResolution()
+{
+    return *myResolution;
+}
+
+void CWindowHandler::SetResolution()
+{
+    LPRECT rect = new RECT{ 0, 0, 0, 0 };
+    if (GetClientRect(myWindowHandle, rect) != 0) {
+        myResolution->x = static_cast<float>(rect->right);
+        myResolution->y = static_cast<float>(rect->bottom);
+    }
 }
 
 void CWindowHandler::SetWindowTitle(std::string aString)

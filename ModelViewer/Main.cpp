@@ -26,6 +26,7 @@
 
 #include <Animation.h>
 
+
 #include <filesystem>
 #include <iostream>
 #include <map>
@@ -34,10 +35,16 @@
 #include "loadAssetsFromDirectory.h"
 #include "spriteViewer.h"
 
-using namespace CommonUtilities;
+//using namespace CommonUtilities;
 namespace SM = DirectX::SimpleMath;
 namespace MW = ModelViewer;
 
+//#define VFX
+
+#ifdef VFX
+#include "../../Game/AbilityComponent.h"//  Grupp 4 stuff might break for grupp3!
+#pragma comment (lib, "../../../Lib/Game_Debug.lib")
+#endif
 ///	NOTES
 ///		aiProcessPreset_TargetRealtime_MaxQuality_DontJoinIndetical 
 ///			Affects performance due to aiProcess_JoinIdenticalVertices (L93). 
@@ -81,6 +88,32 @@ void CloseConsole()
 #define CAMERA_DEFAULT_ROT { 33.f,-45.f,0.f }
 #define CAMERA_DEFAULT_POS { 1.75f,2.0f,-1.5f }
 
+#ifdef VFX
+CGameObject* InitVFX(CScene& aScene)
+{
+	CGameObject* go = new CGameObject();
+
+	std::pair<EAbilityType, unsigned int> abilPair = { EAbilityType::AbilityTest, 1u };
+	std::vector<std::pair<EAbilityType, unsigned int>> vecPair;
+	vecPair.emplace_back(abilPair);
+	vecPair.shrink_to_fit();
+
+	go->AddComponent<CAbilityComponent>(*go, vecPair);
+
+	go->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::AbilityTest, { 0.f,0.f,0.f });
+	
+	aScene.AddInstance(go);
+
+	return go;
+}
+void UpdateVFX(CGameObject* /*aCurrentGameObject*/,CGameObject* /*aCamera*/, CScene* aScene)
+{
+	for (auto& obj : aScene->GetActiveGameObjects())
+	{
+		obj->Update();
+	}
+}
+#endif
 #pragma region TRANSFORM FUNCTIONS
 void UpdateCamera(CGameObject& aCamera, const float dt)
 {
@@ -139,7 +172,6 @@ CGameObject* InitModels(const std::string& aModelPath, CScene& aScene)
 
 	gameobject->AddComponent<CModelComponent>(CModelComponent(*gameobject, aModelPath));
 	gameobject->myTransform->Position({ 0.0f,0.0f,0.0f });
-	
 	aScene.AddInstance(gameobject);
 
 	return gameobject;
@@ -192,28 +224,10 @@ CGameObject* InitAnimation(const std::string& aFilePath, CScene& aScene)
 
 	if (MW::GetSuffixFromString(aFilePath) == "_SK")
 	{
-		const size_t lastSlashIndex		= aFilePath.find_last_of("\\/");
-		const std::string folderPath	= aFilePath.substr(0, lastSlashIndex + 1);
-
-		std::filesystem::path p(folderPath);
-		std::filesystem::directory_iterator start(p);
-		std::filesystem::directory_iterator end;
-
-		std::vector<std::string> somePathsToAnimations;
-		for (auto it = start; it != end; ++it)
-		{
-			if (it->path().extension() == ".fbx")
-			{
-				const std::string filePath = it->path().filename().string();
-				if (MW::GetSuffixFromString(filePath) == "_AN")
-				{
-					somePathsToAnimations.emplace_back(folderPath + filePath);
-				}
-			}
-		}
-
-		CAnimationComponent* animComp = gameObject->AddComponent<CAnimationComponent>(*gameObject);
-		animComp->GetMyAnimation()->Init(aFilePath.c_str(), somePathsToAnimations);
+		std::vector<std::string> somePathsToAnimations = MW::Get_ANFiles(aFilePath);
+		
+		CAnimationComponent* animComp = gameObject->AddComponent<CAnimationComponent>(*gameObject, aFilePath, somePathsToAnimations);
+		//animComp->GetMyAnimation()->Init(aFilePath.c_str(), somePathsToAnimations);
 		animComp->Awake();
 	}
 
@@ -240,32 +254,14 @@ bool ChangeAnimationModel(CGameObject* aCurrentGameObject, const std::vector<std
 	aCurrentGameObject->GetComponent<CModelComponent>()->SetModel(aModelFilePathList[loadModelNumber]);
 	aCurrentGameObject->GetComponent<CTransformComponent>()->Transform({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
 
-	if (MW::GetSuffixFromString(aModelFilePathList[loadModelNumber]) == "_SK")
+	if (MW::Has_SKSuffix(aModelFilePathList[loadModelNumber]))
 	{
-		const size_t lastSlashIndex		= aModelFilePathList[loadModelNumber].find_last_of("\\/");
-		const std::string folderPath	= aModelFilePathList[loadModelNumber].substr(0, lastSlashIndex + 1);
-
-		std::filesystem::path p(folderPath);
-		std::filesystem::directory_iterator start(p);
-		std::filesystem::directory_iterator end;
-
-		std::vector<std::string> somePathsToAnimations;
-		for (auto& it = start; it != end; ++it)
-		{
-			if (it->path().extension() == ".fbx")
-			{
-				const std::string filePath = it->path().filename().string();
-				if (MW::GetSuffixFromString(filePath) == "_AN")
-				{
-					somePathsToAnimations.emplace_back(folderPath + filePath);
-				}
-			}
-		}
+		std::vector<std::string> somePathsToAnimations = MW::Get_ANFiles(aModelFilePathList[loadModelNumber]);
 
 		if (!aCurrentGameObject->GetComponent<CAnimationComponent>())
 		{
-			CAnimationComponent* animComp = aCurrentGameObject->AddComponent<CAnimationComponent>(*aCurrentGameObject);
-			animComp->GetMyAnimation()->Init(aModelFilePathList[loadModelNumber].c_str(), somePathsToAnimations);
+			CAnimationComponent* animComp = aCurrentGameObject->AddComponent<CAnimationComponent>(*aCurrentGameObject, aModelFilePathList[loadModelNumber].c_str(), somePathsToAnimations);
+			//animComp->GetMyAnimation()->Init(aModelFilePathList[loadModelNumber].c_str(), somePathsToAnimations);
 			animComp->Awake();
 		}
 		else
@@ -322,7 +318,18 @@ void UpdateAnimation(CGameObject* aCurrentGameObject, CGameObject* aCamera, cons
 }
 #pragma endregion ! ANIMATIONS
 
-
+/*
+*	If loading animations outside of Model viewer:
+*		Load model as normal
+*		Check if filepath has suffix _SK
+*			Get _AN files from the filepath directory
+*			Add animComp, pass _AN files to the component.
+*		
+*	Connecting _SK models _AN files to StringID
+*	tbd
+*
+*	PlayAnimations: Use index (0-n), Use AnimStringID? 
+*/
 
 //////////////////////////////////// MAIN STARTS HERE ///////////////////////////////////////////////////////////////////
 #define ASSET_ROOT "Assets/3D"
@@ -361,7 +368,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		scene->SetMainCamera(camera->GetComponent<CCameraComponent>());
 // ENV LIGHT
 	CEnvironmentLight* environmentLight = CLightFactory::GetInstance()->CreateEnvironmentLight("Assets/Cubemaps/Yokohama2.dds");
-		environmentLight->SetDirection(SM::Vector3(0, -1, -1));
+		environmentLight->SetDirection(SM::Vector3(0, 0, -1));
 		environmentLight->SetColor(SM::Vector3(1.0f, 1.0f, 1.0f));
 		environmentLight->SetIntensity(1.0f);
 		scene->SetEnvironmentLight(environmentLight);
@@ -402,6 +409,8 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	viewAnimations = true;
 
 	std::vector<std::string> filePaths;
+
+
 	if (viewAnimations)
 	{
 		MW::LoadModelPaths(ASSET_ROOT, filePaths, true);
@@ -412,6 +421,9 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		MW::LoadModelPaths(ASSET_ROOT, filePaths);
 		currentGameObject = InitModels(filePaths[0], *scene);
 	}
+#ifdef VFX
+	currentGameObject = InitVFX(*scene);
+#endif // VFX
 
 	int counter = 0;
 	for (auto& str : filePaths)
@@ -454,8 +466,10 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 				shouldRun = false;
 			}
 		}
-	
 		engine.BeginFrame();
+#ifdef VFX
+		UpdateVFX(currentGameObject, camera, scene);
+#else
 		if (viewAnimations)
 		{
 			UpdateAnimation(currentGameObject, camera, filePaths);
@@ -464,6 +478,9 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		{
 			UpdateModel(filePaths, currentGameObject, camera);
 		}
+#endif
+
+		
 
 		if (Input::GetInstance()->IsKeyPressed('I'))
 		{

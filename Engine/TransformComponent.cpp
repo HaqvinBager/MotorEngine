@@ -51,6 +51,18 @@ void CTransformComponent::Rotation(DirectX::SimpleMath::Vector3 aRotation)
 	myTransform.Translation(tempTranslation);
 }
 
+void CTransformComponent::Rotation(DirectX::SimpleMath::Quaternion aQuaternion)
+{
+	Vector3 tempTranslation = myTransform.Translation();
+
+	Matrix tempRotation = Matrix::CreateFromQuaternion(
+		aQuaternion
+	);
+	myTransform = tempRotation;
+	myTransform *= Matrix::CreateScale(myScale * ENGINE_SCALE);
+	myTransform.Translation(tempTranslation);
+}
+
 void CTransformComponent::Scale(float aScale)
 {
 	myScale = aScale;
@@ -115,6 +127,14 @@ void CTransformComponent::Rotate(DirectX::SimpleMath::Vector3 aRotation)
 	myTransform.Translation(tempTranslation);
 }
 
+void CTransformComponent::Rotate(DirectX::SimpleMath::Quaternion aQuaternion)
+{
+	Vector3 tempTranslation = myTransform.Translation();
+	Matrix tempRotation = Matrix::CreateFromQuaternion(aQuaternion);
+	myTransform *= tempRotation;
+	myTransform.Translation(tempTranslation);
+}
+
 void CTransformComponent::MoveAlongPath()
 {
 	// Astar returns backwards path. Because we cannot swap path nodes, 
@@ -127,29 +147,22 @@ void CTransformComponent::MoveAlongPath()
 
 		float epsilon = 0.005f;
 
-		//if (pathSize > 1) {
-			dir = (myPath[pathSize - 1] - this->Position());
-			dir.Normalize();
-			this->Move(dir * myMoveSpeed * CTimer::Dt());
+		dir = (myPath[pathSize - 1] - this->Position());
+		dir.Normalize();
+		this->Move(dir * myMoveSpeed * CTimer::Dt());
 			
-			if (DirectX::SimpleMath::Vector3::DistanceSquared(this->Position(), myPath[pathSize - 1]) < epsilon) {
-				myPath.pop_back();
-			}
-		//}
-		//else if (myPath.size() == 1) {
-		//	dir = myPath[0] - this->Position();
-		//	dir.Normalize();
-		//	this->Move(dir * myMoveSpeed * CTimer::Dt());
-
-		//	if (DirectX::SimpleMath::Vector3::DistanceSquared(this->Position(), myPath[0]) < epsilon) {
-		//		myPath.pop_back();
-		//	}
-		//}
+		if (DirectX::SimpleMath::Vector3::DistanceSquared(this->Position(), myPath[pathSize - 1]) < epsilon) {
+			myPath.pop_back();
+		}
 	}
 }
 
 void CTransformComponent::SetPath(std::vector<DirectX::SimpleMath::Vector3>& aPath, DirectX::SimpleMath::Vector3 aFinalPosition)
 {
+	if (aPath.empty()) {
+		return;
+	}
+
 	myPath.emplace_back(aFinalPosition);
 	for (unsigned int i = 0; i < aPath.size(); ++i) {
 		myPath.emplace_back(aPath[i]);
@@ -160,4 +173,9 @@ void CTransformComponent::SetPath(std::vector<DirectX::SimpleMath::Vector3>& aPa
 void CTransformComponent::ClearPath()
 {
 	myPath.clear();
+}
+
+DirectX::SimpleMath::Matrix CTransformComponent::GetMatrix() const
+{
+	return myTransform;
 }

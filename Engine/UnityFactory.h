@@ -19,9 +19,9 @@ public:
 	//std::vector<CGameObject*> CreateGameObjects(const SLoadScreenData& aData, const std::vector<std::string>& aBinModelPaths);
 
 private:
-	CGameObject* CreateGameObject(const SCameraData& aData);
+	CGameObject* CreateGameObject(const SCameraData& aData, bool addCameraController = true);
 	CGameObject* CreateGameObject(const SDirectionalLightData& aData);
-	//CGameObject* CreateGameObject(const SPointLightData& aData);
+	CGameObject* CreateGameObject(const SPointLightData& aData);
 
 	CGameObject* CreateGameObject(const SGameObjectData& aData, const std::string& aModelPath);
 	CGameObject* CreateGameObject(const SPlayerData& aData, const std::string& aModelPath);

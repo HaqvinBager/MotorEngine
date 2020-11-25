@@ -1,16 +1,18 @@
 #pragma once
 #include <vector>
+#include "GameObject.h"
+#include "Component.h"
+#include "SpriteInstance.h"
 
 class CModelComponent;
 class CCamera;
 class CEnvironmentLight;
-class CGameObject;
 class CCollisionManager;
 class CPointLight;
 class CParticleInstance;
 class CVFXInstance;
 class CLineInstance;
-class CSpriteInstance;
+//class CSpriteInstance;
 class CAnimatedUIElement;
 class CTextInstance;
 class CCameraComponent;
@@ -70,8 +72,15 @@ public:
 
 	const std::vector<CGameObject*>& GetActiveGameObjects() const { return myGameObjects; }
 
-private:
-
+	template <class T>
+	T* FindObjectOfType() {
+		for (auto& gameObject : myGameObjects) {
+			if (gameObject->GetComponent<T>() != nullptr) {
+				return gameObject->GetComponent<T>();
+			}
+		}
+		return nullptr;
+	}
 
 private:
 	std::vector<CGameObject*> myGameObjects;
@@ -85,12 +94,14 @@ private:
 	std::vector<CParticleInstance*> myParticles;
 	std::vector<CVFXInstance*> myVFXInstances;
 	std::vector<CLineInstance*> myLineInstances;
-	std::vector<CSpriteInstance*> mySprites;
 	std::vector<CAnimatedUIElement*> myAnimatedUIElements;
 	std::vector<CTextInstance*> myTexts;
+	std::unordered_map<ERenderOrder, std::vector<CSpriteInstance*>> mySpriteInstances;
+
 	CCollisionManager* myCollisionManager;
 
 	SNavMesh* myNavMesh;
+	CLineInstance* myNavMeshGrid;
 
 	bool myIsReadyToRender;
 

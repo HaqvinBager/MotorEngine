@@ -113,6 +113,7 @@ CButton::CButton(SButtonData& someData)
 	{
 		mySprites.at(i) = new CSpriteInstance();
 		mySprites.at(i)->Init(CSpriteFactory::GetInstance()->GetSprite(someData.mySpritePaths.at(i)));
+		mySprites.at(i)->SetRenderOrder(ERenderOrder::ForegroundLayer);
 		CEngine::GetInstance()->GetActiveScene().AddInstance(mySprites.at(i));
 	}
 
@@ -120,8 +121,8 @@ CButton::CButton(SButtonData& someData)
 	mySprites.at(static_cast<size_t>(EButtonState::Click))->SetShouldRender(false);
 
 
-	float windowWidth = static_cast<float>(CEngine::GetInstance()->GetWindowHandler()->GetWidth());
-	float windowHeight = static_cast<float>(CEngine::GetInstance()->GetWindowHandler()->GetHeight());
+	float windowWidth = CEngine::GetInstance()->GetWindowHandler()->GetResolution().x;
+	float windowHeight = CEngine::GetInstance()->GetWindowHandler()->GetResolution().y;
 	
 	DirectX::SimpleMath::Vector2 normalizedPosition = someData.myPosition;
 	normalizedPosition /= 2.0f;

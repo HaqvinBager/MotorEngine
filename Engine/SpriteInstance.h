@@ -1,6 +1,13 @@
 #pragma once
+#include <SimpleMath.h>// Added for ModelViewer solution, gave error here... :/
 
 class CSprite;
+
+enum class ERenderOrder {
+	BackgroundLayer,
+	Layer1,
+	ForegroundLayer
+};
 
 class CSpriteInstance
 {
@@ -23,12 +30,16 @@ public:
 	bool GetShouldRender() const { return myShouldRender; }
 	CSprite* GetSprite() const { return mySprite; }
 
+	ERenderOrder GetRenderOrder() const { return myRenderOrder; }
+	void SetRenderOrder(ERenderOrder aRenderOrder);
+
 private:
 	DirectX::SimpleMath::Vector4 myPosition = { 0.0f, 0.0f, 0.0f, 1.0f };
 	DirectX::SimpleMath::Vector4 myColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 	DirectX::SimpleMath::Vector4 myUVRect = { 0.0f, 0.0f, 1.0f, 1.0f };
 	DirectX::SimpleMath::Vector2 mySize = { 1.0f, 1.0f };
 	CSprite* mySprite;
+	ERenderOrder myRenderOrder;
 	bool myShouldRender = true;
 };
 

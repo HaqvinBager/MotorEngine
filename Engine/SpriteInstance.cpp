@@ -23,22 +23,28 @@ bool CSpriteInstance::Init(CSprite* aSprite)
 
 	mySprite = aSprite;
 	this->SetSize({ 1.0f, 1.0f });
+	myRenderOrder = ERenderOrder::ForegroundLayer;
 
 	return true;
 }
 
 void CSpriteInstance::SetSize(DirectX::SimpleMath::Vector2 aSize)
 {
-	UINT windowHeight = CEngine::GetInstance()->GetWindowHandler()->GetHeight();
+	float windowHeight = CEngine::GetInstance()->GetWindowHandler()->GetResolution().y;
 	CSprite::SSpriteData mySpriteData = mySprite->GetSpriteData();
 	mySize = mySpriteData.myDimensions;
-	mySize /= static_cast<float>(windowHeight);
+	mySize /= windowHeight;
 	mySize *= aSize;
 }
 
 void CSpriteInstance::SetShouldRender(bool aBool)
 {
 	myShouldRender = aBool;
+}
+
+void CSpriteInstance::SetRenderOrder(ERenderOrder aRenderOrder)
+{
+	myRenderOrder = aRenderOrder;
 }
 
 /// <summary>

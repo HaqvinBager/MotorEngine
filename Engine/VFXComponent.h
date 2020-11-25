@@ -17,10 +17,12 @@ public:
 	bool Init(CVFXBase* aVFXBase);
 	void SetTransform(DirectX::SimpleMath::Vector3 aPosition, DirectX::SimpleMath::Vector3 aRotation);
 	void SetRotation(DirectX::SimpleMath::Vector3 aRotation);
+	void SetRotation(DirectX::SimpleMath::Quaternion aQuaternion);
 	void SetPosition(DirectX::SimpleMath::Vector3 aPosition);
 	void SetScale(float aScale);
 	void Move(DirectX::SimpleMath::Vector3 aMovement);
 	void Rotate(DirectX::SimpleMath::Vector3 aRotation);
+	void Rotate(DirectX::SimpleMath::Quaternion aQuaternion);
 	void Scroll(DirectX::SimpleMath::Vector2 aScrollVector1, DirectX::SimpleMath::Vector2 aScrollVector2);
 
 public:

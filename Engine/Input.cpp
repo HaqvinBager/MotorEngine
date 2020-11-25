@@ -1,12 +1,13 @@
 #include "stdafx.h"
 #include "Input.h"
 
-CommonUtilities::Input* CommonUtilities::Input::GetInstance() {
-	static CommonUtilities::Input* input = new Input();
+Input* Input::GetInstance()
+{
+	static Input* input = new Input();
 	return input;
 }
 
-CommonUtilities::Input::Input() {
+Input::Input() {
 	_mouse_x = 0;
 	_mouse_y = 0;
 	_mouse_x_last = 0;
@@ -16,7 +17,7 @@ CommonUtilities::Input::Input() {
 	_mouse_screen_y = 0;
 }
 
-bool CommonUtilities::Input::update_events(UINT message, WPARAM wParam, LPARAM lParam) {
+bool Input::update_events(UINT message, WPARAM wParam, LPARAM lParam) {
 
 	switch (message) {
 	case WM_KEYDOWN:
@@ -68,7 +69,7 @@ bool CommonUtilities::Input::update_events(UINT message, WPARAM wParam, LPARAM l
 	return false;
 }
 
-void CommonUtilities::Input::update() {
+void Input::update() {
 	_key_down_last = _key_down;
 
 	_mouse_x_last = _mouse_x;
@@ -83,74 +84,74 @@ void CommonUtilities::Input::update() {
 	}
 }
 
-bool CommonUtilities::Input::move_left() {
+bool Input::move_left() {
 	return IsKeyPressed('A') == true || IsKeyPressed(VK_LEFT) == true;
 }
 
-bool CommonUtilities::Input::move_right() {
+bool Input::move_right() {
 	return IsKeyPressed('D') == true || IsKeyPressed(VK_RIGHT) == true;
 }
 
-bool CommonUtilities::Input::move_up() {
+bool Input::move_up() {
 	return IsKeyPressed('W') == true || IsKeyPressed(VK_UP) == true;
 }
 
-bool CommonUtilities::Input::MoveDown() {
+bool Input::MoveDown() {
 	return IsKeyPressed('S') == true || IsKeyPressed(VK_DOWN) == true;
 }
 
-bool CommonUtilities::Input::IsKeyDown(WPARAM wParam) {
+bool Input::IsKeyDown(WPARAM wParam) {
 	return _key_down[wParam];
 }
 
-bool CommonUtilities::Input::IsKeyPressed(WPARAM wParam) {
+bool Input::IsKeyPressed(WPARAM wParam) {
 	return _key_down[wParam] && (!_key_down_last[wParam]);
 }
 
-bool CommonUtilities::Input::IsKeyReleased(WPARAM wParam) {
+bool Input::IsKeyReleased(WPARAM wParam) {
 	return (!_key_down[wParam]) && _key_down_last[wParam];
 }
 
-int CommonUtilities::Input::MouseX() {
+int Input::MouseX() {
 	return _mouse_x;
 }
 
-int CommonUtilities::Input::MouseY() {
+int Input::MouseY() {
 	return _mouse_y;
 }
 
-int CommonUtilities::Input::MouseScreenX() {
+int Input::MouseScreenX() {
 	return _mouse_screen_x;
 }
 
-int CommonUtilities::Input::MouseScreenY() {
+int Input::MouseScreenY() {
 	return _mouse_screen_y;
 }
 
-int CommonUtilities::Input::MouseDeltaX() {
+int Input::MouseDeltaX() {
 	return (_mouse_x - _mouse_x_last);
 }
 
-int CommonUtilities::Input::MouseDeltaY() {
+int Input::MouseDeltaY() {
 	return (_mouse_y - _mouse_y_last);
 }
 
-int CommonUtilities::Input::MouseWheel() {
+int Input::MouseWheel() {
 	return _mouse_wheel;
 }
 
-void CommonUtilities::Input::SetMouseScreenPosition(int x, int y) {
+void Input::SetMouseScreenPosition(int x, int y) {
 	SetCursorPos(x, y);
 }
 
-bool CommonUtilities::Input::IsMouseDown(MouseButton mouse_button) {
+bool Input::IsMouseDown(MouseButton mouse_button) {
 	return _mouse_button[(int)mouse_button];
 }
 
-bool CommonUtilities::Input::IsMousePressed(MouseButton mouse_button) {
+bool Input::IsMousePressed(MouseButton mouse_button) {
 	return _mouse_button[(int)mouse_button] && (!_mouse_button_last[(int)mouse_button]);
 }
 
-bool CommonUtilities::Input::IsMouseReleased(MouseButton mouse_button) {
+bool Input::IsMouseReleased(MouseButton mouse_button) {
 	return (!_mouse_button[(int)mouse_button]) && _mouse_button_last[(int)mouse_button];
 }

@@ -64,11 +64,11 @@ public:
 	};
 
 	static DirectX::SimpleMath::Ray WorldSpacePick() {
-		unsigned int width = CEngine::GetInstance()->GetWindowHandler()->GetWidth();
-		unsigned int height = CEngine::GetInstance()->GetWindowHandler()->GetHeight();
+		UINT width = static_cast<UINT>(CEngine::GetInstance()->GetWindowHandler()->GetResolution().x);
+		UINT height = static_cast<UINT>(CEngine::GetInstance()->GetWindowHandler()->GetResolution().y);
 
-		float mouseX = static_cast<float>(CommonUtilities::Input::GetInstance()->MouseX());
-		float mouseY = static_cast<float>(CommonUtilities::Input::GetInstance()->MouseY());
+		float mouseX = static_cast<float>(Input::GetInstance()->MouseX());
+		float mouseY = static_cast<float>(Input::GetInstance()->MouseY());
 
 		CCameraComponent* cam = CEngine::GetInstance()->GetActiveScene().GetMainCamera();
 		CTransformComponent* camTransform = cam->GameObject().myTransform;

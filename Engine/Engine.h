@@ -33,7 +33,6 @@ public:
 	friend class CLineFactory;
 	CEngine();
 	~CEngine();
-	void Destroy();
 	bool Init(CWindowHandler::SWindowData& someWindowData);
 	float BeginFrame();
 	void RenderFrame();

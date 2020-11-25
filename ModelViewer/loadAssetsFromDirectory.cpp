@@ -5,14 +5,9 @@
 #include <iostream>
 #include <map>
 
+
 namespace ModelViewer
 {
-	std::size_t number_of_files_in_directory(const std::filesystem::path& path)
-	{// from : https://stackoverflow.com/questions/41304891/how-to-count-the-number-of-files-in-a-directory-using-standard/41305019
-		using std::filesystem::directory_iterator;
-		return std::distance(directory_iterator(path), directory_iterator{});
-	}
-
 	void LoadModelPaths(const std::string& aStartFolderPath, std::vector<std::string>& aFBXFilePaths, const bool aLoadSK)
 	{
 		std::filesystem::path p(aStartFolderPath);

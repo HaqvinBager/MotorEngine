@@ -8,10 +8,12 @@
 #include "AnimationController.h"//TEMP
 #include "Timer.h"
 
-CAnimationComponent::CAnimationComponent(CGameObject& aParent) 
+CAnimationComponent::CAnimationComponent(CGameObject& aParent, const std::string& aModelFilePath, std::vector<std::string>& someAnimationPaths)
 	: CBehaviour(aParent)
-	, myAnimation(new CAnimation())
-{}
+{
+	myAnimation = new CAnimation();
+	myAnimation->Init(aModelFilePath.c_str(), someAnimationPaths);
+}
 
 CAnimationComponent::~CAnimationComponent()
 {

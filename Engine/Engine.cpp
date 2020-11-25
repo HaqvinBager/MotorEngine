@@ -104,56 +104,11 @@ CEngine::~CEngine()
 	ourInstance = nullptr;
 }
 
-void CEngine::Destroy() {
-	//delete myFramework;
-	//myFramework = nullptr;
-
-	//ourInstance = nullptr;
-
-	//delete myScene;
-	//myScene = nullptr;
-	//delete myWindowHandler;
-	//myWindowHandler = nullptr;
-	////delete myFramework;
-	////myFramework = nullptr;
-	//delete myTimer;
-	//myTimer = nullptr;
-
-	//delete myModelFactory;
-	//myModelFactory = nullptr;
-	//delete myCameraFactory;
-	//myCameraFactory = nullptr;
-	//delete myLightFactory;
-	//myLightFactory = nullptr;
-	//delete myRenderManager;
-	//myRenderManager = nullptr;
-
-	//delete myParticleFactory;
-	//myParticleFactory = nullptr;
-	//delete myVFXFactory;
-	//myVFXFactory = nullptr;
-	//delete myLineFactory;
-	//myLineFactory = nullptr;
-	//delete mySpriteFactory;
-	//mySpriteFactory = nullptr;
-	//delete myTextFactory;
-	//myTextFactory = nullptr;
-	//delete myInputMapper;
-	//myInputMapper = nullptr;
-
-	//delete myDebug;
-	//myDebug = nullptr;
-
-	//delete myEnemyFactory;
-	//myEnemyFactory = nullptr;
-
-	////ourInstance = nullptr;
-}
-
 bool CEngine::Init(CWindowHandler::SWindowData& someWindowData)
 {
 	ENGINE_ERROR_BOOL_MESSAGE(myWindowHandler->Init(someWindowData), "Window Handler could not be initialized.");
 	ENGINE_ERROR_BOOL_MESSAGE(myFramework->Init(myWindowHandler), "Framework could not be initialized.");
+	myWindowHandler->SetResolution();
 	ENGINE_ERROR_BOOL_MESSAGE(myModelFactory->Init(*this), "Model Factory could not be initiliazed.");
 	ENGINE_ERROR_BOOL_MESSAGE(myCameraFactory->Init(myWindowHandler), "Camera Factory could not be initialized.");
 	ENGINE_ERROR_BOOL_MESSAGE(myScene->Init(), "Scene could not be initialized.");
@@ -166,6 +121,8 @@ bool CEngine::Init(CWindowHandler::SWindowData& someWindowData)
 	ENGINE_ERROR_BOOL_MESSAGE(mySpriteFactory->Init(myFramework), "Sprite Factory could not be initialized.");
 	ENGINE_ERROR_BOOL_MESSAGE(myTextFactory->Init(myFramework), "Text Factory could not be initialized.");
 	ENGINE_ERROR_BOOL_MESSAGE(myInputMapper->Init(), "InputMapper could not be initialized");
+
+
 	InitWindowsImaging();
 	return true;
 }

@@ -35,7 +35,7 @@ SNavMesh* CNavmeshLoader::LoadNavmesh(std::string aFilepath)
 	SNavMesh* navMesh = new SNavMesh();
 	const struct aiScene* scene = NULL;
 
-	scene = aiImportFile(aFilepath.c_str(), aiProcess_ValidateDataStructure |/* aiProcess_MakeLeftHanded | aiProcess_FlipUVs | aiProcess_FlipWindingOrder |*/ 0);
+	scene = aiImportFile(aFilepath.c_str(), aiProcess_ValidateDataStructure | aiProcess_JoinIdenticalVertices |/* aiProcess_MakeLeftHanded | aiProcess_FlipUVs | aiProcess_FlipWindingOrder |*/ 0);
 
 	if (!scene) {
 		ENGINE_ERROR_BOOL_MESSAGE(false, "Navmesh could not be loaded.")
@@ -49,7 +49,7 @@ SNavMesh* CNavmeshLoader::LoadNavmesh(std::string aFilepath)
 
 void CNavmeshLoader::MakeTriangles(aiMesh* aMesh, SNavMesh* aNavMesh)
 {
-	std::vector</*CNavmeshLoader::*/STriangle*> triangles;
+	std::vector<STriangle*> triangles;
 
 	UINT numberOfFaces = aMesh->mNumFaces;
 
@@ -62,6 +62,7 @@ void CNavmeshLoader::MakeTriangles(aiMesh* aMesh, SNavMesh* aNavMesh)
 				aMesh->mVertices[aMesh->mFaces[i].mIndices[j]].y,
 				aMesh->mVertices[aMesh->mFaces[i].mIndices[j]].z
 			};
+			triangles.back()->myIndices[j] = aMesh->mFaces[i].mIndices[j];
 		}
 		triangles.back()->myCenterPosition = GetCentroid(triangles.back()->myVertexPositions[0], triangles.back()->myVertexPositions[1], triangles.back()->myVertexPositions[2]);
 	}
