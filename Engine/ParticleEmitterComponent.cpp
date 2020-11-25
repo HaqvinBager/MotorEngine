@@ -45,13 +45,13 @@ void CParticleEmitterComponent::Init(std::vector<CParticle*> someParticles)
 {
 	myParticles = someParticles;
 	for (unsigned int i = 0; i < myParticles.size(); ++i) {
-
+	
 		myParticleVertices.emplace_back(std::vector<CParticle::SParticleVertex>());
 		myParticlePools.emplace_back(std::queue<CParticle::SParticleVertex>());
 
 		myParticleVertices[i].reserve(myParticles[i]->GetParticleData().myNumberOfParticles);
 		for (unsigned int j = 0; j < myParticles[i]->GetParticleData().myNumberOfParticles; ++j) {
-			myParticlePools[i].emplace(CParticle::SParticleVertex());
+			myParticlePools[i].push(CParticle::SParticleVertex());
 		}
 		
 		myEmitterTimers.emplace_back(0.0f);

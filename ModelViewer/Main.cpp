@@ -43,7 +43,11 @@ namespace MW = ModelViewer;
 
 #ifdef VFX
 #include "../../Game/AbilityComponent.h"//  Grupp 4 stuff might break for grupp3!
-#pragma comment (lib, "../../../Lib/Game_Debug.lib")
+	#ifdef _DEBUG
+	#pragma comment (lib, "../../../Lib/Game_Debug.lib")
+	#else
+	#pragma comment (lib, "../../../Lib/Game_Release.lib")
+	#endif
 #endif
 ///	NOTES
 ///		aiProcessPreset_TargetRealtime_MaxQuality_DontJoinIndetical 
@@ -99,7 +103,11 @@ CGameObject* InitVFX(CScene& aScene)
 	vecPair.shrink_to_fit();
 
 	go->AddComponent<CAbilityComponent>(*go, vecPair);
-
+	go->Awake();
+	//for (auto& obj : aScene.GetActiveGameObjects())
+	//{
+	//	obj->Awake();
+	//}
 	go->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::AbilityTest, { 0.f,0.f,0.f });
 	
 	aScene.AddInstance(go);
@@ -288,16 +296,16 @@ void UpdateAnimation(CGameObject* aCurrentGameObject, CGameObject* aCamera, cons
 	{
 		const size_t nrOfAnims = animComp->GetMyAnimation()->GetNrOfAnimations();
 
-		if (Input::GetInstance()->IsKeyPressed('0')) { if(IsLessThan(0, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(0); }
-		if (Input::GetInstance()->IsKeyPressed('1')) { if(IsLessThan(1, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(1); }
-		if (Input::GetInstance()->IsKeyPressed('2')) { if(IsLessThan(2, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(2); }
+		if (Input::GetInstance()->IsKeyPressed('0')) { if(IsLessThan(0, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(0,true); }
+		if (Input::GetInstance()->IsKeyPressed('1')) { if(IsLessThan(1, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(1, true); }
+		if (Input::GetInstance()->IsKeyPressed('2')) { if(IsLessThan(2, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(2, true); }
 		if (Input::GetInstance()->IsKeyPressed('3')) { if(IsLessThan(3, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(3, true); }
 		if (Input::GetInstance()->IsKeyPressed('4')) { if(IsLessThan(4, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(4, true); }
-		if (Input::GetInstance()->IsKeyPressed('5')) { if(IsLessThan(5, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(5); }
+		if (Input::GetInstance()->IsKeyPressed('5')) { if(IsLessThan(5, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(5, true); }
 		if (Input::GetInstance()->IsKeyPressed('6')) { if(IsLessThan(6, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(6, true); }
-		if (Input::GetInstance()->IsKeyPressed('7')) { if(IsLessThan(7, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(7); }
-		if (Input::GetInstance()->IsKeyPressed('8')) { if(IsLessThan(8, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(8); }
-		if (Input::GetInstance()->IsKeyPressed('9')) { if(IsLessThan(9, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(9); }
+		if (Input::GetInstance()->IsKeyPressed('7')) { if(IsLessThan(7, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(7, true); }
+		if (Input::GetInstance()->IsKeyPressed('8')) { if(IsLessThan(8, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(8, true); }
+		if (Input::GetInstance()->IsKeyPressed('9')) { if(IsLessThan(9, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(9, true); }
 
 		aCurrentGameObject->GetComponent<CAnimationComponent>()->Update();
 	}
@@ -409,8 +417,9 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	viewAnimations = true;
 
 	std::vector<std::string> filePaths;
-
-
+#ifdef VFX
+	CGameObject* vfxObject = nullptr;
+#endif
 	if (viewAnimations)
 	{
 		MW::LoadModelPaths(ASSET_ROOT, filePaths, true);
@@ -422,7 +431,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		currentGameObject = InitModels(filePaths[0], *scene);
 	}
 #ifdef VFX
-	currentGameObject = InitVFX(*scene);
+	vfxObject = InitVFX(*scene);
 #endif // VFX
 
 	int counter = 0;
@@ -468,8 +477,8 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		}
 		engine.BeginFrame();
 #ifdef VFX
-		UpdateVFX(currentGameObject, camera, scene);
-#else
+		UpdateVFX(vfxObject, camera, scene);
+#endif
 		if (viewAnimations)
 		{
 			UpdateAnimation(currentGameObject, camera, filePaths);
@@ -478,7 +487,6 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		{
 			UpdateModel(filePaths, currentGameObject, camera);
 		}
-#endif
 
 		
 

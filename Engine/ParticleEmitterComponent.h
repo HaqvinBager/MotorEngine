@@ -31,7 +31,7 @@ public:
 	void OnEnable() override;
 	void OnDisable() override;
 public:
-	std::vector<CParticle*> GetParticleSet() { return myParticles; }
+	std::vector<CParticle*>& GetParticleSet() { return myParticles; }
 	std::vector<std::vector<CParticle::SParticleVertex>>& GetParticleVertices() { return myParticleVertices; }
 	DirectX::SimpleMath::Matrix GetTransform() { return myTransform; }
 
@@ -45,6 +45,6 @@ private:
 	std::vector<std::vector<CParticle::SParticleVertex>> myParticleVertices;
 	std::vector<std::queue<CParticle::SParticleVertex>> myParticlePools;
 	std::vector<float> myEmitterTimers;
-	float myScale = 1.0f;
+	float myScale = 10.0f;
 };
 

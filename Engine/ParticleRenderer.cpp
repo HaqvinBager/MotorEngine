@@ -67,6 +67,7 @@ void CParticleRenderer::Render(CCameraComponent* aCamera, std::vector<CGameObjec
         CParticleEmitterComponent* component = gameObject->GetComponent<CParticleEmitterComponent>();
         if (component == nullptr)
             continue;
+
         std::vector<CParticle*> particles = component->GetParticleSet();
         if (particles.empty())
             continue;
@@ -84,9 +85,9 @@ void CParticleRenderer::Render(CCameraComponent* aCamera, std::vector<CGameObjec
             ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
             ENGINE_HR_MESSAGE(myContext->Map(particleData.myParticleVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData), "Vertex Buffer could not be mapped.");
 
-            UINT numberOfVertices = (UINT)component->GetParticleVertices().size();
+            UINT numberOfVertices = (UINT)component->GetParticleVertices()[i].size();
 
-            memcpy(bufferData.pData, &(component->GetParticleVertices()[0]), sizeof(CParticle::SParticleVertex) * numberOfVertices);
+            memcpy(bufferData.pData, &(component->GetParticleVertices()[i][0]), sizeof(CParticle::SParticleVertex) * numberOfVertices);
             myContext->Unmap(particleData.myParticleVertexBuffer, 0);
 
             myContext->IASetPrimitiveTopology(particleData.myPrimitiveTopology);
@@ -105,13 +106,13 @@ void CParticleRenderer::Render(CCameraComponent* aCamera, std::vector<CGameObjec
 
             myContext->Draw(numberOfVertices, 0);
 
-            //Reset Resources
-            ID3D11ShaderResourceView* nullView = NULL;
-            myContext->PSSetShaderResources(0, 1, &nullView);
-            myContext->PSSetShaderResources(1, 1, &nullView);
-
-            myContext->GSSetShader(nullptr, nullptr, 0);
         }
+        //Reset Resources
+        ID3D11ShaderResourceView* nullView = NULL;
+        myContext->PSSetShaderResources(0, 1, &nullView);
+        myContext->PSSetShaderResources(1, 1, &nullView);
+
+        myContext->GSSetShader(nullptr, nullptr, 0);
         
     }
 }
