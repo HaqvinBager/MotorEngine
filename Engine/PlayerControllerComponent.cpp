@@ -47,7 +47,7 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 		this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
 		// TEMP, Ok to remove
 		if(this->GameObject().GetComponent<CAnimationComponent>() != nullptr)
-			this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(1);
+			//this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(1);
 		// ! TEMP
 		break;
 	case IInputObserver::EInputEvent::AttackClick:
