@@ -13,5 +13,6 @@ enum class EMessageType
 	AbilityOneCooldown,
 	AbilityTwoCooldown,
 	AbilityThreeCooldown,
+	Resume,
 	Count
 };

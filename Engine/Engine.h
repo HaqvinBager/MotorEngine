@@ -29,6 +29,7 @@ class CEngine
 	friend class CModelFactory;
 	friend class CVFXFactory;
 	friend class CLightFactory;
+	friend class CPauseState;
 public:
 	friend class CLineFactory;
 	CEngine();
@@ -44,10 +45,12 @@ public:
 	static CEngine* GetInstance();
 
 	unsigned int AddScene(CScene* aScene);
+	void PopBackScene();
 	void SetActiveScene(int sceneIndex);
 	void SetActiveScene(CScene* aScene);
 	CScene& GetActiveScene();
-
+	
+	unsigned int ScenesSize();
 private:
 	static CEngine* ourInstance;
 	

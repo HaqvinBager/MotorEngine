@@ -20,21 +20,21 @@
 CMenuState::CMenuState(CStateStack& aStateStack) :
 	CState(aStateStack)
 {
-	CScene* scene = new CScene();
-	CEngine::GetInstance()->AddScene(scene);
+	myScene = new CScene();
+	CEngine::GetInstance()->AddScene(myScene);
 
 	CGameObject* camera = new CGameObject();
 	camera->AddComponent<CCameraComponent>(*camera, 70.0f);
 	camera->AddComponent<CCameraControllerComponent>(*camera, 25.0f);
 	camera->myTransform->Position({ 0.0f, 0.0f, 0.0f });
 	camera->myTransform->Rotation({ 0.0f, 0.0f, 0.0f });
-	scene->AddInstance(camera);
-	scene->SetMainCamera(camera->GetComponent<CCameraComponent>());
+	myScene->AddInstance(camera);
+	myScene->SetMainCamera(camera->GetComponent<CCameraComponent>());
 
 	CGameObject* envLight = new CGameObject();
 	envLight->AddComponent<CEnviromentLightComponent>(*envLight);
-	scene->AddInstance(envLight);
-	scene->SetEnvironmentLight(envLight->GetComponent<CEnviromentLightComponent>()->GetEnviromentLight());
+	myScene->AddInstance(envLight);
+	myScene->SetEnvironmentLight(envLight->GetComponent<CEnviromentLightComponent>()->GetEnviromentLight());
 
 	myCanvas = new CCanvas();
 	myCanvas->Init("Json/UI_MainMenu_Description.json");
@@ -44,9 +44,14 @@ CMenuState::CMenuState(CStateStack& aStateStack) :
 		for (auto messageType : buttons->GetMessagesToSend())
 		CMainSingleton::PostMaster().Subscribe(messageType, this);
 	}
+
+	myState = CStateStack::EStates::MainMenu;
+	myActiveScene = CEngine::GetInstance()->ScenesSize();
 }
 
 CMenuState::~CMenuState() {
+	CEngine::GetInstance()->PopBackScene();
+
 }
 
 void CMenuState::Awake() {
@@ -59,17 +64,23 @@ void CMenuState::Update() {
 	myCanvas->Update();
 }
 
-void CMenuState::Receive(const SMessage& aMessage) {
-	switch (aMessage.myMessageType) {
-	case EMessageType::LoadLevel:
-	{
-		myStateStack.PushState(new CLoadLevelState(myStateStack));
-		myStateStack.Awake();
-		myStateStack.Start();
-	} break;
-	case EMessageType::Quit:
-	{
-		myStateStack.PopState();
-	} break;
+void CMenuState::Receive(const SMessage &aMessage) {
+	if (this == myStateStack.GetTop()) {
+		switch (aMessage.myMessageType) {
+		case EMessageType::LoadLevel:
+		{
+			myStateStack.PushState(new CLoadLevelState(myStateStack));
+			myStateStack.Awake();
+			myStateStack.Start();
+		} break;
+		case EMessageType::Quit:
+		{
+			myStateStack.PopState();
+		} break;
+		}
 	}
+}
+
+void CMenuState::MakeSceneActive() {
+	CEngine::GetInstance()->SetActiveScene(myActiveScene);
 }

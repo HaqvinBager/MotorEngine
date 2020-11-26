@@ -4,6 +4,7 @@
 
 class CSpriteInstance;
 class CCanvas;
+class CScene;
 
 class CMenuState : public CState, public IObserver{
 public:
@@ -13,8 +14,9 @@ public:
 	void Awake() override;
 	void Start() override;
 	void Update() override;
-	void Receive(const SMessage& aMessage) override;
-
+	void Receive(const SMessage &aMessage) override;
+	void MakeSceneActive() override;
 private:
 	CCanvas* myCanvas;
+	CScene* myScene;
 };

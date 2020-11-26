@@ -203,7 +203,13 @@ CEngine* CEngine::GetInstance()
 unsigned int CEngine::AddScene(CScene* aScene)
 {
 	myScenes.emplace_back(aScene);
+	std::cout << myScenes.size() << std::endl;
 	return static_cast<unsigned int>(myScenes.size() - 1);
+}
+
+void CEngine::PopBackScene()
+{
+	myScenes.pop_back();
 }
 
 void CEngine::SetActiveScene(int sceneIndex)
@@ -226,4 +232,9 @@ void CEngine::SetActiveScene(CScene* aScene)
 CScene& CEngine::GetActiveScene()
 {
 	return *myScenes[myActiveScene];
+}
+
+unsigned int CEngine::ScenesSize()
+{
+	return static_cast<unsigned int>(myScenes.size() - 1);
 }

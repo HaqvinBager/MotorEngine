@@ -39,7 +39,7 @@ void CPlayerControllerComponent::OnDisable()
 {
 }
 
-void CPlayerControllerComponent::RecieveEvent(const IInputObserver::EInputEvent aEvent)
+void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent aEvent)
 {
 	switch (aEvent)
 	{

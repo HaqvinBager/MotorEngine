@@ -4,7 +4,7 @@
 #include "TransformComponent.h"
 #include "Engine.h"
 #include "Scene.h"
-#include "GameObject.h"
+//#include "GameObject.h"
 #include "PlayerControllerComponent.h"
 
 CCameraControllerComponent::CCameraControllerComponent(CGameObject& aGameObject, const float aCameraMoveSpeed , ECameraMode aCameraMode, char aToggleFreeCam, Vector3 aOffset) 
@@ -40,7 +40,9 @@ void CCameraControllerComponent::Update()
 		myCameraMode = myCameraMode == ECameraMode::FreeCam ? ECameraMode::Player : ECameraMode::FreeCam;
 	}
 
-	if (myCameraMode == ECameraMode::FreeCam) {
+	if (myCameraMode == ECameraMode::MenuCam) {
+
+	} else if (myCameraMode == ECameraMode::FreeCam) {
 		UpdateFreeCam();
 	}
 	else {

@@ -6,7 +6,8 @@ class CSprite;
 enum class ERenderOrder {
 	BackgroundLayer,
 	Layer1,
-	ForegroundLayer
+	ForegroundLayer,
+	PauseLayer
 };
 
 class CSpriteInstance

@@ -11,10 +11,11 @@ public:
 	{
 		Player,
 		FreeCam,
+		MenuCam
 	};
 
 public:
-	CCameraControllerComponent(CGameObject& gameObject, const float aCameraMoveSpeed = 25.0f, ECameraMode aCameraMode = ECameraMode::Player, char aToggleFreeCam = 'f', Vector3 aOffset = {0.f, 0.f, 0.f});
+	CCameraControllerComponent(CGameObject& gameObject, const float aCameraMoveSpeed = 25.0f, ECameraMode aCameraMode = ECameraMode::Player, char aToggleFreeCam = 'f', DirectX::SimpleMath::Vector3 aOffset = {0.f, 0.f, 0.f});
 	~CCameraControllerComponent() override;
 
 	void Awake() override;
@@ -30,5 +31,5 @@ private:
 	float myCameraMoveSpeed;
 	CCameraComponent* myCamera;
 	CPlayerControllerComponent* myPlayer;
-	Vector3 myOffset;
+	DirectX::SimpleMath::Vector3 myOffset;
 };

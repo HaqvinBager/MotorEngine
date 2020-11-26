@@ -313,7 +313,7 @@ bool CScene::ClearScene() {
 
 bool CScene::ClearSprites() {
 
-	for (UINT i = 0; i < mySpriteInstances.size(); ++i)
+	for (UINT i = 0; i < mySpriteInstances.size() - 1; ++i)
 	{
 		for (auto& sprite : mySpriteInstances[static_cast<ERenderOrder>(i)])
 		{
