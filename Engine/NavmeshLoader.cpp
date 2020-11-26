@@ -28,7 +28,7 @@ SNavMesh* CNavmeshLoader::LoadNavmesh(std::string aFilepath)
 	std::ifstream infile(aFilepath);
 	if (!infile.good())
 	{
-		OutputDebugStringA("File not found");
+		ENGINE_ERROR_BOOL_MESSAGE(false, "Navmesh file could not be found.");
 		return nullptr;
 	}
 
@@ -38,7 +38,8 @@ SNavMesh* CNavmeshLoader::LoadNavmesh(std::string aFilepath)
 	scene = aiImportFile(aFilepath.c_str(), aiProcess_ValidateDataStructure | aiProcess_JoinIdenticalVertices |/* aiProcess_MakeLeftHanded | aiProcess_FlipUVs | aiProcess_FlipWindingOrder |*/ 0);
 
 	if (!scene) {
-		ENGINE_ERROR_BOOL_MESSAGE(false, "Navmesh could not be loaded.")
+		ENGINE_ERROR_BOOL_MESSAGE(false, "Navmesh could not be loaded.");
+		return nullptr;
 	}
 
 	aiMesh* mesh = scene->mMeshes[0];
