@@ -50,6 +50,8 @@ std::vector<DirectX::SimpleMath::Vector3> CNavMeshComponent::CalculatePath(Direc
 
 void CNavMeshComponent::CalculatePath()
 {
+	if (!myNavMesh) { return; }
+
 	STriangle* triangle = nullptr;
 	DirectX::SimpleMath::Ray ray = MouseTracker::WorldSpacePick();
 
