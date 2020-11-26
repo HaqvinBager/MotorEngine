@@ -6,7 +6,22 @@ class CGameObject;
 class CToken;
 class CPointLight;
 
-class CStatsComponent : public CBehaviour, public IObserver
+struct SBaseStats {
+	const float myBaseHealth;
+	const float myDamage;
+	const float myMoveSpeed;
+	const float myBaseDamageCooldown;
+};
+
+struct SStats {
+	float myHealth;
+	float myDamageCooldown;
+	bool myCanTakeDamage;
+	bool myCanAttack;
+	CToken* myTokenSlot;
+};
+
+class CStatsComponent : public CBehaviour
 {
 public:
 	CStatsComponent(CGameObject& aParent, float aHealth = 0.f, float aDamage = 0.f, float aMoveSpeed = 0.f, float aDamageCooldown = 0.f);
@@ -19,27 +34,10 @@ public:
 	void OnEnable() override;
 	void OnDisable() override;
 
-	void Receive(const SMessage& aMessage) override;
-
-	void FindATarget(CGameObject& aTarget);
-
-	void TakeDamage(float aDamage);
-	float GetDamage();
-
-	float GetHealth() const;
-
-	float GetMoveSpeed() const;
-
-	CToken* GetToken() const;
+	const SBaseStats& GetBaseStats() const;
+	SStats& GetStats();
 
 private:
-	float myHealth;
-	float myDamage;
-	float myMoveSpeed;
-	float myDamageCooldown;
-	float myBaseDamageCooldown;
-	bool canTakeDamage;
-	bool canAttack;
-	CToken* myTokenSlot;
-	CPointLight* myPointLight;
+	SBaseStats myBaseStats;
+	SStats myStats;
 };
