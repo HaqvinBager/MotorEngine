@@ -13,7 +13,6 @@ CInputMapper::CInputMapper() : myInput(Input::GetInstance())
 {
 	ourInstance = this;
 
-	MapEvent(IInputObserver::EInputAction::MouseLeft, IInputObserver::EInputEvent::MoveClick);
 }
 
 CInputMapper::~CInputMapper()
@@ -22,12 +21,14 @@ CInputMapper::~CInputMapper()
 
 bool CInputMapper::Init()
 {
+	MapEvent(IInputObserver::EInputAction::MouseLeft, IInputObserver::EInputEvent::MoveClick);
 	MapEvent(IInputObserver::EInputAction::Key1, IInputObserver::EInputEvent::Ability1);
 	MapEvent(IInputObserver::EInputAction::Key2, IInputObserver::EInputEvent::Ability2);
 	MapEvent(IInputObserver::EInputAction::Key3, IInputObserver::EInputEvent::Ability3);
 	MapEvent(IInputObserver::EInputAction::KeyA, IInputObserver::EInputEvent::Ability1);
 	MapEvent(IInputObserver::EInputAction::KeyS, IInputObserver::EInputEvent::Ability2);
 	MapEvent(IInputObserver::EInputAction::KeyD, IInputObserver::EInputEvent::Ability3);
+	MapEvent(IInputObserver::EInputAction::KeyEscape, IInputObserver::EInputEvent::PauseGame);
 
 	if (this == nullptr)
 		return false;
@@ -39,7 +40,7 @@ void CInputMapper::RunEvent(const IInputObserver::EInputEvent aOutputEvent)
 {
 	for (int i = 0; i < myObservers[aOutputEvent].size(); ++i)
 	{
-		myObservers[aOutputEvent][i]->RecieveEvent(aOutputEvent);
+		myObservers[aOutputEvent][i]->ReceiveEvent(aOutputEvent);
 	}
 }
 
@@ -56,13 +57,14 @@ void CInputMapper::UpdateKeyboardInput()
 {
 	if (myInput->IsKeyPressed(VK_ESCAPE))
 	{
+		std::cout << "I AM PRESSSINGG!!!!\n";
 		TranslateActionToEvent(IInputObserver::EInputAction::KeyEscape);
-	} else if(myInput->IsKeyDown(VK_ESCAPE))
+	}
+	
+	if (myInput->IsKeyPressed(VK_SHIFT))
 	{
-		TranslateActionToEvent(IInputObserver::EInputAction::KeyEscape);
-	} else if (myInput->IsKeyReleased(VK_ESCAPE))
-	{
-		TranslateActionToEvent(IInputObserver::EInputAction::KeyEscape);
+		std::cout << "I AM PRESSSINGG!!!!\n";
+		TranslateActionToEvent(IInputObserver::EInputAction::KeyShift);
 	}
 
 	if (myInput->IsKeyPressed('1'))

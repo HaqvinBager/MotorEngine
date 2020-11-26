@@ -20,16 +20,20 @@ public:
 
 	enum class EInputEvent
 	{
+		PopState,
 		MoveClick,
 		AttackClick,
 		OpenMenuPress,
 		Ability1,
 		Ability2,
-		Ability3
+		Ability3,
+		LoadLevel,
+		PauseGame,
+		QuitGame
 	};
 
 public:
 	IInputObserver() = default;
 	virtual ~IInputObserver() = default;
-	virtual void RecieveEvent(const EInputEvent aEvent) = 0;
+	virtual void ReceiveEvent(const EInputEvent aEvent) = 0;
 };
