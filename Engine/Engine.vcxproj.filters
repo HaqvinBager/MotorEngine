@@ -314,9 +314,6 @@
     <ClCompile Include="Button.cpp">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="CameraControllerComponent.h">
-      <Filter>GameObject and Component\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Canvas.cpp">
       <Filter>UI</Filter>
     </ClCompile>
@@ -341,6 +338,9 @@
     <ClCompile Include="animationLoader.cpp">
       <Filter>SceneData</Filter>
     </ClCompile>
+    <ClCompile Include="CollisionEventComponent.cpp">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EnemyFactory.h" />
@@ -355,6 +355,9 @@
     <ClInclude Include="CameraComponent.h">
       <Filter>GameObject and Component\Component</Filter>
     </ClInclude>
+	    <ClCompile Include="CameraControllerComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClCompile>
     <ClInclude Include="CapsuleColliderComponent.h">
       <Filter>GameObject and Component\Component</Filter>
     </ClInclude>
@@ -639,6 +642,9 @@
     </ClInclude>
     <ClInclude Include="animationEnums.h">
       <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionEventComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
