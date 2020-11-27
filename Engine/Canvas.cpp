@@ -54,7 +54,7 @@ void CCanvas::Init(std::string aFilePath)
 			myTexts.back()->Init(CTextFactory::GetInstance()->GetText(buttonData["FontAndFontSize"].GetString()));
 			myTexts.back()->SetText(buttonData["Text"].GetString());
 			myTexts.back()->SetColor({ buttonData["Text Color R"].GetFloat(), buttonData["Text Color G"].GetFloat(), buttonData["Text Color B"].GetFloat(), 1.0f });
-			myTexts.back()->SetPosition({ buttonData["Position X"].GetFloat(), buttonData["Position Y"].GetFloat() });
+			myTexts.back()->SetPosition({ buttonData["Text Position X"].GetFloat(), buttonData["Text Position Y"].GetFloat() });
 
 			data.myPosition = { buttonData["Position X"].GetFloat(), buttonData["Position Y"].GetFloat() };
 			data.myDimensions = { buttonData["Pixel Width"].GetFloat(), buttonData["Pixel Height"].GetFloat() };

@@ -145,7 +145,7 @@ void CTransformComponent::MoveAlongPath()
 		DirectX::SimpleMath::Vector3 newPos;
 		DirectX::SimpleMath::Vector3 dir;
 
-		float epsilon = 0.005f;
+		float epsilon = 0.05f;
 
 		dir = (myPath[pathSize - 1] - this->Position());
 		dir.Normalize();
@@ -163,16 +163,12 @@ void CTransformComponent::SetPath(std::vector<DirectX::SimpleMath::Vector3>& aPa
 		return;
 	}
 
+	myPath.clear();
 	myPath.emplace_back(aFinalPosition);
 	for (unsigned int i = 0; i < aPath.size(); ++i) {
 		myPath.emplace_back(aPath[i]);
 	}
 	//myPath.emplace_back(this->Position());
-}
-
-void CTransformComponent::ClearPath()
-{
-	myPath.clear();
 }
 
 DirectX::SimpleMath::Matrix CTransformComponent::GetMatrix() const

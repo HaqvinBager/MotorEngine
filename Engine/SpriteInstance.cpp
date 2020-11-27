@@ -30,10 +30,10 @@ bool CSpriteInstance::Init(CSprite* aSprite)
 
 void CSpriteInstance::SetSize(DirectX::SimpleMath::Vector2 aSize)
 {
-	float windowHeight = CEngine::GetInstance()->GetWindowHandler()->GetResolution().y;
+	//Sprites are assumed to be the correct native size in a 1920x1080 resolution
 	CSprite::SSpriteData mySpriteData = mySprite->GetSpriteData();
 	mySize = mySpriteData.myDimensions;
-	mySize /= windowHeight;
+	mySize /= 1080.0f;
 	mySize *= aSize;
 }
 
