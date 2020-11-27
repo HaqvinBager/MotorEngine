@@ -139,6 +139,7 @@
     <ClInclude Include="FModWrapper.h" />
     <ClInclude Include="EnviromentLightComponent.h" />
     <ClInclude Include="Funneling.h" />
+    <ClInclude Include="animationEnums.h" />
     <ClInclude Include="JsonReader.h" />
     <ClInclude Include="MainSingleton.h" />
     <ClInclude Include="Message.h" />

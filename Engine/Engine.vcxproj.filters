@@ -652,6 +652,9 @@
     <ClInclude Include="animationLoader.h">
       <Filter>SceneData</Filter>
     </ClInclude>
+    <ClInclude Include="animationEnums.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="PBRDirectionalLight.hlsli">

@@ -41,11 +41,13 @@ void CNavMeshComponent::OnDisable()
 {
 }
 
-std::vector<DirectX::SimpleMath::Vector3> CNavMeshComponent::CalculatePath(DirectX::SimpleMath::Vector3 aDestination)
+void CNavMeshComponent::CalculatePath(DirectX::SimpleMath::Vector3 aDestination)
 {
+	if (!myNavMesh) { return; }
+
 	std::vector<DirectX::SimpleMath::Vector3> path;
 	path = CAStar::AStar(myNavMesh, myNavMesh->GetTriangleAtPoint(GameObject().myTransform->Position()), myNavMesh->GetTriangleAtPoint(aDestination));
-	return std::move(path);
+	this->GameObject().myTransform->SetPath(path, aDestination);
 }
 
 void CNavMeshComponent::CalculatePath()

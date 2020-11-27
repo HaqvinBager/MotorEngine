@@ -13,6 +13,12 @@ CAnimationComponent::CAnimationComponent(CGameObject& aParent, const std::string
 {
 	myAnimation = new CAnimation();
 	myAnimation->Init(aModelFilePath.c_str(), someAnimationPaths);
+	myAnimationIds.reserve(someAnimationPaths.size());
+	for (auto& str : someAnimationPaths)
+	{
+		myAnimationIds.emplace_back(CStringID(str, CStringIDLoader::EStringIDFiles::AnimFile));
+	}
+	myAnimationIds.shrink_to_fit();
 }
 
 CAnimationComponent::~CAnimationComponent()
@@ -20,9 +26,15 @@ CAnimationComponent::~CAnimationComponent()
 	delete myAnimation;
 	myAnimation = nullptr;
 }
-
+#include <iostream>
 void CAnimationComponent::Awake()
 {
+#ifdef _DEBUG
+	for (auto& strID : myAnimationIds)
+	{
+		std::cout << strID.String() << " " << strID.ID() << std::endl;
+	}
+#endif
 	SetBonesToIdentity();
 	myAnimation->SetCurAnimationScene(0);
 }
@@ -57,32 +69,8 @@ void CAnimationComponent::GetAnimatedTransforms(float dt, SlimMatrix44 * transfo
 	myAnimation->BoneTransforms(transforms);
 }
 
-void CAnimationComponent::SetBlend(int anAnimationIndex, int anAnimationIndexTwo, float aBlend)
-{
-	myBlend.myFirst		= anAnimationIndex;
-	myBlend.mySecond	= anAnimationIndexTwo;
-	myBlend.myBlendLerp = aBlend;
-}
-
 void CAnimationComponent::PlayAnimation(const int anAnimationIndex, bool anIsLooping)
 {
-
-	///
-	/// myCurSceneIndex
-	/// myLoopingSceneIndex
-	/// 
-	/// if anIslooping == true
-	///		myCurSceneIndex = anAnimationIndex.
-	/// 	myLoopingSceneIndex = anAnimationIndex.
-	/// else
-	///		myCureSceneIndex = anAnimationIndex
-	/// 
-	/// Once non-looping anim is complete switch myCureSceneIndex = myLoopingSceneIndex
-	/// 
-	/// How do we check that an animation is complete?
-	/// 
-
-
 	myIsLooping = anIsLooping;
 	if (anIsLooping)
 	{
@@ -93,6 +81,61 @@ void CAnimationComponent::PlayAnimation(const int anAnimationIndex, bool anIsLoo
 		myAnimation->GetMyController().ResetAnimationTimeCurrent();
 	}
 	myAnimation->SetCurAnimationScene(anAnimationIndex);
+}
+
+void CAnimationComponent::PlayAnimation(const EPlayerAnimationID anAnimationID, bool anIsLooping)
+{
+	int id = static_cast<int>(anAnimationID);
+	if (WithinIDRange(id))
+	{
+		PlayAnimation(GetIndexFromID(id), anIsLooping);
+	}
+}
+
+void CAnimationComponent::PlayAnimation(const EEnemyAnimationID anAnimationID, bool anIsLooping)
+{
+	int id = static_cast<int>(anAnimationID);
+	if (WithinIDRange(id))
+	{
+		PlayAnimation(GetIndexFromID(id), anIsLooping);
+	}
+}
+
+void CAnimationComponent::PlayAnimation(const EBossAnimationID anAnimationID, bool anIsLooping)
+{
+	int id = static_cast<int>(anAnimationID);
+	if (WithinIDRange(id))
+	{
+		PlayAnimation(GetIndexFromID(id), anIsLooping);
+	}
+}
+
+void CAnimationComponent::PlayAnimation(const ECrateAnimationID anAnimationID, bool anIsLooping)
+{
+	int id = static_cast<int>(anAnimationID);
+	if (WithinIDRange(id))
+	{
+		PlayAnimation(GetIndexFromID(id), anIsLooping);
+	}
+}
+
+void CAnimationComponent::SetBlend(int anAnimationIndex, int anAnimationIndexTwo, float aBlend)
+{
+	myBlend.myFirst		= anAnimationIndex;
+	myBlend.mySecond	= anAnimationIndexTwo;
+	myBlend.myBlendLerp = aBlend;
+}
+
+bool CAnimationComponent::WithinIDRange(const int anID)
+{
+	// This works if the ids are in a sorted list. But if animations are added at random to the project the ids dont follow eachother. Cant do a bounds check.
+	return (anID <= myAnimationIds.back().ID() && anID >= myAnimationIds.front().ID()); 
+}
+
+const int CAnimationComponent::GetIndexFromID(const int anID)
+{
+	int index = abs(myAnimationIds[0].ID() - anID ) + 1;
+	return index;
 }
 
 bool CAnimationComponent::ReplaceAnimation(const char* aRig, std::vector<std::string>& somePathsToAnimations)
@@ -132,6 +175,7 @@ void CAnimationComponent::UpdateNonBlended(const float dt)
 	SetBonesToIdentity();
 	GetAnimatedTransforms(dt, myBones.data());
 }
+
 
 // Pre 2020 11 15
 /*
@@ -195,3 +239,5 @@ void CAnimationComponent::Update()
 	GetAnimatedTransforms(dt, myBones.data());
 }
 */
+
+
