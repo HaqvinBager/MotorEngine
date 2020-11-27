@@ -105,16 +105,42 @@ bool CNavmeshLoader::AreNeighbors(UINT* someIndices, UINT* someOtherIndices)
 	return counter >= 2;
 }
 
+//Simplified Cross product for 2D (xz-plane)
+inline float Sign(DirectX::SimpleMath::Vector3& p1, DirectX::SimpleMath::Vector3& p2, DirectX::SimpleMath::Vector3& p3)
+{
+	return (p1.x - p3.x) * (p2.z - p3.z) - (p2.x - p3.x) * (p1.z - p3.z);
+}
+
 STriangle* SNavMesh::GetTriangleAtPoint(DirectX::SimpleMath::Vector3 aPosition)
 {
-	float lastDist = FLT_MAX;
-	STriangle* closestTriangle = nullptr;
-	for (auto& tri : myTriangles) {
-		float dist = DirectX::SimpleMath::Vector3::DistanceSquared(aPosition, tri->myCenterPosition);
-		if (dist < lastDist) {
-			closestTriangle = tri;
-			lastDist = dist;
-		}
+	float d1, d2, d3;
+	bool hasNegativeSigns, hasPositiveSigns;
+
+	DirectX::SimpleMath::Vector3 p1;
+	DirectX::SimpleMath::Vector3 p2;
+	DirectX::SimpleMath::Vector3 p3;
+
+	for (auto& tri : myTriangles) 
+	{
+		p1 = tri->myVertexPositions[0];
+		p2 = tri->myVertexPositions[1];
+		p3 = tri->myVertexPositions[2];
+
+		d1 = Sign(aPosition, p1, p2);
+		d2 = Sign(aPosition, p2, p3);
+		//optimization?
+		if (d1 * d2 < 0) continue;
+		d3 = Sign(aPosition, p3, p1);
+		//optimization?
+		if (d1 * d3 < 0) continue;
+
+		hasNegativeSigns = (d1 < 0) || (d2 < 0) || (d3 < 0);
+		hasPositiveSigns = (d1 > 0) || (d2 > 0) || (d3 > 0);
+
+		// Signs should only be zero or of one sign (plus or minus)
+		if (!(hasNegativeSigns && hasPositiveSigns))
+			return tri;
 	}
-	return closestTriangle;
+
+	return nullptr;
 }
