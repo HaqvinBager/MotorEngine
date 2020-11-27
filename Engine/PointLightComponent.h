@@ -22,7 +22,7 @@ public:
 private:
 	CPointLight* myPointLight;
 	float myRange;
-	Vector3 myColor;
+	DirectX::SimpleMath::Vector3 myColor;
 	float myIntensity;
 };
 

@@ -3,6 +3,7 @@
 
 #include "Scene.h"
 #include "GameObject.h"
+#include "Engine.h"
 
 #include "TransformComponent.h"
 #include "CameraComponent.h"
@@ -16,6 +17,9 @@
 
 #include "LightFactory.h"
 #include "PointLight.h"
+#include "StatsComponent.h"
+#include "../../Game/EnemyBehavior.h"
+#include "../../Game/AIBehaviorComponent.h"
 //#include "NavmeshLoader.h"// included in NavMeshComp
 
 #include "animationLoader.h"
@@ -69,6 +73,11 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
     // "Assets\\3D\\Character\\CH_PL_Daughter_01_19G4_1_19\\CH_PL_Daughter_01_19G4_1_19_SK.fbx" // Animated player
     CGameObject* player = CreateGameObject(aData.myPlayerData, aBinModelPaths[aData.myPlayerData.myModelIndex]);
     aScene.AddInstance(player);
+
+    CEnemyBehavior* enemyBehavior = new CEnemyBehavior(&CEngine::GetInstance()->GetActiveScene().FindObjectOfType<CPlayerControllerComponent>()->GameObject());
+    for (const auto& enemyData : aData.myEnemyData) {
+        aScene.AddInstance(CreateGameObject(enemyData, aBinModelPaths[enemyData.myModelIndex], *enemyBehavior));
+    }
 
     for (const auto& gameObjectData : aData.myGameObjects)
     {
@@ -141,5 +150,17 @@ CGameObject* CUnityFactory::CreateGameObject(const SPlayerData& aData, const std
     gameObject->AddComponent<CAbilityComponent>(*gameObject, abs);
 
     AddAnimationsToGameObject(*gameObject, aModelPath);
+    return gameObject;
+}
+
+CGameObject* CUnityFactory::CreateGameObject(const SEnemyData& aData, const std::string& aModelPath, const IAIBehavior& aBehavior)
+{
+    CGameObject* gameObject = new CGameObject();
+    gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
+    gameObject->AddComponent<CStatsComponent>(*gameObject, aData.myHealth, aData.myDamage, aData.myMoveSpeed, /*TODO - damageCooldown*/ 0.f, aData.myVisionRange, aData.myAttackRange);
+    gameObject->AddComponent<CAIBehaviorComponent>(*gameObject, aBehavior);
+    gameObject->myTransform->Position(aData.myPosition);
+    gameObject->myTransform->Rotation(aData.myRotation);
+    CEngine::GetInstance()->GetActiveScene().AddInstance(gameObject);
     return gameObject;
 }

@@ -11,6 +11,8 @@ struct SBaseStats {
 	const float myDamage;
 	const float myMoveSpeed;
 	const float myBaseDamageCooldown;
+	const float myBaseVisionRange;
+	const float myBaseAttackRange;
 };
 
 struct SStats {
@@ -24,7 +26,7 @@ struct SStats {
 class CStatsComponent : public CBehaviour
 {
 public:
-	CStatsComponent(CGameObject& aParent, float aHealth = 0.f, float aDamage = 0.f, float aMoveSpeed = 0.f, float aDamageCooldown = 0.f);
+	CStatsComponent(CGameObject& aParent, float aHealth = 0.f, float aDamage = 0.f, float aMoveSpeed = 0.f, float aDamageCooldown = 0.f, float aVisionRange = 0.f, float aAttackRange = 0.f);
 	~CStatsComponent() override;
 
 	void Awake() override;

@@ -3,6 +3,8 @@
 #include "GameObject.h"
 #include "StatsComponent.h"
 
+//NOTE: Probably wont be used in this project! - 11/27/2020 - Alexander Matthäi
+
 CObjectPool* CObjectPool::ourInstance = nullptr;
 
 CObjectPool* CObjectPool::GetInstance()

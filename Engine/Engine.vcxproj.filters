@@ -317,12 +317,6 @@
     <ClCompile Include="CameraControllerComponent.h">
       <Filter>GameObject and Component\Component</Filter>
     </ClCompile>
-    <ClCompile Include="SceneReader.cpp">
-      <Filter>SceneData</Filter>
-    </ClCompile>
-    <ClCompile Include="UnityFactory.cpp">
-      <Filter>SceneData</Filter>
-    </ClCompile>
     <ClCompile Include="Canvas.cpp">
       <Filter>UI</Filter>
     </ClCompile>
@@ -616,17 +610,8 @@
     <ClInclude Include="Button.h">
       <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="SceneReader.h">
-      <Filter>SceneData</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneData.h">
-      <Filter>SceneData</Filter>
-    </ClInclude>
     <ClInclude Include="JsonReader.h">
       <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="UnityFactory.h">
-      <Filter>SceneData</Filter>
     </ClInclude>
     <ClInclude Include="Canvas.h">
       <Filter>UI</Filter>
