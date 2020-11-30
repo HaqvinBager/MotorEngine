@@ -4,6 +4,7 @@
 #include "SpriteInstance.h"
 #include "AnimatedUIElement.h"
 #include "DDSTextureLoader.h"
+#include "RandomNumberGenerator.h"
 
 CSpriteRenderer::CSpriteRenderer() : myContext(nullptr), myObjectBuffer()
 {
@@ -128,15 +129,19 @@ void CSpriteRenderer::Render(std::vector<CAnimatedUIElement*>& someAnimatedEleme
         myTextureScrollingData.scrollSpeed2 = data->scrollSpeed2;
         myTextureScrollingData.scrollSpeed3 = data->scrollSpeed3;
         myTextureScrollingData.scrollSpeed4 = data->scrollSpeed4;
+        myTextureScrollingData.scrollSpeed5 = data->scrollSpeed5;
         myTextureScrollingData.uvScale1 = data->uvScale1;
         myTextureScrollingData.uvScale2 = data->uvScale2;
         myTextureScrollingData.uvScale3 = data->uvScale3;
         myTextureScrollingData.uvScale4 = data->uvScale4;
+        myTextureScrollingData.uvScale5 = data->uvScale5;
         myTextureScrollingData.glowColor = data->glowColor;
         myTextureScrollingData.glowWidth = data->glowWidth;
         myTextureScrollingData.scrollTimer = CTimer::Time() * scrollingScale; //..is now!
         myTextureScrollingData.level = someAnimatedElements[instanceIndex]->myLevel;
         myTextureScrollingData.verticalDirectionOfChange = data->verticalDirectionOfChange;
+        myTextureScrollingData.maskOffset = data->maskOffset;
+        myTextureScrollingData.randomOffset = data->randomOffset;
         BindBuffer<STextureScrollingData>(myTextureScrollingBuffer, myTextureScrollingData, "Texture Scrolling Buffer");
 
         CSprite::SSpriteData spriteData = sprite->GetSpriteData();
@@ -154,7 +159,7 @@ void CSpriteRenderer::Render(std::vector<CAnimatedUIElement*>& someAnimatedEleme
         myContext->PSSetSamplers(0, 1, &spriteData.mySampler);
         myContext->PSSetConstantBuffers(0, 1, &myObjectBuffer);
         myContext->PSSetConstantBuffers(1, 1, &myTextureScrollingBuffer);
-        myContext->PSSetShaderResources(0, 4, &data->myTexture[0]);
+        myContext->PSSetShaderResources(0, 5, &data->myTexture[0]);
         myContext->PSSetShader(data->myPixelShader, nullptr, 0);
 
         myContext->Draw(3, 0);

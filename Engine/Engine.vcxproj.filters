@@ -88,7 +88,6 @@
     <ClCompile Include="ObjectPool.cpp" />
     <ClCompile Include="LevelLoader.cpp" />
     <ClCompile Include="TokenPool.cpp" />
-    <ClCompile Include="AnimatedUIElement.cpp" />
     <ClCompile Include="AnimationComponent.cpp">
       <Filter>GameObject and Component\Component</Filter>
     </ClCompile>
@@ -341,6 +340,9 @@
     <ClCompile Include="CollisionEventComponent.cpp">
       <Filter>GameObject and Component\Component</Filter>
     </ClCompile>
+    <ClCompile Include="AnimatedUIElement.cpp">
+      <Filter>Sprite</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EnemyFactory.h" />
@@ -348,14 +350,13 @@
     <ClInclude Include="LevelLoader.h" />
     <ClInclude Include="MouseTracker.h" />
     <ClInclude Include="TokenPool.h" />
-    <ClInclude Include="AnimatedUIElement.h" />
     <ClInclude Include="AnimationComponent.h">
       <Filter>GameObject and Component\Component</Filter>
     </ClInclude>
     <ClInclude Include="CameraComponent.h">
       <Filter>GameObject and Component\Component</Filter>
     </ClInclude>
-	    <ClCompile Include="CameraControllerComponent.h">
+    <ClCompile Include="CameraControllerComponent.h">
       <Filter>GameObject and Component\Component</Filter>
     </ClCompile>
     <ClInclude Include="CapsuleColliderComponent.h">
@@ -645,6 +646,9 @@
     </ClInclude>
     <ClInclude Include="CollisionEventComponent.h">
       <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimatedUIElement.h">
+      <Filter>Sprite</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

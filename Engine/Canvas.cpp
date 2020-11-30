@@ -177,6 +177,9 @@ void CCanvas::Receive(const SMessage& aMessage)
 		myAnimatedUIs[2]->Level(*static_cast<float*>(aMessage.data));
 		std::cout << "Used ability 3 value: " << *static_cast<float*>(aMessage.data) << std::endl;
 		break;
+	case EMessageType::PlayerHealthChanged:
+		myAnimatedUIs[3]->Level(*static_cast<float*>(aMessage.data));
+		break;
 	default:
 		break;
 	}

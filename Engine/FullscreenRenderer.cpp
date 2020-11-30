@@ -76,9 +76,20 @@ void CFullscreenRenderer::Render(FullscreenShader anEffect) {
 
 	myContext->VSSetShader(myVertexShader, nullptr, 0);
 	myContext->PSSetShader(myPixelShaders[static_cast<size_t>(anEffect)], nullptr, 0);
+	myContext->PSSetSamplers(0, 1, &mySampler);
 
 	myContext->Draw(3, 0);
 
-	ID3D11ShaderResourceView* clearShaderResourceView = nullptr;
-	myContext->PSSetShaderResources(0, 1, &clearShaderResourceView);
+	ID3D11ShaderResourceView* nullView = NULL;
+	myContext->PSSetShaderResources(0, 1, &nullView);
+	myContext->PSSetShaderResources(1, 1, &nullView);
+	myContext->PSSetShaderResources(2, 1, &nullView);
+	myContext->PSSetShaderResources(3, 1, &nullView);
+	myContext->PSSetShaderResources(4, 1, &nullView);
+	myContext->PSSetShaderResources(5, 1, &nullView);
+	myContext->PSSetShaderResources(6, 1, &nullView);
+	myContext->PSSetShaderResources(7, 1, &nullView);
+	myContext->PSSetShaderResources(8, 1, &nullView);
+
+	myContext->GSSetShader(nullptr, nullptr, 0);
 }

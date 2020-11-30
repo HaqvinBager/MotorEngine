@@ -14,5 +14,7 @@ enum class EMessageType
 	AbilityTwoCooldown,
 	AbilityThreeCooldown,
 	Resume,
+	PlayerHealthChanged,
+	PlayerResourceChanged,
 	Count
 };

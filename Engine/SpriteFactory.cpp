@@ -3,6 +3,7 @@
 #include "Sprite.h"
 #include "DDSTextureLoader.h"
 #include "AnimatedUIElement.h"
+#include "RandomNumberGenerator.h"
 
 #include "rapidjson\document.h"
 #include "rapidjson\istreamwrapper.h"
@@ -101,10 +102,12 @@ SAnimatedSpriteData* CSpriteFactory::LoadVFXSprite(std::string aFilePath)
 	spriteData->scrollSpeed2 = { document["Scroll Speed 2 X"].GetFloat(), document["Scroll Speed 2 Y"].GetFloat() };
 	spriteData->scrollSpeed3 = { document["Scroll Speed 3 X"].GetFloat(), document["Scroll Speed 3 Y"].GetFloat() };
 	spriteData->scrollSpeed4 = { document["Scroll Speed 4 X"].GetFloat(), document["Scroll Speed 4 Y"].GetFloat() };
+	spriteData->scrollSpeed5 = { document["Scroll Speed 5 X"].GetFloat(), document["Scroll Speed 5 Y"].GetFloat() };
 	spriteData->uvScale1 = document["UV Scale 1"].GetFloat();
 	spriteData->uvScale2 = document["UV Scale 2"].GetFloat();
 	spriteData->uvScale3 = document["UV Scale 3"].GetFloat();
 	spriteData->uvScale4 = document["UV Scale 4"].GetFloat();
+	spriteData->uvScale5 = document["UV Scale 5"].GetFloat();
 	spriteData->glowColor = { document["Glow Color R"].GetFloat(), document["Glow Color G"].GetFloat(), document["Glow Color B"].GetFloat() };
 	spriteData->glowWidth = { document["Glow Width"].GetFloat() };
 	spriteData->verticalDirectionOfChange = document["Vertical Direction Of Change"].GetBool();
@@ -130,12 +133,18 @@ SAnimatedSpriteData* CSpriteFactory::LoadVFXSprite(std::string aFilePath)
 	ID3D11ShaderResourceView* textureTwoShaderResourceView = GetShaderResourceView(myFramework->GetDevice(), document["Texture 2"].GetString());
 	ID3D11ShaderResourceView* textureThreeShaderResourceView = GetShaderResourceView(myFramework->GetDevice(), document["Texture 3"].GetString());
 	ID3D11ShaderResourceView* textureFourShaderResourceView = GetShaderResourceView(myFramework->GetDevice(), document["Texture Mask"].GetString());
+	ID3D11ShaderResourceView* textureFiveShaderResourceView = GetShaderResourceView(myFramework->GetDevice(), document["Texture Mask 2"].GetString());
+
+	// ASSUMES A SQUARE MASK (equal width & height)
+	spriteData->maskOffset = (1.0f - (document["Mask Width"].GetFloat() / GetTextureDimensions(textureFiveShaderResourceView).x)) / 2.0f;
+	spriteData->randomOffset = Random(0.0f, 2.0f);
 
 	spriteData->myPixelShader = pixelShader;
 	spriteData->myTexture[0] = textureOneShaderResourceView;
 	spriteData->myTexture[1] = textureTwoShaderResourceView;
 	spriteData->myTexture[2] = textureThreeShaderResourceView;
 	spriteData->myTexture[3] = textureFourShaderResourceView;
+	spriteData->myTexture[4] = textureFiveShaderResourceView;
 
 	return spriteData;
 }

@@ -58,7 +58,12 @@ private:
 		float scrollTimer;
 		float level;
 		bool verticalDirectionOfChange;
-		float padding; // 4 * 4 = 16
+		float uvScale5; // 4 * 4 = 16
+
+		DirectX::SimpleMath::Vector2 scrollSpeed5;
+		float maskOffset;
+		float randomOffset;
+		
 	} myTextureScrollingData;
 
 private:
