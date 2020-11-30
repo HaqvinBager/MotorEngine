@@ -102,7 +102,7 @@
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <IntDir>$(ProjectDir)..\..\..\Temp\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\..\..\Lib\</OutDir>
-    <IncludePath>$(IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\..\DirectXTK\Inc\;$(ProjectDir)..\Game\;$(ProjectDir)..\ModelLoader\;$(ProjectDir)..\UnityImporterApp\;$(ProjectDir)..\Includes\</IncludePath>
+    <IncludePath>$(IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\DirectXTK\Inc\;$(ProjectDir)..\Game\;$(ProjectDir)..\ModelLoader\;$(ProjectDir)..\UnityImporterApp\;$(ProjectDir)..\Includes\</IncludePath>
     <LibraryPath>$(SolutionDir)../../../Lib/;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='G3_Debug|x64'">
@@ -110,7 +110,7 @@
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <IntDir>$(ProjectDir)..\..\..\Temp\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\..\..\Lib\</OutDir>
-    <IncludePath>$(IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\..\DirectXTK\Inc\;$(ProjectDir)..\Game\;$(ProjectDir)..\ModelLoader\;$(ProjectDir)..\UnityImporterApp\;$(ProjectDir)..\Includes\</IncludePath>
+    <IncludePath>$(IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\DirectXTK\Inc\;$(ProjectDir)..\Game\;$(ProjectDir)..\ModelLoader\;$(ProjectDir)..\UnityImporterApp\;$(ProjectDir)..\Includes\</IncludePath>
     <LibraryPath>$(SolutionDir)../../../Lib/;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='G4_Debug|x64'">
@@ -118,7 +118,7 @@
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <IntDir>$(ProjectDir)..\..\..\Temp\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\..\..\Lib\</OutDir>
-    <IncludePath>$(IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\..\DirectXTK\Inc\;$(ProjectDir)..\Game\;$(ProjectDir)..\ModelLoader\;$(ProjectDir)..\UnityImporterApp\;$(ProjectDir)..\Includes\</IncludePath>
+    <IncludePath>$(IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\DirectXTK\Inc\;$(ProjectDir)..\Game\;$(ProjectDir)..\ModelLoader\;$(ProjectDir)..\UnityImporterApp\;$(ProjectDir)..\Includes\</IncludePath>
     <LibraryPath>$(SolutionDir)../../../Lib/;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -126,7 +126,7 @@
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <IntDir>$(ProjectDir)..\..\..\Temp\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\..\..\Lib\</OutDir>
-    <IncludePath>$(IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\..\DirectXTK\Inc\;$(ProjectDir)..\Game\;$(ProjectDir)..\ModelLoader\;$(ProjectDir)..\UnityImporterApp\;$(ProjectDir)..\Includes\</IncludePath>
+    <IncludePath>$(IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\DirectXTK\Inc\;$(ProjectDir)..\Game\;$(ProjectDir)..\ModelLoader\;$(ProjectDir)..\UnityImporterApp\;$(ProjectDir)..\Includes\</IncludePath>
     <LibraryPath>$(SolutionDir)../../../Lib/;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='G3_Release|x64'">
@@ -134,7 +134,7 @@
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <IntDir>$(ProjectDir)..\..\..\Temp\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\..\..\Lib\</OutDir>
-    <IncludePath>$(IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\..\DirectXTK\Inc\;$(ProjectDir)..\Game\;$(ProjectDir)..\ModelLoader\;$(ProjectDir)..\UnityImporterApp\;$(ProjectDir)..\Includes\</IncludePath>
+    <IncludePath>$(IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\DirectXTK\Inc\;$(ProjectDir)..\Game\;$(ProjectDir)..\ModelLoader\;$(ProjectDir)..\UnityImporterApp\;$(ProjectDir)..\Includes\</IncludePath>
     <LibraryPath>$(SolutionDir)../../../Lib/;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='G4_Release|x64'">
@@ -142,7 +142,7 @@
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <IntDir>$(ProjectDir)..\..\..\Temp\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\..\..\Lib\</OutDir>
-    <IncludePath>$(IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\..\DirectXTK\Inc\;$(ProjectDir)..\Game\;$(ProjectDir)..\ModelLoader\;$(ProjectDir)..\UnityImporterApp\;$(ProjectDir)..\Includes\</IncludePath>
+    <IncludePath>$(IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\DirectXTK\Inc\;$(ProjectDir)..\Game\;$(ProjectDir)..\ModelLoader\;$(ProjectDir)..\UnityImporterApp\;$(ProjectDir)..\Includes\</IncludePath>
     <LibraryPath>$(SolutionDir)../../../Lib/;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
