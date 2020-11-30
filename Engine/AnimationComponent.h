@@ -6,16 +6,7 @@
 #include "SimpleMath.h"
 #include "ModelMath.h"
 
-
-// REMINDER: CANIMATION IS UNUSED, CMODELCOMPONENT HAS ITS OWN CANIMATION THAT IT USES
-
 //#define USING_BLENDED_ANIMATIONS
-
-/// <To do>
-/// Model Viewer part complete.
-/// 1 - Can stop looping animation using myIsLooping = false
-/// 2 - Using string IDs to load animations map<int,int> <string id, index to my animation>
-/// </To do>
 
 struct SAnimationBlend
 {
@@ -49,12 +40,12 @@ public:
 	void GetAnimatedTransforms(float dt, SlimMatrix44* transforms);
 
 	//Used mainly for Modelviewer. Please use PlayAnimation that uses a EAnimationID
-	void PlayAnimation(const int anAnimationIndex, bool anIsLooping = false);
+	void PlayAnimation(const int anAnimationIndex, bool anIsLooping = false, const float anAnimSpeed = 1.0f);
 
-	void PlayAnimation(const EPlayerAnimationID anAnimationID, bool anIsLooping = false);
-	void PlayAnimation(const EEnemyAnimationID anAnimationID, bool anIsLooping = false);
-	void PlayAnimation(const EBossAnimationID anAnimationID, bool anIsLooping = false);
-	void PlayAnimation(const ECrateAnimationID anAnimationID, bool anIsLooping = false);
+	void PlayAnimation(const EPlayerAnimationID anAnimationID, bool anIsLooping = false, const float anAnimSpeed = 1.0f);
+	void PlayAnimation(const EEnemyAnimationID anAnimationID, bool anIsLooping = false, const float anAnimSpeed = 1.0f);
+	void PlayAnimation(const EBossAnimationID anAnimationID, bool anIsLooping = false, const float anAnimSpeed = 1.0f);
+	void PlayAnimation(const ECrateAnimationID anAnimationID, bool anIsLooping = false, const float anAnimSpeed = 1.0f);
 
 	// 2020 11 26
 	// Didnt work properly 
@@ -70,8 +61,10 @@ private:
 	void UpdateBlended(const float dt);
 	void UpdateNonBlended(const float dt);
 	void SetBlend(int anAnimationIndex, int anAnimationIndexTwo, float aBlend);// Does nothing atm.
-
+	
+	// This works if the ids are in a sorted list. But if animations are added at random to the project the ids dont follow eachother. Cant do a bounds check.
 	bool WithinIDRange(const int anID);
+	bool HasID(const int anID);
 
 	const int GetIndexFromID(const int anID);
 
@@ -79,6 +72,7 @@ private:
 	std::array<SlimMatrix44, 64> myBones { };
 	SAnimationBlend myBlend;
 	bool myIsLooping;
+	float myAnimationSpeed;
 	std::vector<CStringID> myAnimationIds;
 
 };

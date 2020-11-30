@@ -11,6 +11,8 @@
 #include "AnimMathFunc.h"
 #include "Timer.h"
 
+#include "../ModelLoader/modelExceptionTools.h"
+
 // Note 2020 11 12 Refactoring to use TGA code standard.
 
 #define NUM_BONES_PER_VERTEX 4
@@ -355,7 +357,7 @@ public:
 	/// if 1 set myAnimationTimeCurrent = 0.0f
 	/// set myCurSceneIndex to myLoopingSceneIndex
 
-	void  BoneTransform(std::vector<aiMatrix4x4>& aTransformsVector)
+	void  BoneTransform(std::vector<aiMatrix4x4>& aTransformsVector, const float anAnimSpeedMultiplier)
 	{
 		aiMatrix4x4 identity;// Used for ReadNodeHierarchy
 		InitIdentityM4(identity);
@@ -364,11 +366,13 @@ public:
 		float AnimationTime = 0.0f;
 		if (myScenes[myCurSceneIndex]->mAnimations != nullptr)
 		{
+			float animTimeCurrentModified = (myAnimationTimeCurrent + 0.000001f) * anAnimSpeedMultiplier;
+
 			float TicksPerSecond = 
 				static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mTicksPerSecond) != 0 
 				? 
 				static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mTicksPerSecond) : 25.0f;
-			float TimeInTicks = myAnimationTimeCurrent * TicksPerSecond;
+			float TimeInTicks = animTimeCurrentModified/*myAnimationTimeCurrent*/ * TicksPerSecond;
 			AnimationTime = fmodf(TimeInTicks, static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration));
 			
 			ReadNodeHeirarchy(myScenes[myCurSceneIndex], AnimationTime, myScenes[myCurSceneIndex]->mRootNode, identity, 2);
@@ -472,7 +476,16 @@ public:
 
 		myCurSceneIndex = static_cast<int>(myImporters.size());
 		myImporters.push_back(new Assimp::Importer);
-		myScenes.push_back(myImporters[myCurSceneIndex]->ReadFile(myModelPath, aiProcessPreset_TargetRealtime_Quality | aiProcess_ConvertToLeftHanded));
+
+		using namespace ModelExceptionTools;
+		if (IsDestructibleModel(anFBXFilePath))
+		{
+			myScenes.push_back(myImporters[myCurSceneIndex]->ReadFile(myModelPath, aiProcessPreset_TargetRealtime_Quality_DontJoinIdentical | aiProcess_ConvertToLeftHanded));
+		}
+		else
+		{
+			myScenes.push_back(myImporters[myCurSceneIndex]->ReadFile(myModelPath, aiProcessPreset_TargetRealtime_Quality | aiProcess_ConvertToLeftHanded));
+		}
 		//_curScene = importer.ReadFile( m_ModelPath, aiProcess_Triangulate | aiProcess_GenSmoothNormals );
 
 		bool ret = false;
