@@ -79,6 +79,7 @@ struct SInGameData
 	std::vector<SEventData> myEventData;
 	std::vector<SEnemyData> myEnemyData;
 	std::vector<SGameObjectData> myGameObjects;
+	int mySceneIndex;
 
 	int SizeOf()
 	{

@@ -356,9 +356,6 @@
     <ClInclude Include="CameraComponent.h">
       <Filter>GameObject and Component\Component</Filter>
     </ClInclude>
-    <ClCompile Include="CameraControllerComponent.h">
-      <Filter>GameObject and Component\Component</Filter>
-    </ClCompile>
     <ClInclude Include="CapsuleColliderComponent.h">
       <Filter>GameObject and Component\Component</Filter>
     </ClInclude>
@@ -650,6 +647,7 @@
     <ClInclude Include="AnimatedUIElement.h">
       <Filter>Sprite</Filter>
     </ClInclude>
+    <ClInclude Include="CameraControllerComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PBRDirectionalLight.hlsli">

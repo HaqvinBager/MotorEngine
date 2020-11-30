@@ -22,10 +22,17 @@ CLoadLevelState::~CLoadLevelState()
 
 void CLoadLevelState::Awake()
 {
+
+
+
 	unsigned int loadSceneIndex = Load(ELevel::LoadScreen);
 	CEngine::GetInstance()->SetActiveScene(loadSceneIndex);
+
+	Document latestExportedLevelDoc = CJsonReader::LoadDocument("Levels/DebugLevel.json");
+	int levelIndex = latestExportedLevelDoc["LevelIndex"].GetInt();
+
 	//Start Loading the ELevel::<Level> on a seperate thread.
-	myLoadLevelFuture = std::async(std::launch::async, &CLoadLevelState::Load, this, ELevel::NavTest);
+	myLoadLevelFuture = std::async(std::launch::async, &CLoadLevelState::Load, this, static_cast<ELevel>(levelIndex));
 
 	for (auto& gameObject : CEngine::GetInstance()->GetActiveScene().GetActiveGameObjects())
 	{

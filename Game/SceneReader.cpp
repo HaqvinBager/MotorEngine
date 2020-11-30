@@ -82,6 +82,11 @@ SInGameData& CSceneReader::ReadInGameData()
 		myInGameData.back()->myGameObjects.emplace_back(gameObjectData);
 	}
 
+
+	int mySceneIndex = 0;
+	myStreamPtr += Read(mySceneIndex);
+	myInGameData.back()->mySceneIndex = mySceneIndex;
+
 	myStream.close();
 	myStreamPtr = nullptr;
 
