@@ -4,6 +4,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include "modelExceptionTools.h"
 
 #include <map>
 #include <string>
@@ -11,8 +12,6 @@
 //#include "../Engine/WinInclude.h"
 #include <fstream>
 #include <chrono>
-
-
 
 #include <memory.h>
 
@@ -26,6 +25,7 @@
 
 #define TEXTURE_SET_0 0
 #define ENGINE_SCALE 0.01f
+
 CFBXLoaderCustom::CFBXLoaderCustom()
 {
 }
@@ -306,7 +306,6 @@ bool does_file_exist(const char* fileName)
 
 void* CFBXLoaderCustom::LoadModelInternal(CLoaderModel* someInput)
 {
-
 	CLoaderModel* model = someInput;
 	const struct aiScene* scene = NULL;
 
@@ -317,10 +316,16 @@ void* CFBXLoaderCustom::LoadModelInternal(CLoaderModel* someInput)
 		return nullptr;
 	}
 	//((aiSetImportPropertyFloat(scene, "UnitScaleFactor", 0.01f);
-	scene = aiImportFile(model->myModelPath.c_str(), aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_ConvertToLeftHanded);
-	
-	// aiProcessPreset_TargetRealtime_MaxQuality_DontJoinIndetical affects performance. Create someway to toggle it, so that only destructibles use it!
-	//scene = aiImportFile(model->myModelPath.c_str(), aiProcessPreset_TargetRealtime_MaxQuality_DontJoinIndetical | aiProcess_ConvertToLeftHanded);
+
+	using namespace ModelExceptionTools;
+	if (IsDestructibleModel(model->myModelPath))
+	{
+		scene = aiImportFile(model->myModelPath.c_str(), aiProcessPreset_TargetRealtime_MaxQuality_DontJoinIndetical | aiProcess_ConvertToLeftHanded);
+	}
+	else
+	{
+		scene = aiImportFile(model->myModelPath.c_str(), aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_ConvertToLeftHanded);
+	}
 	
 	//aiSetImportPropertyFloat(aiprops, AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY, GlobalScale);
 

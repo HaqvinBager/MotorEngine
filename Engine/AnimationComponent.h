@@ -6,16 +6,7 @@
 #include "SimpleMath.h"
 #include "ModelMath.h"
 
-
-// REMINDER: CANIMATION IS UNUSED, CMODELCOMPONENT HAS ITS OWN CANIMATION THAT IT USES
-
 //#define USING_BLENDED_ANIMATIONS
-
-/// <To do>
-/// Model Viewer part complete.
-/// 1 - Can stop looping animation using myIsLooping = false
-/// 2 - Using string IDs to load animations map<int,int> <string id, index to my animation>
-/// </To do>
 
 struct SAnimationBlend
 {

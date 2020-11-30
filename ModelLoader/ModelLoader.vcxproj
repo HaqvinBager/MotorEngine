@@ -169,6 +169,7 @@
     <ClInclude Include="ApplicationInterface.h" />
     <ClInclude Include="AssImp\config.h" />
     <ClInclude Include="ConstModelStructs.h" />
+    <ClInclude Include="modelExceptionTools.h" />
     <ClInclude Include="FBXLoaderCustom.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="VertexStructs.h" />
@@ -176,6 +177,7 @@
   <ItemGroup>
     <ClCompile Include="ApplicationInterface.cpp" />
     <ClCompile Include="FBXLoaderCustom.cpp" />
+    <ClCompile Include="modelExceptionTools.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
