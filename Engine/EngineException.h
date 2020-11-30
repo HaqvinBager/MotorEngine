@@ -13,6 +13,7 @@
 #define ENGINE_ERROR_MESSAGE(...)				{ Engine::EngineException::EngineErrorMessage(__LINE__, __FUNCTION__, __FILE__, ##__VA_ARGS__);  }
 #define ENGINE_ERROR_BOOL(result)				{ if (!result)	{ ENGINE_ERROR_MESSAGE(""); return 0;}}
 #define ENGINE_ERROR_BOOL_MESSAGE(result, ...)	{ if (!result)	{ ENGINE_ERROR_MESSAGE(##__VA_ARGS__); return 0;}}
+#define ENGINE_BOOL_POPUP(result, ...)			{ if (!result)  { ENGINE_ERROR_MESSAGE(##__VA_ARGS__); }}
 
 namespace Engine
 {
