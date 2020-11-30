@@ -414,7 +414,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	}
 	viewAnimations = (input == 'A');*/
 
-	viewAnimations = true;
+	viewAnimations = false;
 
 	std::vector<std::string> filePaths;
 #ifdef VFX
