@@ -6,10 +6,10 @@
 #include "MouseTracker.h"
 #include "Engine.h"
 
-CMeleeAttackBehavior::CMeleeAttackBehavior()
+CMeleeAttackBehavior::CMeleeAttackBehavior(float aDuration)
 {
 	myDirection = { 0.0f, 0.0f, 0.0f };
-	myDuration = 2.0f;
+	myDuration = aDuration;
 	myTimer = 0.0f;
 	myCaster = nullptr;
 }

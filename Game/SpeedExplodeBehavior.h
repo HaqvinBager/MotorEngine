@@ -11,15 +11,18 @@ namespace DirectX
 
 namespace SM = DirectX::SimpleMath;
 
-class CMeleeAttackBehavior : public IAbilityBehavior {
+class CSpeedExplodeBehavior : public IAbilityBehavior {
 public:
-	CMeleeAttackBehavior(float aDuration);
-	~CMeleeAttackBehavior() override;
+	CSpeedExplodeBehavior(float aDuration, float aExpodeTime, CGameObject* anAbilityObject);
+	~CSpeedExplodeBehavior() override;
 
 	void Init(CGameObject* aGameObject) override;
 	void Update(CGameObject* aParent) override;
 
 private:
+	float myExplodesAfter;
 	DirectX::SimpleMath::Vector3 myDirection;
 	CGameObject* myCaster;
+	CGameObject* myAbilityObject;
 };
+

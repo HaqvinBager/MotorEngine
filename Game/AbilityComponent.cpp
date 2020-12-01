@@ -13,6 +13,7 @@
 #include "AuraBehavior.h"
 #include "BoomerangBehavior.h"
 #include "MeleeAttackBehavior.h"
+#include "SpeedExplodeBehavior.h"
 #include "TransformComponent.h"
 #include "Scene.h"
 #include "InputMapper.h"
@@ -228,6 +229,8 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	CAuraBehavior* auraBehavior = nullptr;
 	CBoomerangBehavior* boomerangBehavior = nullptr;
 	CMeleeAttackBehavior* meleeAttackBehavior = nullptr;
+	CMeleeAttackBehavior* fireCone = nullptr;
+	CSpeedExplodeBehavior* speedExplodeBehavior = nullptr;
 	std::string colliderType;
 
 	//VFX
@@ -268,8 +271,18 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	}
 	else if (behavior["Type"].GetString() == std::string("MeleeAttack"))
 	{
-		meleeAttackBehavior = new CMeleeAttackBehavior();
+		meleeAttackBehavior = new CMeleeAttackBehavior(behavior["Duration"].GetFloat());
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, meleeAttackBehavior, anAbilityType);
+	}
+	else if (behavior["Type"].GetString() == std::string("FireCone"))
+	{
+		fireCone = new CMeleeAttackBehavior(behavior["Duration"].GetFloat());
+		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, fireCone, anAbilityType);
+	}
+	else if (behavior["Type"].GetString() == std::string("SpeedExplode"))
+	{
+		speedExplodeBehavior = new CSpeedExplodeBehavior(behavior["Duration"].GetFloat(), behavior["ExplodeAfter"].GetFloat(), abilityObject);
+		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, speedExplodeBehavior, anAbilityType);
 	}
 	//!BEHAVIOR
 

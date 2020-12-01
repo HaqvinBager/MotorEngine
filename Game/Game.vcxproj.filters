@@ -75,6 +75,9 @@
     <ClInclude Include="MeleeAttackBehavior.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SpeedExplodeBehavior.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -132,6 +135,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MeleeAttackBehavior.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SpeedExplodeBehavior.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
