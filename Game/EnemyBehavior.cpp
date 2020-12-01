@@ -73,7 +73,7 @@ void CEnemyBehavior::FindATarget(CGameObject& aParent)
 			}
 		}
 		// FOR NAVMESH
-		//aParent.GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
+		aParent.GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
 	}
 }
 

@@ -647,7 +647,9 @@
     <ClInclude Include="AnimatedUIElement.h">
       <Filter>Sprite</Filter>
     </ClInclude>
-    <ClInclude Include="CameraControllerComponent.h" />
+    <ClInclude Include="CameraControllerComponent.h">
+      <Filter>GameObject and Component\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="PBRDirectionalLight.hlsli">

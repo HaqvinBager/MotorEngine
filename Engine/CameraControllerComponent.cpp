@@ -7,7 +7,7 @@
 //#include "GameObject.h"
 #include "PlayerControllerComponent.h"
 
-CCameraControllerComponent::CCameraControllerComponent(CGameObject& aGameObject, const float aCameraMoveSpeed , ECameraMode aCameraMode, char aToggleFreeCam, Vector3 aOffset) 
+CCameraControllerComponent::CCameraControllerComponent(CGameObject& aGameObject, float aCameraMoveSpeed , ECameraMode aCameraMode, char aToggleFreeCam, Vector3 aOffset) 
 	: CComponent(aGameObject),
 	myCameraMoveSpeed(aCameraMoveSpeed),
 	myCamera(nullptr),

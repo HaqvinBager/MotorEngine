@@ -49,6 +49,7 @@ struct SEnemyData {
 	float myHealth;
 	float myDamage;
 	float myMoveSpeed;
+	float myDamageCooldown;
 	float myVisionRange;
 	float myAttackRange;
 	int myModelIndex;

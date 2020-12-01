@@ -8,6 +8,15 @@ CStatsComponent::CStatsComponent(CGameObject& aParent, float aHealth, float aDam
 	, myBaseStats({aHealth, aDamage, aMoveSpeed, aDamageCooldown, aVisionRange, aAttackRange})
 	, myStats({aHealth, aDamageCooldown, true, false, nullptr})
 {
+	//std::cout << "Enemy base stats " << std::endl
+	//	<< "base hp " << myBaseStats.myBaseHealth << std::endl
+	//	<< "base dmg " << myBaseStats.myDamage << std::endl
+	//	<< "base speed " << myBaseStats.myMoveSpeed << std::endl
+	//	<< "base dmg cd " << myBaseStats.myBaseDamageCooldown << std::endl
+	//	<< "base vision " << myBaseStats.myBaseVisionRange << std::endl
+	//	<< "base range " << myBaseStats.myBaseAttackRange << std::endl;
+	//std::cout << "Enemy stats " << std::endl
+	//	<< "hp " << myStats.myHealth << std::endl;
 }
 
 CStatsComponent::~CStatsComponent()

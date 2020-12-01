@@ -27,7 +27,7 @@ enum class ECollisionLayer {
 	BOSSABILITY		= 1 << 6,
 	WALL			= 1 << 7,
 	FLOOR			= 1 << 8,
-	Event			= 1 << 9,
+	EVENT			= 1 << 9,
 	ALL				= 1 << 10
 };
 

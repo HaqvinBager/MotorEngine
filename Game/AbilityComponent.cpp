@@ -47,10 +47,12 @@ CAbilityComponent::CAbilityComponent(CGameObject& aParent, std::vector<std::pair
 	myFilePaths.emplace(EAbilityType::PlayerAbility3, document["Player Ability 3"].GetString());
 	myFilePaths.emplace(EAbilityType::PlayerAbility4, document["Player Ability 4"].GetString());
 	myFilePaths.emplace(EAbilityType::PlayerAbility5, document["Player Ability 5"].GetString());
-	myFilePaths.emplace(EAbilityType::EnemyAbility, document["Ability Test"].GetString());
-	myFilePaths.emplace(EAbilityType::BossAbility1, document["Ability Test"].GetString());
-	myFilePaths.emplace(EAbilityType::BossAbility2, document["Ability Test"].GetString());
-	myFilePaths.emplace(EAbilityType::BossAbility3, document["Ability Test"].GetString());
+
+	myFilePaths.emplace(EAbilityType::EnemyAbility, document["Enemy Ability"].GetString());
+	myFilePaths.emplace(EAbilityType::BossAbility1, document["Boss Ability 1"].GetString());
+	myFilePaths.emplace(EAbilityType::BossAbility2, document["Boss Ability 2"].GetString());
+	myFilePaths.emplace(EAbilityType::BossAbility3, document["Boss Ability 3"].GetString());
+
 	myFilePaths.emplace(EAbilityType::AbilityTest, document["Ability Test"].GetString());
 	myFilePaths.emplace(EAbilityType::WHIRLWIND, document["Ability Test"].GetString());
 }

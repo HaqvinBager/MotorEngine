@@ -39,10 +39,10 @@
 namespace SM = DirectX::SimpleMath;
 namespace MW = ModelViewer;
 
-//#define VFX
+#define VFX
 
 #ifdef VFX
-#include "Game/AbilityComponent.h"//  Group 4 stuff might break for group 3!
+#include "../Game/AbilityComponent.h"//  Group 4 stuff might break for group 3!
 	#ifdef _DEBUG
 	#pragma comment (lib, "../../../Lib/Game_Debug.lib")
 	#else
@@ -297,7 +297,7 @@ void UpdateAnimation(CGameObject* aCurrentGameObject, CGameObject* aCamera, cons
 		const size_t nrOfAnims = animComp->GetMyAnimation()->GetNrOfAnimations();
 
 		if (Input::GetInstance()->IsKeyPressed('0')) { if(IsLessThan(0, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(0, true); }
-		if (Input::GetInstance()->IsKeyPressed('1')) { if(IsLessThan(1, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(1, false, 20.0f); }
+		if (Input::GetInstance()->IsKeyPressed('1')) { if(IsLessThan(1, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(1, true, 1.0f); }
 		if (Input::GetInstance()->IsKeyPressed('2')) { if(IsLessThan(2, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(2, true); }
 		if (Input::GetInstance()->IsKeyPressed('3')) { if(IsLessThan(3, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(3, true); }
 		if (Input::GetInstance()->IsKeyPressed('4')) { if(IsLessThan(4, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(4, true); }

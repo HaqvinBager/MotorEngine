@@ -67,7 +67,7 @@ void CMenuState::Update() {
 void CMenuState::Receive(const SMessage &aMessage) {
 	if (this == myStateStack.GetTop()) {
 		switch (aMessage.myMessageType) {
-		case EMessageType::LoadLevel:
+		case EMessageType::StartGame:
 		{
 			myStateStack.PushState(new CLoadLevelState(myStateStack));
 			myStateStack.Awake();

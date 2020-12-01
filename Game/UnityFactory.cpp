@@ -77,15 +77,15 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
     CGameObject* player = CreateGameObject(aData.myPlayerData, aBinModelPaths[aData.myPlayerData.myModelIndex]);
     aScene.AddInstance(player);
 
-    //for (const auto& eventData : aData.myEventData)
+    //for (const auto& eventdata : aData.myEventData)
     //{
-    //    aScene.AddInstance(CreateGameObject(eventData));
+    //    aScene.AddInstance(CreateGameObject(eventdata));
     //}
-    //
-    //CEnemyBehavior* enemyBehavior = new CEnemyBehavior(player);
-    //for (const auto& enemyData : aData.myEnemyData) {
-    //    aScene.AddInstance(CreateGameObject(enemyData, aBinModelPaths[enemyData.myModelIndex], enemyBehavior););
-    //}
+    
+    CEnemyBehavior* enemyBehavior = new CEnemyBehavior(player);
+    for (const auto& enemyData : aData.myEnemyData) {
+        aScene.AddInstance(CreateGameObject(enemyData, aBinModelPaths[enemyData.myModelIndex], enemyBehavior));
+    }
 
     for (const auto& gameObjectData : aData.myGameObjects)
     {
@@ -111,7 +111,8 @@ CGameObject* CUnityFactory::CreateGameObject(const SCameraData& aData, bool addC
     CGameObject* gameObject = new CGameObject();
     gameObject->AddComponent<CCameraComponent>(*gameObject, aData.myFieldOfView);
     if (addCameraController) {
-        gameObject->AddComponent<CCameraControllerComponent>(*gameObject, aData.myFreeCamMoveSpeed, static_cast<CCameraControllerComponent::ECameraMode>(aData.myStartInCameraMode), static_cast<char>(aData.myToggleFreeCamKey), aData.myOffset);
+        int cameraMode = static_cast<int>(aData.myStartInCameraMode);
+        gameObject->AddComponent<CCameraControllerComponent>(*gameObject, aData.myFreeCamMoveSpeed, static_cast<CCameraControllerComponent::ECameraMode>(cameraMode), static_cast<char>(aData.myToggleFreeCamKey), aData.myOffset);
     }
     gameObject->myTransform->Position(aData.myPosition);
     gameObject->myTransform->Rotation(aData.myRotation);
@@ -153,7 +154,8 @@ CGameObject* CUnityFactory::CreateGameObject(const SPlayerData& aData, const std
     gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
     gameObject->AddComponent<CPlayerControllerComponent>(*gameObject);
     gameObject->AddComponent<CNavMeshComponent>(*gameObject);
-   // gameObject->AddComponent<CRectangleColliderComponent>(*gameObject, 1.f, 1.f,ECollisionLayer::PLAYER, static_cast<uint64_t>(ECollisionLayer::ALL));
+    gameObject->AddComponent<CRectangleColliderComponent>(*gameObject, 1.f, 1.f, ECollisionLayer::ALL, 1024);
+    gameObject->AddComponent<CStatsComponent>(*gameObject, 100.0f, 10.0f, 3.0f, 0.0f, 0.0f, 1.0f);
 
     std::pair<EAbilityType, unsigned int> ab1 = { EAbilityType::PlayerAbility1, 1 };
     std::pair<EAbilityType, unsigned int> ab2 = { EAbilityType::PlayerAbility2, 1 };
@@ -170,8 +172,9 @@ CGameObject* CUnityFactory::CreateGameObject(const SEnemyData& aData, const std:
 {
     CGameObject* gameObject = new CGameObject();
     gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
-    gameObject->AddComponent<CStatsComponent>(*gameObject, aData.myHealth, aData.myDamage, aData.myMoveSpeed, /*TODO - damageCooldown*/ 0.f, aData.myVisionRange, aData.myAttackRange);
+    gameObject->AddComponent<CStatsComponent>(*gameObject, aData.myHealth, aData.myDamage, aData.myMoveSpeed, aData.myDamageCooldown, aData.myVisionRange, aData.myAttackRange);
     gameObject->AddComponent<CAIBehaviorComponent>(*gameObject, aBehavior);
+    gameObject->AddComponent<CNavMeshComponent>(*gameObject);
     gameObject->myTransform->Position(aData.myPosition);
     gameObject->myTransform->Rotation(aData.myRotation);
 
@@ -184,6 +187,6 @@ CGameObject* CUnityFactory::CreateGameObject(const SEventData& aData)
 {
     CGameObject* gameObject = new CGameObject();
     gameObject->myTransform->Position(aData.myPosition);
-    gameObject->AddComponent<CCollisionEventComponent>(*gameObject, static_cast<EMessageType>(aData.myEvent), aData.myColliderData.x, aData.myColliderData.y, ECollisionLayer::Event, static_cast<uint64_t>(ECollisionLayer::PLAYER));
+    gameObject->AddComponent<CCollisionEventComponent>(*gameObject, static_cast<EMessageType>(aData.myEvent), aData.myColliderData.x, aData.myColliderData.y, ECollisionLayer::ALL, 1024);
     return gameObject;
 }
