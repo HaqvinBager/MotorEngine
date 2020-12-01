@@ -39,7 +39,7 @@
 namespace SM = DirectX::SimpleMath;
 namespace MW = ModelViewer;
 
-#define VFX
+//#define VFX
 
 #ifdef VFX
 #include "../Game/AbilityComponent.h"//  Group 4 stuff might break for group 3!
@@ -387,8 +387,12 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		scene->AddInstance(grid);
 // AXIS ORIGIN MARKER
 	CLineInstance* origin = new CLineInstance();
-		origin->Init(CLineFactory::GetInstance()->CreateAxisMarker());
+		//origin->Init(CLineFactory::GetInstance()->CreateAxisMarker());
+		//origin->Init(CLineFactory::GetInstance()->CreateSquareXZ(1.f));
+		origin->Init(CLineFactory::GetInstance()->CreateTriangleXZ(10.f,5.f));
 		origin->SetPosition({ 0.0f,0.01f,0.0f });
+		origin->SetRotation({ 0.0f,90.f,0 });
+		origin->SetScale(0.7f);
 		scene->AddInstance(origin);
 
 	CEngine::GetInstance()->AddScene(scene);

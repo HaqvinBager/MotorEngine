@@ -37,7 +37,11 @@ void CLineInstance::SetRotation(const DirectX::SimpleMath::Vector3& aRotation)
 }
 void CLineInstance::SetScale(const DirectX::SimpleMath::Vector3& aScale)
 {
-	myTransform = myTransform.CreateScale(aScale);
+	myTransform *= myTransform.CreateScale(aScale);
+}
+void CLineInstance::SetScale(const float aScale)
+{
+	myTransform *= myTransform.CreateScale(aScale);
 }
 void CLineInstance::Move(const DirectX::SimpleMath::Vector3& aMovement)
 {

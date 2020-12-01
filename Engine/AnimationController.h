@@ -375,9 +375,9 @@ public:
 			float TimeInTicks = animTimeCurrentModified/*myAnimationTimeCurrent*/ * TicksPerSecond;
 			AnimationTime = fmodf(TimeInTicks, static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration));
 			
-			std::cout << "animTime " << AnimationTime << std::endl;
-			std::cout << "TimeInTicks " << TimeInTicks << std::endl;
-			std::cout << "animTime " << AnimationTime << std::endl;
+			//std::cout << "animTime " << AnimationTime << std::endl;
+			//std::cout << "TimeInTicks " << TimeInTicks << std::endl;
+			//std::cout << "animTime " << AnimationTime << std::endl;
 
 			ReadNodeHeirarchy(myScenes[myCurSceneIndex], AnimationTime, myScenes[myCurSceneIndex]->mRootNode, identity, 2);
 			// anAnimSpeedMultiplier = 20.0f =>  ceil(AnimationTime * myAnimationTimeCurrent * 2.0f) stoppar anim perfekt
@@ -386,7 +386,7 @@ public:
 			//switchBackToLooping = (ceil(AnimationTime * myAnimationTimeCurrent * (anAnimSpeedMultiplier / myScenes[myCurSceneIndex]->mAnimations[0]->mDuration)) >= static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration));
 			//switchBackToLooping = (ceil(AnimationTime * myScenes[myCurSceneIndex]->mAnimations[0]->mDuration) >= static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration));
 			switchBackToLooping = (ceil(AnimationTime) >= static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration));
-			std::cout << "switchBack " << switchBackToLooping << std::endl;
+			//std::cout << "switchBack " << switchBackToLooping << std::endl;
 		}
 
 		aTransformsVector.resize(myNumOfBones);
