@@ -31,12 +31,15 @@ public:
 		ID3D11ShaderResourceView* myTexture = nullptr;
 
 		std::string myTexturePath = "";
+		float myDelay = 0.0f;
+		float myDuration = 0.0f;
 		float mySpawnRate = 0.0f;
 		float mySpawnAngle = 0.0f;
 		float myParticleLifetime = 0.0f;
 		float myParticleSpeed = 0.0f;
 		DirectX::SimpleMath::Vector4 myParticleStartColor = DirectX::SimpleMath::Vector4(0.0f, 0.0f, 0.0f, 0.0f);
 		DirectX::SimpleMath::Vector4 myParticleEndColor = DirectX::SimpleMath::Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+		DirectX::SimpleMath::Vector4 myOffsetPosition = DirectX::SimpleMath::Vector4(0.0f, 0.0f, 0.0f, 0.0f);
 		DirectX::SimpleMath::Vector4 myParticleStartDirection = DirectX::SimpleMath::Vector4(0.0f, 0.0f, 0.0f, 0.0f);
 		DirectX::SimpleMath::Vector4 myParticleEndDirection = DirectX::SimpleMath::Vector4(0.0f, 0.0f, 0.0f, 0.0f);
 		float myParticleStartSize = 0.0f;
