@@ -33,16 +33,6 @@ void CStatsComponent::Start()
 
 void CStatsComponent::Update()
 {
-	std::cout << "Enemy base stats " << std::endl
-		<< "base hp " << myBaseStats.myBaseHealth << std::endl
-		<< "base dmg " << myBaseStats.myDamage << std::endl
-		<< "base speed " << myBaseStats.myMoveSpeed << std::endl
-		<< "base dmg cd " << myBaseStats.myBaseDamageCooldown << std::endl
-		<< "base vision " << myBaseStats.myBaseVisionRange << std::endl
-		<< "base range " << myBaseStats.myBaseAttackRange << std::endl;
-	std::cout << "Enemy stats " << std::endl
-		<< "hp " << myStats.myHealth << std::endl;
-
 }
 
 void CStatsComponent::OnEnable()
