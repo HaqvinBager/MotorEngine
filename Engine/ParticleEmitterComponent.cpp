@@ -32,6 +32,8 @@ void CParticleEmitterComponent::Start()
 
 void CParticleEmitterComponent::Update()
 {
+	if (!Enabled()) return;
+
 	SetPosition(GameObject().myTransform->Position());
 	DirectX::SimpleMath::Vector3 scale;
 	DirectX::SimpleMath::Quaternion quat;
@@ -54,6 +56,8 @@ void CParticleEmitterComponent::Init(std::vector<CParticle*> someParticles)
 			myParticlePools[i].push(CParticle::SParticleVertex());
 		}
 		
+		myEmitterDelays.emplace_back(myParticles[i]->GetParticleData().myDelay);
+		myEmitterDurations.emplace_back(myParticles[i]->GetParticleData().myDuration);
 		myEmitterTimers.emplace_back(0.0f);
 	}
 }
@@ -130,7 +134,12 @@ void CParticleEmitterComponent::Update(DirectX::SimpleMath::Vector3 aCameraPosit
 	{
 		CParticle::SParticleData particleData = myParticles[i]->GetParticleData();
 
-		SpawnParticles(i, aCameraPosition, particleData);
+		if ((myEmitterDelays[i] -= CTimer::Dt()) > 0.0f) { continue; }
+
+		if ((myEmitterDurations[i] -= CTimer::Dt()) > 0.0f) {
+			SpawnParticles(i, aCameraPosition, particleData);
+		}
+
 		UpdateParticles(i, aCameraPosition, particleData);
 
 		std::sort(myParticleVertices[i].begin(), myParticleVertices[i].end(),
@@ -139,15 +148,29 @@ void CParticleEmitterComponent::Update(DirectX::SimpleMath::Vector3 aCameraPosit
 				return aFirstParticle.mySquaredDistanceToCamera > aSecondParticle.mySquaredDistanceToCamera;
 			}
 		);
+
 	}
 }
 
 void CParticleEmitterComponent::OnEnable()
 {
+	Enabled(true);
+	for (unsigned int i = 0; i < myParticles.size(); ++i) {
+		myEmitterDelays[i] = myParticles[i]->GetParticleData().myDelay;
+		myEmitterDurations[i] = myParticles[i]->GetParticleData().myDuration;
+	}
 }
 
 void CParticleEmitterComponent::OnDisable()
 {
+	Enabled(false);
+	for (unsigned int i = 0; i < myParticles.size(); ++i) {
+		size_t currentSize = myParticleVertices[i].size();
+		for (unsigned int j = 0; j < currentSize; ++j) {
+			myParticlePools[i].push(myParticleVertices[i].back());
+			myParticleVertices[i].pop_back();
+		}
+	}
 }
 
 void CParticleEmitterComponent::SpawnParticles(unsigned int anIndex, DirectX::SimpleMath::Vector3& aCameraPosition, CParticle::SParticleData& someParticleData)
@@ -157,7 +180,7 @@ void CParticleEmitterComponent::SpawnParticles(unsigned int anIndex, DirectX::Si
 		myParticleVertices[anIndex].emplace_back(myParticlePools[anIndex].front());
 		myParticlePools[anIndex].pop();
 		myParticleVertices[anIndex].back().myLifeTime = someParticleData.myParticleLifetime + Random(someParticleData.myLifetimeLowerBound, someParticleData.myLifetimeUpperBound);
-		myParticleVertices[anIndex].back().myPosition = { myTransform._41, myTransform._42, myTransform._43, 1.0f };
+		myParticleVertices[anIndex].back().myPosition = { myTransform._41 + (someParticleData.myOffsetPosition.x * (1.0f /ENGINE_SCALE)), myTransform._42 + (someParticleData.myOffsetPosition.y * (1.0f / ENGINE_SCALE)), myTransform._43 + (someParticleData.myOffsetPosition.z * (1.0f / ENGINE_SCALE)), 1.0f };
 		myParticleVertices[anIndex].back().myMovement = someParticleData.myParticleStartDirection;
 		myParticleVertices[anIndex].back().myStartMovement = someParticleData.myParticleStartDirection + Random(someParticleData.myDirectionLowerBound, someParticleData.myDirectionUpperBound, 0.0f);
 		myParticleVertices[anIndex].back().myEndMovement = someParticleData.myParticleEndDirection + Random(someParticleData.myDirectionLowerBound, someParticleData.myDirectionUpperBound, 0.0f);

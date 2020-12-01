@@ -14,6 +14,8 @@ public:
 	void Start() override;
 	void Update() override;
 
+	void Collided(CGameObject* aCollidedGameObject) override;
+
 	void OnEnable() override;
 	void OnDisable() override;
 

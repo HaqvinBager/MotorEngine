@@ -178,6 +178,8 @@ void CParticleFactory::ReadJsonValues(std::string aFilePath, CParticle::SParticl
 
     someParticleData.myNumberOfParticles =          document["Max Number Of Particles"].GetInt();
    
+    someParticleData.myDelay =                      document["Delay"].GetFloat();
+    someParticleData.myDuration =                   document["Duration"].GetFloat();
     someParticleData.mySpawnRate =                  document["Spawn Rate"].GetFloat();
     someParticleData.myParticleLifetime =           document["Lifetime"].GetFloat();
     someParticleData.myParticleSpeed =              document["Speed"].GetFloat(); 
@@ -185,8 +187,9 @@ void CParticleFactory::ReadJsonValues(std::string aFilePath, CParticle::SParticl
     someParticleData.myParticleEndColor =         { document["End Color R"].GetFloat(), document["End Color G"].GetFloat(), document["End Color B"].GetFloat(), document["End Color A"].GetFloat() };
     someParticleData.myParticleStartSize =          document["Start Size"].GetFloat();
     someParticleData.myParticleEndSize =            document["End Size"].GetFloat();
-    someParticleData.myParticleStartDirection =   { document["Start Direction X"].GetFloat(), document["Start Direction Y"].GetFloat(), document["Start Direction Z"].GetFloat(), document["Start Direction W"].GetFloat() };
-    someParticleData.myParticleEndDirection =     { document["End Direction X"].GetFloat(), document["End Direction Y"].GetFloat(), document["End Direction Z"].GetFloat(), document["End Direction W"].GetFloat() };
+    someParticleData.myOffsetPosition =           { document["Offset Position X"].GetFloat(), document["Offset Position Y"].GetFloat(), document["Offset Position Z"].GetFloat(), 1.0f };
+    someParticleData.myParticleStartDirection =   { document["Start Direction X"].GetFloat(), document["Start Direction Y"].GetFloat(), document["Start Direction Z"].GetFloat(), 0.0f };
+    someParticleData.myParticleEndDirection =     { document["End Direction X"].GetFloat(), document["End Direction Y"].GetFloat(), document["End Direction Z"].GetFloat(), 0.0f };
     
     someParticleData.myLifetimeLowerBound =         document["Lifetime Lower Bound"].GetFloat();
     someParticleData.myLifetimeUpperBound =         document["Lifetime Upper Bound"].GetFloat();

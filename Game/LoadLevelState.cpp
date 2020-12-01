@@ -6,6 +6,10 @@
 #include "Engine.h"
 #include "JsonReader.h"
 #include "GameObject.h"
+#include "PostMaster.h"
+#include "MainSingleton.h"
+
+#include "CollisionEventComponent.h"
 
 using namespace rapidjson;
 CLoadLevelState::CLoadLevelState(CStateStack& aStateStack) : CState(aStateStack)
@@ -13,10 +17,12 @@ CLoadLevelState::CLoadLevelState(CStateStack& aStateStack) : CState(aStateStack)
 	SaveLevelNames();
 	myState = CStateStack::EStates::LoadLevel;
 	myActiveScene = CEngine::GetInstance()->ScenesSize();
+	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel, this);
 }
 
 CLoadLevelState::~CLoadLevelState()
 {
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel, this);
 	CEngine::GetInstance()->PopBackScene();
 }
 
@@ -24,8 +30,12 @@ void CLoadLevelState::Awake()
 {
 	unsigned int loadSceneIndex = Load(ELevel::LoadScreen);
 	CEngine::GetInstance()->SetActiveScene(loadSceneIndex);
+
+	Document latestExportedLevelDoc = CJsonReader::LoadDocument("Levels/DebugLevel.json");
+	int levelIndex = latestExportedLevelDoc["LevelIndex"].GetInt();
+
 	//Start Loading the ELevel::<Level> on a seperate thread.
-	myLoadLevelFuture = std::async(std::launch::async, &CLoadLevelState::Load, this, ELevel::NavTest);
+	myLoadLevelFuture = std::async(std::launch::async, &CLoadLevelState::Load, this, static_cast<ELevel>(levelIndex));
 
 	for (auto& gameObject : CEngine::GetInstance()->GetActiveScene().GetActiveGameObjects())
 	{
@@ -130,4 +140,15 @@ std::vector<std::string>& CLoadLevelState::BinModelPaths(const ELevel aLevel)
 void CLoadLevelState::MakeSceneActive() {
 	CEngine::GetInstance()->SetActiveScene(myActiveScene);
 
+}
+
+void CLoadLevelState::Receive(const SMessage& aMessage)
+{
+	switch (aMessage.myMessageType)
+	{
+	case EMessageType::LoadLevel:		
+		CCollisionEventComponent* eventComponent = reinterpret_cast<CCollisionEventComponent*>(aMessage.data);
+		std::cout << "Load Level Event Message: " << eventComponent->GetEventMessage() << std::endl;
+		break;
+	}
 }

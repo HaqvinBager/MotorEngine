@@ -41,11 +41,8 @@ void CCircleColliderComponent::Update() {
 	SetPosition(GameObject().GetComponent<CTransformComponent>()->Position());
 
 	if (GetAsyncKeyState('C')) {
-		CDebug::GetInstance()->DrawLine({ GetPosition().x - (myRadius / 2.0f), GetPosition().y, GetPosition().z }, { GetPosition().x + (myRadius / 2.0f), GetPosition().y, GetPosition().z });
-		CDebug::GetInstance()->DrawLine({ GetPosition().x, GetPosition().y, GetPosition().z - (myRadius / 2.0f) }
-		
-
-		, { GetPosition().x, GetPosition().y, GetPosition().z + (myRadius / 2.0f) });
+		CDebug::GetInstance()->DrawLine({ GetPosition().x - (myRadius), GetPosition().y, GetPosition().z }, { GetPosition().x + (myRadius), GetPosition().y, GetPosition().z });
+		CDebug::GetInstance()->DrawLine({ GetPosition().x, GetPosition().y, GetPosition().z - (myRadius) }, { GetPosition().x, GetPosition().y, GetPosition().z + (myRadius) });
 	}
 }
 

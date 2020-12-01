@@ -49,6 +49,7 @@ struct SEnemyData {
 	float myHealth;
 	float myDamage;
 	float myMoveSpeed;
+	float myDamageCooldown;
 	float myVisionRange;
 	float myAttackRange;
 	int myModelIndex;
@@ -79,6 +80,7 @@ struct SInGameData
 	std::vector<SEventData> myEventData;
 	std::vector<SEnemyData> myEnemyData;
 	std::vector<SGameObjectData> myGameObjects;
+	int mySceneIndex;
 
 	int SizeOf()
 	{

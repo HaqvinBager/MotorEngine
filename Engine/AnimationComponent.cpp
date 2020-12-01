@@ -10,6 +10,8 @@
 
 CAnimationComponent::CAnimationComponent(CGameObject& aParent, const std::string& aModelFilePath, std::vector<std::string>& someAnimationPaths)
 	: CBehaviour(aParent)
+	, myAnimationSpeed(1.0f)
+	, myIsLooping(false)
 {
 	myAnimation = new CAnimation();
 	myAnimation->Init(aModelFilePath.c_str(), someAnimationPaths);
@@ -32,7 +34,7 @@ void CAnimationComponent::Awake()
 #ifdef _DEBUG
 	for (auto& strID : myAnimationIds)
 	{
-		std::cout << strID.String() << " " << strID.ID() << std::endl;
+		std::cout << __FUNCTION__ << "  " << strID.String() << " " << strID.ID() << std::endl;
 	}
 #endif
 	SetBonesToIdentity();
@@ -66,11 +68,12 @@ void CAnimationComponent::GetAnimatedBlendTransforms(float dt, SlimMatrix44 * tr
 void CAnimationComponent::GetAnimatedTransforms(float dt, SlimMatrix44 * transforms)
 {
 	dt;
-	myAnimation->BoneTransforms(transforms);
+	myAnimation->BoneTransforms(transforms, myAnimationSpeed);
 }
 
-void CAnimationComponent::PlayAnimation(const int anAnimationIndex, bool anIsLooping)
+void CAnimationComponent::PlayAnimation(const int anAnimationIndex, bool anIsLooping, const float anAnimSpeed)
 {
+	myAnimationSpeed = anAnimSpeed;
 	myIsLooping = anIsLooping;
 	if (anIsLooping)
 	{
@@ -83,39 +86,39 @@ void CAnimationComponent::PlayAnimation(const int anAnimationIndex, bool anIsLoo
 	myAnimation->SetCurAnimationScene(anAnimationIndex);
 }
 
-void CAnimationComponent::PlayAnimation(const EPlayerAnimationID anAnimationID, bool anIsLooping)
+void CAnimationComponent::PlayAnimation(const EPlayerAnimationID anAnimationID, bool anIsLooping, const float anAnimSpeed)
 {
 	int id = static_cast<int>(anAnimationID);
-	if (WithinIDRange(id))
+	if (HasID(id))
 	{
-		PlayAnimation(GetIndexFromID(id), anIsLooping);
+		PlayAnimation(GetIndexFromID(id), anAnimSpeed, anIsLooping);
 	}
 }
 
-void CAnimationComponent::PlayAnimation(const EEnemyAnimationID anAnimationID, bool anIsLooping)
+void CAnimationComponent::PlayAnimation(const EEnemyAnimationID anAnimationID, bool anIsLooping, const float anAnimSpeed)
 {
 	int id = static_cast<int>(anAnimationID);
-	if (WithinIDRange(id))
+	if (HasID(id))
 	{
-		PlayAnimation(GetIndexFromID(id), anIsLooping);
+		PlayAnimation(GetIndexFromID(id), anAnimSpeed, anIsLooping);
 	}
 }
 
-void CAnimationComponent::PlayAnimation(const EBossAnimationID anAnimationID, bool anIsLooping)
+void CAnimationComponent::PlayAnimation(const EBossAnimationID anAnimationID, bool anIsLooping, const float anAnimSpeed)
 {
 	int id = static_cast<int>(anAnimationID);
-	if (WithinIDRange(id))
+	if (HasID(id))
 	{
-		PlayAnimation(GetIndexFromID(id), anIsLooping);
+		PlayAnimation(GetIndexFromID(id), anAnimSpeed, anIsLooping);
 	}
 }
 
-void CAnimationComponent::PlayAnimation(const ECrateAnimationID anAnimationID, bool anIsLooping)
+void CAnimationComponent::PlayAnimation(const ECrateAnimationID anAnimationID, bool anIsLooping, const float anAnimSpeed)
 {
 	int id = static_cast<int>(anAnimationID);
-	if (WithinIDRange(id))
+	if (HasID(id))
 	{
-		PlayAnimation(GetIndexFromID(id), anIsLooping);
+		PlayAnimation(GetIndexFromID(id), anAnimSpeed, anIsLooping);
 	}
 }
 
@@ -128,8 +131,19 @@ void CAnimationComponent::SetBlend(int anAnimationIndex, int anAnimationIndexTwo
 
 bool CAnimationComponent::WithinIDRange(const int anID)
 {
-	// This works if the ids are in a sorted list. But if animations are added at random to the project the ids dont follow eachother. Cant do a bounds check.
 	return (anID <= myAnimationIds.back().ID() && anID >= myAnimationIds.front().ID()); 
+}
+
+bool CAnimationComponent::HasID(const int anID)
+{
+	for (auto& id : myAnimationIds)
+	{
+		if (id.ID() == anID)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 const int CAnimationComponent::GetIndexFromID(const int anID)

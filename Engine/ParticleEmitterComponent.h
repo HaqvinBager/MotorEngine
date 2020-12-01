@@ -45,6 +45,9 @@ private:
 	std::vector<std::vector<CParticle::SParticleVertex>> myParticleVertices;
 	std::vector<std::queue<CParticle::SParticleVertex>> myParticlePools;
 	std::vector<float> myEmitterTimers;
+	std::vector<float> myEmitterDelays;
+	std::vector<float> myEmitterDurations;
+	std::vector<DirectX::SimpleMath::Vector3> myOffsets;
 	float myScale = 10.0f;
 };
 

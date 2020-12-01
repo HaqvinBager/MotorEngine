@@ -287,16 +287,19 @@
     <ClInclude Include="AIBehaviorComponent.h" />
     <ClInclude Include="AudioManager.h" />
     <ClInclude Include="AuraBehavior.h" />
+    <ClInclude Include="BoomerangBehavior.h" />
     <ClInclude Include="DialogueSystem.h" />
     <ClInclude Include="EnemyBehavior.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="AbilityBehavior.h" />
     <ClInclude Include="InGameState.h" />
     <ClInclude Include="LoadLevelState.h" />
+    <ClInclude Include="MeleeAttackBehavior.h" />
     <ClInclude Include="PauseState.h" />
     <ClInclude Include="ProjectileBehavior.h" />
     <ClInclude Include="SceneData.h" />
     <ClInclude Include="SceneReader.h" />
+    <ClInclude Include="SpeedExplodeBehavior.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="UnityFactory.h" />
   </ItemGroup>
@@ -308,14 +311,17 @@
     <ClCompile Include="AIBehaviorComponent.cpp" />
     <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="AuraBehavior.cpp" />
+    <ClCompile Include="BoomerangBehavior.cpp" />
     <ClCompile Include="DialogueSystem.cpp" />
     <ClCompile Include="EnemyBehavior.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="InGameState.cpp" />
     <ClCompile Include="LoadLevelState.cpp" />
+    <ClCompile Include="MeleeAttackBehavior.cpp" />
     <ClCompile Include="PauseState.cpp" />
     <ClCompile Include="ProjectileBehavior.cpp" />
     <ClCompile Include="SceneReader.cpp" />
+    <ClCompile Include="SpeedExplodeBehavior.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='G3_Debug|x64'">Create</PrecompiledHeader>

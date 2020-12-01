@@ -3,6 +3,7 @@
 #include <future>
 #include "SceneReader.h"
 #include "UnityFactory.h"
+#include "Observer.h"
 
 /// <summary>
 /// This Enum is mapped to the Levels that are inside the LevelSelect.Json file (Important that they are in the same order as in the json file)
@@ -17,8 +18,7 @@ enum class ELevel
 };
 
 
-class CLoadLevelState : public CState {
-
+class CLoadLevelState : public CState, public IObserver {
 public:
 	CLoadLevelState(CStateStack& aStateStack);
 	~CLoadLevelState() override;
@@ -27,6 +27,8 @@ public:
 	void Start() override;
 	void Update() override;
 	void MakeSceneActive() override;
+
+	void Receive(const SMessage& aMessage) override;
 private:
 
 	/// <summary>
@@ -48,5 +50,3 @@ private:
 	std::unordered_map<ELevel, std::string> myModelJsonFileMap;
 	std::unordered_map<ELevel, std::vector<std::string>> myBinModelPaths;
 };
-
-

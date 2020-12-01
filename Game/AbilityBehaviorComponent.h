@@ -20,7 +20,7 @@ public:
 
 	EAbilityType GetAbilityType() const;
 
-	void Init(DirectX::SimpleMath::Vector3 aCasterPosition);
+	void Init(CGameObject* aCaster);
 
 private:
 	IAbilityBehavior* myBehavior;

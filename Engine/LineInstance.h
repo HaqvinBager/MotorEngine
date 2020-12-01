@@ -37,6 +37,7 @@ public:
 	void SetPosition(const DirectX::SimpleMath::Vector3& aPosition);
 	void SetRotation(const DirectX::SimpleMath::Vector3& aRotation);
 	void SetScale(const DirectX::SimpleMath::Vector3& aScale);
+	void SetScale(const float aScale);
 	void Move(const DirectX::SimpleMath::Vector3& aMovement);
 	void Rotate(const DirectX::SimpleMath::Vector3& aRotation);
 	

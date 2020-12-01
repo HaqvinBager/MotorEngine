@@ -10,6 +10,7 @@ public:
 	~CEnemyBehavior() override;
 
 	void Update(CGameObject* aParent) override;
+	void Collided(CGameObject* aGameObject) override;
 
 	void FindATarget(CGameObject& aParent);
 

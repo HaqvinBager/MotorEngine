@@ -7,6 +7,20 @@ CSceneReader::CSceneReader()
 
 CSceneReader::~CSceneReader()
 {
+	myStreamPtr = nullptr;
+	for (auto& data : myLoadScreenData)
+	{
+		delete data;
+		data = nullptr;
+	}
+	myLoadScreenData.clear();
+
+	for (auto& data : myInGameData)
+	{
+		delete data;
+		data = nullptr;
+	}
+	myInGameData.clear();
 }
 
 bool CSceneReader::OpenBin(const std::string& aBinFilePath)
@@ -81,6 +95,11 @@ SInGameData& CSceneReader::ReadInGameData()
 		myStreamPtr += Read(gameObjectData);
 		myInGameData.back()->myGameObjects.emplace_back(gameObjectData);
 	}
+
+
+	int mySceneIndex = 0;
+	myStreamPtr += Read(mySceneIndex);
+	myInGameData.back()->mySceneIndex = mySceneIndex;
 
 	myStream.close();
 	myStreamPtr = nullptr;

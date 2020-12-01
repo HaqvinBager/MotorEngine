@@ -7,7 +7,7 @@
 
 namespace SM = DirectX::SimpleMath;
 
-CParticleInstance::CParticleInstance() : myParticle(nullptr), myEmitterTimer(0.0f)
+CParticleInstance::CParticleInstance() : myParticle(nullptr), myEmitterTimer(0.0f), myStartDelay(0.0f)
 {
 }
 

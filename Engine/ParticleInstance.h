@@ -33,5 +33,6 @@ private:
 	std::vector<CParticle::SParticleVertex> myParticleVertices;
 	std::queue<CParticle::SParticleVertex> myParticlePool;
 	float myEmitterTimer;
+	float myStartDelay;
 };
 

@@ -33,6 +33,9 @@
     <ClInclude Include="AssImp\config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="modelExceptionTools.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApplicationInterface.cpp">
@@ -40,6 +43,9 @@
     </ClCompile>
     <ClCompile Include="FBXLoaderCustom.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="modelExceptionTools.cpp">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

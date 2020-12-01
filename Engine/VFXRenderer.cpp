@@ -64,6 +64,8 @@ void CVFXRenderer::Render(CCameraComponent* aCamera, std::vector<CGameObject*>& 
 		for (auto& vfxBase : vfxBases) {
 			CVFXBase::SVFXBaseData vfxBaseData = vfxBase->GetVFXBaseData();
 
+			if (!vfxBaseData.myIsActive) continue;
+
 			myObjectBufferData.myToWorld = component->GetTransform();
 			BindBuffer<SObjectBufferData>(myObjectBuffer, myObjectBufferData, "Object Buffer");
 

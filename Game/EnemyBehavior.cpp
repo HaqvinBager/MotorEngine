@@ -11,18 +11,22 @@
 #include "Scene.h"
 #include "MainSingleton.h"
 #include "NavMeshComponent.h"
+#include "AnimationComponent.h"
 
 CEnemyBehavior::CEnemyBehavior(CGameObject* aPlayerObject)
 	: myPlayer(aPlayerObject)
-{
-}
+{}
 
 CEnemyBehavior::~CEnemyBehavior()
-{
-}
+{}
 
 void CEnemyBehavior::Update(CGameObject* aParent)
 {
+	if (aParent->GetComponent<CAnimationComponent>())
+	{
+		aParent->GetComponent<CAnimationComponent>()->PlayAnimation(EEnemyAnimationID::Idle, true);
+	}
+
 	//enemy logic
 	SBaseStats baseStats = aParent->GetComponent<CStatsComponent>()->GetBaseStats();
 	SStats stats = aParent->GetComponent<CStatsComponent>()->GetStats();
@@ -44,7 +48,12 @@ void CEnemyBehavior::Update(CGameObject* aParent)
 		//aParent->Active(false);
 	}
 
-	FindATarget(*aParent);
+	//FindATarget(*aParent);
+}
+
+void CEnemyBehavior::Collided(CGameObject* /*aGameObject*/)
+{
+	std::cout << __FUNCTION__ << " The enemy says: OUCH! " << std::endl;
 }
 
 void CEnemyBehavior::FindATarget(CGameObject& aParent)
@@ -65,6 +74,11 @@ void CEnemyBehavior::FindATarget(CGameObject& aParent)
 			if (stats.myTokenSlot == nullptr) {
 				stats.myTokenSlot = CTokenPool::GetInstance()->Request();
 			}
+			myPlayer->GetComponent<CStatsComponent>();
+			if (aParent.GetComponent<CAnimationComponent>())
+			{
+				aParent.GetComponent<CAnimationComponent>()->PlayAnimation(EEnemyAnimationID::Attack01);
+			}
 		}
 		else {
 			if (stats.myTokenSlot != nullptr) {
@@ -73,7 +87,7 @@ void CEnemyBehavior::FindATarget(CGameObject& aParent)
 			}
 		}
 		// FOR NAVMESH
-		//aParent.GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
+		aParent.GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
 	}
 }
 

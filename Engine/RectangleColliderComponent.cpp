@@ -54,9 +54,12 @@ void CRectangleColliderComponent::Awake() {
 void CRectangleColliderComponent::Start() {
 }
 
-void CRectangleColliderComponent::Update() {
-	
-	
+void CRectangleColliderComponent::Update() 
+{
+	// Position is center
+	// myHeight is Length
+	// myWidth is Width
+
 	DirectX::SimpleMath::Vector3 vector = GameObject().GetComponent<CTransformComponent>()->Position() + GameObject().GetComponent<CTransformComponent>()->Transform().Forward() * (myHeight / 2.0f) * 100.0f;
 
 	SetPosition(GameObject().GetComponent<CTransformComponent>()->Position());
@@ -72,10 +75,10 @@ void CRectangleColliderComponent::Update() {
 	myMax = vector + GameObject().GetComponent<CTransformComponent>()->Transform().Right() * (myWidth / 2.0f) * 100.0f;
 
 	if (GetAsyncKeyState('C')) {
-		CDebug::GetInstance()->DrawLine(myMin, { myMax.x, 0.0f, myMin.z });
-		CDebug::GetInstance()->DrawLine(myMin, { myMin.x, 0.0f, myMax.z });
-		CDebug::GetInstance()->DrawLine({ myMax.x, 0.0f, myMin.z }, myMax);
-		CDebug::GetInstance()->DrawLine({ myMin.x, 0.0f, myMax.z }, myMax);
+		CDebug::GetInstance()->DrawLine(myMin, { myMax.x, 0.0f, myMin.z }, 0.00000000001f);
+		CDebug::GetInstance()->DrawLine(myMin, { myMin.x, 0.0f, myMax.z }, 0.00000000001f);
+		CDebug::GetInstance()->DrawLine({ myMax.x, 0.0f, myMin.z }, myMax, 0.00000000001f);
+		CDebug::GetInstance()->DrawLine({ myMin.x, 0.0f, myMax.z }, myMax, 0.00000000001f);
 	}
 }
 
@@ -111,8 +114,30 @@ bool CRectangleColliderComponent::Collided(CTriangleColliderComponent* /*aCollid
 
 bool CRectangleColliderComponent::Collided(CRectangleColliderComponent* aCollidedGameObject)
 {
+#ifdef _DEBUG
+	auto thisMinX = this->myMin.x;
+	auto thisMaxX = this->myMax.x;
+	auto thisMinZ = this->myMin.z;
+	auto thisMaxZ = this->myMax.z;
+
+	auto theirMinX = aCollidedGameObject->GetMin().x;
+	auto theirMaxX = aCollidedGameObject->GetMax().x;
+	auto theirMinZ = aCollidedGameObject->GetMin().z;
+	auto theirMaxZ = aCollidedGameObject->GetMax().z;
+
+	bool minXtoMaxX = thisMinX <= theirMaxX;
+	bool maxXtoMinX = thisMaxX >= theirMinX;
+	bool minZtoMaxZ = thisMinZ <= theirMaxZ;
+	bool maxZtoMinZ = thisMaxZ >= theirMinZ;
+
+	bool collided = (minXtoMaxX && maxXtoMinX) && (minZtoMaxZ && maxZtoMinZ);
+
+	return collided;
+
+#else
 	return (this->myMin.x <= aCollidedGameObject->GetMax().x && this->myMax.x >= aCollidedGameObject->GetMin().x) &&
 		(this->myMin.z <= aCollidedGameObject->GetMax().z && this->myMax.z >= aCollidedGameObject->GetMin().z);
+#endif
 }
 
 bool CRectangleColliderComponent::Collided(CCollider* aCollidedGameObject)

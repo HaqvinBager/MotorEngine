@@ -28,6 +28,6 @@ void CAuraBehavior::Update(CGameObject* aParent)
 	aParent->GetComponent<CTransformComponent>()->Rotate(rotation);
 }
 
-void CAuraBehavior::Init(DirectX::SimpleMath::Vector3 /*aCasterPosition*/)
+void CAuraBehavior::Init(CGameObject* /*aGameObject*/)
 {
 }

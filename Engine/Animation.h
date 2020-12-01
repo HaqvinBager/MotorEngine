@@ -13,7 +13,7 @@ public:
 	void Init(const char* aRig, std::vector<std::string>& somePathsToAnimations);
 
 	void BoneTransformsWithBlend(SlimMatrix44* Transforms, float aBlendFactor);
-	void BoneTransforms(SlimMatrix44* Transforms);
+	void BoneTransforms(SlimMatrix44* Transforms, const float anAnimSpeedMultiplier);
 	void BlendStep(float aDelta);
 	void Step();
 

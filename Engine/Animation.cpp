@@ -33,10 +33,10 @@ void CAnimation::BoneTransformsWithBlend(SlimMatrix44* Transforms, float aBlendF
 
 	memcpy(&Transforms[0], &trans[0], (sizeof(float) * 16) * trans.size());
 }
-void CAnimation::BoneTransforms(SlimMatrix44* Transforms)
+void CAnimation::BoneTransforms(SlimMatrix44* Transforms, const float anAnimSpeedMultiplier)
 {
 	std::vector<aiMatrix4x4> trans;
-	myController->BoneTransform(trans);
+	myController->BoneTransform(trans, anAnimSpeedMultiplier);
 	if (trans.size() == 0)
 	{
 		return;
