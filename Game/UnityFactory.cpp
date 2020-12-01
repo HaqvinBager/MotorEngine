@@ -18,6 +18,7 @@
 #include "PointLightComponent.h"
 #include "CollisionEventComponent.h"
 #include "RectangleColliderComponent.h"
+#include "CircleColliderComponent.h"
 
 #include "CollisionManager.h"
 #include "LightFactory.h"
@@ -209,7 +210,8 @@ CGameObject* CUnityFactory::CreateGameObject(const SPlayerData& aData, const std
     gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
     gameObject->AddComponent<CPlayerControllerComponent>(*gameObject);
     gameObject->AddComponent<CNavMeshComponent>(*gameObject);
-    gameObject->AddComponent<CRectangleColliderComponent>(*gameObject, 1.f, 1.f, ECollisionLayer::ALL, 1024);
+    //gameObject->AddComponent<CRectangleColliderComponent>(*gameObject, 1.f, 1.f, ECollisionLayer::ALL, 1024);
+    gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 1.f, ECollisionLayer::PLAYER, static_cast<uint64_t>(ECollisionLayer::ALL));
     gameObject->AddComponent<CStatsComponent>(*gameObject, 100.0f, 10.0f, 3.0f, 0.0f, 0.0f, 1.0f);
 
     std::pair<EAbilityType, unsigned int> ab1 = { EAbilityType::PlayerAbility1, 1 };
@@ -230,6 +232,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SEnemyData& aData, const std:
     gameObject->AddComponent<CStatsComponent>(*gameObject, aData.myHealth, aData.myDamage, aData.myMoveSpeed, aData.myDamageCooldown, aData.myVisionRange, aData.myAttackRange);
     gameObject->AddComponent<CAIBehaviorComponent>(*gameObject, aBehavior);
     gameObject->AddComponent<CNavMeshComponent>(*gameObject);
+	gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 1.f, ECollisionLayer::ENEMY, static_cast<uint64_t>(ECollisionLayer::PLAYER));
     gameObject->myTransform->Position(aData.myPosition);
     gameObject->myTransform->Rotation(aData.myRotation);
 

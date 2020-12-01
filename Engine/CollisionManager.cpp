@@ -48,7 +48,7 @@ void CCollisionManager::Update()
             bool innerEnabled       = myColliders[inner]->Enabled();
 
             uint64_t outerCollisionLayer = static_cast<uint64_t>(myColliders[outer]->GetCollisionLayer());
-            uint64_t innerCollisionLayer = static_cast<uint64_t>(myColliders[inner]->GetCollisionLayer());
+            uint64_t innerCollisionLayer = static_cast<uint64_t>(myColliders[inner]->GetCollisionFlags());
 
             if (outerActive && innerActive && outerEnabled && innerEnabled) {
                 if (outerCollisionLayer & innerCollisionLayer) {
@@ -61,7 +61,7 @@ void CCollisionManager::Update()
             }
 #else
             if (myColliders[outer]->GameObject().Active() && myColliders[inner]->GameObject().Active() && myColliders[outer]->Enabled() && myColliders[inner]->Enabled()) {
-                if (static_cast<uint64_t>(myColliders[outer]->GetCollisionLayer()) & static_cast<uint64_t>(myColliders[inner]->GetCollisionLayer())) {
+                if (static_cast<uint64_t>(myColliders[outer]->GetCollisionLayer()) & static_cast<uint64_t>(myColliders[inner]->GetCollisionFlags())) {
                     if (myColliders[outer]->Collided(myColliders[inner]))
                     {
                         myColliders[outer]->GameObject().Collided(myColliders[inner]->GameObject());

@@ -1,6 +1,10 @@
 #pragma once
 #include "Collider.h"
 
+#ifdef _DEBUG
+class CLineInstance;
+#endif
+
 namespace DirectX {
 	namespace SimpleMath {
 		struct Vector3;
@@ -53,5 +57,10 @@ private:
 	float myWidth;
 	DirectX::SimpleMath::Vector3 myLeftVertex;
 	DirectX::SimpleMath::Vector3 myRightVertex;
+
+#ifdef _DEBUG
+private:
+	CLineInstance* myVisualizer;
+#endif
 };
 

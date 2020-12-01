@@ -6,11 +6,21 @@
 #include "TransformComponent.h"
 #include "Debug.h"
 
+#ifdef _DEBUG
+#include "LineInstance.h"
+#include "LineFactory.h"
+#include "Engine.h"
+#include "Scene.h"
+#endif
+
 CCircleColliderComponent::CCircleColliderComponent(CGameObject& aParent) :
 	CCollider(aParent, ECollisionLayer::NONE, static_cast<int>(ECollisionLayer::NONE)),
 	myRadius(0.5f)
 {
 	CCollisionManager::GetInstance()->RegisterCollider(this);
+#ifdef _DEBUG
+	myVisualizer = nullptr;
+#endif
 }
 
 CCircleColliderComponent::CCircleColliderComponent(CGameObject& aParent, float aRadius) :
@@ -18,6 +28,9 @@ CCircleColliderComponent::CCircleColliderComponent(CGameObject& aParent, float a
 	myRadius(aRadius)
 {
 	CCollisionManager::GetInstance()->RegisterCollider(this);
+#ifdef _DEBUG
+	myVisualizer = nullptr;
+#endif
 }
 
 CCircleColliderComponent::CCircleColliderComponent(CGameObject& aParent, float aRadius, ECollisionLayer aCollisionLayer, uint64_t someCollisionFlags) :
@@ -25,13 +38,26 @@ CCircleColliderComponent::CCircleColliderComponent(CGameObject& aParent, float a
 	myRadius(aRadius)
 {
 	CCollisionManager::GetInstance()->RegisterCollider(this);
+#ifdef _DEBUG
+	myVisualizer = nullptr;
+#endif
 }
 
 CCircleColliderComponent::~CCircleColliderComponent() {
+#ifdef _DEBUG
+	delete myVisualizer;
+	myVisualizer = nullptr;
+#endif // _DEBUG
 }
 
 void CCircleColliderComponent::Awake() {
 	SetPosition(GameObject().GetComponent<CTransformComponent>()->Position());
+#ifdef _DEBUG
+	myVisualizer = new CLineInstance();
+	myVisualizer->Init(CLineFactory::GetInstance()->CreateCircleXZ(myRadius));
+	myVisualizer->SetPosition(GameObject().GetComponent<CTransformComponent>()->Position());
+	CEngine::GetInstance()->GetActiveScene().AddInstance(myVisualizer);
+#endif // _DEBUG
 }
 
 void CCircleColliderComponent::Start() {
@@ -39,6 +65,11 @@ void CCircleColliderComponent::Start() {
 
 void CCircleColliderComponent::Update() {
 	SetPosition(GameObject().GetComponent<CTransformComponent>()->Position());
+
+#ifdef _DEBUG
+	myVisualizer->SetPosition(GameObject().GetComponent<CTransformComponent>()->Position());
+	myVisualizer->SetRotation(GameObject().GetComponent<CTransformComponent>()->Rotation());
+#endif // _DEBUG
 
 	if (GetAsyncKeyState('C')) {
 		CDebug::GetInstance()->DrawLine({ GetPosition().x - (myRadius), GetPosition().y, GetPosition().z }, { GetPosition().x + (myRadius), GetPosition().y, GetPosition().z });
@@ -174,11 +205,22 @@ bool CCircleColliderComponent::Collided(CCollider* aCollidedGameObject) {
 
 void CCircleColliderComponent::OnEnable()
 {
-
+#ifdef _DEBUG
+	if (myVisualizer)
+	{
+		myVisualizer->SetIsActive(true);
+	}
+#endif // _DEBUG
 }
 void CCircleColliderComponent::OnDisable()
 {
-
+#ifdef _DEBUG
+	if (myVisualizer)
+	{
+		myVisualizer->SetPosition(CLineInstance::ourInactivePos);
+		myVisualizer->SetIsActive(false);
+	}
+#endif // _DEBUG
 }
 
 float const CCircleColliderComponent::GetRadius() const

@@ -6,6 +6,9 @@ class CLine;
 class CLineInstance
 {
 public:
+	static const DirectX::SimpleMath::Vector3 ourInactivePos;
+
+public:
 	CLineInstance();
 	~CLineInstance();
 
@@ -15,6 +18,7 @@ public:
 	CLineInstance(const CLineInstance& other)
 		: myLine(other.myLine)
 		, myTransform(other.myTransform)
+		, myIsActive(other.myIsActive)
 	{
 		//std::copy();
 	}
@@ -22,6 +26,7 @@ public:
 	CLineInstance(CLineInstance&& other) noexcept : myLine(nullptr), myTransform() { 
 		myLine = other.myLine;
 		myTransform = other.myTransform;
+		myIsActive = other.myIsActive;
 		other.myLine = nullptr;
 	}
 
@@ -29,6 +34,7 @@ public:
 	{
 		myLine = other.myLine;
 		myTransform = other.myTransform;
+		myIsActive = other.myIsActive;
 		other.myLine = nullptr;
 		return *this;
 	}
@@ -36,10 +42,14 @@ public:
 	void SetTransform(const DirectX::SimpleMath::Vector3& aPosition, const DirectX::SimpleMath::Vector3& aRotation);
 	void SetPosition(const DirectX::SimpleMath::Vector3& aPosition);
 	void SetRotation(const DirectX::SimpleMath::Vector3& aRotation);
+	void SetRotation(DirectX::SimpleMath::Quaternion aQuaternion);
 	void SetScale(const DirectX::SimpleMath::Vector3& aScale);
 	void SetScale(const float aScale);
 	void Move(const DirectX::SimpleMath::Vector3& aMovement);
 	void Rotate(const DirectX::SimpleMath::Vector3& aRotation);
+
+	void SetIsActive(const bool anIsActive);
+	bool GetIsActive() const;
 	
 public:
 	const CLine* GetLine() const{ return myLine; }
@@ -48,6 +58,6 @@ public:
 private:
 	CLine*						myLine;
 	DirectX::SimpleMath::Matrix myTransform;
-
+	bool myIsActive;
 };
 

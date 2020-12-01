@@ -6,6 +6,13 @@
 #include "TransformComponent.h"
 #include "Debug.h"
 
+#ifdef _DEBUG
+#include "LineInstance.h"
+#include "LineFactory.h"
+#include "Engine.h"
+#include "Scene.h"
+#endif
+
 CRectangleColliderComponent::CRectangleColliderComponent(CGameObject& aParent) :
 	CCollider(aParent, ECollisionLayer::NONE, static_cast<int>(ECollisionLayer::NONE)),
 	myWidth(0.5f),
@@ -13,6 +20,9 @@ CRectangleColliderComponent::CRectangleColliderComponent(CGameObject& aParent) :
 {
 	
 	CCollisionManager::GetInstance()->RegisterCollider(this);
+#ifdef _DEBUG
+	myVisualizer = nullptr;
+#endif
 }
 
 CRectangleColliderComponent::CRectangleColliderComponent(CGameObject& aParent, float aWidth, float aHeight) :
@@ -21,6 +31,9 @@ CRectangleColliderComponent::CRectangleColliderComponent(CGameObject& aParent, f
 	myHeight(aHeight)
 {
 	CCollisionManager::GetInstance()->RegisterCollider(this);
+#ifdef _DEBUG
+	myVisualizer = nullptr;
+#endif
 }
 
 CRectangleColliderComponent::CRectangleColliderComponent(CGameObject& aParent, float aWidth, float aHeight, ECollisionLayer aCollisionLayer, uint64_t someCollisionFlags) :
@@ -29,9 +42,16 @@ CRectangleColliderComponent::CRectangleColliderComponent(CGameObject& aParent, f
 	myHeight(aHeight)
 {
 	CCollisionManager::GetInstance()->RegisterCollider(this);
+#ifdef _DEBUG
+	myVisualizer = nullptr;
+#endif
 }
 
 CRectangleColliderComponent::~CRectangleColliderComponent() {
+#ifdef _DEBUG
+	delete myVisualizer;
+	myVisualizer = nullptr;
+#endif // _DEBUG
 }
 
 void CRectangleColliderComponent::Awake() {
@@ -49,6 +69,14 @@ void CRectangleColliderComponent::Awake() {
 	//TODO Fix after Merge Conflicts Resolved
 	//myVertices.emplace_back(vector - GameObject().GetComponent<CTransformComponent>()->Position().Right * (myWidth / 2.0f));
 	myMax = vector + GameObject().GetComponent<CTransformComponent>()->Transform().Right() * (myWidth / 2.0f) * 100.0f;
+
+#ifdef _DEBUG
+	myVisualizer = new CLineInstance();
+	myVisualizer->Init(CLineFactory::GetInstance()->CreateSquareXZ(myWidth));
+	myVisualizer->SetPosition(GameObject().GetComponent<CTransformComponent>()->Position());
+	myVisualizer->SetRotation(GameObject().GetComponent<CTransformComponent>()->Rotation());
+	CEngine::GetInstance()->GetActiveScene().AddInstance(myVisualizer);
+#endif // _DEBUG
 }
 
 void CRectangleColliderComponent::Start() {
@@ -73,6 +101,11 @@ void CRectangleColliderComponent::Update()
 	//TODO Fix after Merge Conflicts Resolved
 	//myVertices.emplace_back(vector - GameObject().GetComponent<CTransformComponent>()->Position().Right * (myWidth / 2.0f));
 	myMax = vector + GameObject().GetComponent<CTransformComponent>()->Transform().Right() * (myWidth / 2.0f) * 100.0f;
+
+#ifdef _DEBUG
+	myVisualizer->SetPosition(GameObject().GetComponent<CTransformComponent>()->Position());
+	myVisualizer->SetRotation(GameObject().GetComponent<CTransformComponent>()->Rotation());
+#endif // _DEBUG
 
 	if (GetAsyncKeyState('C')) {
 		CDebug::GetInstance()->DrawLine(myMin, { myMax.x, 0.0f, myMin.z }, 0.00000000001f);
@@ -147,10 +180,23 @@ bool CRectangleColliderComponent::Collided(CCollider* aCollidedGameObject)
 
 void CRectangleColliderComponent::OnEnable()
 {
+#ifdef _DEBUG
+	if (myVisualizer)
+	{
+		myVisualizer->SetIsActive(true);
+	}
+#endif // _DEBUG
 }
 
 void CRectangleColliderComponent::OnDisable()
 {
+#ifdef _DEBUG
+	if (myVisualizer)
+	{
+		myVisualizer->SetPosition(CLineInstance::ourInactivePos);
+		myVisualizer->SetIsActive(false);
+	}
+#endif // _DEBUG
 }
 
 float const CRectangleColliderComponent::GetHeight() const

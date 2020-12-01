@@ -6,12 +6,22 @@
 #include "TransformComponent.h"
 #include "Debug.h"
 
+#ifdef _DEBUG
+#include "LineInstance.h"
+#include "LineFactory.h"
+#include "Engine.h"
+#include "Scene.h"
+#endif
+
 CTriangleColliderComponent::CTriangleColliderComponent(CGameObject& aParent) :
 	CCollider(aParent, ECollisionLayer::NONE, static_cast<int>(ECollisionLayer::NONE)),
 	myWidth(0.5f),
 	myHeight(0.5f)
 {
 	CCollisionManager::GetInstance()->RegisterCollider(this);
+#ifdef _DEBUG
+	myVisualizer = nullptr;
+#endif
 }
 
 CTriangleColliderComponent::CTriangleColliderComponent(CGameObject& aParent, float aWidth, float aHeight) :
@@ -20,6 +30,9 @@ CTriangleColliderComponent::CTriangleColliderComponent(CGameObject& aParent, flo
 	myHeight(aHeight)
 {
 	CCollisionManager::GetInstance()->RegisterCollider(this);
+#ifdef _DEBUG
+	myVisualizer = nullptr;
+#endif
 }
 
 CTriangleColliderComponent::CTriangleColliderComponent(CGameObject& aParent, float aWidth, float aHeight, ECollisionLayer aCollisionLayer, uint64_t someCollisionFlags) :
@@ -28,9 +41,16 @@ CTriangleColliderComponent::CTriangleColliderComponent(CGameObject& aParent, flo
 	myHeight(aHeight)
 {
 	CCollisionManager::GetInstance()->RegisterCollider(this);
+#ifdef _DEBUG
+	myVisualizer = nullptr;
+#endif
 }
 
 CTriangleColliderComponent::~CTriangleColliderComponent() {
+#ifdef _DEBUG
+	delete myVisualizer;
+	myVisualizer = nullptr;
+#endif // _DEBUG
 }
 
 
@@ -40,6 +60,15 @@ void CTriangleColliderComponent::Awake() {
 	SetPosition(GameObject().GetComponent<CTransformComponent>()->Position()); //Verex 0
 	myLeftVertex = (vector - GameObject().GetComponent<CTransformComponent>()->Transform().Right() * (myWidth / 2.0f) * 100.0f); //Verex 1
 	myRightVertex = (vector + GameObject().GetComponent<CTransformComponent>()->Transform().Right() * (myWidth / 2.0f) * 100.0f); //Verex 2
+
+#ifdef _DEBUG
+	myVisualizer = new CLineInstance();
+	myVisualizer->Init(CLineFactory::GetInstance()->CreateTriangleXZ(myHeight, myWidth));
+	myVisualizer->SetPosition(GameObject().GetComponent<CTransformComponent>()->Position());
+	myVisualizer->SetRotation(GameObject().GetComponent<CTransformComponent>()->Rotation());
+	CEngine::GetInstance()->GetActiveScene().AddInstance(myVisualizer);
+#endif // _DEBUG
+
 }
 
 void CTriangleColliderComponent::Start() {
@@ -50,6 +79,11 @@ void CTriangleColliderComponent::Update() {
 	SetPosition(GameObject().GetComponent<CTransformComponent>()->Position());
 	myLeftVertex = vector - GameObject().GetComponent<CTransformComponent>()->Transform().Right() * (myWidth / 2.0f) * 100.0f;
 	myRightVertex = vector + GameObject().GetComponent<CTransformComponent>()->Transform().Right() * (myWidth / 2.0f) * 100.0f;
+
+#ifdef _DEBUG
+	myVisualizer->SetPosition(GameObject().GetComponent<CTransformComponent>()->Position());
+	myVisualizer->SetRotation(GameObject().GetComponent<CTransformComponent>()->Rotation());
+#endif // _DEBUG
 
 	if (GetAsyncKeyState('C')) {
 
@@ -166,10 +200,23 @@ bool CTriangleColliderComponent::Collided(CCollider* aCollidedGameObject)
 
 void CTriangleColliderComponent::OnEnable()
 {
+#ifdef _DEBUG
+	if (myVisualizer)
+	{
+		myVisualizer->SetIsActive(true);
+	}
+#endif // _DEBUG
 }
 
 void CTriangleColliderComponent::OnDisable()
 {
+#ifdef _DEBUG
+	if (myVisualizer)
+	{
+		myVisualizer->SetPosition(CLineInstance::ourInactivePos);
+		myVisualizer->SetIsActive(false);
+	}
+#endif // _DEBUG
 }
 
 float const CTriangleColliderComponent::GetHeight() const

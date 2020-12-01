@@ -63,6 +63,15 @@ void CTransformComponent::Rotation(DirectX::SimpleMath::Quaternion aQuaternion)
 	myTransform.Translation(tempTranslation);
 }
 
+const DirectX::SimpleMath::Quaternion CTransformComponent::Rotation()
+{
+	Vector3 scale;
+	Vector3 translation;
+	Quaternion rotation;
+	myTransform.Decompose(scale, rotation, translation);
+	return rotation;
+}
+
 void CTransformComponent::Scale(float aScale)
 {
 	myScale = aScale;

@@ -25,6 +25,7 @@ public:
 
 	void Rotation(DirectX::SimpleMath::Vector3 aRotation);
 	void Rotation(DirectX::SimpleMath::Quaternion aQuaternion);
+	const DirectX::SimpleMath::Quaternion Rotation();
 	void Scale(float aScale);
 	float Scale();
 	void SetOutlineScale();
