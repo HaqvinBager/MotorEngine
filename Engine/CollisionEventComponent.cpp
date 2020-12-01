@@ -12,6 +12,7 @@ CCollisionEventComponent::CCollisionEventComponent(CGameObject& aGameObject, EMe
 	: CComponent(aGameObject)
 	, myMessageType(aMessageType)
 {
+	myTextMessage = "Testing Besting Mesting Lelsing";
 	aGameObject.AddComponent<CRectangleColliderComponent>(aGameObject, aWidth, aHeight, aCollisionLayer, someCollisionFlags);
 }
 
@@ -32,14 +33,17 @@ void CCollisionEventComponent::Update()
 {
 	CRectangleColliderComponent* collider = GameObject().GetComponent<CRectangleColliderComponent>();
 	CDebug::GetInstance()->DrawLine(collider->GetPosition(), { collider->GetPosition().x + 1.0f, collider->GetPosition().y, collider->GetPosition().z + 1.0f });
-
 }
 
 void CCollisionEventComponent::Collided(CGameObject* /*aCollidedGameObject*/)
 {
 	SMessage message = { };
-	message.data = &GameObject();
+	message.data = this;
 	message.myMessageType = myMessageType;
 	CMainSingleton::PostMaster().Send(message);
-	GameObject().GetComponent<CRectangleColliderComponent>()->Enabled(false);
+}
+
+const std::string& CCollisionEventComponent::GetEventMessage() const
+{
+	return myTextMessage;
 }

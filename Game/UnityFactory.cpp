@@ -77,11 +77,11 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
     CGameObject* player = CreateGameObject(aData.myPlayerData, aBinModelPaths[aData.myPlayerData.myModelIndex]);
     aScene.AddInstance(player);
 
-    //for (const auto& eventData : aData.myEventData)
-    //{
-    //    aScene.AddInstance(CreateGameObject(eventData));
-    //}
-    //
+    for (const auto& eventdata : aData.myEventData)
+    {
+        aScene.AddInstance(CreateGameObject(eventdata));
+    }
+    
     //CEnemyBehavior* enemyBehavior = new CEnemyBehavior(player);
     //for (const auto& enemyData : aData.myEnemyData) {
     //    aScene.AddInstance(CreateGameObject(enemyData, aBinModelPaths[enemyData.myModelIndex], enemyBehavior););
@@ -153,7 +153,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SPlayerData& aData, const std
     gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
     gameObject->AddComponent<CPlayerControllerComponent>(*gameObject);
     gameObject->AddComponent<CNavMeshComponent>(*gameObject);
-   // gameObject->AddComponent<CRectangleColliderComponent>(*gameObject, 1.f, 1.f,ECollisionLayer::PLAYER, static_cast<uint64_t>(ECollisionLayer::ALL));
+    gameObject->AddComponent<CRectangleColliderComponent>(*gameObject, 1.f, 1.f, ECollisionLayer::ALL, 1024);
 
     std::pair<EAbilityType, unsigned int> ab1 = { EAbilityType::PlayerAbility1, 1 };
     std::pair<EAbilityType, unsigned int> ab2 = { EAbilityType::PlayerAbility2, 1 };
@@ -184,6 +184,6 @@ CGameObject* CUnityFactory::CreateGameObject(const SEventData& aData)
 {
     CGameObject* gameObject = new CGameObject();
     gameObject->myTransform->Position(aData.myPosition);
-    gameObject->AddComponent<CCollisionEventComponent>(*gameObject, static_cast<EMessageType>(aData.myEvent), aData.myColliderData.x, aData.myColliderData.y, ECollisionLayer::Event, static_cast<uint64_t>(ECollisionLayer::PLAYER));
+    gameObject->AddComponent<CCollisionEventComponent>(*gameObject, static_cast<EMessageType>(aData.myEvent), aData.myColliderData.x, aData.myColliderData.y, ECollisionLayer::ALL, 1024);
     return gameObject;
 }

@@ -8,6 +8,7 @@ enum class EMessageType
 	Credits,
 	Options,
 	LoadLevel,
+	StartGame,
 	LevelSelect,
 	Quit,
 	AbilityOneCooldown,

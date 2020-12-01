@@ -6,6 +6,10 @@
 #include "Engine.h"
 #include "JsonReader.h"
 #include "GameObject.h"
+#include "PostMaster.h"
+#include "MainSingleton.h"
+
+#include "CollisionEventComponent.h"
 
 using namespace rapidjson;
 CLoadLevelState::CLoadLevelState(CStateStack& aStateStack) : CState(aStateStack)
@@ -13,18 +17,17 @@ CLoadLevelState::CLoadLevelState(CStateStack& aStateStack) : CState(aStateStack)
 	SaveLevelNames();
 	myState = CStateStack::EStates::LoadLevel;
 	myActiveScene = CEngine::GetInstance()->ScenesSize();
+	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel, this);
 }
 
 CLoadLevelState::~CLoadLevelState()
 {
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel, this);
 	CEngine::GetInstance()->PopBackScene();
 }
 
 void CLoadLevelState::Awake()
 {
-
-
-
 	unsigned int loadSceneIndex = Load(ELevel::LoadScreen);
 	CEngine::GetInstance()->SetActiveScene(loadSceneIndex);
 
@@ -137,4 +140,15 @@ std::vector<std::string>& CLoadLevelState::BinModelPaths(const ELevel aLevel)
 void CLoadLevelState::MakeSceneActive() {
 	CEngine::GetInstance()->SetActiveScene(myActiveScene);
 
+}
+
+void CLoadLevelState::Receive(const SMessage& aMessage)
+{
+	switch (aMessage.myMessageType)
+	{
+	case EMessageType::LoadLevel:		
+		CCollisionEventComponent* eventComponent = reinterpret_cast<CCollisionEventComponent*>(aMessage.data);
+		std::cout << "Load Level Event Message: " << eventComponent->GetEventMessage() << std::endl;
+		break;
+	}
 }

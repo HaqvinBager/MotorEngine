@@ -17,6 +17,9 @@ public:
 
 	void Collided(CGameObject* aCollidedGameObject) override;
 
+	const std::string& GetEventMessage() const;
+
 private:
 	EMessageType myMessageType;
+	std::string myTextMessage;
 };
