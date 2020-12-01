@@ -37,6 +37,10 @@ CScene::CScene()
 	myCollisionManager = new CCollisionManager();
 	myModelToOutline = nullptr;
 	myEnvironmentLight = nullptr;
+
+#ifdef _DEBUG
+	myShouldRenderLineInstance = true;
+#endif
 }
 
 CScene::~CScene()
@@ -171,7 +175,17 @@ const std::vector<SLineTime>& CScene::CullLines() const
 
 const std::vector<CLineInstance*>& CScene::CullLineInstances() const
 {
+#ifdef _DEBUG
+	if (myShouldRenderLineInstance)
+		return myLineInstances;
+	else
+	{
+		std::vector<CLineInstance*> temp;
+		return std::move(temp);
+	}
+#else
 	return myLineInstances;
+#endif
 }
 
 std::vector<CSpriteInstance*> CScene::CullSprites()
@@ -347,4 +361,11 @@ void CScene::SetModelToOutline(CGameObject* aGameObject)
 	else {
 		myModelToOutline = aGameObject;
 	}
+}
+
+void CScene::SetShouldRenderLineInstance(const bool aShouldRender)
+{
+#ifdef  _DEBUG
+	myShouldRenderLineInstance = aShouldRender;
+#endif //  _DEBUG
 }

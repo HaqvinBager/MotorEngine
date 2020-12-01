@@ -71,6 +71,8 @@ public:
 	const bool Ready() const { return myIsReadyToRender; }
 	void Ready(bool aReady) { myIsReadyToRender = aReady; }
 
+	void SetShouldRenderLineInstance(const bool aShouldRender);
+
 	const std::vector<CGameObject*>& GetActiveGameObjects() const { return myGameObjects; }
 
 	template <class T>
@@ -109,4 +111,9 @@ private:
 	static CScene* ourInstance;
 
 	CGameObject* myModelToOutline;
+
+#ifdef  _DEBUG
+private:
+	bool myShouldRenderLineInstance;
+#endif //  _DEBUG
 };
