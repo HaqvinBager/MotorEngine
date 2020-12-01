@@ -294,6 +294,7 @@
     <ClInclude Include="AbilityBehavior.h" />
     <ClInclude Include="InGameState.h" />
     <ClInclude Include="LoadLevelState.h" />
+    <ClInclude Include="MeleeAttackBehavior.h" />
     <ClInclude Include="PauseState.h" />
     <ClInclude Include="ProjectileBehavior.h" />
     <ClInclude Include="SceneData.h" />
@@ -315,6 +316,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="InGameState.cpp" />
     <ClCompile Include="LoadLevelState.cpp" />
+    <ClCompile Include="MeleeAttackBehavior.cpp" />
     <ClCompile Include="PauseState.cpp" />
     <ClCompile Include="ProjectileBehavior.cpp" />
     <ClCompile Include="SceneReader.cpp" />

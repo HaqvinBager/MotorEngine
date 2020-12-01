@@ -12,6 +12,7 @@
 #include "ProjectileBehavior.h"
 #include "AuraBehavior.h"
 #include "BoomerangBehavior.h"
+#include "MeleeAttackBehavior.h"
 #include "TransformComponent.h"
 #include "Scene.h"
 #include "InputMapper.h"
@@ -226,6 +227,7 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	CProjectileBehavior* projectileBehavior = nullptr;
 	CAuraBehavior* auraBehavior = nullptr;
 	CBoomerangBehavior* boomerangBehavior = nullptr;
+	CMeleeAttackBehavior* meleeAttackBehavior = nullptr;
 	std::string colliderType;
 
 	//VFX
@@ -263,6 +265,11 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	{
 		boomerangBehavior = new CBoomerangBehavior(behavior["Speed"].GetFloat());
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, boomerangBehavior, anAbilityType);
+	}
+	else if (behavior["Type"].GetString() == std::string("MeleeAttack"))
+	{
+		meleeAttackBehavior = new CMeleeAttackBehavior();
+		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, meleeAttackBehavior, anAbilityType);
 	}
 	//!BEHAVIOR
 
