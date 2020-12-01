@@ -111,7 +111,8 @@ CGameObject* CUnityFactory::CreateGameObject(const SCameraData& aData, bool addC
     CGameObject* gameObject = new CGameObject();
     gameObject->AddComponent<CCameraComponent>(*gameObject, aData.myFieldOfView);
     if (addCameraController) {
-        gameObject->AddComponent<CCameraControllerComponent>(*gameObject, aData.myFreeCamMoveSpeed, static_cast<CCameraControllerComponent::ECameraMode>(aData.myStartInCameraMode), static_cast<char>(aData.myToggleFreeCamKey), aData.myOffset);
+        int cameraMode = static_cast<int>(aData.myStartInCameraMode);
+        gameObject->AddComponent<CCameraControllerComponent>(*gameObject, aData.myFreeCamMoveSpeed, static_cast<CCameraControllerComponent::ECameraMode>(cameraMode), static_cast<char>(aData.myToggleFreeCamKey), aData.myOffset);
     }
     gameObject->myTransform->Position(aData.myPosition);
     gameObject->myTransform->Rotation(aData.myRotation);
