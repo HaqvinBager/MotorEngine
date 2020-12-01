@@ -77,15 +77,15 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
     CGameObject* player = CreateGameObject(aData.myPlayerData, aBinModelPaths[aData.myPlayerData.myModelIndex]);
     aScene.AddInstance(player);
 
-    for (const auto& eventdata : aData.myEventData)
-    {
-        aScene.AddInstance(CreateGameObject(eventdata));
-    }
-    
-    //CEnemyBehavior* enemyBehavior = new CEnemyBehavior(player);
-    //for (const auto& enemyData : aData.myEnemyData) {
-    //    aScene.AddInstance(CreateGameObject(enemyData, aBinModelPaths[enemyData.myModelIndex], enemyBehavior););
+    //for (const auto& eventdata : aData.myEventData)
+    //{
+    //    aScene.AddInstance(CreateGameObject(eventdata));
     //}
+    
+    CEnemyBehavior* enemyBehavior = new CEnemyBehavior(player);
+    for (const auto& enemyData : aData.myEnemyData) {
+        aScene.AddInstance(CreateGameObject(enemyData, aBinModelPaths[enemyData.myModelIndex], enemyBehavior));
+    }
 
     for (const auto& gameObjectData : aData.myGameObjects)
     {
@@ -171,8 +171,9 @@ CGameObject* CUnityFactory::CreateGameObject(const SEnemyData& aData, const std:
 {
     CGameObject* gameObject = new CGameObject();
     gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
-    gameObject->AddComponent<CStatsComponent>(*gameObject, aData.myHealth, aData.myDamage, aData.myMoveSpeed, /*TODO - damageCooldown*/ 0.f, aData.myVisionRange, aData.myAttackRange);
+    gameObject->AddComponent<CStatsComponent>(*gameObject, aData.myHealth, aData.myDamage, aData.myMoveSpeed, aData.myDamageCooldown, aData.myVisionRange, aData.myAttackRange);
     gameObject->AddComponent<CAIBehaviorComponent>(*gameObject, aBehavior);
+    gameObject->AddComponent<CNavMeshComponent>(*gameObject);
     gameObject->myTransform->Position(aData.myPosition);
     gameObject->myTransform->Rotation(aData.myRotation);
 
