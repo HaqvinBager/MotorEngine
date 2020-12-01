@@ -1,12 +1,13 @@
 #include "stdafx.h"
 #include "ModelFactory.h"
-#include "Model.h"
 #include "Engine.h"
 #include <d3d11.h>
 #include <fstream>
 #include "DDSTextureLoader.h"
 #include "FBXLoaderCustom.h"
 #include "ModelMath.h"
+#include "Model.h"
+#include <UnityFactory.h>
 
 
 #ifdef _DEBUG
@@ -154,6 +155,10 @@ CModel* CModelFactory::LoadModelPBR(std::string aFilePath)
 		{"UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		{"BONEID", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		{"BONEWEIGHT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"INSTANCETRANSFORM", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"INSTANCETRANSFORM", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"INSTANCETRANSFORM", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"INSTANCETRANSFORM", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1}
 	};
 
 	ID3D11InputLayout* inputLayout;
@@ -516,6 +521,176 @@ CModel* CModelFactory::GetOutlineModelSubset()
 	myOutlineModelSubset->Init(modelData);
 
 	return myOutlineModelSubset;
+}
+
+CModel* CModelFactory::CreateInstancedModels(std::string aFilePath, int aNumberOfInstanced)
+{
+	const size_t last_slash_idx = aFilePath.find_last_of("\\/");
+	std::string modelDirectory = aFilePath.substr(0, last_slash_idx + 1);
+	std::string modelName = aFilePath.substr(last_slash_idx + 1, aFilePath.size() - last_slash_idx - 5);
+
+	CFBXLoaderCustom modelLoader;
+	CLoaderModel* loaderModel = modelLoader.LoadModel(aFilePath.c_str());
+	ENGINE_ERROR_BOOL_MESSAGE(loaderModel, aFilePath.append(" could not be loaded.").c_str());
+
+	CLoaderMesh* mesh = loaderModel->myMeshes[0];
+
+	//Model
+	CModel* model = new CModel();
+	ENGINE_ERROR_BOOL_MESSAGE(model, "Empty model could not be loaded.");
+	model->InstanceCount(aNumberOfInstanced);
+
+	D3D11_BUFFER_DESC vertexBufferDescription = { 0 };
+	vertexBufferDescription.ByteWidth = mesh->myVertexBufferSize * mesh->myVertexCount;
+	vertexBufferDescription.Usage = D3D11_USAGE_IMMUTABLE;
+	vertexBufferDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+
+	D3D11_SUBRESOURCE_DATA vertexSubresourceData = { 0 };
+	vertexSubresourceData.pSysMem = mesh->myVerticies;
+	vertexSubresourceData.SysMemPitch = 0;
+	vertexSubresourceData.SysMemSlicePitch = 0;
+
+	if (vertexBufferDescription.ByteWidth == 0) {
+		return nullptr;
+	}
+	ID3D11Buffer* vertexBuffer;
+	ENGINE_HR_MESSAGE(myEngine->myFramework->GetDevice()->CreateBuffer(&vertexBufferDescription, &vertexSubresourceData, &vertexBuffer), "Vertex Buffer could not be created.");
+
+	D3D11_BUFFER_DESC indexBufferDescription = { 0 };
+	indexBufferDescription.ByteWidth = sizeof(unsigned int) * static_cast<UINT>(mesh->myIndexes.size());
+	indexBufferDescription.Usage = D3D11_USAGE_IMMUTABLE;
+	indexBufferDescription.BindFlags = D3D11_BIND_INDEX_BUFFER;
+
+	D3D11_SUBRESOURCE_DATA IndexSubresourceData = { 0 };
+	IndexSubresourceData.pSysMem = mesh->myIndexes.data();
+
+	ID3D11Buffer* indexBuffer;
+	ENGINE_HR_MESSAGE(myEngine->myFramework->GetDevice()->CreateBuffer(&indexBufferDescription, &IndexSubresourceData, &indexBuffer), "Index Buffer could not be created.");
+
+	//Instance Buffer
+	D3D11_BUFFER_DESC instanceBufferDesc;
+	instanceBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	instanceBufferDesc.ByteWidth = sizeof(CModel::SInstanceType) * model->InstanceCount();
+	instanceBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	instanceBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	instanceBufferDesc.MiscFlags = 0;
+	instanceBufferDesc.StructureByteStride = 0;
+
+	ID3D11Buffer* instanceBuffer;
+	ENGINE_HR_MESSAGE(myEngine->myFramework->GetDevice()->CreateBuffer(&instanceBufferDesc, nullptr, &instanceBuffer), "Instance Buffer could not be created.");
+
+
+	//VertexShader
+	std::ifstream vsFile;
+	if (mesh->myModel->myNumBones > 0)
+	{
+		vsFile.open("Shaders/AnimatedVertexShader.cso", std::ios::binary);
+	}
+	else {
+		vsFile.open("Shaders/InstancedVertexShader.cso", std::ios::binary);
+	}
+
+	std::string vsData = { std::istreambuf_iterator<char>(vsFile), std::istreambuf_iterator<char>() };
+	ID3D11VertexShader* vertexShader;
+	ENGINE_HR_MESSAGE(myEngine->myFramework->GetDevice()->CreateVertexShader(vsData.data(), vsData.size(), nullptr, &vertexShader), "Vertex Shader could not be created.");
+
+	vsFile.close();
+
+
+	//PixelShader
+	std::ifstream psFile;
+	psFile.open("Shaders/PBRPixelShader.cso", std::ios::binary);
+	std::string psData = { std::istreambuf_iterator<char>(psFile), std::istreambuf_iterator<char>() };
+
+	ID3D11PixelShader* pixelShader;
+	ENGINE_HR_MESSAGE(myEngine->myFramework->GetDevice()->CreatePixelShader(psData.data(), psData.size(), nullptr, &pixelShader), "Pixel Shader could not be created.");
+
+	psFile.close();
+
+	//Sampler
+	ID3D11SamplerState* sampler;
+	D3D11_SAMPLER_DESC samplerDesc = { };
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+
+	ENGINE_HR_MESSAGE(myEngine->myFramework->GetDevice()->CreateSamplerState(&samplerDesc, &sampler), "Sampler State could not be created.");
+
+	//Layout
+	D3D11_INPUT_ELEMENT_DESC layout[] =
+	{
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TANGENT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"BITANGENT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"BONEID", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"BONEWEIGHT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"INSTANCETRANSFORM", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"INSTANCETRANSFORM", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"INSTANCETRANSFORM", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"INSTANCETRANSFORM", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1}
+	};
+
+	ID3D11InputLayout* inputLayout;
+	ENGINE_HR_MESSAGE(myEngine->myFramework->GetDevice()->CreateInputLayout(layout, sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC), vsData.data(), vsData.size(), &inputLayout), "Input Layout could not be created.");
+
+	ID3D11Device* device = myEngine->myFramework->GetDevice();
+	std::string modelDirectoryAndName = modelDirectory + modelName;
+
+	//UPDATE THIS ON MONDAY
+	//std::map<int, std::string> trimsheets;
+	//trimsheets.emplace(static_cast<int>('1'), "ts_1_Dungeon");
+	//trimsheets.emplace(static_cast<int>('2'), "ts_2_Something");
+
+	// Check if model uses trimsheet.
+	// suffix ts_#
+	std::string suffix = aFilePath.substr(aFilePath.length() - 8, 4);
+	if (suffix.substr(0, 3) == TRIMSHEET_STRING)
+	{
+		// Info
+		int suffixNr = static_cast<int>(suffix[3]);	// std::string suffix = "ts_1". "ts_#" ; # = an integer
+		suffixNr = abs(49 - suffixNr);			// 49 == static_cast<int>('1'). The ASCII value of '1' is 49. '1' == 49, '2' == 50, '9' == 58 => 49 - (int)'2' = -1 and 49 - '3' = -2
+		if (suffixNr >= 0/*static_cast<int>(MIN_NUM_TRIMSHEETS_CHAR)*/ && suffixNr <= NUM_TRIM_SHEETS/*static_cast<int>(MAX_NUM_TRIMSHEETS_CHAR)*/)
+		{
+			std::array<std::string, NUM_TRIM_SHEETS> trimsheets = { TRIMSHEET_1, TRIMSHEET_2 };
+			modelDirectoryAndName = TRIMSHEET_PATH + trimsheets[suffixNr];
+		}
+	}
+	// ! Check if model uses trimsheet
+
+	ID3D11ShaderResourceView* diffuseResourceView = GetShaderResourceView(device, /*TexturePathWide*/(modelDirectoryAndName + "_D.dds"));
+	ID3D11ShaderResourceView* materialResourceView = GetShaderResourceView(device, /*TexturePathWide*/(modelDirectoryAndName + "_M.dds"));
+	ID3D11ShaderResourceView* normalResourceView = GetShaderResourceView(device, /*TexturePathWide*/(modelDirectoryAndName + "_N.dds"));
+
+	//ID3D11ShaderResourceView* metalnessShaderResourceView = GetShaderResourceView(device, TexturePathWide(modelDirectory + loaderModel->myTextures[10]));
+	//ID3D11ShaderResourceView* roughnessShaderResourceView = GetShaderResourceView(device, TexturePathWide(modelDirectory + loaderModel->myTextures[1]));
+	//ID3D11ShaderResourceView* ambientShaderResourceView = GetShaderResourceView(device, TexturePathWide(modelDirectory + loaderModel->myTextures[2]));
+	//ID3D11ShaderResourceView* emissiveShaderResourceView = GetShaderResourceView(device, TexturePathWide(modelDirectory + loaderModel->myTextures[3]));
+
+	CModel::SModelInstanceData modelInstanceData;
+	modelInstanceData.myNumberOfVertices = mesh->myVertexCount;
+	modelInstanceData.myNumberOfIndices = static_cast<UINT>(mesh->myIndexes.size());
+	modelInstanceData.myStride[0] = mesh->myVertexBufferSize;
+	modelInstanceData.myStride[1] = sizeof(CModel::SInstanceType);
+	modelInstanceData.myOffset[0] = 0;
+	modelInstanceData.myOffset[1] = 0;
+	modelInstanceData.myVertexBuffer = vertexBuffer;
+	modelInstanceData.myIndexBuffer = indexBuffer;
+	modelInstanceData.myInstanceBuffer = instanceBuffer;
+	modelInstanceData.myVertexShader = vertexShader;
+	modelInstanceData.myPixelShader = pixelShader;
+	modelInstanceData.mySamplerState = sampler;
+	modelInstanceData.myPrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	modelInstanceData.myInputLayout = inputLayout;
+	modelInstanceData.myTexture[0] = diffuseResourceView;
+	modelInstanceData.myTexture[1] = materialResourceView;
+	modelInstanceData.myTexture[2] = normalResourceView;
+
+	model->Init(modelInstanceData);
+
+	return model;
 }
 
 

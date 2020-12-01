@@ -2,10 +2,8 @@
 #include <string>
 #include <map>
 
-
-class CModel;
 class CEngine;
-class CModelInstance;
+class CModel;
 
 struct ID3D11Device;
 
@@ -22,6 +20,8 @@ public:
 	CModel* GetCube();
 
 	CModel* GetOutlineModelSubset();
+
+	CModel* CreateInstancedModels(std::string aFilePath, int aNumberOfInstanced);
 
 private:
 	CModelFactory();

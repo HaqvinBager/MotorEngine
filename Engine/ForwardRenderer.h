@@ -24,6 +24,7 @@ public:
 
 	bool Init(CDirectXFramework* aFramework);
 	void Render(CEnvironmentLight* anEnvironmentLight, std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> aModelPointLightList, CCameraComponent* aCamera, std::vector<CGameObject*>& aGameObjectList);
+	void InstancedRender(CEnvironmentLight* anEnvironmentLight, std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> aModelPointLightList, CCameraComponent* aCamera, std::vector<CGameObject*>& aGameObjectList);
 	void RenderLines(CCameraComponent* aCamera, const std::vector<SLineTime>& aLineList);
 	void RenderOutline(CCameraComponent* aCamera, CGameObject* aModelInstance, CModel* someOutlineModelData);
 	void RenderLineInstances(CCameraComponent* aCamera, const std::vector<CLineInstance*>& aLineList);

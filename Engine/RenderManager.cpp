@@ -8,6 +8,7 @@
 #include "TransformComponent.h"
 #include "CameraComponent.h"
 #include "ModelComponent.h"
+#include "InstancedModelComponent.h"
 
 CRenderManager::CRenderManager() /*: myScene(*CScene::GetInstance())*/
 {
@@ -94,14 +95,21 @@ void CRenderManager::Render(CScene& aScene)
 	CCameraComponent* maincamera = aScene.GetMainCamera();
 	//std::vector<CModelComponent*> modelsToRender = myScene.CullGameObjects(maincamera);
 	std::vector<CGameObject*> gameObjects = aScene.CullGameObjects(maincamera);
+	std::vector<CGameObject*> instancedGameObjects;
 	std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> pointlights;
 	for (CGameObject* instance : gameObjects)
 	{
-		if(instance->GetComponent<CModelComponent>())
-			pointlights.push_back(aScene.CullLights(instance));
+		if (instance->GetComponent<CModelComponent>()) {
+			pointlights.emplace_back(aScene.CullLights(instance));
+		}
+		else if (instance->GetComponent<CInstancedModelComponent>()) {
+			pointlights.emplace_back(aScene.CullLights(instance));
+			instancedGameObjects.emplace_back(instance);
+		}
 	}
-	myForwardRenderer.Render(environmentlight, pointlights, maincamera, gameObjects);
 
+	myForwardRenderer.Render(environmentlight, pointlights, maincamera, gameObjects);
+	myForwardRenderer.InstancedRender(environmentlight, pointlights, maincamera, instancedGameObjects);
 
 	auto modelToOutline = aScene.GetModelToOutline();
 	if (modelToOutline) {

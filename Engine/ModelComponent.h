@@ -22,7 +22,6 @@ public:
 	void OnEnable() override;
 	void OnDisable() override;
 private:
-
 	CModel* myModel;
 };
 

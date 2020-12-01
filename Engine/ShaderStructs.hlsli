@@ -40,7 +40,8 @@ struct VertexInput
     float4 myBiNormal : BITANGENT;      //16
 	float2 myUV : UV;                   //8
 	float4 myBoneID : BONEID;           //16
-	float4 myBoneWeight : BONEWEIGHT;   //16
+    float4 myBoneWeight : BONEWEIGHT; //16
+    column_major float4x4 myTransform : INSTANCETRANSFORM;
 };
 
 struct AnimVertexToPixel

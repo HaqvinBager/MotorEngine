@@ -18,6 +18,7 @@ class CTextInstance;
 class CCameraComponent;
 struct SLineTime;
 struct SNavMesh;
+class CModel;
 
 class CScene {
 	friend class CEngine;

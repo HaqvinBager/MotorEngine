@@ -82,6 +82,9 @@
     <FxCompile Include="SpriteVFXSphericalTextureBlendingPixelShader.hlsl">
       <Filter>Shaders\Sprite</Filter>
     </FxCompile>
+    <FxCompile Include="InstancedVertexShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EnemyFactory.cpp" />
@@ -343,6 +346,7 @@
     <ClCompile Include="AnimatedUIElement.cpp">
       <Filter>Sprite</Filter>
     </ClCompile>
+    <ClCompile Include="InstancedModelComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EnemyFactory.h" />
@@ -650,6 +654,7 @@
     <ClInclude Include="AnimatedUIElement.h">
       <Filter>Sprite</Filter>
     </ClInclude>
+    <ClInclude Include="InstancedModelComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PBRDirectionalLight.hlsli">

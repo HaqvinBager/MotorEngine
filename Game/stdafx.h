@@ -11,3 +11,5 @@
 #include "Timer.h"
 
 #include "Input.h"
+
+using namespace DirectX::SimpleMath;

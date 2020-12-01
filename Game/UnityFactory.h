@@ -25,6 +25,7 @@ private:
 	CGameObject* CreateGameObject(const SPointLightData& aData);
 
 	CGameObject* CreateGameObject(const SGameObjectData& aData, const std::string& aModelPath);
+	CGameObject* CreateGameObjectInstanced(const std::string& aModelPath, int aInstancedID, std::vector<DirectX::SimpleMath::Matrix> aInstancedTransforms);
 	CGameObject* CreateGameObject(const SPlayerData& aData, const std::string& aModelPath);
 
 	CGameObject* CreateGameObject(const SEnemyData& aData, const std::string& aModelPath, IAIBehavior* aBehavior);

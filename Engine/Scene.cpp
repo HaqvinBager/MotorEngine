@@ -18,6 +18,9 @@
 #include "CameraComponent.h"
 #include "NavmeshLoader.h"
 #include "LineFactory.h"
+#include "ModelFactory.h"
+#include "Model.h"
+#include "InstancedModelComponent.h"
 
 CScene* CScene::ourInstance = nullptr;
 
@@ -109,6 +112,10 @@ std::vector<CGameObject*> CScene::CullGameObjects(CCameraComponent* aMainCamera)
 	for (auto& gameObject : myGameObjects)
 	{
 		if (!gameObject->Active()) {
+			continue;
+		}
+		if (gameObject->GetComponent<CInstancedModelComponent>()) {
+			culledGameObjects.emplace_back(gameObject);
 			continue;
 		}
 
