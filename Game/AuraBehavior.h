@@ -11,7 +11,7 @@ public:
 
 	void Update(CGameObject* aParent) override;
 
-	void Init(DirectX::SimpleMath::Vector3 aCasterPosition) override;
+	void Init(CGameObject* aGameObject) override;
 
 private:
 	CGameObject* myObjectToFollow;

@@ -31,8 +31,8 @@ void CProjectileBehavior::Update(CGameObject* aParent)
 	aParent->GetComponent<CTransformComponent>()->Move(myDirection * mySpeed * CTimer::Dt());
 }
 
-void CProjectileBehavior::Init(DirectX::SimpleMath::Vector3 aCasterPosition)
+void CProjectileBehavior::Init(CGameObject* aGameObject)
 {
-	myDirection = MouseTracker::ScreenPositionToWorldPosition() - aCasterPosition;
+	myDirection = MouseTracker::ScreenPositionToWorldPosition() - aGameObject->GetComponent<CTransformComponent>()->Position();
 	myDirection.Normalize();
 }

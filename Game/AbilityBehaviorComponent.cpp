@@ -43,7 +43,7 @@ EAbilityType CAbilityBehaviorComponent::GetAbilityType() const
 	return myAbilityType;
 }
 
-void CAbilityBehaviorComponent::Init(DirectX::SimpleMath::Vector3 aCasterPosition)
+void CAbilityBehaviorComponent::Init(CGameObject* aCaster)
 {
-	myBehavior->Init(aCasterPosition);
+	myBehavior->Init(aCaster);
 }

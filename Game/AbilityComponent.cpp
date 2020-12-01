@@ -11,6 +11,7 @@
 #include "CircleColliderComponent.h"
 #include "ProjectileBehavior.h"
 #include "AuraBehavior.h"
+#include "BoomerangBehavior.h"
 #include "TransformComponent.h"
 #include "Scene.h"
 #include "InputMapper.h"
@@ -41,11 +42,11 @@ CAbilityComponent::CAbilityComponent(CGameObject& aParent, std::vector<std::pair
 	Document document;
 	document.ParseStream(inputWrapper);
 
-	myFilePaths.emplace(EAbilityType::PlayerAbility1, document["Ability Test"].GetString());
+	myFilePaths.emplace(EAbilityType::PlayerAbility1, document["Player Ability 1"].GetString());
 	myFilePaths.emplace(EAbilityType::PlayerAbility2, document["Player Ability 2"].GetString());
-	myFilePaths.emplace(EAbilityType::PlayerAbility3, document["Ability Test"].GetString());
-	myFilePaths.emplace(EAbilityType::PlayerAbility4, document["Ability Test"].GetString());
-	myFilePaths.emplace(EAbilityType::PlayerAbility5, document["Ability Test"].GetString());
+	myFilePaths.emplace(EAbilityType::PlayerAbility3, document["Player Ability 3"].GetString());
+	myFilePaths.emplace(EAbilityType::PlayerAbility4, document["Player Ability 4"].GetString());
+	myFilePaths.emplace(EAbilityType::PlayerAbility5, document["Player Ability 5"].GetString());
 	myFilePaths.emplace(EAbilityType::EnemyAbility, document["Ability Test"].GetString());
 	myFilePaths.emplace(EAbilityType::BossAbility1, document["Ability Test"].GetString());
 	myFilePaths.emplace(EAbilityType::BossAbility2, document["Ability Test"].GetString());
@@ -123,7 +124,7 @@ void CAbilityComponent::UseAbility(EAbilityType anAbilityType, DirectX::SimpleMa
 
 	// getparent().playanimation(myactiveabilities.back().getcomponent<pod>().myanimation);
 
-	myActiveAbilities.back()->GetComponent<CAbilityBehaviorComponent>()->Init(aSpawnPosition);
+	myActiveAbilities.back()->GetComponent<CAbilityBehaviorComponent>()->Init(&GameObject());
 
 	//switch (anAbilityType)
 	//{
@@ -222,6 +223,7 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	CGameObject* abilityObject = new CGameObject();
 	CProjectileBehavior* projectileBehavior = nullptr;
 	CAuraBehavior* auraBehavior = nullptr;
+	CBoomerangBehavior* boomerangBehavior = nullptr;
 	std::string colliderType;
 
 	//VFX
@@ -254,6 +256,11 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	{
 		projectileBehavior = new CProjectileBehavior(behavior["Speed"].GetFloat(), behavior["Duration"].GetFloat());
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, projectileBehavior, anAbilityType);
+	}
+	else if (behavior["Type"].GetString() == std::string("Boomerang"))
+	{
+		boomerangBehavior = new CBoomerangBehavior(behavior["Speed"].GetFloat());
+		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, boomerangBehavior, anAbilityType);
 	}
 	//!BEHAVIOR
 
