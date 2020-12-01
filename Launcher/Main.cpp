@@ -133,6 +133,9 @@ void RunGame(LPWSTR lpCmdLine)
 			}
 		}
 
+		if (!shouldRun)
+			break;
+
 		engine.BeginFrame();
 		shouldRun = game.Update();
 		engine.RenderFrame();

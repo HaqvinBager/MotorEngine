@@ -149,7 +149,8 @@ float CEngine::BeginFrame()
 
 void CEngine::RenderFrame()
 {
-	myRenderManager->Render(*myScenes[myActiveScene]);
+	if(myScenes.size() > 0)
+		myRenderManager->Render(*myScenes[myActiveScene]);
 }
 
 void CEngine::EndFrame()
