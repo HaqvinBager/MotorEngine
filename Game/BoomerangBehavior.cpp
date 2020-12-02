@@ -12,56 +12,44 @@
 
 namespace SM = DirectX::SimpleMath;
 
-CBoomerangBehavior::CBoomerangBehavior(float aSpeed, float aResourceCost)
+CBoomerangBehavior::CBoomerangBehavior(float aSpeed, float aDuration, float aResourceCost)
 {
 	myDirection = {0.0f, 0.0f, 0.0f};
 	mySpeed = aSpeed;
 	myTimer = 0.0f;
 	myCaster = nullptr;
 	myIsReturning = false;
+	myDuration = aDuration;
 	myResourceCost = aResourceCost;
+	myHalfLife = myDuration / 2.0f;
 }
 
 CBoomerangBehavior::~CBoomerangBehavior()
 {
-	//myCaster = nullptr;
+	myCaster = nullptr;
 }
 
 void CBoomerangBehavior::Update(CGameObject* aParent)
 {
 	if (myCaster != nullptr) {
-		if (!myIsReturning)
-		{
-			myIsReturning = CheckDistance(aParent->GetComponent<CTransformComponent>()->Position(), myTargetPosition);
+		myTimer += CTimer::Dt();
+
+		if (myTimer < myHalfLife) {
 			aParent->GetComponent<CTransformComponent>()->Move(myDirection * mySpeed * CTimer::Dt());
-		} else if (!CheckDistance(aParent->GetComponent<CTransformComponent>()->Position(), myCaster->GetComponent<CTransformComponent>()->Position()))
+
+		} else if (myTimer < myDuration) {
+			CalculateDirection(myCaster->GetComponent<CTransformComponent>()->Position(), aParent->GetComponent<CTransformComponent>()->Position());
+			aParent->GetComponent<CTransformComponent>()->Move(myDirection * mySpeed * CTimer::Dt());
+		}
+		else 
 		{
-			CalculateDirection(aParent->GetComponent<CTransformComponent>()->Position(), myCaster->GetComponent<CTransformComponent>()->Position());
-			aParent->GetComponent<CTransformComponent>()->Move(-myDirection * mySpeed * CTimer::Dt());
-		} else
-		{
+			myTimer = 0.0f;
 			aParent->Active(false);
 		}
 	} else {
 		aParent->Active(false);
 	}
 
-}
-
-bool CBoomerangBehavior::CheckDistance(DirectX::SimpleMath::Vector3 aFirstPosition, DirectX::SimpleMath::Vector3 aSecondPosition)
-{
-	int x1 = static_cast<int>(aFirstPosition.x);
-	int x2 = static_cast<int>(aSecondPosition.x);
-
-	if (x1 == x2) {
-		int z1 = static_cast<int>(aFirstPosition.z);
-		int z2 = static_cast<int>(aSecondPosition.z);
-		if (z1 == z2) {
-			return true;
-		}
-	}
-
-	return false;
 }
 
 void CBoomerangBehavior::CalculateDirection(DirectX::SimpleMath::Vector3 aFirstPosition, DirectX::SimpleMath::Vector3 aSecondPosition)

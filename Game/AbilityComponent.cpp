@@ -287,7 +287,7 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	}
 	else if (behavior["Type"].GetString() == std::string("Boomerang"))
 	{
-		boomerangBehavior = new CBoomerangBehavior(behavior["Speed"].GetFloat(), behavior["ResourceCost"].GetFloat());
+		boomerangBehavior = new CBoomerangBehavior(behavior["Speed"].GetFloat(), behavior["Duration"].GetFloat(), behavior["ResourceCost"].GetFloat());
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, boomerangBehavior, anAbilityType);
 	}
 	else if (behavior["Type"].GetString() == std::string("MeleeAttack"))

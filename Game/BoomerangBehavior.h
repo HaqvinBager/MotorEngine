@@ -10,11 +10,10 @@ namespace DirectX {
 class CBoomerangBehavior: public IAbilityBehavior
 {
 public:
-	CBoomerangBehavior(float aSpeed, float aResourceCost);
+	CBoomerangBehavior(float aSpeed, float aDuration, float aResourceCost);
 	~CBoomerangBehavior() override;
 
 	void Update(CGameObject* aParent) override;
-	bool CheckDistance(DirectX::SimpleMath::Vector3 aFirstPosition, DirectX::SimpleMath::Vector3 aSecondPosition);
 	void CalculateDirection(DirectX::SimpleMath::Vector3 aFirstPosition, DirectX::SimpleMath::Vector3 aSecondPosition);
 	void Init(CGameObject* aCaster) override;
 
@@ -24,6 +23,7 @@ private:
 	CGameObject* myCaster;
 
 	float mySpeed;
+	float myHalfLife;
 	float myResourceCost;
 	bool myIsReturning;
 };
