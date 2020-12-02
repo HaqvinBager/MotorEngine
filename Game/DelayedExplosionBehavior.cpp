@@ -11,7 +11,7 @@ CDelayedExplosionBehavior::CDelayedExplosionBehavior(float aDuration, float aDel
 	myParent(aParent),
 	myCaster(nullptr)
 {
-	myDuration = 0.0f;
+	myDuration = aDuration;
 	myTimer = 0.0f;
 }
 

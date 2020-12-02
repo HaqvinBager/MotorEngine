@@ -288,6 +288,7 @@
     <ClInclude Include="AudioManager.h" />
     <ClInclude Include="AuraBehavior.h" />
     <ClInclude Include="BoomerangBehavior.h" />
+    <ClInclude Include="DelayedExplosionBehavior.h" />
     <ClInclude Include="DialogueSystem.h" />
     <ClInclude Include="EnemyBehavior.h" />
     <ClInclude Include="Game.h" />
@@ -312,6 +313,7 @@
     <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="AuraBehavior.cpp" />
     <ClCompile Include="BoomerangBehavior.cpp" />
+    <ClCompile Include="DelayedExplosionBehavior.cpp" />
     <ClCompile Include="DialogueSystem.cpp" />
     <ClCompile Include="EnemyBehavior.cpp" />
     <ClCompile Include="Game.cpp" />
