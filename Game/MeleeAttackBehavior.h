@@ -17,7 +17,7 @@ public:
 	~CMeleeAttackBehavior() override;
 
 	void Init(CGameObject* aGameObject) override;
-	void Update(CGameObject* aParent) override;
+	void Update(CGameObject* aCaster) override;
 
 private:
 	DirectX::SimpleMath::Vector3 myDirection;

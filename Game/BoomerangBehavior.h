@@ -16,7 +16,7 @@ public:
 	void Update(CGameObject* aParent) override;
 	bool CheckDistance(DirectX::SimpleMath::Vector3 aFirstPosition, DirectX::SimpleMath::Vector3 aSecondPosition);
 	void CalculateDirection(DirectX::SimpleMath::Vector3 aFirstPosition, DirectX::SimpleMath::Vector3 aSecondPosition);
-	void Init(CGameObject* aGameObject) override;
+	void Init(CGameObject* aCaster) override;
 
 private:
 	DirectX::SimpleMath::Vector3 myDirection;

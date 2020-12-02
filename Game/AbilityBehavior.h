@@ -8,7 +8,7 @@ public:
 
 	virtual void Update(CGameObject* aParent) = 0;
 
-	virtual void Init(CGameObject* aGameObject) = 0;
+	virtual void Init(CGameObject* aCaster) = 0;
 
 public:
 	float myDuration;

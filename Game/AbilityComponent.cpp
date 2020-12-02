@@ -14,6 +14,7 @@
 #include "BoomerangBehavior.h"
 #include "MeleeAttackBehavior.h"
 #include "SpeedExplodeBehavior.h"
+#include "DelayedExplosionBehavior.h"
 #include "TransformComponent.h"
 #include "Scene.h"
 #include "InputMapper.h"
@@ -211,6 +212,24 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 		myMessage.data = &messageValue;
 		CMainSingleton::PostMaster().Send(myMessage);
 		break;
+	case EInputEvent::MoveClick:
+		if (myCurrentCooldowns[2] > 0)
+			break;
+		UseAbility(EAbilityType::PlayerAbility4, GameObject().myTransform->Position());
+		/*myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
+		myCurrentCooldowns[2] = myMaxCooldowns[2];
+		myMessage.data = &messageValue;
+		CMainSingleton::PostMaster().Send(myMessage);*/
+		break;
+	case EInputEvent::AttackClick:
+		if (myCurrentCooldowns[2] > 0)
+			break;
+		UseAbility(EAbilityType::PlayerAbility5, GameObject().myTransform->Position());
+		/*myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
+		myCurrentCooldowns[2] = myMaxCooldowns[2];
+		myMessage.data = &messageValue;
+		CMainSingleton::PostMaster().Send(myMessage);*/
+		break;
 	default:
 		break;
 	}
@@ -231,6 +250,7 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	CMeleeAttackBehavior* meleeAttackBehavior = nullptr;
 	CMeleeAttackBehavior* fireCone = nullptr;
 	CSpeedExplodeBehavior* speedExplodeBehavior = nullptr;
+	CDelayedExplosionBehavior* delayedExplosionBehavior = nullptr;
 	std::string colliderType;
 
 	//VFX
@@ -283,6 +303,11 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	{
 		speedExplodeBehavior = new CSpeedExplodeBehavior(behavior["Duration"].GetFloat(), behavior["ExplodeAfter"].GetFloat(), abilityObject);
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, speedExplodeBehavior, anAbilityType);
+	}
+	else if (behavior["Type"].GetString() == std::string("DelayedExplosion"))
+	{
+		delayedExplosionBehavior = new CDelayedExplosionBehavior(behavior["Duration"].GetFloat(), behavior["Delay"].GetFloat(), abilityObject);
+		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, delayedExplosionBehavior, anAbilityType);
 	}
 	//!BEHAVIOR
 

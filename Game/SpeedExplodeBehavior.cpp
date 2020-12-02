@@ -7,18 +7,18 @@
 #include "Engine.h"
 #include "CircleColliderComponent.h"
 
-CSpeedExplodeBehavior::CSpeedExplodeBehavior(float aDuration, float aExpodeTime, CGameObject* anAbilityObject)
+CSpeedExplodeBehavior::CSpeedExplodeBehavior(float aDuration, float aDelay, CGameObject* aParent)
 {
-	myDirection = { 0.0f, 0.0f, 0.0f };
 	myDuration = aDuration;
 	myTimer = 0.0f;
-	myExplodesAfter = aExpodeTime;
-	myAbilityObject = anAbilityObject;
+	myDelay = aDelay;
+	myParent = aParent;
 	myCaster = nullptr;
 }
 
 CSpeedExplodeBehavior::~CSpeedExplodeBehavior()
 {
+	myParent = nullptr;
 	myCaster = nullptr;
 }
 
@@ -26,25 +26,23 @@ void CSpeedExplodeBehavior::Init(CGameObject* aGameObject)
 {
 	myCaster = aGameObject;
 	
-	myAbilityObject->GetComponent<CCircleColliderComponent>()->Enabled(false); //TODO: getting a collider like this is not good as it limits it to one circle collider ability
-
-	myDirection = MouseTracker::ScreenPositionToWorldPosition() - aGameObject->GetComponent<CTransformComponent>()->Position();
-	myDirection.Normalize();
+	myParent->GetComponent<CCircleColliderComponent>()->Enabled(false); //TODO: getting a collider like this is not good as it limits it to one circle collider ability 
+																		//Is probably fine for this ability, since you probably only want 1 explosion and speed up at a time
 }
 
-#include <iostream>
+//#include <iostream>
 void CSpeedExplodeBehavior::Update(CGameObject* aParent)
 {
 	if (myCaster)
 	{
 		myTimer += CTimer::Dt();
-		//TODO: speed up player
+		//TODO: speed up the parent object
 
-		if (myTimer > myExplodesAfter)
+		if (myTimer > myDelay)
 		{
 			//TODO: explodess
 			aParent->GetComponent<CCircleColliderComponent>()->Enabled(true);
-			std::cout << "exploooode\n";
+			//std::cout << "exploooode\n";
 		}
 
 		if (myTimer > myDuration)

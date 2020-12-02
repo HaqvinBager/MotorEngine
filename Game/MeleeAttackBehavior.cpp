@@ -19,11 +19,11 @@ CMeleeAttackBehavior::~CMeleeAttackBehavior()
 	myCaster = nullptr;
 }
 
-void CMeleeAttackBehavior::Init(CGameObject* aGameObject)
+void CMeleeAttackBehavior::Init(CGameObject* aCaster)
 {
-	myCaster = aGameObject;
+	myCaster = aCaster;
 
-	myDirection = MouseTracker::ScreenPositionToWorldPosition() - aGameObject->GetComponent<CTransformComponent>()->Position();
+	myDirection = MouseTracker::ScreenPositionToWorldPosition() - aCaster->GetComponent<CTransformComponent>()->Position();
 	myDirection.Normalize();
 }
 

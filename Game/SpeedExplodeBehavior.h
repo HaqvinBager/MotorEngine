@@ -20,9 +20,8 @@ public:
 	void Update(CGameObject* aParent) override;
 
 private:
-	float myExplodesAfter;
-	DirectX::SimpleMath::Vector3 myDirection;
+	float myDelay;
 	CGameObject* myCaster;
-	CGameObject* myAbilityObject;
+	CGameObject* myParent;
 };
 

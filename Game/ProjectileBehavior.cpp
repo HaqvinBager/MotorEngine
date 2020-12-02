@@ -31,8 +31,8 @@ void CProjectileBehavior::Update(CGameObject* aParent)
 	aParent->GetComponent<CTransformComponent>()->Move(myDirection * mySpeed * CTimer::Dt());
 }
 
-void CProjectileBehavior::Init(CGameObject* aGameObject)
+void CProjectileBehavior::Init(CGameObject* aCaster)
 {
-	myDirection = MouseTracker::ScreenPositionToWorldPosition() - aGameObject->GetComponent<CTransformComponent>()->Position();
+	myDirection = MouseTracker::ScreenPositionToWorldPosition() - aCaster->GetComponent<CTransformComponent>()->Position();
 	myDirection.Normalize();
 }

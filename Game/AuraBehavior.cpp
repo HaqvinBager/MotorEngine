@@ -28,6 +28,6 @@ void CAuraBehavior::Update(CGameObject* aParent)
 	aParent->GetComponent<CTransformComponent>()->Rotate(rotation);
 }
 
-void CAuraBehavior::Init(CGameObject* /*aGameObject*/)
+void CAuraBehavior::Init(CGameObject* /*aCaster*/)
 {
 }

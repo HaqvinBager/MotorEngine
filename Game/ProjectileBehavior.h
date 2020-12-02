@@ -15,7 +15,7 @@ public:
 
 	void Update(CGameObject* aParent) override;
 
-	void Init(CGameObject* aGameObject) override;
+	void Init(CGameObject* aCaster) override;
 
 private:
 	DirectX::SimpleMath::Vector3 myDirection;
