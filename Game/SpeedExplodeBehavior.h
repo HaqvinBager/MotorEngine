@@ -18,7 +18,7 @@ public:
 	CSpeedExplodeBehavior(float aDuration, float aExpodeTime, float aMovementSpeedMultiplier, CGameObject* anAbilityObject);
 	~CSpeedExplodeBehavior() override;
 
-	void Init(CGameObject* aGameObject) override;
+	void Init(CGameObject* aCaster) override;
 	void Update(CGameObject* aParent) override;
 
 private:

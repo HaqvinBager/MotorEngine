@@ -23,9 +23,9 @@ CSpeedExplodeBehavior::~CSpeedExplodeBehavior()
 	myCaster = nullptr;
 }
 
-void CSpeedExplodeBehavior::Init(CGameObject* aGameObject)
+void CSpeedExplodeBehavior::Init(CGameObject* aCaster)
 {
-	myCaster = aGameObject;
+	myCaster = aCaster;
 	myParent->GetComponent<CCircleColliderComponent>()->Enabled(false); //TODO: getting a collider like this is not good as it limits it to one circle collider ability 
 																		//Is probably fine for this ability, since you probably only want 1 explosion and speed up at a time
 	myCasterTransform = myCaster->GetComponent<CTransformComponent>();
