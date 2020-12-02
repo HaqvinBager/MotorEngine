@@ -6,15 +6,20 @@
 #include "MouseTracker.h"
 #include "Engine.h"
 #include "MouseTracker.h"
+#include "StatsComponent.h"
+#include "PostMaster.h"
+#include "MainSingleton.h"
+
 namespace SM = DirectX::SimpleMath;
 
-CBoomerangBehavior::CBoomerangBehavior(float aSpeed)
+CBoomerangBehavior::CBoomerangBehavior(float aSpeed, float aResourceCost)
 {
 	myDirection = {0.0f, 0.0f, 0.0f};
 	mySpeed = aSpeed;
 	myTimer = 0.0f;
 	myCaster = nullptr;
 	myIsReturning = false;
+	myResourceCost = aResourceCost;
 }
 
 CBoomerangBehavior::~CBoomerangBehavior()
@@ -38,6 +43,7 @@ void CBoomerangBehavior::Update(CGameObject* aParent)
 			aParent->Active(false);
 		}
 	}
+
 }
 
 bool CBoomerangBehavior::CheckDistance(DirectX::SimpleMath::Vector3 aFirstPosition, DirectX::SimpleMath::Vector3 aSecondPosition)
@@ -64,8 +70,23 @@ void CBoomerangBehavior::CalculateDirection(DirectX::SimpleMath::Vector3 aFirstP
 
 void CBoomerangBehavior::Init(CGameObject* aCaster)
 {
-	myCaster = aCaster;
-	myTargetPosition = MouseTracker::ScreenPositionToWorldPosition();
-	CalculateDirection(MouseTracker::ScreenPositionToWorldPosition(), myCaster->GetComponent<CTransformComponent>()->Position());
-	myIsReturning = false;
+	if (aCaster->GetComponent<CStatsComponent>()->GetStats().myResource > myResourceCost) {
+		myCaster = aCaster;
+
+		myTargetPosition = MouseTracker::ScreenPositionToWorldPosition();
+		CalculateDirection(MouseTracker::ScreenPositionToWorldPosition(), myCaster->GetComponent<CTransformComponent>()->Position());
+		myIsReturning = false;
+
+		myCaster->GetComponent<CStatsComponent>()->GetStats().myResource -= myResourceCost;
+
+		float difference = myCaster->GetComponent<CStatsComponent>()->GetBaseStats().myBaseResource - myCaster->GetComponent<CStatsComponent>()->GetStats().myResource;
+		difference = (100.0f - difference) / 100.0f;
+
+		SMessage message;
+		message.myMessageType = EMessageType::PlayerResourceChanged;
+		message.data = &difference;
+		CMainSingleton::PostMaster().Send(message);
+	} else {
+		myCaster = nullptr;
+	}
 }

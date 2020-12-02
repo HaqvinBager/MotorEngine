@@ -17,5 +17,6 @@ enum class EMessageType
 	Resume,
 	PlayerHealthChanged,
 	PlayerResourceChanged,
+	PlayerDied,
 	Count
 };

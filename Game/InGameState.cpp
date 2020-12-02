@@ -108,12 +108,12 @@ void CInGameState::Update()
 
 	}
 
-	static float health = 1.0f;
-	if (Input::GetInstance()->IsKeyPressed('K')) {
-		health -= 0.25f;
-		CMainSingleton::PostMaster().Send({ EMessageType::PlayerHealthChanged, &health });
-		std::cout << health << std::endl;
-	}
+	//static float health = 1.0f;
+	//if (Input::GetInstance()->IsKeyPressed('K')) {
+	//	health -= 0.25f;
+	//	CMainSingleton::PostMaster().Send({ EMessageType::PlayerHealthChanged, &health });
+	//	std::cout << "Ingame: " << health << std::endl;
+	//}
 }
 
 void CInGameState::ReceiveEvent(const EInputEvent aEvent)

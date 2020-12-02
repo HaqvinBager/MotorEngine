@@ -22,6 +22,7 @@ public:
 
 	void Position(DirectX::SimpleMath::Vector3 aPosition);
 	DirectX::SimpleMath::Vector3 Position() const;
+	const DirectX::SimpleMath::Vector3 StartPosition() const;
 
 	void Rotation(DirectX::SimpleMath::Vector3 aRotation);
 	void Rotation(DirectX::SimpleMath::Quaternion aQuaternion);
@@ -52,5 +53,6 @@ private:
 	// TODO: Move speed into "Resource Component"
 	float myMoveSpeed;
 	DirectX::SimpleMath::Matrix myTransform;
+	DirectX::SimpleMath::Vector3 myStartPosition;
 	std::vector<DirectX::SimpleMath::Vector3> myPath;
 };

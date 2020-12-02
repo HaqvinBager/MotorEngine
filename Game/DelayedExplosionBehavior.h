@@ -5,7 +5,7 @@ class CDelayedExplosionBehavior:
     public IAbilityBehavior
 {
 public:
-    CDelayedExplosionBehavior(float aDuration, float aDelay, CGameObject* aParent);
+    CDelayedExplosionBehavior(float aDuration, float aDelay, float aResourceCost, CGameObject* aParent);
     ~CDelayedExplosionBehavior();
 
     void Update(CGameObject* aParent) override;
@@ -15,5 +15,6 @@ private:
     CGameObject* myCaster;
     CGameObject* myParent;
     float myDelay;
+    float myResourceCost;
 };
 

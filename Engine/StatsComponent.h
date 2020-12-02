@@ -8,6 +8,7 @@ class CPointLight;
 
 struct SBaseStats {
 	const float myBaseHealth;
+	const float myBaseResource;
 	const float myDamage;
 	const float myMoveSpeed;
 	const float myBaseDamageCooldown;
@@ -17,6 +18,7 @@ struct SBaseStats {
 
 struct SStats {
 	float myHealth;
+	float myResource;
 	float myDamageCooldown;
 	bool myCanTakeDamage;
 	bool myCanAttack;
