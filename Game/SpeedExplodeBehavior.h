@@ -1,6 +1,8 @@
 #pragma once
 #include "AbilityBehavior.h"
 
+class CTransformComponent;
+
 namespace DirectX
 {
 	namespace SimpleMath
@@ -13,15 +15,19 @@ namespace SM = DirectX::SimpleMath;
 
 class CSpeedExplodeBehavior : public IAbilityBehavior {
 public:
-	CSpeedExplodeBehavior(float aDuration, float aExpodeTime, CGameObject* anAbilityObject);
+	CSpeedExplodeBehavior(float aDuration, float aExpodeTime, float aMovementSpeedMultiplier, CGameObject* anAbilityObject);
 	~CSpeedExplodeBehavior() override;
 
 	void Init(CGameObject* aGameObject) override;
 	void Update(CGameObject* aParent) override;
 
 private:
-	float myDelay;
-	CGameObject* myCaster;
-	CGameObject* myParent;
+	float myExplosionDelay;
+	float myMovementSpeedMutiplier;
+	float myOriginalMovementSpeed;
+	float myMultipliedSpeed;
+	CGameObject* myCaster; //Ex Player
+	CGameObject* myParent; //AbilityComponent Object
+	CTransformComponent* myCasterTransform;
 };
 
