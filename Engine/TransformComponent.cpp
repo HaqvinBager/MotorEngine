@@ -5,10 +5,11 @@
 #define ENGINE_SCALE 0.01f
 using namespace DirectX::SimpleMath;
 
-CTransformComponent::CTransformComponent(CGameObject& aParent, DirectX::SimpleMath::Vector3 aPosition) : myScale(1.0f), CComponent(aParent), myMoveSpeed(3.0f)
+CTransformComponent::CTransformComponent(CGameObject& aParent, DirectX::SimpleMath::Vector3 aPosition): myScale(1.0f), CComponent(aParent), myMoveSpeed(3.0f)
 {
 	Scale(1.0f);
 	Position(aPosition);
+	myStartPosition = {0.0f,0.0f,0.0f};
 }
 
 CTransformComponent::~CTransformComponent()
@@ -21,6 +22,7 @@ void CTransformComponent::Awake()
 
 void CTransformComponent::Start()
 {
+	myStartPosition = Position();
 }
 
 void CTransformComponent::Update()
@@ -35,6 +37,11 @@ void CTransformComponent::Position(DirectX::SimpleMath::Vector3 aPosition)
 DirectX::SimpleMath::Vector3 CTransformComponent::Position() const
 {
 	return myTransform.Translation();
+}
+
+const DirectX::SimpleMath::Vector3 CTransformComponent::StartPosition() const
+{
+	return myStartPosition;
 }
 
 void CTransformComponent::Rotation(DirectX::SimpleMath::Vector3 aRotation)

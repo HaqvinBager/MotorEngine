@@ -5,14 +5,18 @@
 #include "TransformComponent.h"
 #include "Engine.h"
 #include "CircleColliderComponent.h"
+#include "StatsComponent.h"
+#include "PostMaster.h"
+#include "MainSingleton.h"
 
-CDelayedExplosionBehavior::CDelayedExplosionBehavior(float aDuration, float aDelay, CGameObject* aParent):
+CDelayedExplosionBehavior::CDelayedExplosionBehavior(float aDuration, float aDelay, float aResourceCost, CGameObject* aParent):
 	myDelay(aDelay),
 	myParent(aParent),
 	myCaster(nullptr)
 {
 	myDuration = aDuration;
 	myTimer = 0.0f;
+	myResourceCost = aResourceCost;
 }
 
 CDelayedExplosionBehavior::~CDelayedExplosionBehavior()
@@ -44,6 +48,22 @@ void CDelayedExplosionBehavior::Update(CGameObject* aParent)
 
 void CDelayedExplosionBehavior::Init(CGameObject* aCaster)
 {
-	myCaster = aCaster;
-	myParent->GetComponent<CCircleColliderComponent>()->Enabled(false);
+	if (aCaster->GetComponent<CStatsComponent>()->GetStats().myResource > myResourceCost) {
+
+		myParent->GetComponent<CCircleColliderComponent>()->Enabled(false);
+		myCaster = aCaster;
+
+		myCaster->GetComponent<CStatsComponent>()->GetStats().myResource -= myResourceCost;
+
+		float difference = myCaster->GetComponent<CStatsComponent>()->GetBaseStats().myBaseResource - myCaster->GetComponent<CStatsComponent>()->GetStats().myResource;
+		difference = (100.0f - difference) / 100.0f;
+
+		SMessage message;
+		message.myMessageType = EMessageType::PlayerResourceChanged;
+		message.data = &difference;
+		CMainSingleton::PostMaster().Send(message);
+	} else {
+		myCaster = nullptr;
+	}
+
 }

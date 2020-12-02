@@ -19,7 +19,8 @@
 using namespace rapidjson;
 
 CCanvas::CCanvas() :
-	myBackground(nullptr)
+	myBackground(nullptr),
+	myIsEnabled(true)
 {
 }
 
@@ -179,6 +180,9 @@ void CCanvas::Receive(const SMessage& aMessage)
 		break;
 	case EMessageType::PlayerHealthChanged:
 		myAnimatedUIs[3]->Level(*static_cast<float*>(aMessage.data));
+		break;
+	case EMessageType::PlayerResourceChanged:
+		myAnimatedUIs[4]->Level(*static_cast<float*>(aMessage.data));
 		break;
 	default:
 		break;
