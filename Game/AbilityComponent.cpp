@@ -13,6 +13,7 @@
 #include "AuraBehavior.h"
 #include "BoomerangBehavior.h"
 #include "MeleeAttackBehavior.h"
+#include "FireConeBehavior.h"
 #include "SpeedExplodeBehavior.h"
 #include "DelayedExplosionBehavior.h"
 #include "TransformComponent.h"
@@ -34,10 +35,6 @@ CAbilityComponent::CAbilityComponent(CGameObject& aParent, std::vector<std::pair
 	myCurrentCooldowns[0] = 0.0f;
 	myCurrentCooldowns[1] = 0.0f;
 	myCurrentCooldowns[2] = 0.0f;
-
-	myMaxCooldowns[0] = 0.2f; //TODO: make read unity
-	myMaxCooldowns[1] = 1.0f; //TODO: make read unity
-	myMaxCooldowns[2] = 5.0f; //TODO: make read unity
 
 	std::ifstream inputStream("Json/AbilityPaths.json");
 	ENGINE_BOOL_POPUP(inputStream.good(), "Ability json paths could not be found! Looking for Json/AbilityPaths.json");
@@ -248,10 +245,14 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	CAuraBehavior* auraBehavior = nullptr;
 	CBoomerangBehavior* boomerangBehavior = nullptr;
 	CMeleeAttackBehavior* meleeAttackBehavior = nullptr;
-	CMeleeAttackBehavior* fireCone = nullptr;
+	CFireConeBehavior* fireConeBehavior = nullptr;
 	CSpeedExplodeBehavior* speedExplodeBehavior = nullptr;
 	CDelayedExplosionBehavior* delayedExplosionBehavior = nullptr;
 	std::string colliderType;
+
+	//COOLDOWNS
+	myMaxCooldowns[static_cast<int>(anAbilityType)] = document["Cooldown"].GetFloat();
+	//!COOLDOWNS
 
 	//VFX
 	abilityObject->myTransform->Position({ 0.0f, 0.0f, 0.0f });
@@ -296,17 +297,17 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	}
 	else if (behavior["Type"].GetString() == std::string("FireCone"))
 	{
-		fireCone = new CMeleeAttackBehavior(behavior["Duration"].GetFloat());
-		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, fireCone, anAbilityType);
+		fireConeBehavior = new CFireConeBehavior(behavior["Duration"].GetFloat());
+		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, fireConeBehavior, anAbilityType);
 	}
 	else if (behavior["Type"].GetString() == std::string("SpeedExplode"))
 	{
-		speedExplodeBehavior = new CSpeedExplodeBehavior(behavior["Duration"].GetFloat(), behavior["ExplodeAfter"].GetFloat(), abilityObject);
+		speedExplodeBehavior = new CSpeedExplodeBehavior(behavior["Duration"].GetFloat(), behavior["ExplodeAfter"].GetFloat(), behavior["SpeedMultiplier"].GetFloat(), abilityObject);
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, speedExplodeBehavior, anAbilityType);
 	}
 	else if (behavior["Type"].GetString() == std::string("DelayedExplosion"))
 	{
-		delayedExplosionBehavior = new CDelayedExplosionBehavior(behavior["Duration"].GetFloat(), behavior["Delay"].GetFloat(), abilityObject);
+		delayedExplosionBehavior = new CDelayedExplosionBehavior(document["Duration"].GetFloat(), behavior["Delay"].GetFloat(), abilityObject);
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, delayedExplosionBehavior, anAbilityType);
 	}
 	//!BEHAVIOR

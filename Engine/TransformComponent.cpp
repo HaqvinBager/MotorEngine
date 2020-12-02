@@ -180,6 +180,16 @@ void CTransformComponent::SetPath(std::vector<DirectX::SimpleMath::Vector3>& aPa
 	//myPath.emplace_back(this->Position());
 }
 
+float CTransformComponent::MovementSpeed() const
+{
+	return myMoveSpeed;
+}
+
+void CTransformComponent::MovementSpeed(float aMovementSpeed)
+{
+	myMoveSpeed = aMovementSpeed;
+}
+
 DirectX::SimpleMath::Matrix CTransformComponent::GetMatrix() const
 {
 	return myTransform;

@@ -7,12 +7,16 @@
 #include "Engine.h"
 #include "CircleColliderComponent.h"
 
-CSpeedExplodeBehavior::CSpeedExplodeBehavior(float aDuration, float aDelay, CGameObject* aParent)
+CSpeedExplodeBehavior::CSpeedExplodeBehavior(float aDuration, float aExplosionDelay, float aMovementSpeedMultiplier, CGameObject* aParent)
 {
 	myDuration = aDuration;
 	myTimer = 0.0f;
-	myDelay = aDelay;
+	myExplosionDelay = aExplosionDelay;
+	myMovementSpeedMutiplier = aMovementSpeedMultiplier;
+	myMultipliedSpeed = 0.0f;
+	myOriginalMovementSpeed = 0.0f;
 	myParent = aParent;
+	myCasterTransform = nullptr;
 	myCaster = nullptr;
 }
 
@@ -22,31 +26,31 @@ CSpeedExplodeBehavior::~CSpeedExplodeBehavior()
 	myCaster = nullptr;
 }
 
-void CSpeedExplodeBehavior::Init(CGameObject* aGameObject)
+void CSpeedExplodeBehavior::Init(CGameObject* aCaster)
 {
-	myCaster = aGameObject;
-	
-	myParent->GetComponent<CCircleColliderComponent>()->Enabled(false); //TODO: getting a collider like this is not good as it limits it to one circle collider ability 
-																		//Is probably fine for this ability, since you probably only want 1 explosion and speed up at a time
+	myCaster = aCaster;
+	myParent->GetComponent<CCircleColliderComponent>()->Enabled(false);
+	myCasterTransform = myCaster->GetComponent<CTransformComponent>();
+	myOriginalMovementSpeed = myCasterTransform->MovementSpeed();
+	myMultipliedSpeed = myOriginalMovementSpeed * myMovementSpeedMutiplier;
+	myCasterTransform->MovementSpeed(myMultipliedSpeed);
 }
 
-//#include <iostream>
 void CSpeedExplodeBehavior::Update(CGameObject* aParent)
 {
 	if (myCaster)
 	{
 		myTimer += CTimer::Dt();
-		//TODO: speed up the parent object
 
-		if (myTimer > myDelay)
+		if (myTimer > myExplosionDelay)
 		{
-			//TODO: explodess
-			aParent->GetComponent<CCircleColliderComponent>()->Enabled(true);
-			//std::cout << "exploooode\n";
+			//TODO: explodes and does damage
+			myParent->GetComponent<CCircleColliderComponent>()->Enabled(true);
 		}
 
 		if (myTimer > myDuration)
 		{
+			myCasterTransform->MovementSpeed(myOriginalMovementSpeed);
 			myTimer = 0.0f;
 			aParent->Active(false);
 		}

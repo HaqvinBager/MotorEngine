@@ -217,9 +217,11 @@ CGameObject* CUnityFactory::CreateGameObject(const SPlayerData& aData, const std
 
     std::pair<EAbilityType, unsigned int> ab1 = { EAbilityType::PlayerAbility1, 1 };
     std::pair<EAbilityType, unsigned int> ab2 = { EAbilityType::PlayerAbility2, 1 };
+    std::pair<EAbilityType, unsigned int> ab3 = { EAbilityType::PlayerAbility3, 1 };
     std::vector<std::pair<EAbilityType, unsigned int>> abs;
     abs.emplace_back(ab1);
     abs.emplace_back(ab2);
+    abs.emplace_back(ab3);
     gameObject->AddComponent<CAbilityComponent>(*gameObject, abs);
 
     AddAnimationsToGameObject(*gameObject, aModelPath);
