@@ -306,7 +306,7 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	}
 	else if (behavior["Type"].GetString() == std::string("DelayedExplosion"))
 	{
-		delayedExplosionBehavior = new CDelayedExplosionBehavior(behavior["Duration"].GetFloat(), behavior["Delay"].GetFloat(), abilityObject);
+		delayedExplosionBehavior = new CDelayedExplosionBehavior(document["Duration"].GetFloat(), behavior["Delay"].GetFloat(), abilityObject);
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, delayedExplosionBehavior, anAbilityType);
 	}
 	//!BEHAVIOR
