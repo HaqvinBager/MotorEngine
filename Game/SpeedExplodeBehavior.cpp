@@ -13,7 +13,10 @@ CSpeedExplodeBehavior::CSpeedExplodeBehavior(float aDuration, float aExplosionDe
 	myTimer = 0.0f;
 	myExplosionDelay = aExplosionDelay;
 	myMovementSpeedMutiplier = aMovementSpeedMultiplier;
+	myMultipliedSpeed = 0.0f;
+	myOriginalMovementSpeed = 0.0f;
 	myParent = aParent;
+	myCasterTransform = nullptr;
 	myCaster = nullptr;
 }
 
@@ -26,8 +29,7 @@ CSpeedExplodeBehavior::~CSpeedExplodeBehavior()
 void CSpeedExplodeBehavior::Init(CGameObject* aCaster)
 {
 	myCaster = aCaster;
-	myParent->GetComponent<CCircleColliderComponent>()->Enabled(false); //TODO: getting a collider like this is not good as it limits it to one circle collider ability 
-																		//Is probably fine for this ability, since you probably only want 1 explosion and speed up at a time
+	myParent->GetComponent<CCircleColliderComponent>()->Enabled(false);
 	myCasterTransform = myCaster->GetComponent<CTransformComponent>();
 	myOriginalMovementSpeed = myCasterTransform->MovementSpeed();
 	myMultipliedSpeed = myOriginalMovementSpeed * myMovementSpeedMutiplier;

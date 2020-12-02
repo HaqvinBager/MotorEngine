@@ -36,10 +36,6 @@ CAbilityComponent::CAbilityComponent(CGameObject& aParent, std::vector<std::pair
 	myCurrentCooldowns[1] = 0.0f;
 	myCurrentCooldowns[2] = 0.0f;
 
-	myMaxCooldowns[0] = 0.2f; //TODO: make read unity
-	myMaxCooldowns[1] = 1.0f; //TODO: make read unity
-	myMaxCooldowns[2] = 5.0f; //TODO: make read unity
-
 	std::ifstream inputStream("Json/AbilityPaths.json");
 	ENGINE_BOOL_POPUP(inputStream.good(), "Ability json paths could not be found! Looking for Json/AbilityPaths.json");
 	IStreamWrapper inputWrapper(inputStream);
@@ -253,6 +249,10 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	CSpeedExplodeBehavior* speedExplodeBehavior = nullptr;
 	CDelayedExplosionBehavior* delayedExplosionBehavior = nullptr;
 	std::string colliderType;
+
+	//COOLDOWNS
+	myMaxCooldowns[static_cast<int>(anAbilityType)] = document["Cooldown"].GetFloat();
+	//!COOLDOWNS
 
 	//VFX
 	abilityObject->myTransform->Position({ 0.0f, 0.0f, 0.0f });

@@ -15,7 +15,7 @@ namespace SM = DirectX::SimpleMath;
 
 class CSpeedExplodeBehavior : public IAbilityBehavior {
 public:
-	CSpeedExplodeBehavior(float aDuration, float aExpodeTime, float aMovementSpeedMultiplier, CGameObject* anAbilityObject);
+	CSpeedExplodeBehavior(float aDuration, float aExplosionDelay, float aMovementSpeedMultiplier, CGameObject* anAbilityObject);
 	~CSpeedExplodeBehavior() override;
 
 	void Init(CGameObject* aCaster) override;
@@ -26,8 +26,8 @@ private:
 	float myMovementSpeedMutiplier;
 	float myOriginalMovementSpeed;
 	float myMultipliedSpeed;
-	CGameObject* myCaster; //Ex Player
-	CGameObject* myParent; //AbilityComponent Object
+	CGameObject* myCaster;
+	CGameObject* myParent;
 	CTransformComponent* myCasterTransform;
 };
 
