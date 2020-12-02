@@ -62,11 +62,15 @@ private:
 	void UpdateNonBlended(const float dt);
 	void SetBlend(int anAnimationIndex, int anAnimationIndexTwo, float aBlend);// Does nothing atm.
 	
-	// This works if the ids are in a sorted list. But if animations are added at random to the project the ids dont follow eachother. Cant do a bounds check.
+	// This works if the ids are in a sorted list. But if the animations are added at random to the project the ids aren't sorted, making this function unsafe.
 	bool WithinIDRange(const int anID);
+	// Goes through std::vector myAnimationID: returns true if it finds the id within the list.
 	bool HasID(const int anID);
 
+	// This works if the ids are in a sorted list. Uses first abs(id - anID) +1. Unsafe.
 	const int GetIndexFromID(const int anID);
+	// Checks for ID withing std::vector myAnimationIds and returns index of ID
+	const int GetIndexFromList(const int anID);
 
 	CAnimation* myAnimation;
 	std::array<SlimMatrix44, 64> myBones { };

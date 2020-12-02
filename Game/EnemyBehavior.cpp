@@ -78,7 +78,7 @@ void CEnemyBehavior::FindATarget(CGameObject& aParent)
 			myPlayer->GetComponent<CStatsComponent>();
 			if (aParent.GetComponent<CAnimationComponent>())
 			{
-				aParent.GetComponent<CAnimationComponent>()->PlayAnimation(EEnemyAnimationID::Attack01);
+				aParent.GetComponent<CAnimationComponent>()->PlayAnimation(EEnemyAnimationID::Attack);
 			}
 			aParent.GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::EnemyAbility, aParent.myTransform->Position());
 		}
