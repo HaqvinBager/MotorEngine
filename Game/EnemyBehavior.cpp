@@ -12,6 +12,7 @@
 #include "MainSingleton.h"
 #include "NavMeshComponent.h"
 #include "AnimationComponent.h"
+#include "AbilityComponent.h"
 
 CEnemyBehavior::CEnemyBehavior(CGameObject* aPlayerObject)
 	: myPlayer(aPlayerObject)
@@ -48,7 +49,7 @@ void CEnemyBehavior::Update(CGameObject* aParent)
 		//aParent->Active(false);
 	}
 
-	//FindATarget(*aParent);
+	FindATarget(*aParent);
 }
 
 void CEnemyBehavior::Collided(CGameObject* /*aGameObject*/)
@@ -79,6 +80,7 @@ void CEnemyBehavior::FindATarget(CGameObject& aParent)
 			{
 				aParent.GetComponent<CAnimationComponent>()->PlayAnimation(EEnemyAnimationID::Attack01);
 			}
+			aParent.GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::EnemyAbility, aParent.myTransform->Position());
 		}
 		else {
 			if (stats.myTokenSlot != nullptr) {
@@ -87,7 +89,7 @@ void CEnemyBehavior::FindATarget(CGameObject& aParent)
 			}
 		}
 		// FOR NAVMESH
-		aParent.GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
+		//aParent.GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
 	}
 }
 

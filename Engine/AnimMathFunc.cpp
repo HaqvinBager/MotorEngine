@@ -32,8 +32,10 @@ uint FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim)
 		}
 	}
 
-	assert(0);
-	return 0xFFFFFFFF;
+	return pNodeAnim->mNumRotationKeys - 2;
+
+	//assert(0);
+	//return 0xFFFFFFFF;
 }
 
 void CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
@@ -50,6 +52,10 @@ void CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTime, const aiNo
 	assert(NextRotationIndex < pNodeAnim->mNumRotationKeys);
 	float DeltaTime = static_cast<float>(pNodeAnim->mRotationKeys[NextRotationIndex].mTime - pNodeAnim->mRotationKeys[RotationIndex].mTime);
 	float Factor = (AnimationTime - (float)pNodeAnim->mRotationKeys[RotationIndex].mTime) / DeltaTime;
+	if (!(Factor >= 0.0f && Factor <= 1.0f))
+	{
+		Factor = 0.0f;
+	}
 	assert(Factor >= 0.0f && Factor <= 1.0f);
 	const aiQuaternion& StartRotationQ = pNodeAnim->mRotationKeys[RotationIndex].mValue;
 	const aiQuaternion& EndRotationQ = pNodeAnim->mRotationKeys[NextRotationIndex].mValue;

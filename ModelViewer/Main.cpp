@@ -39,7 +39,7 @@
 namespace SM = DirectX::SimpleMath;
 namespace MW = ModelViewer;
 
-//#define VFX
+#define VFX
 
 #ifdef VFX
 #include "../Game/AbilityComponent.h"//  Group 4 stuff might break for group 3!
@@ -138,11 +138,15 @@ CGameObject* InitVFX(CScene& aScene)
 
 	return go;
 }
-void UpdateVFX(CGameObject* /*aCurrentGameObject*/,CGameObject* /*aCamera*/, CScene* aScene)
+void UpdateVFX(CGameObject* aCurrentGameObject,CGameObject* /*aCamera*/, CScene* aScene)
 {
 	for (auto& obj : aScene->GetActiveGameObjects())
 	{
 		obj->Update();
+	}
+	if (Input::GetInstance()->IsKeyPressed('V'))
+	{
+		aCurrentGameObject->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::AbilityTest, { 0.f,0.f,0.f });
 	}
 }
 #endif
@@ -327,7 +331,7 @@ void UpdateAnimation(CGameObject* aCurrentGameObject, CGameObject* aCamera, cons
 		const size_t nrOfAnims = animComp->GetMyAnimation()->GetNrOfAnimations();
 
 		if (Input::GetInstance()->IsKeyPressed('0')) { if(IsLessThan(0, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(0, true); }
-		if (Input::GetInstance()->IsKeyPressed('1')) { if(IsLessThan(1, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(1, true, 1.0f); }
+		if (Input::GetInstance()->IsKeyPressed('1')) { if(IsLessThan(1, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(1, true); }
 		if (Input::GetInstance()->IsKeyPressed('2')) { if(IsLessThan(2, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(2, true); }
 		if (Input::GetInstance()->IsKeyPressed('3')) { if(IsLessThan(3, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(3, true); }
 		if (Input::GetInstance()->IsKeyPressed('4')) { if(IsLessThan(4, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(4, true); }
@@ -433,7 +437,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
 	CCanvas* canvas = nullptr; 
 
-	bool viewAnimations = false;
+	bool viewAnimations = true;
 	/*SetForegroundWindow(GetConsoleWindow());
 	std::cout << "Show Models or Animations? M for Models, A for Animations " << std::endl
 	<< "   Show Models: any model that does not have a rig." << std::endl
@@ -452,7 +456,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	}
 	viewAnimations = (input == 'A');*/
 
-	viewAnimations = false;
+	viewAnimations = true;
 
 	std::vector<std::string> filePaths;
 #ifdef VFX
