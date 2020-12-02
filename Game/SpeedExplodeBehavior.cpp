@@ -26,10 +26,12 @@ CSpeedExplodeBehavior::~CSpeedExplodeBehavior()
 	myCaster = nullptr;
 }
 
+#include "VFXComponent.h"
 void CSpeedExplodeBehavior::Init(CGameObject* aCaster)
 {
 	myCaster = aCaster;
 	myParent->GetComponent<CCircleColliderComponent>()->Enabled(false);
+	myParent->GetComponent<CVFXComponent>();
 	myCasterTransform = myCaster->GetComponent<CTransformComponent>();
 	myOriginalMovementSpeed = myCasterTransform->MovementSpeed();
 	myMultipliedSpeed = myOriginalMovementSpeed * myMovementSpeedMutiplier;
@@ -44,8 +46,9 @@ void CSpeedExplodeBehavior::Update(CGameObject* aParent)
 
 		if (myTimer > myExplosionDelay)
 		{
-			//TODO: explodes and does damage
 			myParent->GetComponent<CCircleColliderComponent>()->Enabled(true);
+			//TODO: play audio
+			//TODO: play vfx
 		}
 
 		if (myTimer > myDuration)
