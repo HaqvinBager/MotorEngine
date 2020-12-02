@@ -28,8 +28,8 @@ CLoadLevelState::~CLoadLevelState()
 
 void CLoadLevelState::Awake()
 {
-	unsigned int loadSceneIndex = Load(ELevel::LoadScreen);
-	CEngine::GetInstance()->SetActiveScene(loadSceneIndex);
+	myActiveScene = Load(ELevel::LoadScreen);
+	CEngine::GetInstance()->SetActiveScene(myActiveScene);
 
 	Document latestExportedLevelDoc = CJsonReader::LoadDocument("Levels/DebugLevel.json");
 	int levelIndex = latestExportedLevelDoc["LevelIndex"].GetInt();
@@ -58,7 +58,8 @@ void CLoadLevelState::Update()
 	{
 		//myLoadedLevelFuture returnType is the same as the CLoadLevelState::Load return type.
 		//The value it will get is the Scene index in which the SceneLoaded will use in CEngine::myScenes
-		CEngine::GetInstance()->SetActiveScene(myLoadLevelFuture.get());
+		myActiveScene = myLoadLevelFuture.get();
+		CEngine::GetInstance()->SetActiveScene(myActiveScene);
 		myStateStack.PushState(new CInGameState(myStateStack));
 		myStateStack.Awake();
 		myStateStack.Start();
