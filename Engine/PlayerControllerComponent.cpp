@@ -8,7 +8,7 @@
 #include "MainSingleton.h"
 #include "TransformComponent.h"
 
-CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent): CBehaviour(aParent), myLastHP(0.0f) {}
+CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent): CBehaviour(aParent), myLastHP(0.0f), myRegenerationSpeed(10.0f) {}
 
 CPlayerControllerComponent::~CPlayerControllerComponent()
 {
@@ -29,6 +29,8 @@ void CPlayerControllerComponent::Update()
 
 	if (!PlayerIsAlive()) {
 		ResetPlayer();
+	} else {
+		RegenerateMana();
 	}
 }
 
@@ -85,4 +87,15 @@ bool CPlayerControllerComponent::PlayerIsAlive()
 	}
 
 	return myLastHP > 0.0f;
+}
+
+
+void CPlayerControllerComponent::RegenerateMana()
+{
+	if (GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myBaseResource > GameObject().GetComponent<CStatsComponent>()->GetStats().myResource) {
+		GameObject().GetComponent<CStatsComponent>()->GetStats().myResource += myRegenerationSpeed * CTimer::Dt();
+		float difference = GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myBaseResource - GameObject().GetComponent<CStatsComponent>()->GetStats().myResource;
+		difference = (100.0f - difference) / 100.0f;
+		MessagePostmaster(EMessageType::PlayerResourceChanged, difference);
+	}
 }

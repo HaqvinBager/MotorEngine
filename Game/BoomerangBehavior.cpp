@@ -42,6 +42,8 @@ void CBoomerangBehavior::Update(CGameObject* aParent)
 		{
 			aParent->Active(false);
 		}
+	} else {
+		aParent->Active(false);
 	}
 
 }

@@ -43,6 +43,8 @@ void CDelayedExplosionBehavior::Update(CGameObject* aParent)
 		}
 
 		aParent->GetComponent<CTransformComponent>()->Position(myCaster->myTransform->Position());
+	} else {
+		aParent->Active(false);
 	}
 }
 

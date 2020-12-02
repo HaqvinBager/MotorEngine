@@ -19,6 +19,8 @@ public:
 	void ResetPlayer();
 	void MessagePostmaster(EMessageType aMessageType, float aValue);
 	bool PlayerIsAlive();
+	void RegenerateMana();
 private:
 	float myLastHP;
+	float myRegenerationSpeed;
 };
