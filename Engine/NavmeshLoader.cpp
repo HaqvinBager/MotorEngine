@@ -65,6 +65,7 @@ void CNavmeshLoader::MakeTriangles(aiMesh* aMesh, SNavMesh* aNavMesh)
 			};
 			triangles.back()->myIndices[j] = aMesh->mFaces[i].mIndices[j];
 		}
+		triangles.back()->myId = i;
 		triangles.back()->myCenterPosition = GetCentroid(triangles.back()->myVertexPositions[0], triangles.back()->myVertexPositions[1], triangles.back()->myVertexPositions[2]);
 	}
 
