@@ -3,8 +3,9 @@
 #include <SimpleMath.h>
 #include <map>
 
+class CCanvas;
 namespace SpriteViewer
 {
-	void Init();
-	void Update(bool aShouldUpdate);
+	CCanvas* Init();
+	void Update(CCanvas& aCanvas, bool aShouldUpdate);
 }

@@ -367,5 +367,7 @@ void CScene::SetShouldRenderLineInstance(const bool aShouldRender)
 {
 #ifdef  _DEBUG
 	myShouldRenderLineInstance = aShouldRender;
+#else
+	aShouldRender;
 #endif //  _DEBUG
 }

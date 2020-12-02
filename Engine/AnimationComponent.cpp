@@ -32,10 +32,10 @@ CAnimationComponent::~CAnimationComponent()
 void CAnimationComponent::Awake()
 {
 #ifdef _DEBUG
-	for (auto& strID : myAnimationIds)
-	{
-		std::cout << __FUNCTION__ << "  " << strID.String() << " " << strID.ID() << std::endl;
-	}
+	//for (auto& strID : myAnimationIds)
+	//{
+	//	std::cout << __FUNCTION__ << "  " << strID.String() << " " << strID.ID() << std::endl;
+	//}
 #endif
 	SetBonesToIdentity();
 	myAnimation->SetCurAnimationScene(0);

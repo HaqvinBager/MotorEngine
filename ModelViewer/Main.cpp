@@ -25,7 +25,7 @@
 #include "LevelLoader.h"
 
 #include <Animation.h>
-
+#include <Canvas.h>
 
 #include <filesystem>
 #include <iostream>
@@ -103,14 +103,38 @@ CGameObject* InitVFX(CScene& aScene)
 	vecPair.shrink_to_fit();
 
 	go->AddComponent<CAbilityComponent>(*go, vecPair);
-	go->Awake();
+	//go->Awake();
+	//go->Start();
 	//for (auto& obj : aScene.GetActiveGameObjects())
 	//{
 	//	obj->Awake();
 	//}
-	go->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::AbilityTest, { 0.f,0.f,0.f });
-	
 	aScene.AddInstance(go);
+
+	const std::vector<CGameObject*>& gameObjects = aScene.GetActiveGameObjects();
+	size_t currentSize = gameObjects.size();
+
+	for (size_t i = 0; i < currentSize; ++i)
+	{
+		if (gameObjects[i])
+		{
+			gameObjects[i]->Awake();
+		}
+
+	}
+
+	size_t newSize = gameObjects.size();
+
+	//Late awake
+	for (size_t j = currentSize; j < newSize; ++j) 
+	{
+		if (gameObjects[j])
+		{
+			gameObjects[j]->Awake();
+		}
+	}
+
+	go->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::AbilityTest, { 0.f,0.f,0.f });
 
 	return go;
 }
@@ -233,10 +257,12 @@ CGameObject* InitAnimation(const std::string& aFilePath, CScene& aScene)
 	if (MW::GetSuffixFromString(aFilePath) == "_SK")
 	{
 		std::vector<std::string> somePathsToAnimations = MW::Get_ANFiles(aFilePath);
-		
+#ifndef VFX
 		CAnimationComponent* animComp = gameObject->AddComponent<CAnimationComponent>(*gameObject, aFilePath, somePathsToAnimations);
-		//animComp->GetMyAnimation()->Init(aFilePath.c_str(), somePathsToAnimations);
 		animComp->Awake();
+#else
+		gameObject->AddComponent<CAnimationComponent>(*gameObject, aFilePath, somePathsToAnimations);
+#endif
 	}
 
 	aScene.AddInstance(gameObject);
@@ -268,9 +294,13 @@ bool ChangeAnimationModel(CGameObject* aCurrentGameObject, const std::vector<std
 
 		if (!aCurrentGameObject->GetComponent<CAnimationComponent>())
 		{
-			CAnimationComponent* animComp = aCurrentGameObject->AddComponent<CAnimationComponent>(*aCurrentGameObject, aModelFilePathList[loadModelNumber].c_str(), somePathsToAnimations);
 			//animComp->GetMyAnimation()->Init(aModelFilePathList[loadModelNumber].c_str(), somePathsToAnimations);
+#ifndef VFX
+			CAnimationComponent* animComp = aCurrentGameObject->AddComponent<CAnimationComponent>(*aCurrentGameObject, aModelFilePathList[loadModelNumber].c_str(), somePathsToAnimations);
 			animComp->Awake();
+#else
+			aCurrentGameObject->AddComponent<CAnimationComponent>(*aCurrentGameObject, aModelFilePathList[loadModelNumber].c_str(), somePathsToAnimations);
+#endif
 		}
 		else
 		{
@@ -307,7 +337,9 @@ void UpdateAnimation(CGameObject* aCurrentGameObject, CGameObject* aCamera, cons
 		if (Input::GetInstance()->IsKeyPressed('8')) { if(IsLessThan(8, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(8, true); }
 		if (Input::GetInstance()->IsKeyPressed('9')) { if(IsLessThan(9, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(9, true); }
 
+#ifndef VFX
 		aCurrentGameObject->GetComponent<CAnimationComponent>()->Update();
+#endif
 	}
 
 	const float dt = CTimer::Dt();
@@ -387,17 +419,19 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		scene->AddInstance(grid);
 // AXIS ORIGIN MARKER
 	CLineInstance* origin = new CLineInstance();
-		//origin->Init(CLineFactory::GetInstance()->CreateAxisMarker());
+		origin->Init(CLineFactory::GetInstance()->CreateAxisMarker());
 		//origin->Init(CLineFactory::GetInstance()->CreateSquareXZ(1.f));
-		origin->Init(CLineFactory::GetInstance()->CreateTriangleXZ(10.f,5.f));
-		origin->SetPosition({ 0.0f,0.01f,0.0f });
-		origin->SetRotation({ 0.0f,90.f,0 });
-		origin->SetScale(0.7f);
+		//origin->Init(CLineFactory::GetInstance()->CreateTriangleXZ(10.f,5.f));
+		origin->SetPosition({ 0.0f,0.02f,0.0f });
+		//origin->SetRotation({ 0.0f,90.f,0 });
+		origin->SetScale(1.2f);
 		scene->AddInstance(origin);
 
 	CEngine::GetInstance()->AddScene(scene);
 	CEngine::GetInstance()->SetActiveScene(0);
 	CGameObject* currentGameObject = nullptr;
+
+	CCanvas* canvas = nullptr; 
 
 	bool viewAnimations = false;
 	/*SetForegroundWindow(GetConsoleWindow());
@@ -418,7 +452,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	}
 	viewAnimations = (input == 'A');*/
 
-	viewAnimations = true;
+	viewAnimations = false;
 
 	std::vector<std::string> filePaths;
 #ifdef VFX
@@ -493,12 +527,12 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 			UpdateModel(filePaths, currentGameObject, camera);
 		}
 
-		if (Input::GetInstance()->IsKeyPressed('I'))
+		if (Input::GetInstance()->IsKeyPressed('I') && !showUI)
 		{
-			SpriteViewer::Init();
+			canvas = SpriteViewer::Init();
 			showUI = true;
 		}
-		SpriteViewer::Update(showUI);
+		SpriteViewer::Update(*canvas, showUI);
 
 		engine.RenderFrame();
 		engine.EndFrame();
