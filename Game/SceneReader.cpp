@@ -74,6 +74,9 @@ SInGameData& CSceneReader::ReadInGameData()
 	for (int i = 0; i < eventDataCount; ++i) {
 		SEventData evenData = {};
 		myStreamPtr += Read(evenData);
+
+		std::string eventString = ReadStringAuto();
+		myInGameData.back()->myEventStringMap[evenData.myEvent] = std::string(eventString); //Neccesary to Copy here
 		myInGameData.back()->myEventData.emplace_back(evenData);
 	}
 
