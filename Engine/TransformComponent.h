@@ -26,7 +26,9 @@ public:
 
 	void Rotation(DirectX::SimpleMath::Vector3 aRotation);
 	void Rotation(DirectX::SimpleMath::Quaternion aQuaternion);
-	const DirectX::SimpleMath::Quaternion Rotation();
+
+	DirectX::SimpleMath::Quaternion Rotation();
+
 	void Scale(float aScale);
 	float Scale();
 	void SetOutlineScale();
@@ -39,7 +41,7 @@ public:
 	void MoveLocal(DirectX::SimpleMath::Vector3 aMovement);
 	void Rotate(DirectX::SimpleMath::Vector3 aRotation);
 	void Rotate(DirectX::SimpleMath::Quaternion aQuaternion);
-	
+
 	void MoveAlongPath();
 	void SetPath(std::vector<DirectX::SimpleMath::Vector3>& aPath, DirectX::SimpleMath::Vector3 aFinalPosition);
 
@@ -55,4 +57,5 @@ private:
 	DirectX::SimpleMath::Matrix myTransform;
 	DirectX::SimpleMath::Vector3 myStartPosition;
 	std::vector<DirectX::SimpleMath::Vector3> myPath;
+	DirectX::SimpleMath::Quaternion myQuat;
 };

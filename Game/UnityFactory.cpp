@@ -239,6 +239,11 @@ CGameObject* CUnityFactory::CreateGameObject(const SEnemyData& aData, const std:
     gameObject->myTransform->Position(aData.myPosition);
     gameObject->myTransform->Rotation(aData.myRotation);
 
+	std::pair<EAbilityType, unsigned int> ab1 = { EAbilityType::EnemyAbility, 1 };
+	std::vector<std::pair<EAbilityType, unsigned int>> abs;
+	abs.emplace_back(ab1);
+	gameObject->AddComponent<CAbilityComponent>(*gameObject, abs);
+
 	AddAnimationsToGameObject(*gameObject, aModelPath);
 
 	return gameObject;
