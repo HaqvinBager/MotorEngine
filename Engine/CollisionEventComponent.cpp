@@ -8,11 +8,11 @@
 #include "PostMaster.h"
 #include "Debug.h"
 
-CCollisionEventComponent::CCollisionEventComponent(CGameObject& aGameObject, EMessageType aMessageType, float aWidth, float aHeight, ECollisionLayer aCollisionLayer, uint64_t someCollisionFlags) 
+CCollisionEventComponent::CCollisionEventComponent(CGameObject& aGameObject, EMessageType aMessageType, std::string anEventString, float aWidth, float aHeight, ECollisionLayer aCollisionLayer, uint64_t someCollisionFlags)
 	: CComponent(aGameObject)
 	, myMessageType(aMessageType)
-{
-	myTextMessage = "Testing Besting Mesting Lelsing";
+	, myTextMessage(anEventString)
+{	
 	aGameObject.AddComponent<CRectangleColliderComponent>(aGameObject, aWidth, aHeight, aCollisionLayer, someCollisionFlags);
 }
 
@@ -35,12 +35,10 @@ void CCollisionEventComponent::Update()
 	CDebug::GetInstance()->DrawLine(collider->GetPosition(), { collider->GetPosition().x + 1.0f, collider->GetPosition().y, collider->GetPosition().z + 1.0f });
 }
 
-void CCollisionEventComponent::Collided(CGameObject* /*aCollidedGameObject*/)
+void CCollisionEventComponent::Collided(CGameObject* aCollidedGameObject)
 {
-	SMessage message = { };
-	message.data = this;
-	message.myMessageType = myMessageType;
-	CMainSingleton::PostMaster().Send(message);
+	SStringMessage stringMessage = { myTextMessage.c_str(), aCollidedGameObject };
+	CMainSingleton::PostMaster().Send(stringMessage);
 }
 
 const std::string& CCollisionEventComponent::GetEventMessage() const

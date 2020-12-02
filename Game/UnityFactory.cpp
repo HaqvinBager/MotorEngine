@@ -84,7 +84,7 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 
 	for (const auto& eventdata : aData.myEventData)
 	{
-	    aScene.AddInstance(CreateGameObject(eventdata));
+	    aScene.AddInstance(CreateGameObject(eventdata, aData.myEventStringMap.at(eventdata.myEvent)));
 	}
 
 	CEnemyBehavior* enemyBehavior = new CEnemyBehavior(player);
@@ -210,7 +210,8 @@ CGameObject* CUnityFactory::CreateGameObject(const SPlayerData& aData, const std
     gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
     gameObject->AddComponent<CPlayerControllerComponent>(*gameObject);
     gameObject->AddComponent<CNavMeshComponent>(*gameObject);
-    //gameObject->AddComponent<CRectangleColliderComponent>(*gameObject, 1.f, 1.f, ECollisionLayer::ALL, 1024);
+
+	gameObject->AddComponent<CRectangleColliderComponent>(*gameObject, 1.f, 1.f, ECollisionLayer::PLAYER , static_cast<uint64_t>(ECollisionLayer::ALL));
     gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 1.f, ECollisionLayer::PLAYER, static_cast<uint64_t>(ECollisionLayer::ALL));
     gameObject->AddComponent<CStatsComponent>(*gameObject, 100.0f, 10.0f, 3.0f, 0.0f, 0.0f, 1.0f);
 
@@ -243,10 +244,16 @@ CGameObject* CUnityFactory::CreateGameObject(const SEnemyData& aData, const std:
 	return gameObject;
 }
 
-CGameObject* CUnityFactory::CreateGameObject(const SEventData& aData)
+CGameObject* CUnityFactory::CreateGameObject(const SEventData& aData, const std::string anEventString)
 {
     CGameObject* gameObject = new CGameObject();
     gameObject->myTransform->Position(aData.myPosition);
-    gameObject->AddComponent<CCollisionEventComponent>(*gameObject, static_cast<EMessageType>(aData.myEvent), aData.myColliderData.x, aData.myColliderData.y, ECollisionLayer::ALL, 1024);
+    gameObject->AddComponent<CCollisionEventComponent>(*gameObject, 
+		static_cast<EMessageType>(aData.myEvent),
+		anEventString,
+		aData.myColliderData.x, 
+		aData.myColliderData.y, 
+		ECollisionLayer::EVENT, 
+		static_cast<uint64_t>(ECollisionLayer::PLAYER));
     return gameObject;
 }

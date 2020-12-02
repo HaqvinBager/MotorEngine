@@ -43,6 +43,9 @@ public:
 	void MoveAlongPath();
 	void SetPath(std::vector<DirectX::SimpleMath::Vector3>& aPath, DirectX::SimpleMath::Vector3 aFinalPosition);
 
+	float MovementSpeed() const;
+	void MovementSpeed(float aMovementSpeed);
+
 	DirectX::SimpleMath::Matrix GetMatrix() const;
 
 private:

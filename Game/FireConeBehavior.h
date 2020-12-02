@@ -11,10 +11,10 @@ namespace DirectX
 
 namespace SM = DirectX::SimpleMath;
 
-class CMeleeAttackBehavior : public IAbilityBehavior {
+class CFireConeBehavior : public IAbilityBehavior {
 public:
-	CMeleeAttackBehavior(float aDuration);
-	~CMeleeAttackBehavior() override;
+	CFireConeBehavior(float aDuration);
+	~CFireConeBehavior() override;
 
 	void Init(CGameObject* aCaster) override;
 	void Update(CGameObject* aParent) override;

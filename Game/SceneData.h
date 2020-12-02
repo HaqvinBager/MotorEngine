@@ -81,6 +81,7 @@ struct SInGameData
 	std::vector<SEnemyData> myEnemyData;
 	std::vector<SGameObjectData> myGameObjects;
 	int mySceneIndex;
+	std::unordered_map<int, std::string> myEventStringMap;
 
 	int SizeOf()
 	{
