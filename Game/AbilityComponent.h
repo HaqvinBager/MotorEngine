@@ -32,7 +32,7 @@ public:
 	void OnEnable() override;
 	void OnDisable() override;
 
-	void UseAbility(EAbilityType anAbilityType, DirectX::SimpleMath::Vector3 aSpawnPosition);
+	bool UseAbility(EAbilityType anAbilityType, DirectX::SimpleMath::Vector3 aSpawnPosition);
 
 	void SendEvent();
 	void ReceiveEvent(const EInputEvent aEvent) override;

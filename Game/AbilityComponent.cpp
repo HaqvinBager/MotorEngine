@@ -22,6 +22,7 @@
 #include "MainSingleton.h"
 #include "Engine.h"
 #include "EngineException.h"
+#include "StatsComponent.h"
 
 #include <fstream>
 #include "rapidjson\document.h"
@@ -108,36 +109,26 @@ void CAbilityComponent::OnDisable()
 {
 }
 
-void CAbilityComponent::UseAbility(EAbilityType anAbilityType, DirectX::SimpleMath::Vector3 aSpawnPosition)
+bool CAbilityComponent::UseAbility(EAbilityType anAbilityType, DirectX::SimpleMath::Vector3 aSpawnPosition)
 {
-
 	if (myAbilityPools.find(anAbilityType) == myAbilityPools.end()) {
-		return;
+		return false;
 	}
 
 	if (myAbilityPools.at(anAbilityType).empty()) {
-		return;
+		return false;
 	}
+
+	if (myAbilityPools.at(anAbilityType).back()->GetComponent<CAbilityBehaviorComponent>()->AbilityBehavior()->myResourceCost > GameObject().GetComponent<CStatsComponent>()->GetStats().myResource)
+		return false;
 
 	myActiveAbilities.emplace_back(myAbilityPools.at(anAbilityType).back());
 	myAbilityPools.at(anAbilityType).pop_back();
 	myActiveAbilities.back()->Active(true);
 	myActiveAbilities.back()->myTransform->Position(aSpawnPosition);
-
-	// getparent().playanimation(myactiveabilities.back().getcomponent<pod>().myanimation);
-
 	myActiveAbilities.back()->GetComponent<CAbilityBehaviorComponent>()->Init(&GameObject());
 
-	//switch (anAbilityType)
-	//{
-	//case EAbilityType::WHIRLWIND:
-	//	break;
-	//case EAbilityType::AbilityTest:
-	//	myActiveAbilities.back()->GetComponent<CAbilityBehaviorComponent>()->Init(aSpawnPosition);
-	//	break;
-	//default:
-	//	break;
-	//}
+	return true;
 }
 
 void CAbilityComponent::SendEvent() {
@@ -178,50 +169,64 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 {
 	float messageValue = 1.0f;
 
-
 	switch (aEvent)
 	{
 		SMessage myMessage;
 	case EInputEvent::Ability1:
 		if (myCurrentCooldowns[0] > 0)
 			break;
-		UseAbility(EAbilityType::PlayerAbility1, GameObject().myTransform->Position());
-		myMessage.myMessageType = EMessageType::AbilityOneCooldown;
-		myCurrentCooldowns[0] = myMaxCooldowns[0];
-		myMessage.data = &messageValue;
-		CMainSingleton::PostMaster().Send(myMessage);
+
+		if (UseAbility(EAbilityType::PlayerAbility1, GameObject().myTransform->Position()))
+		{
+			myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
+			myCurrentCooldowns[0] = myMaxCooldowns[0];
+			myMessage.data = &messageValue;
+			CMainSingleton::PostMaster().Send(myMessage);
+		}
 		break;
 	case EInputEvent::Ability2:
 		if (myCurrentCooldowns[1] > 0)
 			break;
-		UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position());
-		myMessage.myMessageType = EMessageType::AbilityTwoCooldown;
-		myCurrentCooldowns[1] = myMaxCooldowns[1];
-		myMessage.data = &messageValue;
-		CMainSingleton::PostMaster().Send(myMessage);
+
+		if (UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position()))
+		{
+			myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
+			myCurrentCooldowns[1] = myMaxCooldowns[1];
+			myMessage.data = &messageValue;
+			CMainSingleton::PostMaster().Send(myMessage);
+		}
 		break;
 	case EInputEvent::Ability3:
 		if (myCurrentCooldowns[2] > 0)
 			break;
-		UseAbility(EAbilityType::PlayerAbility3, GameObject().myTransform->Position());
-		myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
-		myCurrentCooldowns[2] = myMaxCooldowns[2];
-		myMessage.data = &messageValue;
-		CMainSingleton::PostMaster().Send(myMessage);
+
+		if (UseAbility(EAbilityType::PlayerAbility3, GameObject().myTransform->Position()))
+		{
+			myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
+			myCurrentCooldowns[2] = myMaxCooldowns[2];
+			myMessage.data = &messageValue;
+			CMainSingleton::PostMaster().Send(myMessage);
+		}
 		break;
 	case EInputEvent::MoveClick:
-		if (myCurrentCooldowns[2] > 0)
+		if (myCurrentCooldowns[3] > 0)
 			break;
-		UseAbility(EAbilityType::PlayerAbility4, GameObject().myTransform->Position());
+
+		if (UseAbility(EAbilityType::PlayerAbility4, GameObject().myTransform->Position()))
+		{
+		}
 		/*myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
 		myCurrentCooldowns[2] = myMaxCooldowns[2];
 		myMessage.data = &messageValue;
 		CMainSingleton::PostMaster().Send(myMessage);*/
 		break;
 	case EInputEvent::AttackClick:
-		if (myCurrentCooldowns[2] > 0)
+		if (myCurrentCooldowns[4] > 0)
 			break;
-		UseAbility(EAbilityType::PlayerAbility5, GameObject().myTransform->Position());
+
+		if (UseAbility(EAbilityType::PlayerAbility5, GameObject().myTransform->Position()))
+		{
+		}
 		/*myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
 		myCurrentCooldowns[2] = myMaxCooldowns[2];
 		myMessage.data = &messageValue;
@@ -297,12 +302,12 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	}
 	else if (behavior["Type"].GetString() == std::string("FireCone"))
 	{
-		fireConeBehavior = new CFireConeBehavior(behavior["Duration"].GetFloat());
+		fireConeBehavior = new CFireConeBehavior(behavior["Duration"].GetFloat(), behavior["ResourceCost"].GetFloat());
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, fireConeBehavior, anAbilityType);
 	}
 	else if (behavior["Type"].GetString() == std::string("SpeedExplode"))
 	{
-		speedExplodeBehavior = new CSpeedExplodeBehavior(behavior["Duration"].GetFloat(), behavior["ExplodeAfter"].GetFloat(), behavior["SpeedMultiplier"].GetFloat(), abilityObject);
+		speedExplodeBehavior = new CSpeedExplodeBehavior(behavior["Duration"].GetFloat(), behavior["ResourceCost"].GetFloat(), behavior["ExplodeAfter"].GetFloat(), behavior["SpeedMultiplier"].GetFloat(), abilityObject);
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, speedExplodeBehavior, anAbilityType);
 	}
 	else if (behavior["Type"].GetString() == std::string("DelayedExplosion"))

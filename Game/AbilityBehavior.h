@@ -4,6 +4,7 @@ class CGameObject;
 
 class IAbilityBehavior {
 public:
+	IAbilityBehavior();
 	virtual ~IAbilityBehavior() = 0;
 
 	virtual void Update(CGameObject* aParent) = 0;
@@ -13,4 +14,5 @@ public:
 public:
 	float myDuration;
 	float myTimer;
+	float myResourceCost;
 };

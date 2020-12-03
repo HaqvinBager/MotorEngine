@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include "AbilityBehavior.h"
 
-CAbilityBehaviorComponent::CAbilityBehaviorComponent(CGameObject& aParent, IAbilityBehavior* aBehavior, EAbilityType anAbilityType) 
+CAbilityBehaviorComponent::CAbilityBehaviorComponent(CGameObject& aParent, IAbilityBehavior* aBehavior, EAbilityType anAbilityType)
 	: CBehaviour(aParent), myBehavior(aBehavior), myAbilityType(anAbilityType)
 {
 }
@@ -46,4 +46,9 @@ EAbilityType CAbilityBehaviorComponent::GetAbilityType() const
 void CAbilityBehaviorComponent::Init(CGameObject* aCaster)
 {
 	myBehavior->Init(aCaster);
+}
+
+IAbilityBehavior* CAbilityBehaviorComponent::AbilityBehavior()
+{
+	return myBehavior;
 }
