@@ -106,7 +106,7 @@ CAudioManager::CAudioManager() : myWrapper() {
 	}
 
 	// SEND MESSAGE TO START PLAYING MUSIC
-	CMainSingleton::PostMaster().Send({ EMessageType::MainMenu, NULL });
+	//CMainSingleton::PostMaster().Send({ EMessageType::MainMenu, NULL });
 }
 
 CAudioManager::~CAudioManager() 
