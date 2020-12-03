@@ -18,12 +18,14 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent):
 CPlayerControllerComponent::~CPlayerControllerComponent()
 {
 	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::MoveClick, this);
+	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::AttackClick, this);
 }
 
 void CPlayerControllerComponent::Awake()
 {
 	myLastHP = GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth;
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::MoveClick, this);
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::AttackClick, this);
 }
 
 void CPlayerControllerComponent::Start() {}
@@ -49,13 +51,10 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 	{
 	case IInputObserver::EInputEvent::MoveClick:
 		this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
-		// TEMP, Ok to remove
-		if(this->GameObject().GetComponent<CAnimationComponent>() != nullptr)
-			this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::Run);
-		// ! TEMP
-			break;
+		break;
 	case IInputObserver::EInputEvent::AttackClick:
-		//ALSO DO STUFF TOO
+		this->GameObject().GetComponent<CAnimationComponent>()->DeadState();// for testing
+		//this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::AttackLight);
 		break;
 
 	default:

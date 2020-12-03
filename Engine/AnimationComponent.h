@@ -6,7 +6,7 @@
 #include "SimpleMath.h"
 #include "ModelMath.h"
 
-//#define USING_BLENDED_ANIMATIONS
+//#define USING_BLENDED_ANIMATIONS // Don't toggle this. There is no support for it atm. Anything can happen if active.
 
 struct SAnimationBlend
 {
@@ -31,26 +31,29 @@ public:
 	void OnDisable() override;
 
 public:
-	CAnimation* GetMyAnimation() { return myAnimation; }
-	const float GetBlend() const { return myBlend.myBlendLerp; }
-
-public:
 	std::array<SlimMatrix44, 64> GetBones() { return myBones; }
 	void GetAnimatedBlendTransforms(float dt, SlimMatrix44* transforms);
 	void GetAnimatedTransforms(float dt, SlimMatrix44* transforms);
 
-	//Used mainly for Modelviewer. Please use PlayAnimation that uses a EAnimationID
-	void PlayAnimation(const int anAnimationIndex, bool anIsLooping = false, const float anAnimSpeed = 1.0f);
+	void MovingState();
+	void DeadState();// After calling this no other animation will be able to be called.
+	void ForceToIdleState();
 
-	void PlayAnimation(const EPlayerAnimationID anAnimationID, bool anIsLooping = false, const float anAnimSpeed = 1.0f);
-	void PlayAnimation(const EEnemyAnimationID anAnimationID, bool anIsLooping = false, const float anAnimSpeed = 1.0f);
-	void PlayAnimation(const EBossAnimationID anAnimationID, bool anIsLooping = false, const float anAnimSpeed = 1.0f);
-	void PlayAnimation(const ECrateAnimationID anAnimationID, bool anIsLooping = false, const float anAnimSpeed = 1.0f);
+	template <class T>
+	void PlayAnimation(const T anEAnimationID);// Use with E- Player/Enemy/Boss/Other -AnimationID
+	template <class T>
+	void SetIdleID(const T anIdleID);
+	template <class T>
+	void SetMovingID(const T aMovingID);
+	template <class T>
+	void SetDyingID(const T aDyingID);
+	template<class T>
+	void SetStateIDs(const T anIdleID, const T aMovingID, const T aDyingID);
 
-	// 2020 11 26
-	// Didnt work properly 
-	//template <class T>
-	//void PlayAnimationUsingID(const T anEAnimationID, bool anIsLooping = false);
+public:
+	CAnimation* GetMyAnimation() { return myAnimation; }
+	const float GetBlend() const { return myBlend.myBlendLerp; }
+	const int CurrentAnimationState() { return myCurrentAnimationID; }
 
 public:
 	//Intended use is in Model viewer. Careful using it anywhere else. Deletes the previous myAnimation, news and inits a new CAnimation.
@@ -61,17 +64,13 @@ private:
 	void UpdateBlended(const float dt);
 	void UpdateNonBlended(const float dt);
 	void SetBlend(int anAnimationIndex, int anAnimationIndexTwo, float aBlend);// Does nothing atm.
-	
-	// This works if the ids are in a sorted list. But if the animations are added at random to the project the ids aren't sorted, making this function unsafe.
-	bool WithinIDRange(const int anID);
-	// Goes through std::vector myAnimationID: returns true if it finds the id within the list.
-	bool HasID(const int anID);
+	inline bool UpdateIdleTimer();
+	inline void ResetIdleTimer();
+	void SwitchBackToIdle();
 
-	// This works if the ids are in a sorted list. Uses first abs(id - anID) +1. Unsafe.
-	const int GetIndexFromID(const int anID);
-	// Checks for ID withing std::vector myAnimationIds and returns index of ID
-	const int GetIndexFromList(const int anID);
+	void PlayAnimation(const int anAnimationIndex, bool anIsLooping = false, const float anAnimSpeed = 1.0f);
 
+private:
 	CAnimation* myAnimation;
 	std::array<SlimMatrix44, 64> myBones { };
 	SAnimationBlend myBlend;
@@ -79,16 +78,100 @@ private:
 	float myAnimationSpeed;
 	std::vector<CStringID> myAnimationIds;
 
+	int myCurrentAnimationID;// Current State
+	int myIdleAnimationID;// Idle State
+	int myMovingAnimationID;// Moving State
+	int myDyingAnimationID;// Dying / Dead State
+	float myReturnToIdleTimer;
+
+private: // Needed for template functions
+	// This works if the ids are in a sorted list. But if the animations are added at random to the project the ids aren't sorted, making this function unsafe.
+	bool WithinIDRange(const int anID)
+	{
+		return (anID <= myAnimationIds.back().ID() && anID >= myAnimationIds.front().ID()); 
+	}
+
+	// Goes through std::vector myAnimationID: returns true if it finds the id within the list.
+	bool HasID(const int anID)
+	{
+		for (auto& id : myAnimationIds)
+		{
+			if (id.ID() == anID)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// This works if the ids are in a sorted list. Uses first abs(id - anID) +1. Unsafe.
+	const int GetIndexFromID(const int anID)
+	{
+		int index = abs(myAnimationIds[0].ID() - anID ) + 1;
+		return index;
+	}
+
+	// Checks for ID withing std::vector myAnimationIds and returns index of ID
+	const int GetIndexFromList(const int anID)
+	{
+		for (int i = 0; i < myAnimationIds.size(); ++i)
+		{
+			if (myAnimationIds[i].ID() == anID)
+			{
+				return i + 1; // Animations inside CAnimation start at 1, 0 is a static civillian/ tpose.
+			}
+		}
+		return 0;
+	}
 };
 
-// 2020 11 26
-// Doesn't seem safe to use. High potential for weird errors.
-//template <class T>
-//void CAnimationComponent::PlayAnimationUsingID(const T anEAnimationID, bool anIsLooping)
-//{
-//	int id = static_cast<int>(anEAnimationID);
-//	if (WithinIDRange(id))
-//	{
-//		PlayAnimation(GetIndexFromID(id), anIsLooping);
-//	}
-//}
+template <class T>
+void CAnimationComponent::PlayAnimation(const T anEAnimationID)
+{
+	int id = static_cast<int>(anEAnimationID);
+	if (this->HasID(id))
+	{
+		this->PlayAnimation(this->GetIndexFromList(id), false);
+		myCurrentAnimationID = id;
+	}
+	else
+	{
+		this->PlayAnimation(0, false);
+		assert(false && "Does not contain animation ID");
+	}
+}
+
+template <class T>
+void CAnimationComponent::SetIdleID(const T anIdleID)
+{
+	int id = static_cast<int>(anIdleID);
+	if (this->HasID(id))
+		this->myIdleAnimationID = id;
+	else
+		this->myIdleAnimationID = 0;
+}
+template <class T>
+void CAnimationComponent::SetMovingID(const T aMovingID)
+{
+	int id = static_cast<int>(aMovingID);
+	if (this->HasID(id))
+		this->myMovingAnimationID = id;
+	else
+		this->myMovingAnimationID = 0;
+}
+template <class T>
+void CAnimationComponent::SetDyingID(const T aDyingID)
+{
+	int id = static_cast<int>(aDyingID);
+	if (this->HasID(id))
+		this->myDyingAnimationID = id;
+	else
+		this->myDyingAnimationID = 0;
+}
+template<class T>
+void CAnimationComponent::SetStateIDs(const T anIdleID, const T aMovingID, const T aDyingID)
+{
+	this->SetIdleID(anIdleID);
+	this->SetMovingID(aMovingID);
+	this->SetDyingID(aDyingID);
+}

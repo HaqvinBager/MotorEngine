@@ -22,6 +22,7 @@ CInputMapper::~CInputMapper()
 bool CInputMapper::Init()
 {
 	MapEvent(IInputObserver::EInputAction::MouseLeft, IInputObserver::EInputEvent::MoveClick);
+	MapEvent(IInputObserver::EInputAction::MouseRight, IInputObserver::EInputEvent::AttackClick);
 	MapEvent(IInputObserver::EInputAction::Key1, IInputObserver::EInputEvent::Ability1);
 	MapEvent(IInputObserver::EInputAction::Key2, IInputObserver::EInputEvent::Ability2);
 	MapEvent(IInputObserver::EInputAction::Key3, IInputObserver::EInputEvent::Ability3);
@@ -109,6 +110,10 @@ void CInputMapper::UpdateMouseInput()
 	//{
 	//	TranslateActionToEvent(IInputObserver::EInputAction::MouseLeft);
 	//}
+	if (myInput->IsMousePressed(Input::MouseButton::Right))
+	{
+		TranslateActionToEvent(IInputObserver::EInputAction::MouseRight);
+	}
 }
 
 void CInputMapper::Update()
