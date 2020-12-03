@@ -251,7 +251,7 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	std::string colliderType;
 
 	//COOLDOWNS
-	myMaxCooldowns[static_cast<int>(anAbilityType)] = document["Cooldown"].GetFloat();
+	myMaxCooldowns[static_cast<int>(anAbilityType)] = document.HasMember("Cooldown") ? document["Cooldown"].GetFloat() : 0.5f;
 	//!COOLDOWNS
 
 	//VFX
