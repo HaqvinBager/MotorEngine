@@ -42,3 +42,8 @@ void CTextInstance::SetColor(DirectX::SimpleMath::Vector4 aColor)
 {
     myColor = aColor;
 }
+
+void CTextInstance::SetPivot(DirectX::SimpleMath::Vector2 aPivot)
+{
+    myPivot = aPivot;
+}

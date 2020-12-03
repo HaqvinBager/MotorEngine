@@ -56,6 +56,7 @@ void CCanvas::Init(std::string aFilePath)
 			myTexts.back()->SetText(buttonData["Text"].GetString());
 			myTexts.back()->SetColor({ buttonData["Text Color R"].GetFloat(), buttonData["Text Color G"].GetFloat(), buttonData["Text Color B"].GetFloat(), 1.0f });
 			myTexts.back()->SetPosition({ buttonData["Text Position X"].GetFloat(), buttonData["Text Position Y"].GetFloat() });
+			myTexts.back()->SetPivot({ buttonData["Text Pivot X"].GetFloat(), buttonData["Text Pivot Y"].GetFloat() });
 
 			data.myPosition = { buttonData["Position X"].GetFloat(), buttonData["Position Y"].GetFloat() };
 			data.myDimensions = { buttonData["Pixel Width"].GetFloat(), buttonData["Pixel Height"].GetFloat() };
@@ -87,6 +88,7 @@ void CCanvas::Init(std::string aFilePath)
 			myTexts.back()->SetText(textData["Text"].GetString());
 			myTexts.back()->SetColor({ textData["Color R"].GetFloat(), textData["Color G"].GetFloat(), textData["Color B"].GetFloat(), 1.0f });
 			myTexts.back()->SetPosition({ textData["Position X"].GetFloat(), textData["Position Y"].GetFloat() });
+			myTexts.back()->SetPivot({ textData["Pivot X"].GetFloat(), textData["Pivot Y"].GetFloat() });
 		}
 	}
 
