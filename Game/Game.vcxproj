@@ -285,7 +285,6 @@
     <ClInclude Include="AbilityComponent.h" />
     <ClInclude Include="AIBehavior.h" />
     <ClInclude Include="AIBehaviorComponent.h" />
-    <ClInclude Include="AudioManager.h" />
     <ClInclude Include="AuraBehavior.h" />
     <ClInclude Include="BoomerangBehavior.h" />
     <ClInclude Include="DelayedExplosionBehavior.h" />
@@ -311,7 +310,6 @@
     <ClCompile Include="AbilityComponent.cpp" />
     <ClCompile Include="AIBehavior.cpp" />
     <ClCompile Include="AIBehaviorComponent.cpp" />
-    <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="AuraBehavior.cpp" />
     <ClCompile Include="BoomerangBehavior.cpp" />
     <ClCompile Include="DelayedExplosionBehavior.cpp" />

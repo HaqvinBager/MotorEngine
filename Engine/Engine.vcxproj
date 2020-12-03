@@ -314,6 +314,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+   
     <ClInclude Include="AnimatedUIElement.h" />
     <ClInclude Include="Animation.h" />
     <ClInclude Include="AnimationComponent.h" />
@@ -322,6 +323,7 @@
     <ClInclude Include="AStar.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="AudioChannel.h" />
+    <ClInclude Include="AudioManager.h" />
     <ClInclude Include="Behaviour.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Camera.h" />
@@ -421,6 +423,7 @@
     <ClInclude Include="WinInclude.h" />
   </ItemGroup>
   <ItemGroup>
+    
     <ClCompile Include="AnimatedUIElement.cpp" />
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="AnimationComponent.cpp" />
@@ -428,6 +431,7 @@
     <ClCompile Include="AStar.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="AudioChannel.cpp" />
+    <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraComponent.cpp" />

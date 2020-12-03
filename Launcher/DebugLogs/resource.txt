@@ -1,0 +1,2 @@
+[14:35:57][resource] resource message
+
