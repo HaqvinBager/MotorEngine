@@ -187,7 +187,7 @@ void CTransformComponent::MoveAlongPath()
 		dir.Normalize();
 		this->Move(dir * myMoveSpeed * CTimer::Dt());
 
-		Rotation({ 0,DirectX::XMConvertToDegrees( atan2f(dir.x, dir.z)) + 180.f,0 });
+		Rotation({ 0, DirectX::XMConvertToDegrees(atan2f(dir.x, dir.z)) + 180.f, 0 });
 
 		if (DirectX::SimpleMath::Vector3::DistanceSquared(this->Position(), myPath[pathSize - 1]) < epsilon) {
 			myPath.pop_back();

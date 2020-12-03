@@ -50,6 +50,8 @@ public:
 
 	DirectX::SimpleMath::Matrix GetMatrix() const;
 
+	std::vector<DirectX::SimpleMath::Vector3> GetNavMeshPath() { return myPath; }
+
 private:
 	float myScale;
 	// TODO: Move speed into "Resource Component"

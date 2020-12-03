@@ -13,6 +13,7 @@
 #include "NavMeshComponent.h"
 #include "AnimationComponent.h"
 #include "AbilityComponent.h"
+#include "NavMeshComponent.h"
 
 CEnemyBehavior::CEnemyBehavior(CGameObject* aPlayerObject)
 	: myPlayer(aPlayerObject)
@@ -66,11 +67,12 @@ void CEnemyBehavior::FindATarget(CGameObject& aParent)
 
 	float dist = DirectX::SimpleMath::Vector3::DistanceSquared(parentPos, targetPos);
 	if (dist <= baseStats.myBaseVisionRange) {
-			// NON NAVMESH MOVEMENT
 		DirectX::SimpleMath::Vector3 dir = targetPos - parentPos;
 		dir.Normalize();
-		aParent.GetComponent<CTransformComponent>()->Move(dir * baseStats.myMoveSpeed * CTimer::Dt());
-			// NON NAVMESH MOVEMENT
+		//aParent.GetComponent<CTransformComponent>()->Move(dir * baseStats.myMoveSpeed * CTimer::Dt());
+
+		//NavMesh movement
+		aParent.GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
 		if (dist <= baseStats.myBaseAttackRange) {
 			if (stats.myTokenSlot == nullptr) {
 				stats.myTokenSlot = CTokenPool::GetInstance()->Request();
