@@ -5,11 +5,9 @@
 
 #ifdef _DEBUG
 #pragma comment(lib, "Engine_Debug.lib")
-#pragma comment(lib, "UnityImporterApp_Debug.lib")
 #endif // _DEBUG
 #ifdef NDEBUG
 #pragma comment(lib, "Engine_Release.lib")
-#pragma comment(lib, "UnityImporterApp_Release.lib")
 #endif // NDEBUG
 
 CGame::CGame()
