@@ -13,7 +13,7 @@ namespace SM = DirectX::SimpleMath;
 
 class CFireConeBehavior : public IAbilityBehavior {
 public:
-	CFireConeBehavior(float aDuration, float aResourceCost);
+	CFireConeBehavior(float aDuration, float aResourceCost, CGameObject* aParent);
 	~CFireConeBehavior() override;
 
 	void Init(CGameObject* aCaster) override;
@@ -22,4 +22,5 @@ public:
 private:
 	DirectX::SimpleMath::Vector3 myDirection;
 	CGameObject* myCaster;
+	CGameObject* myParent;
 };

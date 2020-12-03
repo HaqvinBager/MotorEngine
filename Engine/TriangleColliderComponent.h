@@ -34,23 +34,22 @@ public:
 	void Start() override;
 	void Update()override;
 	
-public:
 	bool Collided(CCircleColliderComponent* aCollidedGameObject) override;
 	bool Collided(CTriangleColliderComponent* aCollidedGameObject) override;
 	bool Collided(CRectangleColliderComponent* aCollidedGameObject) override;
 	bool Collided(CCollider* aCollidedGameObject) override;
 
-public:
 	void OnEnable() override;
 	void OnDisable() override;
 
-public:
 	float const GetHeight() const;
 	void SetHeight(float aHeight);
 	float const GetWidth() const;
 	void SetWidth(float aWidth);
 	DirectX::SimpleMath::Vector3 const GetLeftVertex() const { return myLeftVertex; }
 	DirectX::SimpleMath::Vector3 const GetRightVertex() const { return myRightVertex; }
+	void SetLeftVertex(DirectX::SimpleMath::Vector3& aLeftVertex);
+	void SetRightVertex(DirectX::SimpleMath::Vector3& aRightVertex);
 
 private:
 	float myHeight;

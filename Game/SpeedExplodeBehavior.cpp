@@ -63,6 +63,7 @@ void CSpeedExplodeBehavior::Update(CGameObject* aParent)
 
 		if (myTimer > myExplosionDelay)
 		{
+			myParent->GetComponent<CCircleColliderComponent>();
 			myParent->GetComponent<CCircleColliderComponent>()->Enabled(true);
 			//TODO: play audio
 		}
