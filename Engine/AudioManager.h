@@ -37,6 +37,8 @@ public:
 	// Listen to PostMaster
 	void Receive(const SMessage& aMessage);
 
+	
+
 private:
 	void SubscribeToMessages();
 	void UnsubscribeToMessages();

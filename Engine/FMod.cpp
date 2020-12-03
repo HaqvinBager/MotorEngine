@@ -42,6 +42,7 @@ const FMOD::System* CFMod::GetCoreSystem() const
 
 FMOD::Sound* CFMod::CreateSound(std::string aFilePath)
 {
+
     FMOD::Sound* soundPtr;
     FMOD_EXCEPTION(myCoreSystem->createSound(aFilePath.c_str(), FMOD_DEFAULT, nullptr, &soundPtr));
     return soundPtr;

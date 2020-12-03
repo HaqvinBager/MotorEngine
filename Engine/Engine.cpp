@@ -26,6 +26,7 @@
 #include "EnemyFactory.h"
 #include "DL_Debug.h"
 #include "MainSingleton.h"
+#include "AudioManager.h"
 #include <string>
 
 #pragma comment(lib, "runtimeobject.lib")
@@ -55,7 +56,7 @@ CEngine::CEngine()
 	myRenderManager = nullptr;
 	myEnemyFactory = new CEnemyFactory();
 	myMainSingleton = new CMainSingleton();
-
+	myAudioManager = new CAudioManager();
 	myActiveScene = 0; //muc bad
 }
 
@@ -100,6 +101,9 @@ CEngine::~CEngine()
 
 	delete myMainSingleton;
 	myMainSingleton = nullptr;
+
+	delete myAudioManager;
+	myAudioManager = nullptr;
 
 	ourInstance = nullptr;
 }

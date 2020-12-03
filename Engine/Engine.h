@@ -22,6 +22,7 @@ class CMainSingleton;
 class CForwardRenderer;
 class CVFXFactory;
 class CLineFactory;
+class CAudioManager;
 
 class CEngine
 {
@@ -76,4 +77,5 @@ private:
 	CInputMapper* myInputMapper;
 	CEnemyFactory* myEnemyFactory;
 	CMainSingleton* myMainSingleton;
+	CAudioManager* myAudioManager;
 };

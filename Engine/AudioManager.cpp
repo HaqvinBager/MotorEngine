@@ -6,21 +6,99 @@
 #include "AudioChannel.h"
 #include "MainSingleton.h"
 #include "PostMaster.h"
+#include "rapidjson\document.h"
+#include "rapidjson\istreamwrapper.h"
+
+
+
+using namespace rapidjson;
 
 #define CAST(type) { static_cast<unsigned int>(type) }
 
 CAudioManager::CAudioManager() : myWrapper() {
 	SubscribeToMessages();
 
+	std::ifstream inputStream("Json/AudioPaths.json");
+	IStreamWrapper inputWrapper(inputStream);
+	Document document;
+	document.ParseStream(inputWrapper);
+	
+
 	// Init Channels
 	for (unsigned int i = 0; i < static_cast<unsigned int>(EChannels::Count); ++i) {
 		myChannels.emplace_back(myWrapper.RequestChannel(TranslateChannels(static_cast<EChannels>(i))));
 	}
 
-	// Init Music
-	for (unsigned int i = 0; i < static_cast<unsigned int>(EMusic::Count); ++i) {
-		myMusicAudio.emplace_back(myWrapper.RequestSound(GetPath(static_cast<EMusic>(i))));
-	}	
+
+	if (document.HasMember("Music"))
+	{
+		auto audioDataArray = document["Music"].GetArray();
+		for (unsigned int i = 0; i < audioDataArray.Size(); ++i)
+		{
+			auto audioData = audioDataArray[i].GetObjectW();
+			myMusicAudio.emplace_back(myWrapper.RequestSound(myMusicPath + audioData["Path"].GetString()));
+
+		}
+
+	}
+
+	if (document.HasMember("Ambience"))
+	{
+		auto audioDataArray = document["Ambience"].GetArray();
+		for (unsigned int i = 0; i < audioDataArray.Size(); ++i)
+		{
+			auto audioData = audioDataArray[i].GetObjectW();
+			myAmbianceAudio.emplace_back(myWrapper.RequestSound(myAmbiancePath + audioData["Path"].GetString()));
+
+		}
+
+	}
+
+	if (document.HasMember("SFX"))
+	{
+		auto audioDataArray = document["SFX"].GetArray();
+		for (unsigned int i = 0; i < audioDataArray.Size(); ++i)
+		{
+			auto audioData = audioDataArray[i].GetObjectW();
+			mySFXAudio.emplace_back(myWrapper.RequestSound(mySFXPath + audioData["Path"].GetString()));
+
+		}
+
+	}
+
+	if (document.HasMember("UI"))
+	{
+		auto audioDataArray = document["Ambience"].GetArray();
+		for (unsigned int i = 0; i < audioDataArray.Size(); ++i)
+		{
+			auto audioData = audioDataArray[i].GetObjectW();
+			myUIAudio.emplace_back(myWrapper.RequestSound(myUIPath + audioData["Path"].GetString()));
+
+		}
+
+	}
+
+	if (document.HasMember("VoiceLine"))
+	{
+		auto audioDataArray = document["Ambience"].GetArray();
+		for (unsigned int i = 0; i < audioDataArray.Size(); ++i)
+		{
+			auto audioData = audioDataArray[i].GetObjectW();
+			myVoicelineAudio.emplace_back(myWrapper.RequestSound(myVoxPath + audioData["Path"].GetString()));
+
+		}
+
+	}
+
+
+	
+
+	//// Init Music
+	//for (unsigned int i = 0; i < static_cast<unsigned int>(EMusic::Count); ++i) {
+	//	myMusicAudio.emplace_back(myWrapper.RequestSound(GetPath(static_cast<EMusic>(i))));
+	//}	
+
+
 
 	// Set starting volume
 	for (auto& channel : myChannels) {
@@ -28,13 +106,16 @@ CAudioManager::CAudioManager() : myWrapper() {
 	}
 
 	// SEND MESSAGE TO START PLAYING MUSIC
-	//CMainSingleton::PostMaster().Send({ EMessageType::MainMenu, NULL });
+	CMainSingleton::PostMaster().Send({ EMessageType::MainMenu, NULL });
 }
 
 CAudioManager::~CAudioManager() 
 {
 	UnsubscribeToMessages();
 }
+
+
+
 
 void CAudioManager::Receive(const SMessage& aMessage) {
 	switch (aMessage.myMessageType)
