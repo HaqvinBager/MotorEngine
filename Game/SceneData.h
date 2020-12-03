@@ -37,6 +37,7 @@ struct SPlayerData
 };
 
 struct SEventData {
+	int myInstanceID;
 	DirectX::SimpleMath::Vector3 myPosition;
 	DirectX::SimpleMath::Vector2 myColliderData;
 	int myEvent;

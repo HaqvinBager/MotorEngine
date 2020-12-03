@@ -375,7 +375,6 @@
     <ClInclude Include="Heap.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="IntersectionManager.h" />
-    <ClInclude Include="LevelLoader.h" />
     <ClInclude Include="LightFactory.h" />
     <ClInclude Include="Line.h" />
     <ClInclude Include="LineFactory.h" />
@@ -471,7 +470,6 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="IntersectionManager.cpp" />
-    <ClCompile Include="LevelLoader.cpp" />
     <ClCompile Include="LightFactory.cpp" />
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="LineFactory.cpp" />

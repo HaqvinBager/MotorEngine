@@ -89,7 +89,6 @@
   <ItemGroup>
     <ClCompile Include="EnemyFactory.cpp" />
     <ClCompile Include="ObjectPool.cpp" />
-    <ClCompile Include="LevelLoader.cpp" />
     <ClCompile Include="TokenPool.cpp" />
     <ClCompile Include="AnimationComponent.cpp">
       <Filter>GameObject and Component\Component</Filter>
@@ -351,7 +350,6 @@
   <ItemGroup>
     <ClInclude Include="EnemyFactory.h" />
     <ClInclude Include="ObjectPool.h" />
-    <ClInclude Include="LevelLoader.h" />
     <ClInclude Include="MouseTracker.h" />
     <ClInclude Include="TokenPool.h" />
     <ClInclude Include="AnimationComponent.h">

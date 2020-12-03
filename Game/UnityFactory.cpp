@@ -84,7 +84,7 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 
 	for (const auto& eventdata : aData.myEventData)
 	{
-	    aScene.AddInstance(CreateGameObject(eventdata, aData.myEventStringMap.at(eventdata.myEvent)));
+	    aScene.AddInstance(CreateGameObject(eventdata, aData.myEventStringMap.at(eventdata.myInstanceID)));
 	}
 
 	CEnemyBehavior* enemyBehavior = new CEnemyBehavior(player);
