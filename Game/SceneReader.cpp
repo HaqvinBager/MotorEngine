@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SceneReader.h"
 
+
 CSceneReader::CSceneReader()
 {
 }
@@ -51,7 +52,7 @@ SInGameData& CSceneReader::ReadInGameData()
 
 	int pointLightDataCount = 0;
 	myStreamPtr += Read(pointLightDataCount);
-	assert(pointLightDataCount > 1000 && "Something went wrong when reading PointLightData");
+	assert(pointLightDataCount < 1000 && "Something went wrong when reading PointLightData");
 	myInGameData.back()->myPointLightData.reserve(pointLightDataCount);
 	for (int i = 0; i < pointLightDataCount; ++i)
 	{
@@ -71,7 +72,7 @@ SInGameData& CSceneReader::ReadInGameData()
 
 	int eventDataCount = 0;
 	myStreamPtr += Read(eventDataCount);
-	assert(eventDataCount > 1000 && "Something went wrong when reading EventData");
+	assert(eventDataCount < 1000 && "Something went wrong when reading EventData");
 	myInGameData.back()->myEventData.reserve(eventDataCount);
 	for (int i = 0; i < eventDataCount; ++i) {
 		SEventData evenData = {};
@@ -85,7 +86,7 @@ SInGameData& CSceneReader::ReadInGameData()
 
 	int enemyDataCount = 0;
 	myStreamPtr += Read(enemyDataCount);
-	assert(enemyDataCount > 1000 && "Something went wrong when reading EnemyData");
+	assert(enemyDataCount < 1000 && "Something went wrong when reading EnemyData");
 	myInGameData.back()->myEnemyData.reserve(enemyDataCount);
 	for (int i = 0; i < enemyDataCount; ++i) {
 		SEnemyData enemyData = {};
@@ -95,7 +96,7 @@ SInGameData& CSceneReader::ReadInGameData()
 
 	int myGameObjectDataCount = 0;
 	myStreamPtr += Read(myGameObjectDataCount);
-	assert(myGameObjectDataCount > 1000 && "Something went wrong when reading EnemyData");
+	assert(myGameObjectDataCount < 1000 && "Something went wrong when reading GameObjectData");
 	myInGameData.back()->myGameObjects.reserve(myGameObjectDataCount);
 	for (int i = 0; i < myGameObjectDataCount; ++i)
 	{
