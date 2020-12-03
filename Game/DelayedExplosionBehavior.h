@@ -1,8 +1,7 @@
 #pragma once
 #include "AbilityBehavior.h"
 
-class CDelayedExplosionBehavior:
-    public IAbilityBehavior
+class CDelayedExplosionBehavior: public IAbilityBehavior
 {
 public:
     CDelayedExplosionBehavior(float aDuration, float aDelay, float aResourceCost, CGameObject* aParent);
@@ -15,6 +14,5 @@ private:
     CGameObject* myCaster;
     CGameObject* myParent;
     float myDelay;
-    float myResourceCost;
 };
 

@@ -8,7 +8,12 @@
 #include "MainSingleton.h"
 #include "TransformComponent.h"
 
-CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent): CBehaviour(aParent), myLastHP(0.0f), myRegenerationSpeed(10.0f) {}
+CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent): 
+	CBehaviour(aParent), 
+	myLastHP(0.0f), 
+	myRegenerationSpeed(5.0f) //TODO: read from unity
+{
+}
 
 CPlayerControllerComponent::~CPlayerControllerComponent()
 {
