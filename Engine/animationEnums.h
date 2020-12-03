@@ -24,6 +24,10 @@ enum class EEnemyAnimationID
 
 enum class EBossAnimationID
 {
+	Attack		= 5014,
+	Dead		= 5015,
+	Idle		= 5016,
+	Walk		= 5017
 };
 
 enum class ECrateAnimationID

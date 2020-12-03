@@ -287,6 +287,7 @@
     <ClInclude Include="AIBehaviorComponent.h" />
     <ClInclude Include="AuraBehavior.h" />
     <ClInclude Include="BoomerangBehavior.h" />
+    <ClInclude Include="BossBehavior.h" />
     <ClInclude Include="DelayedExplosionBehavior.h" />
     <ClInclude Include="DialogueSystem.h" />
     <ClInclude Include="EnemyBehavior.h" />
@@ -312,6 +313,7 @@
     <ClCompile Include="AIBehaviorComponent.cpp" />
     <ClCompile Include="AuraBehavior.cpp" />
     <ClCompile Include="BoomerangBehavior.cpp" />
+    <ClCompile Include="BossBehavior.cpp" />
     <ClCompile Include="DelayedExplosionBehavior.cpp" />
     <ClCompile Include="DialogueSystem.cpp" />
     <ClCompile Include="EnemyBehavior.cpp" />
