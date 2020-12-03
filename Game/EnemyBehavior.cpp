@@ -12,6 +12,8 @@
 #include "MainSingleton.h"
 #include "NavMeshComponent.h"
 #include "AnimationComponent.h"
+#include "AbilityComponent.h"
+#include "NavMeshComponent.h"
 
 CEnemyBehavior::CEnemyBehavior(CGameObject* aPlayerObject)
 	: myPlayer(aPlayerObject)
@@ -48,7 +50,7 @@ void CEnemyBehavior::Update(CGameObject* aParent)
 		//aParent->Active(false);
 	}
 
-	//FindATarget(*aParent);
+	FindATarget(*aParent);
 }
 
 void CEnemyBehavior::Collided(CGameObject* /*aGameObject*/)
@@ -65,11 +67,12 @@ void CEnemyBehavior::FindATarget(CGameObject& aParent)
 
 	float dist = DirectX::SimpleMath::Vector3::DistanceSquared(parentPos, targetPos);
 	if (dist <= baseStats.myBaseVisionRange) {
-			// NON NAVMESH MOVEMENT
 		DirectX::SimpleMath::Vector3 dir = targetPos - parentPos;
 		dir.Normalize();
-		aParent.GetComponent<CTransformComponent>()->Move(dir * baseStats.myMoveSpeed * CTimer::Dt());
-			// NON NAVMESH MOVEMENT
+		//aParent.GetComponent<CTransformComponent>()->Move(dir * baseStats.myMoveSpeed * CTimer::Dt());
+
+		//NavMesh movement
+		aParent.GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
 		if (dist <= baseStats.myBaseAttackRange) {
 			if (stats.myTokenSlot == nullptr) {
 				stats.myTokenSlot = CTokenPool::GetInstance()->Request();
@@ -77,8 +80,9 @@ void CEnemyBehavior::FindATarget(CGameObject& aParent)
 			myPlayer->GetComponent<CStatsComponent>();
 			if (aParent.GetComponent<CAnimationComponent>())
 			{
-				aParent.GetComponent<CAnimationComponent>()->PlayAnimation(EEnemyAnimationID::Attack01);
+				aParent.GetComponent<CAnimationComponent>()->PlayAnimation(EEnemyAnimationID::Attack);
 			}
+			aParent.GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::EnemyAbility, aParent.myTransform->Position());
 		}
 		else {
 			if (stats.myTokenSlot != nullptr) {
@@ -87,7 +91,7 @@ void CEnemyBehavior::FindATarget(CGameObject& aParent)
 			}
 		}
 		// FOR NAVMESH
-		aParent.GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
+		//aParent.GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
 	}
 }
 

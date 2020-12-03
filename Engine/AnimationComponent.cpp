@@ -91,7 +91,7 @@ void CAnimationComponent::PlayAnimation(const EPlayerAnimationID anAnimationID, 
 	int id = static_cast<int>(anAnimationID);
 	if (HasID(id))
 	{
-		PlayAnimation(GetIndexFromID(id), anAnimSpeed, anIsLooping);
+		PlayAnimation(GetIndexFromList(id), anIsLooping, anAnimSpeed);
 	}
 }
 
@@ -100,7 +100,7 @@ void CAnimationComponent::PlayAnimation(const EEnemyAnimationID anAnimationID, b
 	int id = static_cast<int>(anAnimationID);
 	if (HasID(id))
 	{
-		PlayAnimation(GetIndexFromID(id), anAnimSpeed, anIsLooping);
+		PlayAnimation(GetIndexFromList(id), anIsLooping, anAnimSpeed);
 	}
 }
 
@@ -109,7 +109,7 @@ void CAnimationComponent::PlayAnimation(const EBossAnimationID anAnimationID, bo
 	int id = static_cast<int>(anAnimationID);
 	if (HasID(id))
 	{
-		PlayAnimation(GetIndexFromID(id), anAnimSpeed, anIsLooping);
+		PlayAnimation(GetIndexFromList(id), anIsLooping, anAnimSpeed);
 	}
 }
 
@@ -118,7 +118,7 @@ void CAnimationComponent::PlayAnimation(const ECrateAnimationID anAnimationID, b
 	int id = static_cast<int>(anAnimationID);
 	if (HasID(id))
 	{
-		PlayAnimation(GetIndexFromID(id), anAnimSpeed, anIsLooping);
+		PlayAnimation(GetIndexFromList(id), anIsLooping, anAnimSpeed);
 	}
 }
 
@@ -150,6 +150,18 @@ const int CAnimationComponent::GetIndexFromID(const int anID)
 {
 	int index = abs(myAnimationIds[0].ID() - anID ) + 1;
 	return index;
+}
+
+const int CAnimationComponent::GetIndexFromList(const int anID)
+{
+	for (int i = 0; i < myAnimationIds.size(); ++i)
+	{
+		if (myAnimationIds[i].ID() == anID)
+		{
+			return i + 1; // Animations inside CAnimation start at 1, 0 is a static civillian/ tpose.
+		}
+	}
+	return 0;
 }
 
 bool CAnimationComponent::ReplaceAnimation(const char* aRig, std::vector<std::string>& somePathsToAnimations)

@@ -5,10 +5,11 @@
 #define ENGINE_SCALE 0.01f
 using namespace DirectX::SimpleMath;
 
-CTransformComponent::CTransformComponent(CGameObject& aParent, DirectX::SimpleMath::Vector3 aPosition) : myScale(1.0f), CComponent(aParent), myMoveSpeed(3.0f)
+CTransformComponent::CTransformComponent(CGameObject& aParent, DirectX::SimpleMath::Vector3 aPosition): myScale(1.0f), CComponent(aParent), myMoveSpeed(3.0f)
 {
 	Scale(1.0f);
 	Position(aPosition);
+	myStartPosition = {0.0f,0.0f,0.0f};
 }
 
 CTransformComponent::~CTransformComponent()
@@ -21,6 +22,7 @@ void CTransformComponent::Awake()
 
 void CTransformComponent::Start()
 {
+	myStartPosition = Position();
 }
 
 void CTransformComponent::Update()
@@ -35,6 +37,11 @@ void CTransformComponent::Position(DirectX::SimpleMath::Vector3 aPosition)
 DirectX::SimpleMath::Vector3 CTransformComponent::Position() const
 {
 	return myTransform.Translation();
+}
+
+const DirectX::SimpleMath::Vector3 CTransformComponent::StartPosition() const
+{
+	return myStartPosition;
 }
 
 void CTransformComponent::Rotation(DirectX::SimpleMath::Vector3 aRotation)
@@ -63,13 +70,12 @@ void CTransformComponent::Rotation(DirectX::SimpleMath::Quaternion aQuaternion)
 	myTransform.Translation(tempTranslation);
 }
 
-const DirectX::SimpleMath::Quaternion CTransformComponent::Rotation()
+DirectX::SimpleMath::Quaternion CTransformComponent::Rotation()
 {
-	Vector3 scale;
-	Vector3 translation;
-	Quaternion rotation;
-	myTransform.Decompose(scale, rotation, translation);
-	return rotation;
+	DirectX::SimpleMath::Vector3 translation;
+	DirectX::SimpleMath::Vector3 scale;
+	GetMatrix().Decompose(scale, myQuat, translation);
+	return myQuat;
 }
 
 void CTransformComponent::Scale(float aScale)
@@ -146,8 +152,11 @@ void CTransformComponent::Rotate(DirectX::SimpleMath::Quaternion aQuaternion)
 
 void CTransformComponent::MoveAlongPath()
 {
-	// Astar returns backwards path. Because we cannot swap path nodes, 
+	// Astar returns backwards path. Because we cannot swap path nodes,
 	// we go from the back to the front in the path.
+
+	DirectX::SimpleMath::Matrix lookAt;
+
 	size_t pathSize = myPath.size();
 	if (pathSize > 0) {
 
@@ -156,10 +165,30 @@ void CTransformComponent::MoveAlongPath()
 
 		float epsilon = 0.05f;
 
+		//lookAt = DirectX::XMMatrixLookAtLH(Position(), myPath[pathSize - 1], DirectX::SimpleMath::Vector3::Up);
+
+		//DirectX::SimpleMath::Vector3 translation;
+		//DirectX::SimpleMath::Quaternion quat;
+		//DirectX::SimpleMath::Vector3 scale;
+
+		//DirectX::XMVECTOR* axis = nullptr;
+		//float* angle = nullptr;
+
+		//DirectX::XMQuaternionToAxisAngle(axis, angle, quat);
+
+		//axis;
+		//angle;
+
+		//lookAt.Decompose(scale, quat, translation);
+
+		//Rotation(quat);
+
 		dir = (myPath[pathSize - 1] - this->Position());
 		dir.Normalize();
 		this->Move(dir * myMoveSpeed * CTimer::Dt());
-			
+
+		Rotation({ 0, DirectX::XMConvertToDegrees(atan2f(dir.x, dir.z)) + 180.f, 0 });
+
 		if (DirectX::SimpleMath::Vector3::DistanceSquared(this->Position(), myPath[pathSize - 1]) < epsilon) {
 			myPath.pop_back();
 		}

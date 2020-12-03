@@ -12,6 +12,7 @@ enum class EStatus {
 };
 
 struct STriangle {
+	int myId;
 	DirectX::SimpleMath::Vector3 myCenterPosition;
 	DirectX::SimpleMath::Vector3 myVertexPositions[3];
 	UINT myIndices[3];

@@ -6,6 +6,7 @@
 #include "MouseTracker.h"
 #include "Engine.h"
 #include "CircleColliderComponent.h"
+#include "VFXComponent.h"
 
 CSpeedExplodeBehavior::CSpeedExplodeBehavior(float aDuration, float aExplosionDelay, float aMovementSpeedMultiplier, CGameObject* aParent)
 {
@@ -30,6 +31,7 @@ void CSpeedExplodeBehavior::Init(CGameObject* aCaster)
 {
 	myCaster = aCaster;
 	myParent->GetComponent<CCircleColliderComponent>()->Enabled(false);
+	myParent->GetComponent<CVFXComponent>();
 	myCasterTransform = myCaster->GetComponent<CTransformComponent>();
 	myOriginalMovementSpeed = myCasterTransform->MovementSpeed();
 	myMultipliedSpeed = myOriginalMovementSpeed * myMovementSpeedMutiplier;
@@ -44,8 +46,8 @@ void CSpeedExplodeBehavior::Update(CGameObject* aParent)
 
 		if (myTimer > myExplosionDelay)
 		{
-			//TODO: explodes and does damage
 			myParent->GetComponent<CCircleColliderComponent>()->Enabled(true);
+			//TODO: play audio
 		}
 
 		if (myTimer > myDuration)
