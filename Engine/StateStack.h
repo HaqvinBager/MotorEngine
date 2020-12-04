@@ -17,13 +17,13 @@ public:
 	CStateStack() = default;
 	~CStateStack();
 
-	bool Init(std::initializer_list<CStateStack::EState> someStates, const EState aStartState = EState::MainMenu);
+	bool Awake(std::initializer_list<CStateStack::EState> someStates, const EState aStartState = EState::MainMenu);
 
 	CState* GetTop() { return myStateStack.top(); }
-	bool PushState(CState* aState);
+	bool PushState(const EState aState);
 	bool PopState();
 	bool PopUntil(EState aState);
-	void Awake();
+	void Awake();//Remove,should only be called on PushState.
 	void Start();
 	bool Update();
 

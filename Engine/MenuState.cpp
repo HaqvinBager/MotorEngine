@@ -17,12 +17,21 @@
 #include "PostMaster.h"
 #include "MainSingleton.h"
 
-CMenuState::CMenuState(CStateStack& aStateStack, const CStateStack::EState aState) :
-	CState(aStateStack, aState)
+CMenuState::CMenuState(CStateStack& aStateStack, const CStateStack::EState aState) 
+	: CState(aStateStack, aState)
+	, myCanvas(nullptr)
+	, myScene(nullptr)
+{
+}
+
+CMenuState::~CMenuState() {
+	CEngine::GetInstance()->PopBackScene();
+
+}
+
+void CMenuState::Awake() 
 {
 	myScene = new CScene();
-	CEngine::GetInstance()->AddScene(myScene);
-
 	CGameObject* camera = new CGameObject();
 	camera->AddComponent<CCameraComponent>(*camera, 70.0f);
 	camera->AddComponent<CCameraControllerComponent>(*camera, 25.0f);
@@ -37,27 +46,18 @@ CMenuState::CMenuState(CStateStack& aStateStack, const CStateStack::EState aStat
 	myScene->SetEnvironmentLight(envLight->GetComponent<CEnviromentLightComponent>()->GetEnviromentLight());
 
 	myCanvas = new CCanvas();
-	myCanvas->Init("Json/UI_MainMenu_Description.json");
+	myCanvas->Init("Json/UI_MainMenu_Description.json", *myScene);
 
 	for (auto buttons : myCanvas->GetButtons())
 	{
 		for (auto messageType : buttons->GetMessagesToSend())
-		CMainSingleton::PostMaster().Subscribe(messageType, this);
+			CMainSingleton::PostMaster().Subscribe(messageType, this);
 	}
-
-	
-	myActiveScene = CEngine::GetInstance()->ScenesSize();
 }
 
-CMenuState::~CMenuState() {
-	CEngine::GetInstance()->PopBackScene();
-
-}
-
-void CMenuState::Awake() {
-}
-
-void CMenuState::Start() {
+void CMenuState::Start() 
+{
+	myActiveScene = CEngine::GetInstance()->AddScene(myScene);
 }
 
 void CMenuState::Update() {
@@ -69,9 +69,7 @@ void CMenuState::Receive(const SMessage &aMessage) {
 		switch (aMessage.myMessageType) {
 		case EMessageType::StartGame:
 		{
-			myStateStack.PushState(new CLoadLevelState(myStateStack));
-			myStateStack.Awake();
-			myStateStack.Start();
+			myStateStack.PushState(CStateStack::EState::InGame);
 		} break;
 		case EMessageType::Quit:
 		{

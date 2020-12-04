@@ -22,7 +22,7 @@ CGame::~CGame()
 
 void CGame::Init()
 {
-	myStateStack.Init(
+	myStateStack.Awake(
 		{ 
 		CStateStack::EState::MainMenu, 
 		CStateStack::EState::LoadLevel,
@@ -30,9 +30,6 @@ void CGame::Init()
 		CStateStack::EState::PauseMenu 
 		}, 
 		CStateStack::EState::MainMenu);
-
-	myStateStack.Awake();
-	myStateStack.Start();
 }
 
 bool CGame::Update()

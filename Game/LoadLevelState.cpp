@@ -12,12 +12,9 @@
 #include "CollisionEventComponent.h"
 
 using namespace rapidjson;
-CLoadLevelState::CLoadLevelState(CStateStack& aStateStack, const CStateStack::EState aState) : 
-	CState(aStateStack, aState)
+CLoadLevelState::CLoadLevelState(CStateStack& aStateStack, const CStateStack::EState aState) 
+	: CState(aStateStack, aState)
 {
-	SaveLevelNames();	
-	myActiveScene = CEngine::GetInstance()->ScenesSize();
-	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel, this);
 }
 
 CLoadLevelState::~CLoadLevelState()
@@ -28,7 +25,13 @@ CLoadLevelState::~CLoadLevelState()
 
 void CLoadLevelState::Awake()
 {
+	SaveLevelNames();	
 	myActiveScene = Load(ELevel::LoadScreen);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel, this);
+}
+
+void CLoadLevelState::Start()
+{
 	CEngine::GetInstance()->SetActiveScene(myActiveScene);
 
 	Document latestExportedLevelDoc = CJsonReader::LoadDocument("Levels/DebugLevel.json");
@@ -41,10 +44,7 @@ void CLoadLevelState::Awake()
 	{
 		gameObject->Awake();
 	}
-}
 
-void CLoadLevelState::Start()
-{
 	for (auto& gameObject : CEngine::GetInstance()->GetActiveScene().GetActiveGameObjects())
 	{
 		gameObject->Start();
@@ -60,9 +60,7 @@ void CLoadLevelState::Update()
 		//The value it will get is the Scene index in which the SceneLoaded will use in CEngine::myScenes
 		myActiveScene = myLoadLevelFuture.get();
 		CEngine::GetInstance()->SetActiveScene(myActiveScene);
-		myStateStack.PushState(new CInGameState(myStateStack));
-		myStateStack.Awake();
-		myStateStack.Start();
+		myStateStack.PushState(CStateStack::EState::InGame);
 	}
 
 	for (auto& gameObject : CEngine::GetInstance()->GetActiveScene().GetActiveGameObjects())

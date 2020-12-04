@@ -5,6 +5,7 @@ class CButton;
 class CSpriteInstance;
 class CTextInstance;
 class CAnimatedUIElement;
+class CScene;
 
 class CCanvas : public IObserver
 {
@@ -13,7 +14,7 @@ public:
 	~CCanvas();
 
 public:
-	void Init(std::string aFilePath);
+	void Init(std::string aFilePath, CScene& aScene);
 	void Update(/*float aDeltaTime*/);
 
 public:

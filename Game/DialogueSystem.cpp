@@ -25,14 +25,14 @@
 
 namespace SM = DirectX::SimpleMath;
 
-CDialogueSystem::CDialogueSystem() {
+CDialogueSystem::CDialogueSystem(CScene& aScene) {
 
 	CSpriteFactory* factory = CSpriteFactory::GetInstance();
 	myDialogueBox = new CSpriteInstance();
 	myDialogueBox->Init(factory->GetSprite("Assets/3D/UI/Ingame/tempDialogueBox.dds"));
 	myDialogueBox->SetSize({ 0.75f, 0.75f });
 	myDialogueBox->SetPosition({ -0.0f, 0.0f });
-	CScene::GetInstance()->AddInstance(myDialogueBox);
+	aScene.AddInstance(myDialogueBox);
 
 	mySpeakerPortraits.emplace_back(new CSpriteInstance());
 	mySpeakerPortraits.back()->Init(factory->GetSprite("Assets/3D/UI/Ingame/tempSpeakerPortrait.dds"));
@@ -40,25 +40,25 @@ CDialogueSystem::CDialogueSystem() {
 	mySpeakerPortraits.back()->SetSize({ 0.75f, 0.75f });
 	mySpeakerPortraits.back()->SetPosition({-0.30f, 0.57f});
 	mySpeakerPortraits.back()->SetShouldRender(false);
-	CScene::GetInstance()->AddInstance(mySpeakerPortraits.back());
+	aScene.AddInstance(mySpeakerPortraits.back());
 	
 	mySpeakerPortraits.emplace_back(new CSpriteInstance());
 	mySpeakerPortraits.back()->Init(factory->GetSprite("Assets/3D/UI/Ingame/tempSpeakerPortrait2.dds"));
 	mySpeakerPortraits.back()->SetSize({ 0.75f, 0.75f });
 	mySpeakerPortraits.back()->SetPosition({ -0.30f, 0.57f });
 	mySpeakerPortraits.back()->SetShouldRender(false);
-	CScene::GetInstance()->AddInstance(mySpeakerPortraits.back());
+	aScene.AddInstance(mySpeakerPortraits.back());
 
 	CTextFactory* textFactory = CTextFactory::GetInstance();
-	myDialogueLine = new CTextInstance();
+	myDialogueLine = new CTextInstance(aScene);
 	myDialogueLine->Init(textFactory->GetText("baskerville16"));
 	myDialogueLine->SetPosition({ 500.0f, 500.0f });
 
-	myAnimatedDialogue = new CTextInstance();
+	myAnimatedDialogue = new CTextInstance(aScene);
 	myAnimatedDialogue->Init(textFactory->GetText("baskerville16"));
 	myAnimatedDialogue->SetPosition({ 500.0f, 500.0f });
 	
-	CScene::GetInstance()->AddInstance(myAnimatedDialogue);
+	aScene.AddInstance(myAnimatedDialogue);
 
 	LoadDialogue("Test");
 }

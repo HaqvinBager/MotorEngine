@@ -15,7 +15,7 @@ CStateStack::~CStateStack()
 	}
 }
 
-bool CStateStack::Init(std::initializer_list<CStateStack::EState> someStates, const EState aStartState)
+bool CStateStack::Awake(std::initializer_list<CStateStack::EState> someStates, const EState aStartState)
 {
 	for (const CStateStack::EState state : someStates)
 	{
@@ -23,15 +23,19 @@ bool CStateStack::Init(std::initializer_list<CStateStack::EState> someStates, co
 		{
 		case CStateStack::EState::MainMenu:
 			myStateMap[state] = new CMenuState(*this);
+			myStateMap[state]->Awake();
 			break;
 		case CStateStack::EState::LoadLevel:
 			myStateMap[state] = new CLoadLevelState(*this);
+			myStateMap[state]->Awake();
 			break;
 		case CStateStack::EState::InGame:
 			myStateMap[state] = new CInGameState(*this);
+			myStateMap[state]->Awake();
 			break;
 		case CStateStack::EState::PauseMenu:
 			myStateMap[state] = new CPauseState(*this);
+			myStateMap[state]->Awake();
 			break;
 		default:
 			assert(0 && "State Is not Implemented yet.");
@@ -39,23 +43,22 @@ bool CStateStack::Init(std::initializer_list<CStateStack::EState> someStates, co
 		}
 	}
 
-	return PushState(myStateMap[aStartState]);
+	return PushState(aStartState);
 }
 
-bool CStateStack::PushState(CState* aState)
+bool CStateStack::PushState(const EState aState)
 {
-	ENGINE_ERROR_BOOL_MESSAGE(aState, "Trying to push aState that was nullptr");
-	myStateStack.push(aState);
+	myStateStack.push(myStateMap[aState]);
+	myStateStack.top()->Start();
 	return true;
 }
 
 bool CStateStack::PopState()
 {
 	ENGINE_ERROR_BOOL_MESSAGE(!myStateStack.empty(), "Trying to pop an empty stack");
-	delete myStateStack.top();
 	myStateStack.pop();
 
-	if (0 < myStateStack.size())
+	if ( myStateStack.size() > 0)// == 0 < myStateStack.size()
 		myStateStack.top()->MakeSceneActive();
 
 	return true;
@@ -65,14 +68,13 @@ bool CStateStack::PopUntil(EState aState)
 {
 	ENGINE_ERROR_BOOL_MESSAGE(!myStateStack.empty(), "Trying to pop an empty stack");
 
-	if (aState != myStateStack.top()->GetState())
+	while(myStateStack.top()->GetState() != aState)
 	{
-		delete myStateStack.top();
+		//myStateStack.top()->Stop();
 		myStateStack.pop();
-		PopUntil(aState);
 	}
 	myStateStack.top()->MakeSceneActive();
-
+	myStateStack.top()->Start();
 	return true;
 }
 

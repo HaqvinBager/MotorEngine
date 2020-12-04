@@ -7,6 +7,7 @@
 
 class CSpriteInstance;
 class CTextInstance;
+class CScene;
 
 struct SSpeakerLine {
 	SSpeakerLine(std::string aString, int aSpeaker, int aLine)
@@ -21,7 +22,7 @@ struct SSpeakerLine {
 
 class CDialogueSystem {
 public:
-	CDialogueSystem();
+	CDialogueSystem(CScene& aScene);
 	~CDialogueSystem();
 
 	void LoadDialogue(const char* aSceneName);

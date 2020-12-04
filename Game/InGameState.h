@@ -4,7 +4,6 @@
 
 class CTokenPool;
 class CCanvas;
-class CGameObject;
 class CInGameState : public CState, public IInputObserver
 {
 
@@ -22,5 +21,4 @@ public:
 private:
 	CCanvas* myCanvas;
 	CTokenPool* myTokenPool;
-	CGameObject* myEnemy;
 };

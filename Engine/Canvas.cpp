@@ -36,7 +36,7 @@ CCanvas::~CCanvas()
 	myTexts.clear();
 }
 
-void CCanvas::Init(std::string aFilePath)
+void CCanvas::Init(std::string aFilePath, CScene& aScene)
 {
 	std::ifstream inputStream(aFilePath);
 	IStreamWrapper inputWrapper(inputStream);
@@ -51,7 +51,7 @@ void CCanvas::Init(std::string aFilePath)
 			SButtonData data;
 			auto buttonData = buttonDataArray[i].GetObjectW();
 			
-			myTexts.emplace_back(new CTextInstance());
+			myTexts.emplace_back(new CTextInstance(aScene));
 			myTexts.back()->Init(CTextFactory::GetInstance()->GetText(buttonData["FontAndFontSize"].GetString()));
 			myTexts.back()->SetText(buttonData["Text"].GetString());
 			myTexts.back()->SetColor({ buttonData["Text Color R"].GetFloat(), buttonData["Text Color G"].GetFloat(), buttonData["Text Color B"].GetFloat(), 1.0f });
@@ -83,7 +83,7 @@ void CCanvas::Init(std::string aFilePath)
 		for (unsigned int i = 0; i < textDataArray.Size(); ++i)
 		{
 			auto textData = textDataArray[i].GetObjectW();
-			myTexts.emplace_back(new CTextInstance());
+			myTexts.emplace_back(new CTextInstance(aScene));
 			myTexts.back()->Init(CTextFactory::GetInstance()->GetText(textData["FontAndFontSize"].GetString()));
 			myTexts.back()->SetText(textData["Text"].GetString());
 			myTexts.back()->SetColor({ textData["Color R"].GetFloat(), textData["Color G"].GetFloat(), textData["Color B"].GetFloat(), 1.0f });

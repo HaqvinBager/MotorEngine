@@ -9,11 +9,26 @@
 #include "CameraControllerComponent.h"
 #include "CameraComponent.h"
 
-CPauseState::CPauseState(CStateStack& aStateStack, const CStateStack::EState aState) : 
-	CState(aStateStack, aState), myCanvas(nullptr) 
+CPauseState::CPauseState(CStateStack& aStateStack, const CStateStack::EState aState) 
+	: CState(aStateStack, aState)
+	, myCanvas(nullptr) 
+	, myScene(nullptr)
+{
+
+}
+
+CPauseState::~CPauseState() {
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::MainMenu,this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::Resume,this);
+	CEngine::GetInstance()->PopBackScene();
+	//CEngine::GetInstance()->GetActiveScene().ClearScene();
+	//CEngine::GetInstance()->GetActiveScene().ClearSprites();
+}
+
+void CPauseState::Awake() 
 {
 	myScene = new CScene();
-	CEngine::GetInstance()->AddScene(myScene);
+
 	unsigned int index = static_cast<unsigned int>(CEngine::GetInstance()->myScenes.size() - 1);
 	CEngine::GetInstance()->SetActiveScene(index);
 
@@ -31,23 +46,16 @@ CPauseState::CPauseState(CStateStack& aStateStack, const CStateStack::EState aSt
 	myScene->SetEnvironmentLight(envLight->GetComponent<CEnviromentLightComponent>()->GetEnviromentLight());
 
 	myCanvas = new CCanvas();
-	myCanvas->Init("Json/UI_PauseMenu_Description.json");	
+	myCanvas->Init("Json/UI_PauseMenu_Description.json", *myScene);
+
+	myActiveScene = CEngine::GetInstance()->AddScene(myScene);
 }
 
-CPauseState::~CPauseState() {
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::MainMenu,this);
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::Resume,this);
-	CEngine::GetInstance()->PopBackScene();
-	//CEngine::GetInstance()->GetActiveScene().ClearScene();
-	//CEngine::GetInstance()->GetActiveScene().ClearSprites();
-}
-
-void CPauseState::Awake() {
+void CPauseState::Start()  
+{
+	CEngine::GetInstance()->SetActiveScene(myActiveScene);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::Resume, this);
-}
-
-void CPauseState::Start()  {
 }
 
 void CPauseState::Update() {
