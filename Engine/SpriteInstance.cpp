@@ -5,10 +5,10 @@
 #include "Engine.h"
 #include "WindowHandler.h"
 
-CSpriteInstance::CSpriteInstance()
+CSpriteInstance::CSpriteInstance(CScene& aScene)
 {
 	mySprite = nullptr;
-	CEngine::GetInstance()->GetActiveScene().AddInstance(this);
+	aScene.AddInstance(this);
 }
 
 CSpriteInstance::~CSpriteInstance()

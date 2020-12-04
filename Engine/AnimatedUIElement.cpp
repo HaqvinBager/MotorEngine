@@ -9,7 +9,7 @@
 #include "rapidjson\document.h"
 #include "rapidjson\istreamwrapper.h"
 
-CAnimatedUIElement::CAnimatedUIElement(std::string aFilePath) : mySpriteInstance(nullptr), myLevel(1.0f)
+CAnimatedUIElement::CAnimatedUIElement(std::string aFilePath, CScene& aScene) : mySpriteInstance(nullptr), myLevel(1.0f)
 {
     using namespace rapidjson;
 
@@ -18,10 +18,10 @@ CAnimatedUIElement::CAnimatedUIElement(std::string aFilePath) : mySpriteInstance
     Document document;
     document.ParseStream(input_wrapper);
 
-    mySpriteInstance = new CSpriteInstance();
+    mySpriteInstance = new CSpriteInstance(aScene);
     mySpriteInstance->Init(CSpriteFactory::GetInstance()->GetSprite(document["Texture Overlay"].GetString()));
     myData = CSpriteFactory::GetInstance()->GetVFXSprite(aFilePath);
-    CEngine::GetInstance()->GetActiveScene().AddInstance(this);
+    aScene.AddInstance(this);
 }
 
 CAnimatedUIElement::~CAnimatedUIElement()

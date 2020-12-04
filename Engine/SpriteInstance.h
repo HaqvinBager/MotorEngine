@@ -2,6 +2,7 @@
 #include <SimpleMath.h>// Added for ModelViewer solution, gave error here... :/
 
 class CSprite;
+class CScene;
 
 enum class ERenderOrder {
 	BackgroundLayer,
@@ -13,7 +14,7 @@ enum class ERenderOrder {
 class CSpriteInstance
 {
 public:
-	CSpriteInstance();
+	CSpriteInstance(CScene& aScene);
 	~CSpriteInstance();
 
 	bool Init(CSprite* aSprite);
