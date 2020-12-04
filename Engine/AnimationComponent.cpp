@@ -12,6 +12,10 @@ CAnimationComponent::CAnimationComponent(CGameObject& aParent, const std::string
 	: CBehaviour(aParent)
 	, myAnimationSpeed(1.0f)
 	, myIsLooping(false)
+	, myReturnToIdleTimer(-1.0f)
+	, myCurrentAnimationID(0)
+	, myMovingAnimationID(0)
+	, myDyingAnimationID(0)
 {
 	myAnimation = new CAnimation();
 	myAnimation->Init(aModelFilePath.c_str(), someAnimationPaths);
@@ -42,7 +46,10 @@ void CAnimationComponent::Awake()
 }
 
 void CAnimationComponent::Start()
-{}
+{
+	myCurrentAnimationID = myIdleAnimationID;
+	SwitchBackToIdle();
+}
 
 void CAnimationComponent::Update()
 {
@@ -53,6 +60,11 @@ void CAnimationComponent::Update()
 #else
 	UpdateNonBlended(dt);
 #endif
+
+	if (UpdateIdleTimer())
+	{
+		SwitchBackToIdle();
+	}
 }
 
 void CAnimationComponent::OnEnable()
@@ -71,7 +83,30 @@ void CAnimationComponent::GetAnimatedTransforms(float dt, SlimMatrix44 * transfo
 	myAnimation->BoneTransforms(transforms, myAnimationSpeed);
 }
 
-void CAnimationComponent::PlayAnimation(const int anAnimationIndex, bool anIsLooping, const float anAnimSpeed)
+void CAnimationComponent::MovingState()
+{
+	if (myCurrentAnimationID == myDyingAnimationID)
+		return;
+	if (myCurrentAnimationID != myIdleAnimationID)
+		return;
+	if (myCurrentAnimationID != myMovingAnimationID)
+	{
+		PlayAnimation(GetIndexFromList(myMovingAnimationID), true);
+		myCurrentAnimationID = myMovingAnimationID;
+	}
+	ResetIdleTimer();
+}
+
+void CAnimationComponent::DeadState()
+{
+	PlayAnimation(GetIndexFromList(myDyingAnimationID));
+	myCurrentAnimationID = myDyingAnimationID;
+	myAnimation->GetMyController().ResetAnimationTimeCurrent();
+	myAnimation->GetMyController().SetLoopingSceneIndex(0);
+	//myAnimation->GetMyController().SetLoopingSceneIndex(myDyingAnimationID);
+}
+
+void CAnimationComponent::ModelViewerPlayAnimation(const int anAnimationIndex, bool anIsLooping, const float anAnimSpeed)
 {
 	myAnimationSpeed = anAnimSpeed;
 	myIsLooping = anIsLooping;
@@ -86,40 +121,9 @@ void CAnimationComponent::PlayAnimation(const int anAnimationIndex, bool anIsLoo
 	myAnimation->SetCurAnimationScene(anAnimationIndex);
 }
 
-void CAnimationComponent::PlayAnimation(const EPlayerAnimationID anAnimationID, bool anIsLooping, const float anAnimSpeed)
+void CAnimationComponent::ForceToIdleState()
 {
-	int id = static_cast<int>(anAnimationID);
-	if (HasID(id))
-	{
-		PlayAnimation(GetIndexFromList(id), anIsLooping, anAnimSpeed);
-	}
-}
-
-void CAnimationComponent::PlayAnimation(const EEnemyAnimationID anAnimationID, bool anIsLooping, const float anAnimSpeed)
-{
-	int id = static_cast<int>(anAnimationID);
-	if (HasID(id))
-	{
-		PlayAnimation(GetIndexFromList(id), anIsLooping, anAnimSpeed);
-	}
-}
-
-void CAnimationComponent::PlayAnimation(const EBossAnimationID anAnimationID, bool anIsLooping, const float anAnimSpeed)
-{
-	int id = static_cast<int>(anAnimationID);
-	if (HasID(id))
-	{
-		PlayAnimation(GetIndexFromList(id), anIsLooping, anAnimSpeed);
-	}
-}
-
-void CAnimationComponent::PlayAnimation(const ECrateAnimationID anAnimationID, bool anIsLooping, const float anAnimSpeed)
-{
-	int id = static_cast<int>(anAnimationID);
-	if (HasID(id))
-	{
-		PlayAnimation(GetIndexFromList(id), anIsLooping, anAnimSpeed);
-	}
+	myCurrentAnimationID = myIdleAnimationID;
 }
 
 void CAnimationComponent::SetBlend(int anAnimationIndex, int anAnimationIndexTwo, float aBlend)
@@ -129,39 +133,49 @@ void CAnimationComponent::SetBlend(int anAnimationIndex, int anAnimationIndexTwo
 	myBlend.myBlendLerp = aBlend;
 }
 
-bool CAnimationComponent::WithinIDRange(const int anID)
+bool CAnimationComponent::UpdateIdleTimer()
 {
-	return (anID <= myAnimationIds.back().ID() && anID >= myAnimationIds.front().ID()); 
-}
+	if (myCurrentAnimationID == myIdleAnimationID)
+		return false;
 
-bool CAnimationComponent::HasID(const int anID)
-{
-	for (auto& id : myAnimationIds)
-	{
-		if (id.ID() == anID)
-		{
-			return true;
-		}
-	}
+	myReturnToIdleTimer -= CTimer::Dt();
+	if (myReturnToIdleTimer <= 0.0f)
+		return true;
 	return false;
 }
 
-const int CAnimationComponent::GetIndexFromID(const int anID)
+void CAnimationComponent::ResetIdleTimer()
 {
-	int index = abs(myAnimationIds[0].ID() - anID ) + 1;
-	return index;
+	myReturnToIdleTimer = CTimer::Dt() * 3.0f;
 }
 
-const int CAnimationComponent::GetIndexFromList(const int anID)
+void CAnimationComponent::SwitchBackToIdle()
 {
-	for (int i = 0; i < myAnimationIds.size(); ++i)
+	if (myCurrentAnimationID != myDyingAnimationID)
 	{
-		if (myAnimationIds[i].ID() == anID)
-		{
-			return i + 1; // Animations inside CAnimation start at 1, 0 is a static civillian/ tpose.
-		}
+		PlayAnimation(GetIndexFromList(myIdleAnimationID), true);
+		myCurrentAnimationID = myIdleAnimationID;
 	}
-	return 0;
+}
+
+void CAnimationComponent::PlayAnimation(const int anAnimationIndex, bool anIsLooping, const float anAnimSpeed)
+{
+	if (myCurrentAnimationID == myDyingAnimationID)
+		return;
+
+	myAnimationSpeed = anAnimSpeed;
+	myIsLooping = anIsLooping;
+	if (anIsLooping)
+	{
+		myAnimation->GetMyController().SetLoopingSceneIndex(anAnimationIndex);
+	}
+	else
+	{
+		if(GetIndexFromList(myCurrentAnimationID) != anAnimationIndex)
+			myAnimation->GetMyController().ResetAnimationTimeCurrent();
+	}
+	myAnimation->SetCurAnimationScene(anAnimationIndex);
+	myReturnToIdleTimer = myAnimation->GetMyController().CurrentAnimationDuration() / 59.0f;
 }
 
 bool CAnimationComponent::ReplaceAnimation(const char* aRig, std::vector<std::string>& somePathsToAnimations)
@@ -203,7 +217,9 @@ void CAnimationComponent::UpdateNonBlended(const float dt)
 }
 
 
-// Pre 2020 11 15
+
+
+// Pre 2020 11 15 - Original Blended
 /*
 void CAnimationComponent::PlayAnimation(const int anAnimationIndex, bool anIsLooping)
 {
@@ -265,5 +281,3 @@ void CAnimationComponent::Update()
 	GetAnimatedTransforms(dt, myBones.data());
 }
 */
-
-

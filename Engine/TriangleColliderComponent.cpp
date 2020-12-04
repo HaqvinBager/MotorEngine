@@ -75,18 +75,12 @@ void CTriangleColliderComponent::Start() {
 }
 
 void CTriangleColliderComponent::Update() {
-	DirectX::SimpleMath::Vector3 vector = GameObject().GetComponent<CTransformComponent>()->Position() + GameObject().GetComponent<CTransformComponent>()->Transform().Forward() * myHeight * 100.0f;
-	SetPosition(GameObject().GetComponent<CTransformComponent>()->Position());
-	myLeftVertex = vector - GameObject().GetComponent<CTransformComponent>()->Transform().Right() * (myWidth / 2.0f) * 100.0f;
-	myRightVertex = vector + GameObject().GetComponent<CTransformComponent>()->Transform().Right() * (myWidth / 2.0f) * 100.0f;
-
 #ifdef _DEBUG
-	myVisualizer->SetPosition(GameObject().GetComponent<CTransformComponent>()->Position());
+	myVisualizer->SetPosition(GameObject().GetComponent<CTransformComponent>()->Position()); //TODO: make rotate right
 	myVisualizer->SetRotation(GameObject().GetComponent<CTransformComponent>()->Rotation());
 #endif // _DEBUG
 
 	if (GetAsyncKeyState('C')) {
-
 		CDebug::GetInstance()->DrawLine(GetPosition(), myLeftVertex);
 		CDebug::GetInstance()->DrawLine(GetPosition(), myRightVertex);
 		CDebug::GetInstance()->DrawLine(myLeftVertex, myRightVertex);
@@ -237,4 +231,14 @@ float const CTriangleColliderComponent::GetWidth() const
 void CTriangleColliderComponent::SetWidth(float aWidth)
 {
 	myWidth = aWidth;
+}
+
+void CTriangleColliderComponent::SetLeftVertex(DirectX::SimpleMath::Vector3& aLeftVertex)
+{
+	myLeftVertex = aLeftVertex;
+}
+
+void CTriangleColliderComponent::SetRightVertex(DirectX::SimpleMath::Vector3& aRightVertex)
+{
+	myRightVertex = aRightVertex;
 }

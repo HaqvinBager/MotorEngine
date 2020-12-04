@@ -225,6 +225,8 @@ CGameObject* CUnityFactory::CreateGameObject(const SPlayerData& aData, const std
     gameObject->AddComponent<CAbilityComponent>(*gameObject, abs);
 
     AddAnimationsToGameObject(*gameObject, aModelPath);
+	gameObject->GetComponent<CAnimationComponent>()->SetStateIDs(EPlayerAnimationID::Idle, EPlayerAnimationID::Run, EPlayerAnimationID::Dead);
+
     return gameObject;
 }
 
@@ -245,6 +247,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SEnemyData& aData, const std:
 	gameObject->AddComponent<CAbilityComponent>(*gameObject, abs);
 
 	AddAnimationsToGameObject(*gameObject, aModelPath);
+	gameObject->GetComponent<CAnimationComponent>()->SetStateIDs(EEnemyAnimationID::Idle, EEnemyAnimationID::Walk, EEnemyAnimationID::Dead);
 
 	return gameObject;
 }

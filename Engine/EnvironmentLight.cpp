@@ -28,12 +28,13 @@ bool CEnvironmentLight::Init(CDirectXFramework* aFramework, std::string aFilePat
 
 	delete[] cubeMapPathWide;
 
-	ID3D11Resource* cubeResource;
-	myCubeShaderResourceView->GetResource(&cubeResource);
-	ID3D11Texture2D* cubeTexture = reinterpret_cast<ID3D11Texture2D*>(cubeResource);
-	D3D11_TEXTURE2D_DESC cubeDescription = { 0 };
-	cubeTexture->GetDesc(&cubeDescription);
-	myMipLevels = cubeDescription.MipLevels;
+	// 2020 12 04 - Seems to not be used anywhere.
+		//ID3D11Resource* cubeResource;
+		//myCubeShaderResourceView->GetResource(&cubeResource);
+		//ID3D11Texture2D* cubeTexture = reinterpret_cast<ID3D11Texture2D*>(cubeResource);
+		//D3D11_TEXTURE2D_DESC cubeDescription = { 0 };
+		//cubeTexture->GetDesc(&cubeDescription);
+		//myMipLevels = cubeDescription.MipLevels;
 
 	return true;
 }
@@ -43,7 +44,8 @@ ID3D11ShaderResourceView* const* CEnvironmentLight::GetCubeMap()
 	return &myCubeShaderResourceView;
 }
 
-unsigned int CEnvironmentLight::GetMipLevels()
-{
-	return myMipLevels;
-}
+// 2020 12 04 - Seems to not be used anywhere.
+//unsigned int CEnvironmentLight::GetMipLevels()
+//{
+//	return myMipLevels;
+//}

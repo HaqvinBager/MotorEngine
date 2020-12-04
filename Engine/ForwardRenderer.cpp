@@ -71,7 +71,7 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector
 
 	myContext->VSSetConstantBuffers(0, 1, &myFrameBuffer);
 	myContext->PSSetConstantBuffers(0, 1, &myFrameBuffer);
-	ID3D11ShaderResourceView* nullView = NULL;
+	//ID3D11ShaderResourceView* nullView = NULL;
 	//myContext->PSSetShaderResources(0, 1, &nullView);
 	myContext->PSSetShaderResources(0, 1, anEnvironmentLight->GetCubeMap());
 
@@ -127,7 +127,7 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector
 		myContext->PSSetSamplers(0, 1, &modelData.mySamplerState);
 		myContext->PSSetShader(modelData.myPixelShader, nullptr, 0);
 
-		myContext->PSSetShaderResources(0, 1, &nullView);
+		//myContext->PSSetShaderResources(0, 1, &nullView);
 		// TODO: Check this?
 		//myContext->PSSetShaderResources(0, 1, anEnvironmentLight->GetCubeMap());
 		myContext->DrawIndexed(modelData.myNumberOfIndices, 0, 0);
@@ -150,7 +150,7 @@ void CForwardRenderer::InstancedRender(CEnvironmentLight* anEnvironmentLight, st
 
 	myContext->VSSetConstantBuffers(0, 1, &myFrameBuffer);
 	myContext->PSSetConstantBuffers(0, 1, &myFrameBuffer);
-	ID3D11ShaderResourceView* nullView = NULL;
+	//ID3D11ShaderResourceView* nullView = NULL;
 	//myContext->PSSetShaderResources(0, 1, &nullView);
 	myContext->PSSetShaderResources(0, 1, anEnvironmentLight->GetCubeMap());
 
@@ -218,7 +218,7 @@ void CForwardRenderer::InstancedRender(CEnvironmentLight* anEnvironmentLight, st
 		myContext->PSSetSamplers(0, 1, &modelData.mySamplerState);
 		myContext->PSSetShader(modelData.myPixelShader, nullptr, 0);
 
-		myContext->PSSetShaderResources(0, 1, &nullView);
+		//myContext->PSSetShaderResources(0, 1, &nullView);
 		// TODO: Check this?
 		//myContext->PSSetShaderResources(0, 1, anEnvironmentLight->GetCubeMap());
 		myContext->DrawIndexedInstanced(modelData.myNumberOfIndices, model->InstanceCount(), 0, 0, 0);

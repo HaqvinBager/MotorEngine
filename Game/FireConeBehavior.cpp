@@ -7,13 +7,15 @@
 #include "Engine.h"
 #include "StatsComponent.h"
 #include "MainSingleton.h"
+#include "TriangleColliderComponent.h"
 
-CFireConeBehavior::CFireConeBehavior(float aDuration, float aResourceCost)
+CFireConeBehavior::CFireConeBehavior(float aDuration, float aResourceCost, CGameObject* aParent)
 {
 	myDirection = { 0.0f, 0.0f, 0.0f };
 	myDuration = aDuration;
 	myResourceCost = aResourceCost;
 	myTimer = 0.0f;
+	myParent = aParent;
 	myCaster = nullptr;
 }
 
@@ -22,12 +24,21 @@ CFireConeBehavior::~CFireConeBehavior()
 	myCaster = nullptr;
 }
 
+#include <iostream>
 void CFireConeBehavior::Init(CGameObject* aCaster)
 {
 	if (aCaster->GetComponent<CStatsComponent>()->GetStats().myResource > myResourceCost)
 	{
 		myCaster = aCaster;
 		myCaster->GetComponent<CStatsComponent>()->GetStats().myResource -= myResourceCost;
+
+		CTriangleColliderComponent* triangleCollider = myParent->GetComponent<CTriangleColliderComponent>();
+		DirectX::SimpleMath::Vector3 vector = myCaster->GetComponent<CTransformComponent>()->Position() + myCaster->GetComponent<CTransformComponent>()->Transform().Forward() * triangleCollider->GetHeight() * 100.0f;
+		triangleCollider->SetPosition(myCaster->GetComponent<CTransformComponent>()->Position());
+		DirectX::SimpleMath::Vector3 aLeftVertex = vector - myCaster->myTransform->Transform().Right() * (triangleCollider->GetWidth() / 2.0f) * 100.0f;
+		DirectX::SimpleMath::Vector3 aRightVertex = vector + myCaster->myTransform->Transform().Right() * (triangleCollider->GetWidth() / 2.0f) * 100.0f;
+		triangleCollider->SetLeftVertex(aLeftVertex);
+		triangleCollider->SetRightVertex(aRightVertex);
 
 		myDirection = MouseTracker::ScreenPositionToWorldPosition() - aCaster->GetComponent<CTransformComponent>()->Position();
 		myDirection.Normalize();
@@ -46,6 +57,14 @@ void CFireConeBehavior::Update(CGameObject* aParent)
 {
 	if (myCaster)
 	{
+		CTriangleColliderComponent* triangleCollider = myParent->GetComponent<CTriangleColliderComponent>();
+		DirectX::SimpleMath::Vector3 vector = myCaster->GetComponent<CTransformComponent>()->Position() + myCaster->GetComponent<CTransformComponent>()->Transform().Forward() * triangleCollider->GetHeight() * 100.0f;
+		triangleCollider->SetPosition(myCaster->GetComponent<CTransformComponent>()->Position());
+		DirectX::SimpleMath::Vector3 aLeftVertex = vector - myCaster->myTransform->Transform().Right() * (triangleCollider->GetWidth() / 2.0f) * 100.0f;
+		DirectX::SimpleMath::Vector3 aRightVertex = vector + myCaster->myTransform->Transform().Right() * (triangleCollider->GetWidth() / 2.0f) * 100.0f;
+		triangleCollider->SetLeftVertex(aLeftVertex);
+		triangleCollider->SetRightVertex(aRightVertex);
+
 		myTimer += CTimer::Dt();
 		if (myTimer > myDuration)
 		{

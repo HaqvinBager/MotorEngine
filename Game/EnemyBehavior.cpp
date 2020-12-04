@@ -69,8 +69,9 @@ void CEnemyBehavior::FindATarget()
 
 	float dist = DirectX::SimpleMath::Vector3::DistanceSquared(parentPos, targetPos);
 	if (dist <= baseStats.myBaseVisionRange) {
-		DirectX::SimpleMath::Vector3 dir = targetPos - parentPos;
-		dir.Normalize();
+		//DirectX::SimpleMath::Vector3 dir = targetPos - parentPos;
+		//dir.Normalize();
+		//aParent.GetComponent<CTransformComponent>()->Move(dir * baseStats.myMoveSpeed * CTimer::Dt());
 
 		//NavMesh movement
 		myCurrentParent->GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);

@@ -24,11 +24,6 @@ CBossBehavior::~CBossBehavior()
 
 void CBossBehavior::Update(CGameObject* aParent)
 {
-	if (aParent->GetComponent<CAnimationComponent>())
-	{
-		aParent->GetComponent<CAnimationComponent>()->PlayAnimation(EBossAnimationID::Idle, true);
-	}
-
 	//enemy logic
 	SBaseStats baseStats = aParent->GetComponent<CStatsComponent>()->GetBaseStats();
 	SStats stats = aParent->GetComponent<CStatsComponent>()->GetStats();
