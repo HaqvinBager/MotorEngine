@@ -10,11 +10,13 @@ public:
 	~CEnemyBehavior() override;
 
 	void Update(CGameObject* aParent) override;
-	void Collided(CGameObject* aGameObject) override;
+	void Collided(CGameObject* aParent, CGameObject* aCollidedWithGameObject) override;
 
 	void FindATarget();
 
 	void TakeDamage(float someDamage);
+
+	void Die();
 
 private:
 	CGameObject* myPlayer;
