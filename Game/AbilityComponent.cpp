@@ -69,9 +69,7 @@ CAbilityComponent::~CAbilityComponent()
 
 void CAbilityComponent::Awake()
 {
-	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability1, this);
-	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability2, this);
-	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability3, this);
+	
 
 	// Setting up pools
 	for (unsigned int i = 0; i < myAbilityPoolDescriptions.size(); ++i) {
@@ -103,10 +101,16 @@ void CAbilityComponent::Update()
 
 void CAbilityComponent::OnEnable()
 {
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability1, this);
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability2, this);
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability3, this);
 }
 
 void CAbilityComponent::OnDisable()
 {
+	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability1, this);
+	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability2, this);
+	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability3, this);
 }
 
 bool CAbilityComponent::UseAbility(EAbilityType anAbilityType, DirectX::SimpleMath::Vector3 aSpawnPosition)
@@ -246,6 +250,7 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	document.ParseStream(inputWrapper);
 
 	CGameObject* abilityObject = new CGameObject();
+	std::cout << "LoadAbilityFromFile: " << *&abilityObject << std::endl;
 	CProjectileBehavior* projectileBehavior = nullptr;
 	CAuraBehavior* auraBehavior = nullptr;
 	CBoomerangBehavior* boomerangBehavior = nullptr;
@@ -351,7 +356,7 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	//!COLLIDER
 
 	abilityObject->Active(false);
-	CEngine::GetInstance()->GetActiveScene().AddInstance(abilityObject);
+	//CEngine::GetInstance()->GetActiveScene().AddInstance(abilityObject);
 
 	return abilityObject;
 }

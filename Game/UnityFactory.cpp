@@ -37,10 +37,12 @@
 
 CUnityFactory::CUnityFactory()
 {
+
 }
 
 CUnityFactory::~CUnityFactory()
 {
+
 }
 
 bool CUnityFactory::FillScene(const SLoadScreenData& aData, const std::vector<std::string>& someModelPaths, CScene& aScene)

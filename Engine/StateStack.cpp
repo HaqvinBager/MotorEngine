@@ -48,6 +48,9 @@ bool CStateStack::Awake(std::initializer_list<CStateStack::EState> someStates, c
 
 bool CStateStack::PushState(const EState aState)
 {
+	if (myStateMap.find(aState) == myStateMap.end())
+		return false;
+
 	myStateStack.push(myStateMap[aState]);
 	myStateStack.top()->Start();
 	return true;
@@ -58,24 +61,31 @@ bool CStateStack::PopState()
 	ENGINE_ERROR_BOOL_MESSAGE(!myStateStack.empty(), "Trying to pop an empty stack");
 	myStateStack.top()->Stop();
 	myStateStack.pop();
-	if ( myStateStack.size() > 0)// == 0 < myStateStack.size()
-		myStateStack.top()->MakeSceneActive();
+	if (myStateStack.size() == 0)// == 0 < myStateStack.size()
+		return false;
 
 	return true;
 }
 
-bool CStateStack::PopUntil(EState aState)
+bool CStateStack::PopUntil(const EState aState)
 {
 	ENGINE_ERROR_BOOL_MESSAGE(!myStateStack.empty(), "Trying to pop an empty stack");
 
 	while(myStateStack.top()->GetState() != aState)
 	{
-		//myStateStack.top()->Stop();
+		myStateStack.top()->Stop();
 		myStateStack.pop();
 	}
-	myStateStack.top()->MakeSceneActive();
 	myStateStack.top()->Start();
 	return true;
+}
+
+bool CStateStack::PopTopAndPush(const EState aState)
+{
+	if (!PopState())
+		return false;
+
+	return PushState(aState);
 }
 
 void CStateStack::Awake()
@@ -83,15 +93,15 @@ void CStateStack::Awake()
 	myStateStack.top()->Awake();
 }
 
-void CStateStack::Start()
-{
-	myStateStack.top()->Start();
-}
-
-void CStateStack::Stop()
-{
-	myStateStack.top()->Stop();
-}
+//void CStateStack::Start()
+//{
+//	myStateStack.top()->Start();
+//}
+//
+//void CStateStack::Stop()
+//{
+//	myStateStack.top()->Stop();
+//}
 
 bool CStateStack::Update()
 {

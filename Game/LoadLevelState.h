@@ -17,8 +17,7 @@ enum class ELevel
 	NavTest
 };
 
-
-class CLoadLevelState : public CState, public IObserver 
+class CLoadLevelState : public CState
 {
 public:
 	CLoadLevelState(CStateStack& aStateStack, const CStateStack::EState aState = CStateStack::EState::LoadLevel);
@@ -27,9 +26,6 @@ public:
 	void Start() override;
 	void Stop() override;
 	void Update() override;
-	void MakeSceneActive() override;
-
-	void Receive(const SMessage& aMessage) override;
 
 private:
 	void Awake() override;

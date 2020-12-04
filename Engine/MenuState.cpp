@@ -65,7 +65,7 @@ void CMenuState::Start()
 
 void CMenuState::Stop()
 {
-	
+
 }
 
 void CMenuState::Update() {
@@ -85,8 +85,4 @@ void CMenuState::Receive(const SMessage &aMessage) {
 		} break;
 		}
 	}
-}
-
-void CMenuState::MakeSceneActive() {
-	CEngine::GetInstance()->SetActiveScene(myActiveScene);
 }

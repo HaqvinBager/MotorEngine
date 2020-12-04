@@ -28,8 +28,6 @@ void CLoadLevelState::Awake()
 
 void CLoadLevelState::Start()
 {
-	//CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel, this);
-
 	myActiveScene = Load(ELevel::LoadScreen);
 	CEngine::GetInstance()->SetActiveScene(myActiveScene);
 
@@ -52,11 +50,7 @@ void CLoadLevelState::Start()
 
 void CLoadLevelState::Stop()
 {
-	//CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel, this);
 
-	// Engine->ActiveScene(myInGameScene)
-	// delete myLoadScreenScene;
-	// myLoadScreenScene = nullptr;
 }
 
 void CLoadLevelState::Update()
@@ -68,7 +62,7 @@ void CLoadLevelState::Update()
 		//The value it will get is the Scene index in which the SceneLoaded will use in CEngine::myScenes
 		myActiveScene = myLoadLevelFuture.get();
 		CEngine::GetInstance()->SetActiveScene(myActiveScene);
-		myStateStack.PushState(CStateStack::EState::InGame);//PopAndPush()
+		myStateStack.PopTopAndPush(CStateStack::EState::InGame);
 	}
 
 	for (auto& gameObject : CEngine::GetInstance()->GetActiveScene().GetActiveGameObjects())
@@ -88,6 +82,7 @@ unsigned int CLoadLevelState::Load(const ELevel aLevel)
 			SLoadScreenData& data = mySceneReader.ReadLoadScreenData();
 			CScene* loadScreenScene = new CScene();// myLoadScreenScene
 			myUnityFactory.FillScene(data, BinModelPaths(aLevel), *loadScreenScene);
+			std::cout << "Adding Loading Screen" << std::endl;
 			return CEngine::GetInstance()->AddScene(loadScreenScene);
 		}
 		else //All other Scenes are regarded as "InGame" scenes. And will have to contain at least a Camera, Directional Light & Player (player is currently "utkommenterad", Fix Monday)
@@ -100,6 +95,7 @@ unsigned int CLoadLevelState::Load(const ELevel aLevel)
 			inGameScene->InitNavMesh(navMeshPath);
 
 			myUnityFactory.FillScene(data, BinModelPaths(aLevel), *inGameScene);
+			//std::cout << "Adding Loading Screen" << std::endl;
 			return CEngine::GetInstance()->AddScene(inGameScene);
 		}
 	}
@@ -142,20 +138,4 @@ std::string& CLoadLevelState::BinPath(const ELevel aLevel)
 std::vector<std::string>& CLoadLevelState::BinModelPaths(const ELevel aLevel)
 {
 	return myBinModelPaths[aLevel];
-}
-
-void CLoadLevelState::MakeSceneActive() {
-	CEngine::GetInstance()->SetActiveScene(myActiveScene);
-
-}
-
-void CLoadLevelState::Receive(const SMessage& aMessage)
-{
-	switch (aMessage.myMessageType)
-	{
-	case EMessageType::LoadLevel:		
-		CCollisionEventComponent* eventComponent = reinterpret_cast<CCollisionEventComponent*>(aMessage.data);
-		std::cout << "Load Level Event Message: " << eventComponent->GetEventMessage() << std::endl;
-		break;
-	}
 }

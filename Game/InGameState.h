@@ -17,8 +17,6 @@ public:
 	void Update() override;
 
 	void ReceiveEvent(const EInputEvent aEvent) override;
-	void MakeSceneActive() override;
-
 private:
 	CCanvas* myCanvas;
 	CTokenPool* myTokenPool;

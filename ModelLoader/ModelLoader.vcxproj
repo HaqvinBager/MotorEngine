@@ -166,7 +166,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="ApplicationInterface.h" />
     <ClInclude Include="AssImp\config.h" />
     <ClInclude Include="ConstModelStructs.h" />
     <ClInclude Include="modelExceptionTools.h" />
@@ -175,7 +174,6 @@
     <ClInclude Include="VertexStructs.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ApplicationInterface.cpp" />
     <ClCompile Include="FBXLoaderCustom.cpp" />
     <ClCompile Include="modelExceptionTools.cpp" />
   </ItemGroup>

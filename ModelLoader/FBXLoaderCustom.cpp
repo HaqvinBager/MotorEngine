@@ -355,6 +355,9 @@ void* CFBXLoaderCustom::LoadModelInternal(CLoaderModel* someInput)
 		{
 			mesh->myIndexes.insert(mesh->myIndexes.end(), std::make_move_iterator(&fbxMesh->mFaces[i].mIndices[0]), std::make_move_iterator(&fbxMesh->mFaces[i].mIndices[fbxMesh->mFaces[i].mNumIndices]));
 		}
+
+		delete fbxMesh;
+		fbxMesh = nullptr;
 	}
 	// CHange to support multiple animations
 	if (scene->mNumAnimations > 0)

@@ -211,7 +211,7 @@ CEngine* CEngine::GetInstance()
 unsigned int CEngine::AddScene(CScene* aScene)
 {
 	myScenes.emplace_back(aScene);
-	std::cout << myScenes.size() << std::endl;
+	//std::cout << myScenes.size() << std::endl;
 	return static_cast<unsigned int>(myScenes.size() - 1);
 }
 

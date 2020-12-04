@@ -15,8 +15,6 @@ public:
 	void Stop() override;
 	void Update() override;
 	void Receive(const SMessage& aMessage) override;
-	void MakeSceneActive() override;
-
 private:
 	void Awake() override;
 

@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ApplicationInterface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="VertexStructs.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -38,9 +35,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ApplicationInterface.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="FBXLoaderCustom.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

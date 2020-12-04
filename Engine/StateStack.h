@@ -22,13 +22,16 @@ public:
 	CState* GetTop() { return myStateStack.top(); }
 	bool PushState(const EState aState);
 	bool PopState();
-	bool PopUntil(EState aState);
+	bool PopUntil(const EState aState);
+	bool PopTopAndPush(const EState aState);
 
-	void Start();
-	void Stop();
 	bool Update();
 
+
+
 private:
+	//void Start();
+	//void Stop();
 	void Awake();//Remove,should only be called on PushState.
 
 	std::stack<CState*> myStateStack;

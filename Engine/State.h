@@ -8,7 +8,7 @@ class CState
 public:
 	CState(CStateStack& aStateStack, const CStateStack::EState aState);
 	virtual ~CState();
-	virtual void MakeSceneActive() = 0;
+	/*virtual void MakeSceneActive() = 0;*/
 	virtual void Stop() = 0;
 	virtual void Start() = 0;
 	virtual void Update() = 0;

@@ -82,8 +82,3 @@ void CPauseState::Receive(const SMessage& aMessage) {
 		}
 	}
 }
-
-void CPauseState::MakeSceneActive() 
-{
-	CEngine::GetInstance()->SetActiveScene(myActiveScene);
-}
