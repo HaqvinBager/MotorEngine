@@ -12,7 +12,7 @@
 
 namespace SM = DirectX::SimpleMath;
 
-CBoomerangBehavior::CBoomerangBehavior(float aSpeed, float aDuration, float aResourceCost, float aRotationalSpeed)
+CBoomerangBehavior::CBoomerangBehavior(float aSpeed, float aDuration, float aResourceCost, float aRotationalSpeed, float aDamage)
 {
 	myDirection = {0.0f, 0.0f, 0.0f};
 	mySpeed = aSpeed;
@@ -23,6 +23,7 @@ CBoomerangBehavior::CBoomerangBehavior(float aSpeed, float aDuration, float aRes
 	myResourceCost = aResourceCost;
 	myRotationalSpeed = aRotationalSpeed;
 	myHalfLife = myDuration / 2.0f;
+	myDamage = aDamage;
 }
 
 CBoomerangBehavior::~CBoomerangBehavior()

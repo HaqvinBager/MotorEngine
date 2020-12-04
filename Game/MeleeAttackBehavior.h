@@ -15,7 +15,7 @@ class CGameObject;
 
 class CMeleeAttackBehavior : public IAbilityBehavior {
 public:
-	CMeleeAttackBehavior(float aDuration, CGameObject* aParent);
+	CMeleeAttackBehavior(float aDuration, float aDamage, CGameObject* aParent);
 	~CMeleeAttackBehavior() override;
 
 	void Init(CGameObject* aCaster) override;

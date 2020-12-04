@@ -7,13 +7,14 @@
 #include "Engine.h"
 #include "TriangleColliderComponent.h"
 
-CMeleeAttackBehavior::CMeleeAttackBehavior(float aDuration, CGameObject* aParent)
+CMeleeAttackBehavior::CMeleeAttackBehavior(float aDuration, float aDamage, CGameObject* aParent)
 {
 	myDirection = { 0.0f, 0.0f, 0.0f };
 	myDuration = aDuration;
 	myTimer = 0.0f;
 	myParent = aParent;
 	myCaster = nullptr;
+	myDamage = aDamage;
 }
 
 CMeleeAttackBehavior::~CMeleeAttackBehavior()

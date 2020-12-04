@@ -10,7 +10,7 @@
 #include "StatsComponent.h"
 #include "MainSingleton.h"
 
-CSpeedExplodeBehavior::CSpeedExplodeBehavior(float aDuration, float aResourceCost, float aExplosionDelay, float aMovementSpeedMultiplier, CGameObject* aParent)
+CSpeedExplodeBehavior::CSpeedExplodeBehavior(float aDuration, float aResourceCost, float aExplosionDelay, float aMovementSpeedMultiplier, float aDamage, CGameObject* aParent)
 {
 	myDuration = aDuration;
 	myTimer = 0.0f;
@@ -22,6 +22,7 @@ CSpeedExplodeBehavior::CSpeedExplodeBehavior(float aDuration, float aResourceCos
 	myParent = aParent;
 	myCasterTransform = nullptr;
 	myCaster = nullptr;
+	myDamage = aDamage;
 }
 
 CSpeedExplodeBehavior::~CSpeedExplodeBehavior()

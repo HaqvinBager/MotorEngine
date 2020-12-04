@@ -6,7 +6,7 @@
 CStatsComponent::CStatsComponent(CGameObject& aParent, float aHealth, float aDamage, float aMoveSpeed, float aDamageCooldown, float aVisionRange, float aAttackRange)
 	: CBehaviour(aParent)
 	, myBaseStats({aHealth, 100.0f, aDamage, aMoveSpeed, aDamageCooldown, aVisionRange, aAttackRange})
-	, myStats({aHealth, 100.0f, aDamageCooldown, true, false, nullptr})
+	, myStats({aHealth, 100.0f, aDamageCooldown, 0.0f, true, false, nullptr})
 {
 }
 

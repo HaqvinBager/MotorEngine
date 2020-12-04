@@ -20,6 +20,7 @@ struct SStats {
 	float myHealth;
 	float myResource;
 	float myDamageCooldown;
+	float myDamageMultiplier;
 	bool myCanTakeDamage;
 	bool myCanAttack;
 	CToken* myTokenSlot;

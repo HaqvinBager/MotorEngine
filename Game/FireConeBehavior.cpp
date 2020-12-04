@@ -9,7 +9,7 @@
 #include "MainSingleton.h"
 #include "TriangleColliderComponent.h"
 
-CFireConeBehavior::CFireConeBehavior(float aDuration, float aResourceCost, CGameObject* aParent)
+CFireConeBehavior::CFireConeBehavior(float aDuration, float aResourceCost, float aDamage, CGameObject* aParent)
 {
 	myDirection = { 0.0f, 0.0f, 0.0f };
 	myDuration = aDuration;
@@ -17,6 +17,7 @@ CFireConeBehavior::CFireConeBehavior(float aDuration, float aResourceCost, CGame
 	myTimer = 0.0f;
 	myParent = aParent;
 	myCaster = nullptr;
+	myDamage = aDamage;
 }
 
 CFireConeBehavior::~CFireConeBehavior()

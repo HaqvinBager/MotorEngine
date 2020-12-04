@@ -19,6 +19,8 @@
 #include "RectangleColliderComponent.h"
 #include "TriangleColliderComponent.h"
 #include "CircleColliderComponent.h"
+#include "AIBehaviorComponent.h"
+#include "AbilityBehavior.h"
 
 CEnemyBehavior::CEnemyBehavior(CGameObject* aPlayerObject)
 	: myPlayer(aPlayerObject)
@@ -56,7 +58,7 @@ void CEnemyBehavior::Update(CGameObject* aParent)
 }
 
 // Sending in the parent feels safer than relying on myCurrentParent
-void CEnemyBehavior::Collided(CGameObject* /*aParent*/, CGameObject* aCollidedWithGameObject)
+void CEnemyBehavior::Collided(CGameObject* aParent, CGameObject* aCollidedWithGameObject)
 {
 	CCollider* collider = reinterpret_cast<CCollider*>(aCollidedWithGameObject->GetComponent<CTriangleColliderComponent>());
 	if (!collider) 
@@ -70,12 +72,13 @@ void CEnemyBehavior::Collided(CGameObject* /*aParent*/, CGameObject* aCollidedWi
 
 	if (!collider) { return; }
 
-	if (collider->GetCollisionLayer() == ECollisionLayer::PLAYERABILITY)
+	if (collider->GetCollisionLayer() == ECollisionLayer::PLAYERABILITY1)
 	{
 		std::cout << __FUNCTION__ << " Enemy collided with player ability " << std::endl;
 		//CStatsComponent* playerStats = myPlayer->GetComponent<CStatsComponent>();
-
-		TakeDamage(1);
+		myCurrentParent = aParent;
+		
+		//TakeDamage(aCollidedWithGameObject->GetComponent<>);
 		return;
 	}
 
@@ -134,6 +137,9 @@ void CEnemyBehavior::TakeDamage(float someDamage)
 void CEnemyBehavior::Die()
 {
 	std::cout << __FUNCTION__ << " Enemy collided with player ability " << std::endl;
-	// kill enemy??
+	myCurrentParent->GetComponent<CAIBehaviorComponent>()->Enabled(false);
+	myCurrentParent->GetComponent<CAbilityComponent>()->Enabled(false);
+	myCurrentParent->GetComponent<CCircleColliderComponent>()->Enabled(false);
+	myCurrentParent->GetComponent<CAnimationComponent>()->DeadState();
 	CMainSingleton::PostMaster().Send({ EMessageType::EnemyDied, 0 });
 }

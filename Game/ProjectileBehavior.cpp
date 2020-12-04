@@ -8,13 +8,14 @@
 
 namespace SM = DirectX::SimpleMath;
 
-CProjectileBehavior::CProjectileBehavior(float aSpeed, float aDuration)
+CProjectileBehavior::CProjectileBehavior(float aSpeed, float aDuration, float aDamage)
 {
 	myDirection = {0.0f, 0.0f, 0.0f};
 	mySpeed = aSpeed;
 
 	myDuration = aDuration;
 	myTimer = 0.0f;
+	myDamage = aDamage;
 }
 
 CProjectileBehavior::~CProjectileBehavior()

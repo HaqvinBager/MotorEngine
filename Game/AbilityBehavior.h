@@ -15,4 +15,5 @@ public:
 	float myDuration;
 	float myTimer;
 	float myResourceCost;
+	float myDamage;
 };

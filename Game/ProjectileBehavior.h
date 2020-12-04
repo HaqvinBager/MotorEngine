@@ -10,7 +10,7 @@ namespace DirectX {
 class CProjectileBehavior : public IAbilityBehavior
 {
 public:
-	CProjectileBehavior(float aSpeed, float aDuration);
+	CProjectileBehavior(float aSpeed, float aDuration, float aDamage);
 	~CProjectileBehavior() override;
 
 	void Update(CGameObject* aParent) override;
