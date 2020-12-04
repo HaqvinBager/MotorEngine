@@ -35,6 +35,9 @@ public:
 	void GetAnimatedBlendTransforms(float dt, SlimMatrix44* transforms);
 	void GetAnimatedTransforms(float dt, SlimMatrix44* transforms);
 
+	// Intended use: internal and Modelviewer. Use <T> version of this function if used elsewhere.
+	void PlayAnimation(const int anAnimationIndex, bool anIsLooping = false, const float anAnimSpeed = 1.0f);
+
 	void MovingState();
 	void DeadState();// After calling this no other animation will be able to be called.
 	void ForceToIdleState();
@@ -67,8 +70,6 @@ private:
 	inline bool UpdateIdleTimer();
 	inline void ResetIdleTimer();
 	void SwitchBackToIdle();
-
-	void PlayAnimation(const int anAnimationIndex, bool anIsLooping = false, const float anAnimSpeed = 1.0f);
 
 private:
 	CAnimation* myAnimation;

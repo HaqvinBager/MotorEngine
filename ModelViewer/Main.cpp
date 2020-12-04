@@ -22,7 +22,6 @@
 #include <LineInstance.h>
 #include <LineFactory.h>
 #include <Timer.h>
-#include "LevelLoader.h"
 
 #include <Animation.h>
 #include <Canvas.h>
@@ -39,7 +38,7 @@
 namespace SM = DirectX::SimpleMath;
 namespace MW = ModelViewer;
 
-#define VFX
+//#define VFX
 
 #ifdef VFX
 #include "../Game/AbilityComponent.h"//  Group 4 stuff might break for group 3!
@@ -49,19 +48,6 @@ namespace MW = ModelViewer;
 	#pragma comment (lib, "../../../Lib/Game_Release.lib")
 	#endif
 #endif
-///	NOTES
-///		aiProcessPreset_TargetRealtime_MaxQuality_DontJoinIndetical 
-///			Affects performance due to aiProcess_JoinIdenticalVertices (L93). 
-/// 
-///			Todo: Create some way to toggle it, so that only destructibles use it!
-/// 
-///			This flag is found in postprocess.h for Assimp. Create the toggle so that it is only used by destructibles.
-///			Its current counterpart, aiProcessPreset_TargetRealtime_MaxQuality,  is used in:
-///			AnimationController.h :: bool Add3DAnimFromFile(const std::string& fileName)
-///			and 
-///			FBXLoaderCustom.cpp :: void* CFBXLoaderCustom::LoadModelInternal(CLoaderModel* someInput)
-///			L 603 in postprocess.h
-
 
 #define USE_CONSOLE_COMMAND
 void InitConsole()
@@ -150,6 +136,7 @@ void UpdateVFX(CGameObject* aCurrentGameObject,CGameObject* /*aCamera*/, CScene*
 	}
 }
 #endif
+
 #pragma region TRANSFORM FUNCTIONS
 void UpdateCamera(CGameObject& aCamera, const float dt)
 {
@@ -199,6 +186,7 @@ void ResetModelTransform(CGameObject& aCurrentGameObject)
 	}
 }
 #pragma endregion ! TRANSFORM FUNCTIONS
+
 #pragma region MODELS 
 CGameObject* InitModels(const std::string& aModelPath, CScene& aScene)
 {
@@ -250,6 +238,7 @@ void UpdateModel(const std::vector<std::string>& aModelFilePathList, CGameObject
 	}
 }
 #pragma endregion ! MODELS
+
 #pragma region ANIMATIONS
 CGameObject* InitAnimation(const std::string& aFilePath, CScene& aScene)
 {
@@ -411,7 +400,12 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		//CScene::GetInstance()->AddInstance(camera);
 		scene->SetMainCamera(camera->GetComponent<CCameraComponent>());
 // ENV LIGHT
-	CEnvironmentLight* environmentLight = CLightFactory::GetInstance()->CreateEnvironmentLight("Assets/Cubemaps/Yokohama2.dds");
+	//CEnvironmentLight* environmentLight = CLightFactory::GetInstance()->CreateEnvironmentLight("Assets/Cubemaps/cubemap_BGRA8.dds");
+	//CEnvironmentLight* environmentLight = CLightFactory::GetInstance()->CreateEnvironmentLight("Assets/Cubemaps/Yokohama2_color.dds");
+	//CEnvironmentLight* environmentLight = CLightFactory::GetInstance()->CreateEnvironmentLight("Assets/Cubemaps/Yokohama2.dds");
+	//CEnvironmentLight* environmentLight = CLightFactory::GetInstance()->CreateEnvironmentLight("Assets/Cubemaps/Cube_lv1.dds");
+	//CEnvironmentLight* environmentLight = CLightFactory::GetInstance()->CreateEnvironmentLight("Assets/Cubemaps/HCross_BGRA8_4Mips.dds");
+	CEnvironmentLight* environmentLight = CLightFactory::GetInstance()->CreateEnvironmentLight("Assets/Cubemaps/c.dds");
 		environmentLight->SetDirection(SM::Vector3(0, 0, -1));
 		environmentLight->SetColor(SM::Vector3(1.0f, 1.0f, 1.0f));
 		environmentLight->SetIntensity(1.0f);
@@ -455,8 +449,6 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		std::cin >> input;
 	}
 	viewAnimations = (input == 'A');*/
-
-	viewAnimations = true;
 
 	std::vector<std::string> filePaths;
 #ifdef VFX

@@ -37,10 +37,11 @@ PixelOutPut main(VertexToPixel input)
     float3 toEye = normalize(cameraPosition.xyz - input.myWorldPosition.xyz);
     float3 albedo = PixelShader_Albedo(input).myColor.rgb;
     float3 normal = PixelShader_Normal(input).myColor.xyz;
-    
-    float ambientocclusion = PixelShader_AmbientOcclusion(input).myColor.r;
+   
+    // ambient = 1 - PixelShader_AO() seems to solve glossiness-issue. Not sure if correct might be SG baking normalmaps 
+    float ambientocclusion = 1 - PixelShader_AmbientOcclusion(input).myColor.a;
     float metalness = PixelShader_Metalness(input).myColor.r;
-    float perceptualroughness = PixelShader_PerceptualRoughness(input).myColor.r;
+    float perceptualroughness = PixelShader_PerceptualRoughness(input).myColor.g;
     float emissivedata = PixelShader_Emissive(input).myColor.r;
     
     float3 specularcolor = lerp((float3) 0.04, albedo, metalness);
@@ -58,7 +59,7 @@ PixelOutPut main(VertexToPixel input)
     }
     
     float3 emissive = albedo * emissivedata;
-    float3 radiance = ambience + directionallight + pointLights +  emissive;
+    float3 radiance = ambience + directionallight + pointLights + emissive;
    
     output.myColor.rgb = LinearToGamma(radiance);
     output.myColor.a = 1.0f;

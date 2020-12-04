@@ -120,7 +120,6 @@ void CAnimationComponent::SetBlend(int anAnimationIndex, int anAnimationIndexTwo
 
 bool CAnimationComponent::UpdateIdleTimer()
 {
-	std::cout << myReturnToIdleTimer << std::endl;
 	if (myCurrentAnimationID == myIdleAnimationID)
 		return false;
 
@@ -162,7 +161,6 @@ void CAnimationComponent::PlayAnimation(const int anAnimationIndex, bool anIsLoo
 	}
 	myAnimation->SetCurAnimationScene(anAnimationIndex);
 	myReturnToIdleTimer = myAnimation->GetMyController().CurrentAnimationDuration() / 59.0f;
-	std::cout << myReturnToIdleTimer << std::endl;
 }
 
 bool CAnimationComponent::ReplaceAnimation(const char* aRig, std::vector<std::string>& somePathsToAnimations)
