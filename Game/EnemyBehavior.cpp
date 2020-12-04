@@ -26,11 +26,6 @@ void CEnemyBehavior::Update(CGameObject* aParent)
 {
 	myCurrentParent = aParent;
 
-	if (myCurrentParent->GetComponent<CAnimationComponent>())
-	{
-		myCurrentParent->GetComponent<CAnimationComponent>()->PlayAnimation(EEnemyAnimationID::Idle, true);
-	}
-
 	//enemy logic
 	SBaseStats baseStats = myCurrentParent->GetComponent<CStatsComponent>()->GetBaseStats();
 	SStats stats = myCurrentParent->GetComponent<CStatsComponent>()->GetStats();
