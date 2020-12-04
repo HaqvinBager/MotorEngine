@@ -57,6 +57,7 @@ CEngine::CEngine()
 	myRenderManager = nullptr;
 	myEnemyFactory = new CEnemyFactory();
 	myMainSingleton = new CMainSingleton();
+	// Audio Manager must be constructed after main singleton, since it subscribes to postmaster messages
 	myAudioManager = new CAudioManager();
 	myActiveScene = 0; //muc bad
 }
@@ -100,11 +101,13 @@ CEngine::~CEngine()
 	delete myEnemyFactory;
 	myEnemyFactory = nullptr;
 
+	// Audio Manager must be destroyed before main singleton, since it unsubscribes from postmaster messages
+	delete myAudioManager;
+	myAudioManager = nullptr;
+
 	delete myMainSingleton;
 	myMainSingleton = nullptr;
 
-	delete myAudioManager;
-	myAudioManager = nullptr;
 
 	ourInstance = nullptr;
 }

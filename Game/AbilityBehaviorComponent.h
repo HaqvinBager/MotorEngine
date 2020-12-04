@@ -21,6 +21,8 @@ public:
 	EAbilityType GetAbilityType() const;
 
 	void Init(CGameObject* aCaster);
+	
+	IAbilityBehavior* AbilityBehavior();
 
 private:
 	IAbilityBehavior* myBehavior;

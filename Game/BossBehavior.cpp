@@ -1,12 +1,10 @@
 #include "stdafx.h"
-#include "EnemyBehavior.h"
+#include "BossBehavior.h"
 #include "GameObject.h"
 #include "AIBehaviorComponent.h"
 #include "TransformComponent.h"
 #include "StatsComponent.h"
 #include "Timer.h"
-#include "ObjectPool.h"
-#include "TokenPool.h"
 #include "Engine.h"
 #include "Scene.h"
 #include "MainSingleton.h"
@@ -15,14 +13,16 @@
 #include "AbilityComponent.h"
 #include "NavMeshComponent.h"
 
-CEnemyBehavior::CEnemyBehavior(CGameObject* aPlayerObject)
+CBossBehavior::CBossBehavior(CGameObject* aPlayerObject)
 	: myPlayer(aPlayerObject)
-{}
+{
+}
 
-CEnemyBehavior::~CEnemyBehavior()
-{}
+CBossBehavior::~CBossBehavior()
+{
+}
 
-void CEnemyBehavior::Update(CGameObject* aParent)
+void CBossBehavior::Update(CGameObject* aParent)
 {
 	//enemy logic
 	SBaseStats baseStats = aParent->GetComponent<CStatsComponent>()->GetBaseStats();
@@ -37,23 +37,17 @@ void CEnemyBehavior::Update(CGameObject* aParent)
 	}
 
 	if (stats.myHealth <= 0) {
-		CMainSingleton::PostMaster().Send({ EMessageType::EnemyDied, this });
-		if (stats.myTokenSlot != nullptr) {
-			CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
-			stats.myTokenSlot = nullptr;
-		}
-		//aParent->Active(false);
+		CMainSingleton::PostMaster().Send({ EMessageType::BossDied, this });
 	}
 
 	FindATarget(*aParent);
 }
 
-void CEnemyBehavior::Collided(CGameObject* /*aGameObject*/)
+void CBossBehavior::Collided(CGameObject* /*aGameObject*/)
 {
-	std::cout << __FUNCTION__ << " The enemy says: OUCH! " << std::endl;
 }
 
-void CEnemyBehavior::FindATarget(CGameObject& aParent)
+void CBossBehavior::FindATarget(CGameObject& aParent)
 {
 	DirectX::SimpleMath::Vector3 parentPos = aParent.GetComponent<CTransformComponent>()->Position();
 	DirectX::SimpleMath::Vector3 targetPos = myPlayer->GetComponent<CTransformComponent>()->Position();
@@ -62,32 +56,20 @@ void CEnemyBehavior::FindATarget(CGameObject& aParent)
 
 	float dist = DirectX::SimpleMath::Vector3::DistanceSquared(parentPos, targetPos);
 	if (dist <= baseStats.myBaseVisionRange) {
-		//DirectX::SimpleMath::Vector3 dir = targetPos - parentPos;
-		//dir.Normalize();
-		//aParent.GetComponent<CTransformComponent>()->Move(dir * baseStats.myMoveSpeed * CTimer::Dt());
 
-		//NavMesh movement
 		aParent.GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
 		if (dist <= baseStats.myBaseAttackRange) {
-			if (stats.myTokenSlot == nullptr) {
-				stats.myTokenSlot = CTokenPool::GetInstance()->Request();
-			}
 			myPlayer->GetComponent<CStatsComponent>();
-			aParent.GetComponent<CAnimationComponent>()->PlayAnimation(EEnemyAnimationID::Attack);
-			aParent.GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::EnemyAbility, aParent.myTransform->Position());
-		}
-		else {
-			if (stats.myTokenSlot != nullptr) {
-				CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
-				stats.myTokenSlot = nullptr;
+			if (aParent.GetComponent<CAnimationComponent>())
+			{
+				aParent.GetComponent<CAnimationComponent>()->PlayAnimation(EEnemyAnimationID::Attack);
 			}
+			aParent.GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility1, aParent.myTransform->Position());
 		}
-		// FOR NAVMESH
-		aParent.GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
 	}
 }
 
-void CEnemyBehavior::TakeDamage(float /*aDamage*/)
+void CBossBehavior::TakeDamage(float /*aDamage*/)
 {
 	//TODO: decrease stats.myHealth
 }

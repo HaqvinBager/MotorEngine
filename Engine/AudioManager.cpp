@@ -29,7 +29,6 @@ CAudioManager::CAudioManager() : myWrapper() {
 		myChannels.emplace_back(myWrapper.RequestChannel(TranslateChannels(static_cast<EChannels>(i))));
 	}
 
-
 	if (document.HasMember("Music"))
 	{
 		auto audioDataArray = document["Music"].GetArray();
@@ -90,15 +89,10 @@ CAudioManager::CAudioManager() : myWrapper() {
 
 	}
 
-
-	
-
 	//// Init Music
 	//for (unsigned int i = 0; i < static_cast<unsigned int>(EMusic::Count); ++i) {
 	//	myMusicAudio.emplace_back(myWrapper.RequestSound(GetPath(static_cast<EMusic>(i))));
 	//}	
-
-
 
 	// Set starting volume
 	for (auto& channel : myChannels) {

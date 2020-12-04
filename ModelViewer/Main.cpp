@@ -22,7 +22,6 @@
 #include <LineInstance.h>
 #include <LineFactory.h>
 #include <Timer.h>
-#include "LevelLoader.h"
 
 #include <Animation.h>
 #include <Canvas.h>
@@ -39,7 +38,7 @@
 namespace SM = DirectX::SimpleMath;
 namespace MW = ModelViewer;
 
-#define VFX
+//#define VFX
 
 #ifdef VFX
 #include "../Game/AbilityComponent.h"//  Group 4 stuff might break for group 3!
@@ -49,19 +48,6 @@ namespace MW = ModelViewer;
 	#pragma comment (lib, "../../../Lib/Game_Release.lib")
 	#endif
 #endif
-///	NOTES
-///		aiProcessPreset_TargetRealtime_MaxQuality_DontJoinIndetical 
-///			Affects performance due to aiProcess_JoinIdenticalVertices (L93). 
-/// 
-///			Todo: Create some way to toggle it, so that only destructibles use it!
-/// 
-///			This flag is found in postprocess.h for Assimp. Create the toggle so that it is only used by destructibles.
-///			Its current counterpart, aiProcessPreset_TargetRealtime_MaxQuality,  is used in:
-///			AnimationController.h :: bool Add3DAnimFromFile(const std::string& fileName)
-///			and 
-///			FBXLoaderCustom.cpp :: void* CFBXLoaderCustom::LoadModelInternal(CLoaderModel* someInput)
-///			L 603 in postprocess.h
-
 
 #define USE_CONSOLE_COMMAND
 void InitConsole()
@@ -150,6 +136,7 @@ void UpdateVFX(CGameObject* aCurrentGameObject,CGameObject* /*aCamera*/, CScene*
 	}
 }
 #endif
+
 #pragma region TRANSFORM FUNCTIONS
 void UpdateCamera(CGameObject& aCamera, const float dt)
 {
@@ -199,6 +186,7 @@ void ResetModelTransform(CGameObject& aCurrentGameObject)
 	}
 }
 #pragma endregion ! TRANSFORM FUNCTIONS
+
 #pragma region MODELS 
 CGameObject* InitModels(const std::string& aModelPath, CScene& aScene)
 {
@@ -250,6 +238,7 @@ void UpdateModel(const std::vector<std::string>& aModelFilePathList, CGameObject
 	}
 }
 #pragma endregion ! MODELS
+
 #pragma region ANIMATIONS
 CGameObject* InitAnimation(const std::string& aFilePath, CScene& aScene)
 {
@@ -263,6 +252,7 @@ CGameObject* InitAnimation(const std::string& aFilePath, CScene& aScene)
 		std::vector<std::string> somePathsToAnimations = MW::Get_ANFiles(aFilePath);
 #ifndef VFX
 		CAnimationComponent* animComp = gameObject->AddComponent<CAnimationComponent>(*gameObject, aFilePath, somePathsToAnimations);
+		animComp->SetStateIDs(0,-1,-1);
 		animComp->Awake();
 #else
 		gameObject->AddComponent<CAnimationComponent>(*gameObject, aFilePath, somePathsToAnimations);
@@ -330,16 +320,16 @@ void UpdateAnimation(CGameObject* aCurrentGameObject, CGameObject* aCamera, cons
 	{
 		const size_t nrOfAnims = animComp->GetMyAnimation()->GetNrOfAnimations();
 
-		if (Input::GetInstance()->IsKeyPressed('0')) { if(IsLessThan(0, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(0, true); }
-		if (Input::GetInstance()->IsKeyPressed('1')) { if(IsLessThan(1, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(1, true); }
-		if (Input::GetInstance()->IsKeyPressed('2')) { if(IsLessThan(2, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(2, true); }
-		if (Input::GetInstance()->IsKeyPressed('3')) { if(IsLessThan(3, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(3, true); }
-		if (Input::GetInstance()->IsKeyPressed('4')) { if(IsLessThan(4, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(4, true); }
-		if (Input::GetInstance()->IsKeyPressed('5')) { if(IsLessThan(5, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(5, true); }
-		if (Input::GetInstance()->IsKeyPressed('6')) { if(IsLessThan(6, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(6, true); }
-		if (Input::GetInstance()->IsKeyPressed('7')) { if(IsLessThan(7, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(7, true); }
-		if (Input::GetInstance()->IsKeyPressed('8')) { if(IsLessThan(8, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(8, true); }
-		if (Input::GetInstance()->IsKeyPressed('9')) { if(IsLessThan(9, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->PlayAnimation(9, true); }
+		if (Input::GetInstance()->IsKeyPressed('0')) { if(IsLessThan(0, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->ModelViewerPlayAnimation(0, true); }
+		if (Input::GetInstance()->IsKeyPressed('1')) { if(IsLessThan(1, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->ModelViewerPlayAnimation(1, true); }
+		if (Input::GetInstance()->IsKeyPressed('2')) { if(IsLessThan(2, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->ModelViewerPlayAnimation(2, true); }
+		if (Input::GetInstance()->IsKeyPressed('3')) { if(IsLessThan(3, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->ModelViewerPlayAnimation(3, true); }
+		if (Input::GetInstance()->IsKeyPressed('4')) { if(IsLessThan(4, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->ModelViewerPlayAnimation(4, true); }
+		if (Input::GetInstance()->IsKeyPressed('5')) { if(IsLessThan(5, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->ModelViewerPlayAnimation(5, true); }
+		if (Input::GetInstance()->IsKeyPressed('6')) { if(IsLessThan(6, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->ModelViewerPlayAnimation(6, true); }
+		if (Input::GetInstance()->IsKeyPressed('7')) { if(IsLessThan(7, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->ModelViewerPlayAnimation(7, true); }
+		if (Input::GetInstance()->IsKeyPressed('8')) { if(IsLessThan(8, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->ModelViewerPlayAnimation(8, true); }
+		if (Input::GetInstance()->IsKeyPressed('9')) { if(IsLessThan(9, nrOfAnims)) aCurrentGameObject->GetComponent<CAnimationComponent>()->ModelViewerPlayAnimation(9, true); }
 
 #ifndef VFX
 		aCurrentGameObject->GetComponent<CAnimationComponent>()->Update();
@@ -411,11 +401,30 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		//CScene::GetInstance()->AddInstance(camera);
 		scene->SetMainCamera(camera->GetComponent<CCameraComponent>());
 // ENV LIGHT
-	CEnvironmentLight* environmentLight = CLightFactory::GetInstance()->CreateEnvironmentLight("Assets/Cubemaps/Yokohama2.dds");
+	//CEnvironmentLight* environmentLight = CLightFactory::GetInstance()->CreateEnvironmentLight("Assets/Cubemaps/cubemap_BGRA8.dds");
+	//CEnvironmentLight* environmentLight = CLightFactory::GetInstance()->CreateEnvironmentLight("Assets/Cubemaps/Yokohama2_color.dds");
+	//CEnvironmentLight* environmentLight = CLightFactory::GetInstance()->CreateEnvironmentLight("Assets/Cubemaps/Yokohama2.dds");
+	//CEnvironmentLight* environmentLight = CLightFactory::GetInstance()->CreateEnvironmentLight("Assets/Cubemaps/Cube_lv1.dds");
+	//CEnvironmentLight* environmentLight = CLightFactory::GetInstance()->CreateEnvironmentLight("Assets/Cubemaps/HCross_BGRA8_4Mips.dds");
+	CEnvironmentLight* environmentLight = CLightFactory::GetInstance()->CreateEnvironmentLight("Assets/Cubemaps/c.dds");
 		environmentLight->SetDirection(SM::Vector3(0, 0, -1));
 		environmentLight->SetColor(SM::Vector3(1.0f, 1.0f, 1.0f));
 		environmentLight->SetIntensity(1.0f);
 		scene->SetEnvironmentLight(environmentLight);
+
+		CEnvironmentLight* environmentLight_lv1 = CLightFactory::GetInstance()->CreateEnvironmentLight("Assets/Cubemaps/Cube_lv1.dds");
+		environmentLight_lv1->SetDirection(SM::Vector3(0, 0, -1));
+		environmentLight_lv1->SetColor(SM::Vector3(1.0f, 1.0f, 1.0f));
+		environmentLight_lv1->SetIntensity(1.0f);
+		CEnvironmentLight* environmentLight_lv2 = CLightFactory::GetInstance()->CreateEnvironmentLight("Assets/Cubemaps/Cube_lv2.dds");
+		environmentLight_lv2->SetDirection(SM::Vector3(0, 0, -1));
+		environmentLight_lv2->SetColor(SM::Vector3(1.0f, 1.0f, 1.0f));
+		environmentLight_lv2->SetIntensity(1.0f);
+		CEnvironmentLight* environmentLight_lv3 = CLightFactory::GetInstance()->CreateEnvironmentLight("Assets/Cubemaps/Cube_lv3.dds");
+		environmentLight_lv3->SetDirection(SM::Vector3(0, 0, -1));
+		environmentLight_lv3->SetColor(SM::Vector3(1.0f, 1.0f, 1.0f));
+		environmentLight_lv3->SetIntensity(1.0f);
+
 // GRID
 	CLineInstance* grid = new CLineInstance();
 		grid->Init(CLineFactory::GetInstance()->CreateGrid({ 0.33f,0.33f,0.33f, 1.0f }));
@@ -455,8 +464,6 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		std::cin >> input;
 	}
 	viewAnimations = (input == 'A');*/
-
-	viewAnimations = true;
 
 	std::vector<std::string> filePaths;
 #ifdef VFX
@@ -531,6 +538,24 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 			UpdateModel(filePaths, currentGameObject, camera);
 		}
 
+
+		if (Input::GetInstance()->IsKeyPressed(VK_F1))
+		{
+			scene->SetEnvironmentLight(environmentLight_lv1);
+		}
+		if (Input::GetInstance()->IsKeyPressed(VK_F2))
+		{
+			scene->SetEnvironmentLight(environmentLight_lv2);
+		}
+		if (Input::GetInstance()->IsKeyPressed(VK_F3))
+		{
+			scene->SetEnvironmentLight(environmentLight_lv3);
+		}
+		if (Input::GetInstance()->IsKeyPressed(VK_F4))
+		{
+			scene->SetEnvironmentLight(environmentLight);
+		}
+
 		if (Input::GetInstance()->IsKeyPressed('I') && !showUI)
 		{
 			canvas = SpriteViewer::Init();
@@ -551,6 +576,15 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
 	delete environmentLight;
 	environmentLight = nullptr;
+
+	delete environmentLight_lv1;
+	environmentLight_lv1 = nullptr;
+
+	delete environmentLight_lv2;
+	environmentLight_lv2 = nullptr;
+
+	delete environmentLight_lv3;
+	environmentLight_lv3 = nullptr;
 
 	delete grid;
 	grid = nullptr;

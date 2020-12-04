@@ -24,7 +24,6 @@ private:
 
 	float mySpeed;
 	float myHalfLife;
-	float myResourceCost;
 	bool myIsReturning;
 };
 

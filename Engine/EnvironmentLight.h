@@ -40,9 +40,10 @@ public:
 	DirectX::SimpleMath::Vector4 GetColor() { return myColor; }
 
 	ID3D11ShaderResourceView* const* GetCubeMap();
-	unsigned int GetMipLevels();
+	//unsigned int GetMipLevels();// 2020 12 04 - Seems to not be used anywhere.
+
 private:
-	unsigned int myMipLevels;
+	//unsigned int myMipLevels;// 2020 12 04 - Seems to not be used anywhere.
 	ID3D11ShaderResourceView* myCubeShaderResourceView = nullptr;
 	DirectX::SimpleMath::Vector4 myDirection; //Points towards the Light
 	DirectX::SimpleMath::Vector4 myColor; //Color (XYZ) and Intensity (W)

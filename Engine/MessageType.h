@@ -18,5 +18,9 @@ enum class EMessageType
 	PlayerHealthChanged,
 	PlayerResourceChanged,
 	PlayerDied,
+	BossFightStart,
+	BossPhase2,
+	BossPhase3,
+	BossDied,
 	Count
 };

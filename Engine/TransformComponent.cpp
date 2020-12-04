@@ -2,6 +2,8 @@
 #include "TransformComponent.h"
 #include <SimpleMath.h>
 
+#include "AnimationComponent.h"
+
 #define ENGINE_SCALE 0.01f
 using namespace DirectX::SimpleMath;
 
@@ -159,6 +161,8 @@ void CTransformComponent::MoveAlongPath()
 
 	size_t pathSize = myPath.size();
 	if (pathSize > 0) {
+
+		GameObject().GetComponent<CAnimationComponent>()->MovingState();
 
 		DirectX::SimpleMath::Vector3 newPos;
 		DirectX::SimpleMath::Vector3 dir;

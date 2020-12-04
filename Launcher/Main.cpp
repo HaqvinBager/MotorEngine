@@ -7,7 +7,6 @@
 #include <strsafe.h>
 #include "EngineException.h"
 #include "DL_Debug.h"
-#include <WinUser.h>
 
 #ifdef _DEBUG
 #pragma comment(lib, "Game_Debug.lib")
@@ -156,7 +155,6 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	lpCmdLine;
 	nShowCmd;
 
-	ShowCursor(false);
 
 #ifdef USE_CONSOLE_COMMAND
 	InitConsole();

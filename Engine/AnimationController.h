@@ -109,22 +109,14 @@ public:
 
 	void SetRotation(const aiVector3D& aRotation) { myRotation = aRotation; }
 	aiVector3D GetRotation() { return myRotation; }
+
 	void SetCurSceneIndex(int aCurSceneIndex) { myCurSceneIndex = aCurSceneIndex; }
 	void SetLoopingSceneIndex(int aSceneIndex) { myLoopingSceneIndex = aSceneIndex; }
+	const int GetCurSceneIndex() { return myCurSceneIndex; }
+	const int GetLoopingSceneIndex() { return myLoopingSceneIndex; }
 	const size_t GetNrOfAnimations() const { return myScenes.size(); }
-	void ResetAnimationTimeCurrent(/*const bool anIsLooping*/) 
-	{ 
-		// anIsLooping was if we wished to continue the loopinbg animation on the exact frame it started... i think.
-		//if (anIsLooping) 
-		//{
-		//	myAnimationTimeLooping = myAnimationTimePrev;
-		//}
-		myAnimationTimeCurrent = 0.0f; 
-	}
-
-	//  Was if we wished to continue the loopinbg animation on the exact frame it started... i think.
-	//void AnimationTimePrevToLooping() { myAnimationTimePrev = myAnimationTimeLooping; }
-	//void AnimationTimeLoopingToPrev() { myAnimationTimeLooping = myAnimationTimePrev; }
+	void ResetAnimationTimeCurrent() { myAnimationTimeCurrent = 0.0f; }
+	const float CurrentAnimationDuration() { return static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration); }
 
 	~AnimationController()
 	{

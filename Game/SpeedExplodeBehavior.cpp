@@ -7,11 +7,14 @@
 #include "Engine.h"
 #include "CircleColliderComponent.h"
 #include "VFXComponent.h"
+#include "StatsComponent.h"
+#include "MainSingleton.h"
 
-CSpeedExplodeBehavior::CSpeedExplodeBehavior(float aDuration, float aExplosionDelay, float aMovementSpeedMultiplier, CGameObject* aParent)
+CSpeedExplodeBehavior::CSpeedExplodeBehavior(float aDuration, float aResourceCost, float aExplosionDelay, float aMovementSpeedMultiplier, CGameObject* aParent)
 {
 	myDuration = aDuration;
 	myTimer = 0.0f;
+	myResourceCost = aResourceCost;
 	myExplosionDelay = aExplosionDelay;
 	myMovementSpeedMutiplier = aMovementSpeedMultiplier;
 	myMultipliedSpeed = 0.0f;
@@ -29,13 +32,27 @@ CSpeedExplodeBehavior::~CSpeedExplodeBehavior()
 
 void CSpeedExplodeBehavior::Init(CGameObject* aCaster)
 {
-	myCaster = aCaster;
 	myParent->GetComponent<CCircleColliderComponent>()->Enabled(false);
-	myParent->GetComponent<CVFXComponent>();
-	myCasterTransform = myCaster->GetComponent<CTransformComponent>();
-	myOriginalMovementSpeed = myCasterTransform->MovementSpeed();
-	myMultipliedSpeed = myOriginalMovementSpeed * myMovementSpeedMutiplier;
-	myCasterTransform->MovementSpeed(myMultipliedSpeed);
+
+	if (aCaster->GetComponent<CStatsComponent>()->GetStats().myResource > myResourceCost)
+	{
+		myCaster = aCaster;
+		myCaster->GetComponent<CStatsComponent>()->GetStats().myResource -= myResourceCost;
+
+		myParent->GetComponent<CVFXComponent>();
+		myCasterTransform = myCaster->GetComponent<CTransformComponent>();
+		myOriginalMovementSpeed = myCasterTransform->MovementSpeed();
+		myMultipliedSpeed = myOriginalMovementSpeed * myMovementSpeedMutiplier;
+		myCasterTransform->MovementSpeed(myMultipliedSpeed);
+
+		float difference = myCaster->GetComponent<CStatsComponent>()->GetBaseStats().myBaseResource - myCaster->GetComponent<CStatsComponent>()->GetStats().myResource;
+		difference = (100.0f - difference) / 100.0f;
+
+		SMessage message;
+		message.myMessageType = EMessageType::PlayerResourceChanged;
+		message.data = &difference;
+		CMainSingleton::PostMaster().Send(message);
+	}
 }
 
 void CSpeedExplodeBehavior::Update(CGameObject* aParent)
@@ -46,6 +63,7 @@ void CSpeedExplodeBehavior::Update(CGameObject* aParent)
 
 		if (myTimer > myExplosionDelay)
 		{
+			myParent->GetComponent<CCircleColliderComponent>();
 			myParent->GetComponent<CCircleColliderComponent>()->Enabled(true);
 			//TODO: play audio
 		}
@@ -59,4 +77,13 @@ void CSpeedExplodeBehavior::Update(CGameObject* aParent)
 
 		aParent->GetComponent<CTransformComponent>()->Position(myCaster->myTransform->Position());
 	}
+	else
+	{
+		aParent->Active(false);
+	}
+}
+
+float CSpeedExplodeBehavior::ResourceCost() const
+{
+	return myResourceCost;
 }
