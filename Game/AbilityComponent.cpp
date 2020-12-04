@@ -295,7 +295,6 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	{
 		boomerangBehavior = new CBoomerangBehavior(behavior["Speed"].GetFloat(), behavior["Duration"].GetFloat(), behavior["ResourceCost"].GetFloat(), behavior["RotationalSpeed"].GetFloat());
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, boomerangBehavior, anAbilityType);
-		abilityObject->myTransform->Position({0.0f, 1.25f, 0.0f});
 	}
 	else if (behavior["Type"].GetString() == std::string("MeleeAttack"))
 	{
@@ -314,7 +313,7 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	}
 	else if (behavior["Type"].GetString() == std::string("DelayedExplosion"))
 	{
-		delayedExplosionBehavior = new CDelayedExplosionBehavior(document["Duration"].GetFloat(), behavior["Delay"].GetFloat(), behavior["ResourceCost"].GetFloat(), abilityObject);
+		delayedExplosionBehavior = new CDelayedExplosionBehavior(behavior["Duration"].GetFloat(), behavior["Delay"].GetFloat(), behavior["ResourceCost"].GetFloat(), abilityObject);
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, delayedExplosionBehavior, anAbilityType);
 	}
 	//!BEHAVIOR
