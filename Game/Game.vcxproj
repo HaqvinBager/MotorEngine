@@ -288,6 +288,7 @@
     <ClInclude Include="AuraBehavior.h" />
     <ClInclude Include="BoomerangBehavior.h" />
     <ClInclude Include="BossBehavior.h" />
+    <ClInclude Include="DamageUtility.h" />
     <ClInclude Include="DelayedExplosionBehavior.h" />
     <ClInclude Include="DialogueSystem.h" />
     <ClInclude Include="EnemyBehavior.h" />

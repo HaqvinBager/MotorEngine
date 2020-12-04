@@ -84,6 +84,9 @@
     <ClInclude Include="BossBehavior.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DamageUtility.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
