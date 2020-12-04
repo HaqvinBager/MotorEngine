@@ -11,7 +11,8 @@ public:
 		MainMenu,
 		LoadLevel,
 		InGame,
-		PauseMenu
+		PauseMenu,
+		NoState
 	};
 
 	CStateStack() = default;

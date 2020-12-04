@@ -20,6 +20,5 @@ protected:
 
 	CStateStack& myStateStack;
 	CStateStack::EState myState;
-	unsigned int myActiveScene;
 };
 

@@ -28,8 +28,8 @@ void CLoadLevelState::Awake()
 
 void CLoadLevelState::Start()
 {
-	myActiveScene = Load(ELevel::LoadScreen);
-	CEngine::GetInstance()->SetActiveScene(myActiveScene);
+	//myActiveScene = ;
+	CEngine::GetInstance()->SetActiveScene(Load(ELevel::LoadScreen));
 
 	Document latestExportedLevelDoc = CJsonReader::LoadDocument("Levels/DebugLevel.json");
 	int levelIndex = latestExportedLevelDoc["LevelIndex"].GetInt();
@@ -50,7 +50,6 @@ void CLoadLevelState::Start()
 
 void CLoadLevelState::Stop()
 {
-
 }
 
 void CLoadLevelState::Update()
@@ -60,8 +59,9 @@ void CLoadLevelState::Update()
 	{
 		//myLoadedLevelFuture returnType is the same as the CLoadLevelState::Load return type.
 		//The value it will get is the Scene index in which the SceneLoaded will use in CEngine::myScenes
-		myActiveScene = myLoadLevelFuture.get();
-		CEngine::GetInstance()->SetActiveScene(myActiveScene);
+		//myActiveScene = ;
+		myLoadLevelFuture.get();
+		//CEngine::GetInstance()->SetActiveScene();
 		myStateStack.PopTopAndPush(CStateStack::EState::InGame);
 	}
 
@@ -71,7 +71,33 @@ void CLoadLevelState::Update()
 	}
 }
 
-unsigned int CLoadLevelState::Load(const ELevel aLevel)
+///
+///	Engine::AddScene(enum EState, CScene* scene)
+/// {
+///		if(sceneMap contains EState)
+///			delete sceneMap[EState]
+///			
+///		sceneMap[EState] = scene;
+/// 
+///	Engine::ClearScene(enum EState)
+/// {
+///		if(sceneMap containts EState)
+///			sceneMap[EState]->ClearScene();
+/// 
+/// Engine::SetActiveScene(int aEState)
+/// {
+///		EState state = static_cast<EState>(aEState)
+///		if(sceneMap containts EState)
+///			myActiveState = EState
+/// 
+/// CScene* Engine::GetActiveScene()
+/// {
+///		return sceneMap[myActiveState];
+/// 
+/// 
+/// Future: CScene => CState
+
+const CStateStack::EState CLoadLevelState::Load(const ELevel aLevel)
 {
 	if (mySceneReader.OpenBin(BinPath(aLevel)))
 	{
@@ -83,7 +109,7 @@ unsigned int CLoadLevelState::Load(const ELevel aLevel)
 			CScene* loadScreenScene = new CScene();// myLoadScreenScene
 			myUnityFactory.FillScene(data, BinModelPaths(aLevel), *loadScreenScene);
 			std::cout << "Adding Loading Screen" << std::endl;
-			return CEngine::GetInstance()->AddScene(loadScreenScene);
+			return CEngine::GetInstance()->AddScene(CStateStack::EState::LoadLevel, loadScreenScene);
 		}
 		else //All other Scenes are regarded as "InGame" scenes. And will have to contain at least a Camera, Directional Light & Player (player is currently "utkommenterad", Fix Monday)
 		{
@@ -96,10 +122,10 @@ unsigned int CLoadLevelState::Load(const ELevel aLevel)
 
 			myUnityFactory.FillScene(data, BinModelPaths(aLevel), *inGameScene);
 			//std::cout << "Adding Loading Screen" << std::endl;
-			return CEngine::GetInstance()->AddScene(inGameScene);
+			return CEngine::GetInstance()->AddScene(CStateStack::EState::InGame, inGameScene);
 		}
 	}
-	return 0;
+	return CStateStack::EState::NoState;
 }
 
 void CLoadLevelState::SaveLevelNames()

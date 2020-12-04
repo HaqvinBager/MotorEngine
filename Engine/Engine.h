@@ -1,8 +1,13 @@
 #pragma once
 #include "WindowHandler.h"
 #include "DirectXFramework.h"
+
+#include "StateStack.h"
+
 #include <string>
 #include <vector>
+#include <unordered_map>
+
 
 class CWindowHandler;
 class CDirextXFramework;
@@ -30,7 +35,7 @@ class CEngine
 	friend class CModelFactory;
 	friend class CVFXFactory;
 	friend class CLightFactory;
-	friend class CPauseState;
+
 public:
 	friend class CLineFactory;
 	CEngine();
@@ -44,14 +49,16 @@ public:
 	void CrashWithScreenShot(std::wstring& aSubPath);
 
 	static CEngine* GetInstance();
-
-	unsigned int AddScene(CScene* aScene);
-	void PopBackScene();
-	void SetActiveScene(int sceneIndex);
-	void SetActiveScene(CScene* aScene);
-	CScene& GetActiveScene();
 	
-	unsigned int ScenesSize();
+	const CStateStack::EState AddScene(const CStateStack::EState aState, CScene* aScene);
+	void SetActiveScene(const CStateStack::EState aState);
+	CScene& GetActiveScene();
+
+	//void PopBackScene();
+	//void SetActiveScene(CScene* aScene);
+	
+	//unsigned int ScenesSize();
+
 private:
 	static CEngine* ourInstance;
 	
@@ -63,8 +70,10 @@ private:
 	CTimer* myTimer;
 	CDebug* myDebug;
 
-	unsigned int myActiveScene;
-	std::vector<CScene*> myScenes;
+	//unsigned int myActiveScene;
+	CStateStack::EState myActiveState;
+	//std::vector<CScene*> myScenes;
+	std::unordered_map<CStateStack::EState, CScene*> mySceneMap;
 
 	CModelFactory* myModelFactory;
 	CCameraFactory* myCameraFactory;

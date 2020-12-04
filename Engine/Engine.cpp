@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include <array>
 #include "Engine.h"
+
 #include "WindowHandler.h"
 #include "DirectXFramework.h"
 #include "ForwardRenderer.h"
@@ -29,6 +30,7 @@
 #include "AudioManager.h"
 #include <string>
 
+#include "StateStack.h"
 
 #pragma comment(lib, "runtimeobject.lib")
 #pragma comment(lib, "d3d11.lib")
@@ -59,7 +61,8 @@ CEngine::CEngine()
 	myMainSingleton = new CMainSingleton();
 	// Audio Manager must be constructed after main singleton, since it subscribes to postmaster messages
 	myAudioManager = new CAudioManager();
-	myActiveScene = 0; //muc bad
+	//myActiveScene = 0; //muc bad
+	myActiveState = CStateStack::EState::MainMenu;
 }
 
 CEngine::~CEngine()
@@ -156,8 +159,9 @@ float CEngine::BeginFrame()
 
 void CEngine::RenderFrame()
 {
-	if(myScenes.size() > 0 && myActiveScene < myScenes.size())
-		myRenderManager->Render(*myScenes[myActiveScene]);
+	myRenderManager->Render(*mySceneMap[myActiveState]);
+	//if(myScenes.size() > 0 && myActiveScene < myScenes.size())
+	//	myRenderManager->Render(*myScenes[myActiveScene]);
 }
 
 void CEngine::EndFrame()
@@ -208,42 +212,48 @@ CEngine* CEngine::GetInstance()
 	return ourInstance;
 }
 
-unsigned int CEngine::AddScene(CScene* aScene)
+const CStateStack::EState CEngine::AddScene(const CStateStack::EState aState, CScene* aScene)
 {
-	myScenes.emplace_back(aScene);
-	//std::cout << myScenes.size() << std::endl;
-	return static_cast<unsigned int>(myScenes.size() - 1);
-}
-
-void CEngine::PopBackScene()
-{
-	myScenes.back()->ClearScene();
-	myScenes.pop_back();
-}
-
-void CEngine::SetActiveScene(int sceneIndex)
-{
-	myActiveScene = sceneIndex;
-}
-
-void CEngine::SetActiveScene(CScene* aScene)
-{
-	for (unsigned int i = 0; i < myScenes.size(); ++i)
+	if (mySceneMap.find(aState) == mySceneMap.end())
 	{
-		if (myScenes[i] == aScene)
-		{
-			myActiveScene = i;
-			std::cout << "Active Scene Index: " << i << std::endl;
-		}
+		delete mySceneMap[aState];
+		mySceneMap[aState] = nullptr;
 	}
+	mySceneMap[aState] = aScene;
+
+	return aState;
 }
+
+//void CEngine::PopBackScene()
+//{
+//	myScenes.back()->ClearScene();
+//	myScenes.pop_back();
+//}
+
+void CEngine::SetActiveScene(const CStateStack::EState aState)
+{
+	myActiveState = aState;
+}
+
+//void CEngine::SetActiveScene(CScene* aScene)
+//{
+//	for (unsigned int i = 0; i < myScenes.size(); ++i)
+//	{
+//		if (myScenes[i] == aScene)
+//		{
+//			myActiveScene = i;
+//			std::cout << "Active Scene Index: " << i << std::endl;
+//		}
+//	}
+//}
 
 CScene& CEngine::GetActiveScene()
 {
-	return *myScenes[myActiveScene];
+	return *mySceneMap[myActiveState];
+	//return *myScenes[myActiveScene];
 }
 
-unsigned int CEngine::ScenesSize()
-{
-	return static_cast<unsigned int>(myScenes.size() - 1);
-}
+//unsigned int CEngine::ScenesSize()
+//{
+//	return static_cast<unsigned int>(myScenes.size() - 1);
+//}

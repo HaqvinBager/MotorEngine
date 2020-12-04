@@ -59,6 +59,8 @@ void CInGameState::Start()
 {
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::PauseGame, this);
 	
+	CEngine::GetInstance()->SetActiveScene(myState);
+
 	myCanvas = new CCanvas();
 	myCanvas->Init("Json/UI_InGame_Description.json", CEngine::GetInstance()->GetActiveScene());
 
@@ -74,7 +76,7 @@ void CInGameState::Start()
 		}
 	}
 
-	//Late awake
+	////Late awake
 	size_t newSize = gameObjects.size();
 	for (size_t j = currentSize; j < newSize; ++j) 
 	{
@@ -97,10 +99,8 @@ void CInGameState::Stop()
 	delete myTokenPool;
 	myTokenPool = nullptr;
 
-	//delete myCanvas;
+	delete myCanvas;
 	myCanvas = nullptr;
-
-	CEngine::GetInstance()->PopBackScene();
 }
 
 void CInGameState::Update()

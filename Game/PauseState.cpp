@@ -26,9 +26,6 @@ void CPauseState::Awake()
 {
 	myScene = new CScene();
 
-	unsigned int index = static_cast<unsigned int>(CEngine::GetInstance()->myScenes.size() - 1);
-	CEngine::GetInstance()->SetActiveScene(index);
-
 	CGameObject* camera = new CGameObject();
 	camera->AddComponent<CCameraComponent>(*camera, 70.0f);
 	camera->AddComponent<CCameraControllerComponent>(*camera, 25.0f);
@@ -45,12 +42,12 @@ void CPauseState::Awake()
 	myCanvas = new CCanvas();
 	myCanvas->Init("Json/UI_PauseMenu_Description.json", *myScene);
 
-	myActiveScene = CEngine::GetInstance()->AddScene(myScene);
+	CEngine::GetInstance()->AddScene(myState, myScene);
 }
 
 void CPauseState::Start()  
 {
-	CEngine::GetInstance()->SetActiveScene(myActiveScene);
+	CEngine::GetInstance()->SetActiveScene(myState);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::Resume, this);
 }

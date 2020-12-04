@@ -55,12 +55,12 @@ void CMenuState::Awake()
 			CMainSingleton::PostMaster().Subscribe(messageType, this);
 	}
 
-	myActiveScene = CEngine::GetInstance()->AddScene(myScene);
+	CEngine::GetInstance()->AddScene(myState, myScene);
 }
 
 void CMenuState::Start() 
 {
-	CEngine::GetInstance()->SetActiveScene(myActiveScene);
+	CEngine::GetInstance()->SetActiveScene(myState);
 }
 
 void CMenuState::Stop()
