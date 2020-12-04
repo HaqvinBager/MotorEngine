@@ -324,7 +324,7 @@ bool CScene::RemoveInstance(CPointLight* aPointLight)
 
 bool CScene::ClearScene() {
 
-	for (auto gameObject : myGameObjects) {
+	for (auto& gameObject : myGameObjects) {
 		delete gameObject;
 		gameObject = nullptr;
 	}

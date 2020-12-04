@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PauseState.h"
+
 #include "Canvas.h"
 #include "MainSingleton.h"
 #include "Scene.h"
@@ -13,16 +14,12 @@ CPauseState::CPauseState(CStateStack& aStateStack, const CStateStack::EState aSt
 	: CState(aStateStack, aState)
 	, myCanvas(nullptr) 
 	, myScene(nullptr)
+{}
+
+CPauseState::~CPauseState() 
 {
-
-}
-
-CPauseState::~CPauseState() {
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::MainMenu,this);
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::Resume,this);
-	CEngine::GetInstance()->PopBackScene();
-	//CEngine::GetInstance()->GetActiveScene().ClearScene();
-	//CEngine::GetInstance()->GetActiveScene().ClearSprites();
+	delete myScene;
+	myScene = nullptr;
 }
 
 void CPauseState::Awake() 
@@ -58,7 +55,14 @@ void CPauseState::Start()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::Resume, this);
 }
 
-void CPauseState::Update() {
+void CPauseState::Stop()
+{
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::MainMenu,this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::Resume,this);
+}
+
+void CPauseState::Update() 
+{
 	myCanvas->Update();
 }
 
@@ -79,7 +83,7 @@ void CPauseState::Receive(const SMessage& aMessage) {
 	}
 }
 
-void CPauseState::MakeSceneActive() {
+void CPauseState::MakeSceneActive() 
+{
 	CEngine::GetInstance()->SetActiveScene(myActiveScene);
-
 }

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "InGameState.h"
+
 #include "StateStack.h"
 #include "Scene.h"
 #include "GameObject.h"
@@ -47,24 +48,23 @@ CInGameState::CInGameState(CStateStack& aStateStack, const CStateStack::EState a
 
 CInGameState::~CInGameState()
 {
-	CEngine::GetInstance()->PopBackScene();
-
-	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::PauseGame, this);
 }
 
 
 void CInGameState::Awake()
 {
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::PauseGame, this);
-	myTokenPool = new CTokenPool(4, 4.0f);// Delete in Stop()
+	
 }
 
 void CInGameState::Start()
 {
-	myActiveScene = CEngine::GetInstance()->ScenesSize();
+	//myActiveScene = CEngine::GetInstance()->ScenesSize();
 
 	myCanvas = new CCanvas();
 	myCanvas->Init("Json/UI_InGame_Description.json", CEngine::GetInstance()->GetActiveScene());
+
+	myTokenPool = new CTokenPool(4, 4.0f);
 
 	std::vector<CGameObject*>& gameObjects = CEngine::GetInstance()->GetActiveScene().myGameObjects;
 	size_t currentSize = gameObjects.size();
@@ -74,7 +74,6 @@ void CInGameState::Start()
 		{
 			gameObjects[i]->Awake();
 		}
-
 	}
 
 	//Late awake
@@ -91,6 +90,19 @@ void CInGameState::Start()
 	{
 		gameObject->Start();
 	}
+}
+
+void CInGameState::Stop()
+{
+	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::PauseGame, this);
+
+	delete myTokenPool;
+	myTokenPool = nullptr;
+
+	delete myCanvas;
+	myCanvas = nullptr;
+
+	CEngine::GetInstance()->PopBackScene();
 }
 
 void CInGameState::Update()

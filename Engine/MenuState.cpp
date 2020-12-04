@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "MenuState.h"
+
 #include "SpriteInstance.h"
 #include "SpriteFactory.h"
 #include "Scene.h"
@@ -21,12 +22,12 @@ CMenuState::CMenuState(CStateStack& aStateStack, const CStateStack::EState aStat
 	: CState(aStateStack, aState)
 	, myCanvas(nullptr)
 	, myScene(nullptr)
+{}
+
+CMenuState::~CMenuState() 
 {
-}
-
-CMenuState::~CMenuState() {
-	CEngine::GetInstance()->PopBackScene();
-
+	delete myScene;
+	myScene = nullptr;
 }
 
 void CMenuState::Awake() 
@@ -53,11 +54,18 @@ void CMenuState::Awake()
 		for (auto messageType : buttons->GetMessagesToSend())
 			CMainSingleton::PostMaster().Subscribe(messageType, this);
 	}
+
+	myActiveScene = CEngine::GetInstance()->AddScene(myScene);
 }
 
 void CMenuState::Start() 
 {
-	myActiveScene = CEngine::GetInstance()->AddScene(myScene);
+	CEngine::GetInstance()->SetActiveScene(myActiveScene);
+}
+
+void CMenuState::Stop()
+{
+	
 }
 
 void CMenuState::Update() {
@@ -69,7 +77,7 @@ void CMenuState::Receive(const SMessage &aMessage) {
 		switch (aMessage.myMessageType) {
 		case EMessageType::StartGame:
 		{
-			myStateStack.PushState(CStateStack::EState::InGame);
+			myStateStack.PushState(CStateStack::EState::LoadLevel);
 		} break;
 		case EMessageType::Quit:
 		{

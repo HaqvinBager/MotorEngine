@@ -13,6 +13,7 @@ public:
 
 	void Awake() override;
 	void Start() override;
+	void Stop() override;
 	void Update() override;
 
 	void ReceiveEvent(const EInputEvent aEvent) override;

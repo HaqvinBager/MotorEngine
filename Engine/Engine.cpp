@@ -217,6 +217,7 @@ unsigned int CEngine::AddScene(CScene* aScene)
 
 void CEngine::PopBackScene()
 {
+	myScenes.back()->ClearScene();
 	myScenes.pop_back();
 }
 

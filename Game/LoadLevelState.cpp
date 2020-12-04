@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "LoadLevelState.h"
+
 #include "InGameState.h"
 #include "StateStack.h"
 #include "Scene.h"
@@ -14,24 +15,22 @@
 using namespace rapidjson;
 CLoadLevelState::CLoadLevelState(CStateStack& aStateStack, const CStateStack::EState aState) 
 	: CState(aStateStack, aState)
-{
-}
+{}
 
 CLoadLevelState::~CLoadLevelState()
 {
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel, this);
-	CEngine::GetInstance()->PopBackScene();
 }
 
 void CLoadLevelState::Awake()
 {
 	SaveLevelNames();	
-	myActiveScene = Load(ELevel::LoadScreen);
-	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel, this);
 }
 
 void CLoadLevelState::Start()
 {
+	//CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel, this);
+
+	myActiveScene = Load(ELevel::LoadScreen);
 	CEngine::GetInstance()->SetActiveScene(myActiveScene);
 
 	Document latestExportedLevelDoc = CJsonReader::LoadDocument("Levels/DebugLevel.json");
@@ -39,7 +38,7 @@ void CLoadLevelState::Start()
 
 	//Start Loading the ELevel::<Level> on a seperate thread.
 	myLoadLevelFuture = std::async(std::launch::async, &CLoadLevelState::Load, this, static_cast<ELevel>(levelIndex));
-
+	
 	for (auto& gameObject : CEngine::GetInstance()->GetActiveScene().GetActiveGameObjects())
 	{
 		gameObject->Awake();
@@ -51,6 +50,15 @@ void CLoadLevelState::Start()
 	}
 }
 
+void CLoadLevelState::Stop()
+{
+	//CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel, this);
+
+	// Engine->ActiveScene(myInGameScene)
+	// delete myLoadScreenScene;
+	// myLoadScreenScene = nullptr;
+}
+
 void CLoadLevelState::Update()
 {
 	//When the Thread loading the ELevell::<Level> level is complete this will be true.
@@ -60,7 +68,7 @@ void CLoadLevelState::Update()
 		//The value it will get is the Scene index in which the SceneLoaded will use in CEngine::myScenes
 		myActiveScene = myLoadLevelFuture.get();
 		CEngine::GetInstance()->SetActiveScene(myActiveScene);
-		myStateStack.PushState(CStateStack::EState::InGame);
+		myStateStack.PushState(CStateStack::EState::InGame);//PopAndPush()
 	}
 
 	for (auto& gameObject : CEngine::GetInstance()->GetActiveScene().GetActiveGameObjects())
@@ -78,7 +86,7 @@ unsigned int CLoadLevelState::Load(const ELevel aLevel)
 		if (aLevel == ELevel::LoadScreen) //LoadScreen uses a different Type (Which kind of Data it will Load from Unity) 
 		{
 			SLoadScreenData& data = mySceneReader.ReadLoadScreenData();
-			CScene* loadScreenScene = new CScene();
+			CScene* loadScreenScene = new CScene();// myLoadScreenScene
 			myUnityFactory.FillScene(data, BinModelPaths(aLevel), *loadScreenScene);
 			return CEngine::GetInstance()->AddScene(loadScreenScene);
 		}

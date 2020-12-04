@@ -3,6 +3,7 @@
 
 class CCanvas;
 class CSpriteInstance;
+class CScene;
 
 struct SButtonData {
 	std::vector<EMessageType> myMessagesToSend;
@@ -37,7 +38,7 @@ public:
 	std::vector<EMessageType> GetMessagesToSend() { return myMessagesToSend; }
 
 private:
-	CButton(SButtonData& someData);
+	CButton(SButtonData& someData, CScene& aScene);
 	~CButton();
 
 private:

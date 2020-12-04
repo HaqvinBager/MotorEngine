@@ -56,8 +56,8 @@ bool CStateStack::PushState(const EState aState)
 bool CStateStack::PopState()
 {
 	ENGINE_ERROR_BOOL_MESSAGE(!myStateStack.empty(), "Trying to pop an empty stack");
+	myStateStack.top()->Stop();
 	myStateStack.pop();
-
 	if ( myStateStack.size() > 0)// == 0 < myStateStack.size()
 		myStateStack.top()->MakeSceneActive();
 
@@ -86,6 +86,11 @@ void CStateStack::Awake()
 void CStateStack::Start()
 {
 	myStateStack.top()->Start();
+}
+
+void CStateStack::Stop()
+{
+	myStateStack.top()->Stop();
 }
 
 bool CStateStack::Update()

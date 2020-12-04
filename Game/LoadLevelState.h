@@ -18,18 +18,21 @@ enum class ELevel
 };
 
 
-class CLoadLevelState : public CState, public IObserver {
+class CLoadLevelState : public CState, public IObserver 
+{
 public:
 	CLoadLevelState(CStateStack& aStateStack, const CStateStack::EState aState = CStateStack::EState::LoadLevel);
 	~CLoadLevelState() override;
 
-	void Awake() override;
 	void Start() override;
+	void Stop() override;
 	void Update() override;
 	void MakeSceneActive() override;
 
 	void Receive(const SMessage& aMessage) override;
+
 private:
+	void Awake() override;
 
 	/// <summary>
 	/// Returns the Index this Scene will use in CEngine::myScenes

@@ -73,7 +73,7 @@ void CCanvas::Init(std::string aFilePath, CScene& aScene)
 				data.myMessagesToSend[j] = static_cast<EMessageType>(messageDataArray[j].GetInt());
 			}
 
-			myButtons.emplace_back(new CButton(data));
+			myButtons.emplace_back(new CButton(data, aScene));
 		}
 	}
 

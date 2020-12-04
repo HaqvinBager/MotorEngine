@@ -23,11 +23,14 @@ public:
 	bool PushState(const EState aState);
 	bool PopState();
 	bool PopUntil(EState aState);
-	void Awake();//Remove,should only be called on PushState.
+
 	void Start();
+	void Stop();
 	bool Update();
 
 private:
+	void Awake();//Remove,should only be called on PushState.
+
 	std::stack<CState*> myStateStack;
 	std::unordered_map<EState, CState*> myStateMap;
 };
