@@ -183,7 +183,7 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 
 		if (UseAbility(EAbilityType::PlayerAbility1, GameObject().myTransform->Position()))
 		{
-			myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
+			myMessage.myMessageType = EMessageType::AbilityOneCooldown;
 			myCurrentCooldowns[0] = myMaxCooldowns[0];
 			myMessage.data = &messageValue;
 			CMainSingleton::PostMaster().Send(myMessage);
@@ -195,7 +195,7 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 
 		if (UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position()))
 		{
-			myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
+			myMessage.myMessageType = EMessageType::AbilityTwoCooldown;
 			myCurrentCooldowns[1] = myMaxCooldowns[1];
 			myMessage.data = &messageValue;
 			CMainSingleton::PostMaster().Send(myMessage);

@@ -2,6 +2,7 @@
 #include "AIBehavior.h"
 
 class CGameObject;
+class CAbilityComponent;
 
 class CBossBehavior : public IAIBehavior
 {
@@ -12,11 +13,27 @@ public:
 	void Update(CGameObject* aParent) override;
 	void Collided(CGameObject* aParent, CGameObject* aCollidedWithGameObject) override;
 
-	void FindATarget(CGameObject& aParent);
+	bool FindATarget(CGameObject& aParent);
 
 	void TakeDamage(float aDamage);
 
 private:
+	void IdlePhase(CGameObject* aParent);
+	void StartPhase(CGameObject* aParent);
+	void MidPhase(CGameObject* aParent);
+	void FinalPhase(CGameObject* aParent);
+
+	enum class Phase
+	{
+		Idle,
+		Start,
+		Mid,
+		Final
+	};
+
+	float myTempAttackTimer;
 	CGameObject* myPlayer;
+	CAbilityComponent* myAblilityComponent;
+	Phase myPhase;
 };
 
