@@ -13,12 +13,14 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent): CB
 CPlayerControllerComponent::~CPlayerControllerComponent()
 {
 	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::MoveClick, this);
+	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::MoveDown, this);
 }
 
 void CPlayerControllerComponent::Awake()
 {
 	myLastHP = GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth;
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::MoveClick, this);
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::MoveDown, this);
 }
 
 void CPlayerControllerComponent::Start() {}
@@ -43,6 +45,13 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 	switch (aEvent)
 	{
 	case IInputObserver::EInputEvent::MoveClick:
+		this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
+		// TEMP, Ok to remove
+		if(this->GameObject().GetComponent<CAnimationComponent>() != nullptr)
+			this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::Run);
+		// ! TEMP
+			break;
+	case IInputObserver::EInputEvent::MoveDown:
 		this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
 		// TEMP, Ok to remove
 		if(this->GameObject().GetComponent<CAnimationComponent>() != nullptr)

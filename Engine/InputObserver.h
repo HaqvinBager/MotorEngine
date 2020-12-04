@@ -4,7 +4,8 @@ class IInputObserver {
 public:
 	enum class EInputAction
 	{
-		MouseLeft,
+		MouseLeftPressed,
+		MouseLeftDown,
 		MouseRight,
 		MouseMiddle,
 		KeyEscape,
@@ -22,6 +23,7 @@ public:
 	{
 		PopState,
 		MoveClick,
+		MoveDown,
 		AttackClick,
 		OpenMenuPress,
 		Ability1,
