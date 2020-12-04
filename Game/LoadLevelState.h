@@ -20,7 +20,7 @@ enum class ELevel
 
 class CLoadLevelState : public CState, public IObserver {
 public:
-	CLoadLevelState(CStateStack& aStateStack);
+	CLoadLevelState(CStateStack& aStateStack, const CStateStack::EState aState = CStateStack::EState::LoadLevel);
 	~CLoadLevelState() override;
 
 	void Awake() override;

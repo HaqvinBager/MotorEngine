@@ -8,7 +8,7 @@ class CScene;
 
 class CPauseState : public CState, public IObserver {
 public:
-	CPauseState(CStateStack& aStateStack);
+	CPauseState(CStateStack& aStateStack, const CStateStack::EState aState = CStateStack::EState::PauseMenu);
 	~CPauseState() override;
 
 	void Awake() override;

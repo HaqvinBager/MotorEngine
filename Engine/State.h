@@ -5,18 +5,18 @@
 class CState  {
 
 public:
-	CState(CStateStack& aStateStack);
+	CState(CStateStack& aStateStack, const CStateStack::EState aState);
 	virtual ~CState();
 	virtual void MakeSceneActive() = 0;
 	virtual void Awake() = 0;
 	virtual void Start() = 0;
 	virtual void Update() = 0;
 
-	CStateStack::EStates GetState() { return myState; }
+	CStateStack::EState GetState() { return myState; }
 
 protected:
 	CStateStack& myStateStack;
-	CStateStack::EStates myState;
+	CStateStack::EState myState;
 	unsigned int myActiveScene;
 };
 

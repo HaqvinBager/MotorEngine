@@ -9,7 +9,9 @@
 #include "CameraControllerComponent.h"
 #include "CameraComponent.h"
 
-CPauseState::CPauseState(CStateStack& aStateStack): CState(aStateStack), myCanvas(nullptr) {
+CPauseState::CPauseState(CStateStack& aStateStack, const CStateStack::EState aState) : 
+	CState(aStateStack, aState), myCanvas(nullptr) 
+{
 	myScene = new CScene();
 	CEngine::GetInstance()->AddScene(myScene);
 	unsigned int index = static_cast<unsigned int>(CEngine::GetInstance()->myScenes.size() - 1);
@@ -29,9 +31,7 @@ CPauseState::CPauseState(CStateStack& aStateStack): CState(aStateStack), myCanva
 	myScene->SetEnvironmentLight(envLight->GetComponent<CEnviromentLightComponent>()->GetEnviromentLight());
 
 	myCanvas = new CCanvas();
-	myCanvas->Init("Json/UI_PauseMenu_Description.json");
-
-	myState = CStateStack::EStates::PauseMenu;
+	myCanvas->Init("Json/UI_PauseMenu_Description.json");	
 }
 
 CPauseState::~CPauseState() {
@@ -59,7 +59,7 @@ void CPauseState::Receive(const SMessage& aMessage) {
 	if (this == myStateStack.GetTop()) {
 		switch (aMessage.myMessageType) {
 		case EMessageType::MainMenu:
-			myStateStack.PopUntil(CStateStack::EStates::MainMenu);
+			myStateStack.PopUntil(CStateStack::EState::MainMenu);
 			break;
 		case EMessageType::Resume:
 			std::cout << "Should not pop yet" << std::endl;

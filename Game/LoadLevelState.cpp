@@ -12,10 +12,10 @@
 #include "CollisionEventComponent.h"
 
 using namespace rapidjson;
-CLoadLevelState::CLoadLevelState(CStateStack& aStateStack) : CState(aStateStack)
+CLoadLevelState::CLoadLevelState(CStateStack& aStateStack, const CStateStack::EState aState) : 
+	CState(aStateStack, aState)
 {
-	SaveLevelNames();
-	myState = CStateStack::EStates::LoadLevel;
+	SaveLevelNames();	
 	myActiveScene = CEngine::GetInstance()->ScenesSize();
 	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel, this);
 }

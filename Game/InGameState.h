@@ -9,7 +9,7 @@ class CInGameState : public CState, public IInputObserver
 {
 
 public:
-	CInGameState(CStateStack& aStateStack);
+	CInGameState(CStateStack& aStateStack, const CStateStack::EState aState = CStateStack::EState::InGame);
 	~CInGameState() override;
 
 	void Awake() override;

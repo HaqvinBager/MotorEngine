@@ -37,7 +37,9 @@
 #include "MainSingleton.h"
 #include <iostream>
 
-CInGameState::CInGameState(CStateStack& aStateStack) : CState(aStateStack) {
+CInGameState::CInGameState(CStateStack& aStateStack, const CStateStack::EState aState) : 
+	CState(aStateStack, aState) 
+{
 	myCanvas = new CCanvas();
 	myCanvas->Init("Json/UI_InGame_Description.json");
 	myActiveScene = CEngine::GetInstance()->ScenesSize();

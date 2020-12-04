@@ -6,9 +6,9 @@ class CSpriteInstance;
 class CCanvas;
 class CScene;
 
-class CMenuState : public CState, public IObserver{
+class CMenuState : public CState, public IObserver {
 public:
-	CMenuState(CStateStack& aStateStack);
+	CMenuState(CStateStack& aStateStack, const CStateStack::EState = CStateStack::EState::MainMenu);
 	~CMenuState() override;
 
 	void Awake() override;

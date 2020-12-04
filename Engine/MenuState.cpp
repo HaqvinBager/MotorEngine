@@ -17,8 +17,8 @@
 #include "PostMaster.h"
 #include "MainSingleton.h"
 
-CMenuState::CMenuState(CStateStack& aStateStack) :
-	CState(aStateStack)
+CMenuState::CMenuState(CStateStack& aStateStack, const CStateStack::EState aState) :
+	CState(aStateStack, aState)
 {
 	myScene = new CScene();
 	CEngine::GetInstance()->AddScene(myScene);
@@ -45,7 +45,7 @@ CMenuState::CMenuState(CStateStack& aStateStack) :
 		CMainSingleton::PostMaster().Subscribe(messageType, this);
 	}
 
-	myState = CStateStack::EStates::MainMenu;
+	
 	myActiveScene = CEngine::GetInstance()->ScenesSize();
 }
 
