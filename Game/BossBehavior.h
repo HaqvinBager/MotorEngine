@@ -11,7 +11,7 @@ public:
 	~CBossBehavior() override;
 
 	void Update(CGameObject* aParent) override;
-	void Collided(CGameObject* aGameObject) override;
+	void Collided(CGameObject* aParent, CGameObject* aCollidedWithGameObject) override;
 
 	bool FindATarget(CGameObject& aParent);
 

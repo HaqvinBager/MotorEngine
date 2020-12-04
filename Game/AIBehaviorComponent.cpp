@@ -29,7 +29,7 @@ void CAIBehaviorComponent::Update()
 
 void CAIBehaviorComponent::Collided(CGameObject* aCollidedGameObject)
 {
-	myBehavior->Collided(aCollidedGameObject);
+	myBehavior->Collided(&GameObject(), aCollidedGameObject);
 }
 
 void CAIBehaviorComponent::OnEnable()

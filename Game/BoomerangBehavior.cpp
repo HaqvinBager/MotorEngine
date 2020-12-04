@@ -12,7 +12,7 @@
 
 namespace SM = DirectX::SimpleMath;
 
-CBoomerangBehavior::CBoomerangBehavior(float aSpeed, float aDuration, float aResourceCost)
+CBoomerangBehavior::CBoomerangBehavior(float aSpeed, float aDuration, float aResourceCost, float aRotationalSpeed)
 {
 	myDirection = {0.0f, 0.0f, 0.0f};
 	mySpeed = aSpeed;
@@ -21,6 +21,7 @@ CBoomerangBehavior::CBoomerangBehavior(float aSpeed, float aDuration, float aRes
 	myIsReturning = false;
 	myDuration = aDuration;
 	myResourceCost = aResourceCost;
+	myRotationalSpeed = aRotationalSpeed;
 	myHalfLife = myDuration / 2.0f;
 }
 
@@ -46,10 +47,13 @@ void CBoomerangBehavior::Update(CGameObject* aParent)
 			myTimer = 0.0f;
 			aParent->Active(false);
 		}
+		aParent->GetComponent<CTransformComponent>()->Position({aParent->GetComponent<CTransformComponent>()->Position().x, 1.25f, aParent->GetComponent<CTransformComponent>()->Position().z});
 	} else {
 		aParent->Active(false);
 	}
 
+	DirectX::SimpleMath::Vector3 rotation = {0.0f, myRotationalSpeed * CTimer::Dt(), 0.0f};
+	aParent->GetComponent<CTransformComponent>()->Rotate(rotation);
 }
 
 void CBoomerangBehavior::CalculateDirection(DirectX::SimpleMath::Vector3 aFirstPosition, DirectX::SimpleMath::Vector3 aSecondPosition)

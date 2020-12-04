@@ -10,7 +10,7 @@ namespace DirectX {
 class CBoomerangBehavior: public IAbilityBehavior
 {
 public:
-	CBoomerangBehavior(float aSpeed, float aDuration, float aResourceCost);
+	CBoomerangBehavior(float aSpeed, float aDuration, float aResourceCost, float aRotationalSpeed);
 	~CBoomerangBehavior() override;
 
 	void Update(CGameObject* aParent) override;
@@ -24,6 +24,7 @@ private:
 
 	float mySpeed;
 	float myHalfLife;
+	float myRotationalSpeed;
 	bool myIsReturning;
 };
 

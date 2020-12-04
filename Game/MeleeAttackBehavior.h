@@ -9,7 +9,9 @@ namespace DirectX
 	}
 }
 
+
 namespace SM = DirectX::SimpleMath;
+class CGameObject;
 
 class CMeleeAttackBehavior : public IAbilityBehavior {
 public:

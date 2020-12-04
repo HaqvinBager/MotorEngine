@@ -65,7 +65,7 @@ void CBossBehavior::Update(CGameObject* aParent)
 	}
 }
 
-void CBossBehavior::Collided(CGameObject* /*aGameObject*/)
+void CBossBehavior::Collided(CGameObject* /*aParent*/, CGameObject* /*aCollidedWithGameObject*/)
 {
 }
 
