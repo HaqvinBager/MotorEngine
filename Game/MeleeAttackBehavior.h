@@ -13,7 +13,7 @@ namespace SM = DirectX::SimpleMath;
 
 class CMeleeAttackBehavior : public IAbilityBehavior {
 public:
-	CMeleeAttackBehavior(float aDuration);
+	CMeleeAttackBehavior(float aDuration, CGameObject* aParent);
 	~CMeleeAttackBehavior() override;
 
 	void Init(CGameObject* aCaster) override;
@@ -22,4 +22,5 @@ public:
 private:
 	DirectX::SimpleMath::Vector3 myDirection;
 	CGameObject* myCaster;
+	CGameObject* myParent;
 };

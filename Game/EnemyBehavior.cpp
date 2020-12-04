@@ -24,9 +24,11 @@ CEnemyBehavior::~CEnemyBehavior()
 
 void CEnemyBehavior::Update(CGameObject* aParent)
 {
+	myCurrentParent = aParent;
+
 	//enemy logic
-	SBaseStats baseStats = aParent->GetComponent<CStatsComponent>()->GetBaseStats();
-	SStats stats = aParent->GetComponent<CStatsComponent>()->GetStats();
+	SBaseStats baseStats = myCurrentParent->GetComponent<CStatsComponent>()->GetBaseStats();
+	SStats stats = myCurrentParent->GetComponent<CStatsComponent>()->GetStats();
 
 	if (stats.myCanTakeDamage == false) {
 		stats.myDamageCooldown -= CTimer::Dt();
@@ -45,7 +47,7 @@ void CEnemyBehavior::Update(CGameObject* aParent)
 		//aParent->Active(false);
 	}
 
-	FindATarget(*aParent);
+	FindATarget();
 }
 
 void CEnemyBehavior::Collided(CGameObject* /*aGameObject*/)
@@ -53,12 +55,12 @@ void CEnemyBehavior::Collided(CGameObject* /*aGameObject*/)
 	std::cout << __FUNCTION__ << " The enemy says: OUCH! " << std::endl;
 }
 
-void CEnemyBehavior::FindATarget(CGameObject& aParent)
+void CEnemyBehavior::FindATarget()
 {
-	DirectX::SimpleMath::Vector3 parentPos = aParent.GetComponent<CTransformComponent>()->Position();
+	DirectX::SimpleMath::Vector3 parentPos = myCurrentParent->GetComponent<CTransformComponent>()->Position();
 	DirectX::SimpleMath::Vector3 targetPos = myPlayer->GetComponent<CTransformComponent>()->Position();
-	SBaseStats baseStats = aParent.GetComponent<CStatsComponent>()->GetBaseStats();
-	SStats stats = aParent.GetComponent<CStatsComponent>()->GetStats();
+	SBaseStats baseStats = myCurrentParent->GetComponent<CStatsComponent>()->GetBaseStats();
+	SStats stats = myCurrentParent->GetComponent<CStatsComponent>()->GetStats();
 
 	float dist = DirectX::SimpleMath::Vector3::DistanceSquared(parentPos, targetPos);
 	if (dist <= baseStats.myBaseVisionRange) {
@@ -67,14 +69,17 @@ void CEnemyBehavior::FindATarget(CGameObject& aParent)
 		//aParent.GetComponent<CTransformComponent>()->Move(dir * baseStats.myMoveSpeed * CTimer::Dt());
 
 		//NavMesh movement
-		aParent.GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
+		myCurrentParent->GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
 		if (dist <= baseStats.myBaseAttackRange) {
 			if (stats.myTokenSlot == nullptr) {
 				stats.myTokenSlot = CTokenPool::GetInstance()->Request();
 			}
 			myPlayer->GetComponent<CStatsComponent>();
-			aParent.GetComponent<CAnimationComponent>()->PlayAnimation(EEnemyAnimationID::Attack);
-			aParent.GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::EnemyAbility, aParent.myTransform->Position());
+			if (myCurrentParent->GetComponent<CAnimationComponent>())
+			{
+				myCurrentParent->GetComponent<CAnimationComponent>()->PlayAnimation(EEnemyAnimationID::Attack);
+			}
+			myCurrentParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::EnemyAbility, myCurrentParent->myTransform->Position());
 		}
 		else {
 			if (stats.myTokenSlot != nullptr) {
@@ -82,12 +87,12 @@ void CEnemyBehavior::FindATarget(CGameObject& aParent)
 				stats.myTokenSlot = nullptr;
 			}
 		}
-		// FOR NAVMESH
-		aParent.GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
 	}
 }
 
-void CEnemyBehavior::TakeDamage(float /*aDamage*/)
+void CEnemyBehavior::TakeDamage(float /*someDamage*/)
 {
+	SBaseStats baseStats = myCurrentParent->GetComponent<CStatsComponent>()->GetBaseStats();
+	SStats stats = myCurrentParent->GetComponent<CStatsComponent>()->GetStats();
 	//TODO: decrease stats.myHealth
 }

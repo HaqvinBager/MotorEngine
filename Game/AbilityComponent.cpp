@@ -299,7 +299,7 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	}
 	else if (behavior["Type"].GetString() == std::string("MeleeAttack"))
 	{
-		meleeAttackBehavior = new CMeleeAttackBehavior(behavior["Duration"].GetFloat());
+		meleeAttackBehavior = new CMeleeAttackBehavior(behavior["Duration"].GetFloat(), abilityObject);
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, meleeAttackBehavior, anAbilityType);
 	}
 	else if (behavior["Type"].GetString() == std::string("FireCone"))
