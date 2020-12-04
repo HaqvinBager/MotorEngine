@@ -12,11 +12,12 @@ public:
 	void Update(CGameObject* aParent) override;
 	void Collided(CGameObject* aGameObject) override;
 
-	void FindATarget(CGameObject& aParent);
+	void FindATarget();
 
-	void TakeDamage(float aDamage);
+	void TakeDamage(float someDamage);
 
 private:
 	CGameObject* myPlayer;
+	CGameObject* myCurrentParent;
 };
 
