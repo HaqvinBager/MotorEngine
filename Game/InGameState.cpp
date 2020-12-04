@@ -20,12 +20,9 @@
 #include "PostMaster.h"
 #include "Canvas.h"
 #include "AbilityComponent.h"
-//collider test
 #include "CircleColliderComponent.h"
 #include "RectangleColliderComponent.h"
 #include "TriangleColliderComponent.h"
-//collider test
-
 #include "TokenPool.h"
 #include "StatsComponent.h"
 #include "EnemyBehavior.h"
@@ -36,6 +33,11 @@
 #include "PostMaster.h"
 #include "MainSingleton.h"
 #include <iostream>
+
+//testing
+#include "AIBehaviorComponent.h"
+#include "BossBehavior.h"
+#include "NavMeshComponent.h"
 
 CInGameState::CInGameState(CStateStack& aStateStack) : CState(aStateStack) {
 	myCanvas = new CCanvas();
@@ -52,7 +54,6 @@ CInGameState::~CInGameState()
 
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::PauseGame, this);
 }
-#include "AIBehaviorComponent.h"
 void CInGameState::Awake()
 {
 	std::vector<CGameObject*>& gameObjects = CEngine::GetInstance()->GetActiveScene().myGameObjects;
@@ -79,12 +80,39 @@ void CInGameState::Awake()
 	}
 
 	//myEnemy = new CGameObject();
-	//myEnemy->AddComponent<CModelComponent>(*myEnemy, "Assets/3D/Character/CH_NPC_enemy_01_19G4_1_19/CH_NPC_enemy_01_19G4_1_19.fbx");
+	////myEnemy->AddComponent<CModelComponent>(*myEnemy, "Assets/3D/Character/CH_NPC_enemy_01_19G4_1_19/CH_NPC_enemy_01_19G4_1_19.fbx");
+	//myEnemy->AddComponent<CModelComponent>(*myEnemy, "Assets/Graphics/Skeletons/CH_E_Melee_SK.fbx");
 	//myEnemy->AddComponent<CStatsComponent>(*myEnemy, 10.0f, 10.0f, 3.0f);
 	//CEnemyBehavior* enemyBehavior = new CEnemyBehavior(&CEngine::GetInstance()->GetActiveScene().FindObjectOfType<CPlayerControllerComponent>()->GameObject());
 	//myEnemy->AddComponent<CAIBehaviorComponent>(*myEnemy, enemyBehavior);
-	//myEnemy->myTransform->Position({ 0.0f, 0.0f, 5.0f });
+	//myEnemy->myTransform->Position({ -2.0f, 0.0f, 6.0f });
+	//myEnemy->AddComponent<CCircleColliderComponent>(*myEnemy, 0.5f, ECollisionLayer::ENEMY, static_cast<int>(ECollisionLayer::PLAYER));
 	//CEngine::GetInstance()->GetActiveScene().AddInstance(myEnemy);
+	//myEnemy->Awake();	
+	
+	//NO TOUCHY UNLESS BOSS TEST
+	//myTestBoss = new CGameObject();
+	//CBossBehavior* bossBehavior = new CBossBehavior(&CEngine::GetInstance()->GetActiveScene().FindObjectOfType<CPlayerControllerComponent>()->GameObject());
+	//myTestBoss->myTransform->Position({ -2.0f, 0.0f, 6.0f });
+	//myTestBoss->AddComponent<CCircleColliderComponent>(*myTestBoss, 0.5f, ECollisionLayer::BOSS, static_cast<int>(ECollisionLayer::PLAYER));
+	//myTestBoss->AddComponent<CModelComponent>(*myTestBoss, "Assets/Graphics/Skeletons/CH_E_Boss_SK.fbx");
+	//myTestBoss->AddComponent<CStatsComponent>(*myTestBoss, 10.0f, 10.0f, 3.0f, 3.0f, 20.0f, 15.0f);
+	//myTestBoss->AddComponent<CAIBehaviorComponent>(*myTestBoss, bossBehavior);
+
+	//myTestBoss->AddComponent<CNavMeshComponent>(*myTestBoss);
+
+	//std::pair<EAbilityType, unsigned int> ab1 = { EAbilityType::BossAbility1, 1 };
+	//std::pair<EAbilityType, unsigned int> ab2 = { EAbilityType::BossAbility2, 1 };
+	//std::pair<EAbilityType, unsigned int> ab3 = { EAbilityType::BossAbility3, 1 };
+	//std::vector<std::pair<EAbilityType, unsigned int>> abs;
+	//abs.emplace_back(ab1);
+	//abs.emplace_back(ab2);
+	//abs.emplace_back(ab3);
+	//CAbilityComponent* ac = myTestBoss->AddComponent<CAbilityComponent>(*myTestBoss, abs);
+	//ac->Awake();
+
+	//CEngine::GetInstance()->GetActiveScene().AddInstance(myTestBoss);
+	//myTestBoss->Awake();
 }
 
 void CInGameState::Start()

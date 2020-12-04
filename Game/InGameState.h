@@ -23,4 +23,5 @@ private:
 	CCanvas* myCanvas;
 	CTokenPool* myTokenPool;
 	CGameObject* myEnemy;
+	CGameObject* myTestBoss;
 };
