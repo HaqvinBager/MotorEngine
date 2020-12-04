@@ -66,8 +66,9 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 		// ! TEMP
 		break;
 	case IInputObserver::EInputEvent::AttackClick:
-		this->GameObject().GetComponent<CAnimationComponent>()->DeadState();// for testing
-		//this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::AttackLight);
+		//this->GameObject().GetComponent<CAnimationComponent>()->DeadState();// for testing
+		this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::AttackLight);
+
 		break;
 
 	default:

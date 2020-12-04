@@ -72,6 +72,7 @@ void CAbilityComponent::Awake()
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability1, this);
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability2, this);
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability3, this);
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::AttackClick, this);
 
 	// Setting up pools
 	for (unsigned int i = 0; i < myAbilityPoolDescriptions.size(); ++i) {
@@ -292,8 +293,9 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	}
 	else if (behavior["Type"].GetString() == std::string("Boomerang"))
 	{
-		boomerangBehavior = new CBoomerangBehavior(behavior["Speed"].GetFloat(), behavior["Duration"].GetFloat(), behavior["ResourceCost"].GetFloat());
+		boomerangBehavior = new CBoomerangBehavior(behavior["Speed"].GetFloat(), behavior["Duration"].GetFloat(), behavior["ResourceCost"].GetFloat(), behavior["RotationalSpeed"].GetFloat());
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, boomerangBehavior, anAbilityType);
+		abilityObject->myTransform->Position({0.0f, 1.25f, 0.0f});
 	}
 	else if (behavior["Type"].GetString() == std::string("MeleeAttack"))
 	{
