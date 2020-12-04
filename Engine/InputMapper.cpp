@@ -21,7 +21,8 @@ CInputMapper::~CInputMapper()
 
 bool CInputMapper::Init()
 {
-	MapEvent(IInputObserver::EInputAction::MouseLeft, IInputObserver::EInputEvent::MoveClick);
+	MapEvent(IInputObserver::EInputAction::MouseLeftPressed, IInputObserver::EInputEvent::MoveClick);
+	MapEvent(IInputObserver::EInputAction::MouseLeftDown, IInputObserver::EInputEvent::MoveDown);
 	MapEvent(IInputObserver::EInputAction::MouseRight, IInputObserver::EInputEvent::AttackClick);
 	MapEvent(IInputObserver::EInputAction::Key1, IInputObserver::EInputEvent::Ability1);
 	MapEvent(IInputObserver::EInputAction::Key2, IInputObserver::EInputEvent::Ability2);
@@ -100,7 +101,11 @@ void CInputMapper::UpdateMouseInput()
 
 	if (myInput->IsMousePressed(Input::MouseButton::Left))
 	{
-		TranslateActionToEvent(IInputObserver::EInputAction::MouseLeft);
+		TranslateActionToEvent(IInputObserver::EInputAction::MouseLeftPressed);
+	}
+	if (myInput->IsMouseDown(Input::MouseButton::Left))
+	{
+		TranslateActionToEvent(IInputObserver::EInputAction::MouseLeftDown);
 	}
 	//else if (myInput->IsMouseDown(Input::MouseButton::Left))
 	//{

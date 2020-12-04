@@ -8,9 +8,9 @@
 #include "MainSingleton.h"
 #include "TransformComponent.h"
 
-CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent): 
-	CBehaviour(aParent), 
-	myLastHP(0.0f), 
+CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent):
+	CBehaviour(aParent),
+	myLastHP(0.0f),
 	myRegenerationSpeed(5.0f) //TODO: read from unity
 {
 }
@@ -18,6 +18,7 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent):
 CPlayerControllerComponent::~CPlayerControllerComponent()
 {
 	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::MoveClick, this);
+	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::MoveDown, this);
 	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::AttackClick, this);
 }
 
@@ -25,6 +26,7 @@ void CPlayerControllerComponent::Awake()
 {
 	myLastHP = GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth;
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::MoveClick, this);
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::MoveDown, this);
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::AttackClick, this);
 }
 
@@ -51,6 +53,17 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 	{
 	case IInputObserver::EInputEvent::MoveClick:
 		this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
+		// TEMP, Ok to remove
+		if (this->GameObject().GetComponent<CAnimationComponent>() != nullptr)
+			this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::Run);
+		// ! TEMP
+		break;
+	case IInputObserver::EInputEvent::MoveDown:
+		this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
+		// TEMP, Ok to remove
+		if (this->GameObject().GetComponent<CAnimationComponent>() != nullptr)
+			this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::Run);
+		// ! TEMP
 		break;
 	case IInputObserver::EInputEvent::AttackClick:
 		this->GameObject().GetComponent<CAnimationComponent>()->DeadState();// for testing
