@@ -9,6 +9,8 @@
 #include "CameraComponent.h"
 #include "ModelComponent.h"
 #include "InstancedModelComponent.h"
+#include "MainSingleton.h"
+#include "PopupTextService.h"
 
 CRenderManager::CRenderManager() /*: myScene(*CScene::GetInstance())*/
 {
@@ -213,5 +215,7 @@ void CRenderManager::Render(CScene& aScene)
 	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_DEFAULT);
 
 	std::vector<CTextInstance*> textsToRender = aScene.GetTexts();
+	std::vector<CTextInstance*> popupTexts = CMainSingleton::PopupTextService().GetTexts();
+	textsToRender.insert(textsToRender.end(), popupTexts.begin(), popupTexts.end());
 	myTextRenderer.Render(textsToRender);
 }

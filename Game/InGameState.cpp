@@ -31,6 +31,8 @@
 #include "TransformComponent.h"
 #include "PauseState.h"
 #include "PostMaster.h"
+#include "PopupTextService.h"
+#include "RandomNumberGenerator.h"
 #include "MainSingleton.h"
 #include <iostream>
 
@@ -136,11 +138,11 @@ void CInGameState::Update()
 
 	}
 
-	//static float health = 1.0f;
+	//static SDamagePopupData damage;
+	//damage.myDamage = 32.0f;
+	//damage.myHitType = Random(0, 3);
 	//if (Input::GetInstance()->IsKeyPressed('K')) {
-	//	health -= 0.25f;
-	//	CMainSingleton::PostMaster().Send({ EMessageType::PlayerHealthChanged, &health });
-	//	std::cout << "Ingame: " << health << std::endl;
+	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &damage);
 	//}
 }
 

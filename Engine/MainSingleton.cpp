@@ -16,3 +16,8 @@ CPostMaster& CMainSingleton::PostMaster()
 {
 	return ourInstance->myPostMaster;
 }
+
+CPopupTextService& CMainSingleton::PopupTextService()
+{
+	return ourInstance->myPopupTextService;
+}
