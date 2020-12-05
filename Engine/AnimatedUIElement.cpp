@@ -26,8 +26,10 @@ CAnimatedUIElement::CAnimatedUIElement(std::string aFilePath, CScene& aScene) : 
 
 CAnimatedUIElement::~CAnimatedUIElement()
 {
+    //Destruction is taken care of by CScene
     delete mySpriteInstance;
     mySpriteInstance = nullptr;
+
 }
 
 void CAnimatedUIElement::Level(float aLevel)

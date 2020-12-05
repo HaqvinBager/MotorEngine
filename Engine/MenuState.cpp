@@ -28,11 +28,15 @@ CMenuState::~CMenuState()
 {
 	delete myScene;
 	myScene = nullptr;
+
+	delete myCanvas;
+	myCanvas = nullptr;
 }
 
 void CMenuState::Awake() 
 {
 	myScene = new CScene();
+
 	CGameObject* camera = new CGameObject();
 	camera->AddComponent<CCameraComponent>(*camera, 70.0f);
 	camera->AddComponent<CCameraControllerComponent>(*camera, 25.0f);

@@ -58,6 +58,7 @@ CDialogueSystem::CDialogueSystem(CScene& aScene) {
 	myAnimatedDialogue->Init(textFactory->GetText("baskerville16"));
 	myAnimatedDialogue->SetPosition({ 500.0f, 500.0f });
 	
+	aScene.AddInstance(myDialogueLine);
 	aScene.AddInstance(myAnimatedDialogue);
 
 	LoadDialogue("Test");

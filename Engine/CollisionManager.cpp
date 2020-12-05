@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "CollisionManager.h"
+
 #include "IntersectionManager.h"
 #include "CapsuleColliderComponent.h"
 #include "TriangleColliderComponent.h"
@@ -12,10 +13,10 @@
 using namespace DirectX::SimpleMath;
 
 CCollisionManager* CCollisionManager::ourInstance = nullptr;
-CCollisionManager* CCollisionManager::GetInstance()
-{
-    return ourInstance;
-}
+//CCollisionManager* CCollisionManager::GetInstance()
+//{
+//    return ourInstance;
+//}
 
 CCollisionManager::CCollisionManager()
 {
@@ -31,6 +32,11 @@ void CCollisionManager::RegisterCollider(CCollider* aCollider)
 {
     assert(aCollider != nullptr && "Collider is nullptr");
     myColliders.emplace_back(aCollider);
+}
+
+void CCollisionManager::ClearColliders()
+{
+    myColliders.clear();
 }
 
 void CCollisionManager::Update()

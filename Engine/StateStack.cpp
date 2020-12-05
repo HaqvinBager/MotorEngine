@@ -8,7 +8,7 @@
 
 CStateStack::~CStateStack()
 {
-	while (!myStateStack.empty())
+	while (!myStateStack.empty())// change this
 	{
 		delete myStateStack.top();
 		myStateStack.pop();

@@ -20,6 +20,9 @@ CPauseState::~CPauseState()
 {
 	delete myScene;
 	myScene = nullptr;
+
+	delete myCanvas;
+	myCanvas = nullptr;
 }
 
 void CPauseState::Awake() 

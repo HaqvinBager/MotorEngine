@@ -38,13 +38,14 @@ public:
 	~CCollisionManager();
 
 	void RegisterCollider(CCollider* aCollider);
+	void ClearColliders();
 	void Update();
 
 private:
 	std::vector<CCollider*> myColliders;
 
-public:
-	static CCollisionManager* GetInstance();
+//public:
+//	//static CCollisionManager* GetInstance();
 
 private:
 	static CCollisionManager* ourInstance;

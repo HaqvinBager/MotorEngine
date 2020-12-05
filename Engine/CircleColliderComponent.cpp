@@ -2,9 +2,11 @@
 #include "CircleColliderComponent.h"
 #include "TriangleColliderComponent.h"
 #include "RectangleColliderComponent.h"
-#include "CollisionManager.h"
 #include "TransformComponent.h"
 #include "Debug.h"
+
+//#include "CollisionManager.h"
+#include "MainSingleton.h"
 
 #ifdef _DEBUG
 #include "LineInstance.h"
@@ -17,7 +19,8 @@ CCircleColliderComponent::CCircleColliderComponent(CGameObject& aParent) :
 	CCollider(aParent, ECollisionLayer::NONE, static_cast<int>(ECollisionLayer::NONE)),
 	myRadius(0.5f)
 {
-	CCollisionManager::GetInstance()->RegisterCollider(this);
+	//CCollisionManager::GetInstance()->RegisterCollider(this);
+	CMainSingleton::CollisionManager().RegisterCollider(this);
 #ifdef _DEBUG
 	myVisualizer = nullptr;
 #endif
@@ -27,7 +30,7 @@ CCircleColliderComponent::CCircleColliderComponent(CGameObject& aParent, float a
 	CCollider(aParent, ECollisionLayer::NONE, static_cast<int>(ECollisionLayer::NONE)),
 	myRadius(aRadius)
 {
-	CCollisionManager::GetInstance()->RegisterCollider(this);
+	CMainSingleton::CollisionManager().RegisterCollider(this);
 #ifdef _DEBUG
 	myVisualizer = nullptr;
 #endif
@@ -37,7 +40,7 @@ CCircleColliderComponent::CCircleColliderComponent(CGameObject& aParent, float a
 	CCollider(aParent, aCollisionLayer, someCollisionFlags),
 	myRadius(aRadius)
 {
-	CCollisionManager::GetInstance()->RegisterCollider(this);
+	CMainSingleton::CollisionManager().RegisterCollider(this);
 #ifdef _DEBUG
 	myVisualizer = nullptr;
 #endif

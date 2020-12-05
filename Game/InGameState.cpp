@@ -17,8 +17,8 @@
 #include "Engine.h"
 #include "WindowHandler.h"
 #include "AnimatedUIElement.h"
+//#include "PostMaster.h"
 #include "InputMapper.h"
-#include "PostMaster.h"
 #include "Canvas.h"
 #include "AbilityComponent.h"
 //collider test
@@ -34,7 +34,7 @@
 #include "AIBehaviorComponent.h"
 #include "TransformComponent.h"
 #include "PauseState.h"
-#include "PostMaster.h"
+//#include "PostMaster.h"
 #include "MainSingleton.h"
 #include "AIBehaviorComponent.h"
 #include <iostream>
@@ -95,6 +95,7 @@ void CInGameState::Start()
 void CInGameState::Stop()
 {
 	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::PauseGame, this);
+	CMainSingleton::CollisionManager().ClearColliders();
 
 	delete myTokenPool;
 	myTokenPool = nullptr;
@@ -105,7 +106,7 @@ void CInGameState::Stop()
 
 void CInGameState::Update()
 {
-	CCollisionManager::GetInstance()->Update();
+	CMainSingleton::CollisionManager().Update();
 
 	myCanvas->Update();
 	myTokenPool->GetInstance()->Update();
@@ -113,7 +114,6 @@ void CInGameState::Update()
 	for (auto& gameObject : CEngine::GetInstance()->GetActiveScene().myGameObjects)
 	{
 		gameObject->Update();
-
 	}
 }
 

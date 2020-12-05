@@ -29,7 +29,7 @@ public:
 	CScene();
 	~CScene();
 
-	static CScene* GetInstance();
+	//static CScene* GetInstance();
 	bool Init();
 	bool InitNavMesh(std::string aPath);
 	void SetMainCamera(CCameraComponent* aCamera);
@@ -63,8 +63,14 @@ public:
 	bool RemoveInstance(CGameObject* aGameObject);
 	bool RemoveInstance(CPointLight* aPointLight);
 
-	bool ClearScene();
-	bool ClearSprites();
+	bool DestroyGameObjects();
+	bool DestroySprites();
+	bool DestroyPointLights();
+	bool DestroyParticles();
+	bool DestroyVFXInstances();
+	bool DestroyLineInstances();
+	bool DestroyAnimatedUIElement();
+	bool DestroyTextInstances();
 
 	void SetModelToOutline(CGameObject* aGameObject);
 
@@ -90,7 +96,7 @@ private:
 	CCameraComponent* myMainCamera;
 	CEnvironmentLight* myEnvironmentLight;
 
-	//Ev Remove
+	//Ev Remove // Ev? / Aki
 	//std::vector<CCamera*> myCameras;
 	//std::vector<CEnvironmentLight*> myEnvironmentLights;
 	std::vector<CPointLight*> myPointLights;
@@ -101,14 +107,14 @@ private:
 	std::vector<CTextInstance*> myTexts;
 	std::unordered_map<ERenderOrder, std::vector<CSpriteInstance*>> mySpriteInstances;
 
-	CCollisionManager* myCollisionManager;
+	//CCollisionManager* myCollisionManager;
 
 	SNavMesh* myNavMesh;
 	CLineInstance* myNavMeshGrid;
 
 	bool myIsReadyToRender;
 
-	static CScene* ourInstance;
+	//static CScene* ourInstance;
 
 	CGameObject* myModelToOutline;
 

@@ -30,9 +30,28 @@ CCanvas::~CCanvas()
 	myMessageTypes.clear();
 	delete myBackground;
 	myBackground = nullptr;
-	myAnimatedUIs.clear();
+
+	myAnimatedUIs.clear();// Destruction is done in CScene
+
+	for (size_t i = 0; i < myButtons.size(); ++i)
+	{
+			delete myButtons[i];
+			myButtons[i] = nullptr;
+	}
 	myButtons.clear();
+
+	for (size_t i = 0; i < mySprites.size(); ++i)
+	{
+			delete mySprites[i];
+			mySprites[i] = nullptr;
+	}
 	mySprites.clear();
+
+	for (size_t i = 0; i < myTexts.size(); ++i)
+	{
+			delete myTexts[i];
+			myTexts[i] = nullptr;
+	}
 	myTexts.clear();
 }
 

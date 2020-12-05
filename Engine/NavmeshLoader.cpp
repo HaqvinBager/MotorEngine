@@ -145,3 +145,13 @@ STriangle* SNavMesh::GetTriangleAtPoint(DirectX::SimpleMath::Vector3 aPosition)
 
 	return nullptr;
 }
+
+SNavMesh::~SNavMesh()
+{
+	for (size_t i = 0; i < myTriangles.size(); ++i)
+	{
+		delete myTriangles[i];
+		myTriangles[i] = nullptr;
+	}
+	myTriangles.clear();
+}

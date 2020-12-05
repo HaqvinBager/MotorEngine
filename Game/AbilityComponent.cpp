@@ -60,10 +60,10 @@ CAbilityComponent::CAbilityComponent(CGameObject& aParent, std::vector<std::pair
 
 CAbilityComponent::~CAbilityComponent()
 {
-	delete myCurrentCooldowns;
+	delete myCurrentCooldowns;// delete[]? , see constructor for reason for question
 	myCurrentCooldowns = nullptr;
 
-	delete myMaxCooldowns;
+	delete myMaxCooldowns;// delete[]?
 	myMaxCooldowns = nullptr;
 }
 

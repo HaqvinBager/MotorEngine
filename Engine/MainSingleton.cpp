@@ -16,3 +16,8 @@ CPostMaster& CMainSingleton::PostMaster()
 {
 	return ourInstance->myPostMaster;
 }
+
+CCollisionManager& CMainSingleton::CollisionManager()
+{
+	return ourInstance->myCollisionManager;
+}

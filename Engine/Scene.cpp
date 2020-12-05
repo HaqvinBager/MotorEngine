@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Scene.h"
+
 #include "EnvironmentLight.h"
 #include "ModelComponent.h"
 #include "GameObject.h"
@@ -21,22 +22,25 @@
 #include "ModelFactory.h"
 #include "Model.h"
 #include "InstancedModelComponent.h"
+#include "TextInstance.h"
 
-CScene* CScene::ourInstance = nullptr;
+//CScene* CScene::ourInstance = nullptr;
 
-CScene* CScene::GetInstance()
-{
-	return ourInstance;
-}
+//CScene* CScene::GetInstance()
+//{
+//	return ourInstance;
+//}
 
 CScene::CScene()
 {
 	myIsReadyToRender = false;
-	ourInstance = this;
+	//ourInstance = this;
 	myMainCamera = nullptr;
-	myCollisionManager = new CCollisionManager();
+	//myCollisionManager = new CCollisionManager();// ? i dont understand why / Aki
 	myModelToOutline = nullptr;
 	myEnvironmentLight = nullptr;
+	myNavMesh = nullptr;
+	myNavMeshGrid = nullptr;
 
 #ifdef _DEBUG
 	myShouldRenderLineInstance = true;
@@ -45,10 +49,34 @@ CScene::CScene()
 
 CScene::~CScene()
 {
-	ourInstance = nullptr;
+	//ourInstance = nullptr;
 	myMainCamera = nullptr;
-	delete myCollisionManager;
-	myCollisionManager = nullptr;
+	
+	//delete myCollisionManager;
+	//myCollisionManager = nullptr;
+	if (myNavMesh)// Any CScene that is not InGame's scene will not hold a NavMesh
+	{
+		delete myNavMesh;
+		myNavMesh = nullptr;
+	}
+	if (myNavMeshGrid)// -||-
+	{
+		delete myNavMeshGrid;
+		myNavMeshGrid = nullptr;
+	}
+
+	delete myEnvironmentLight;
+	myEnvironmentLight = nullptr;
+
+	this->DestroyGameObjects();
+	this->DestroySprites();
+	this->DestroyPointLights();
+	this->DestroyParticles();
+	this->DestroyVFXInstances();
+	//this->DestroyLineInstances();// Seems they are taken care of where by their creators (the class that created them... that is).
+	this->DestroyAnimatedUIElement();// Seems they are taken care of where they are created.
+	this->DestroyTextInstances();
+	// Even with this the memory still increases on every load!
 }
 
 
@@ -322,7 +350,7 @@ bool CScene::RemoveInstance(CPointLight* aPointLight)
 	return true;
 }
 
-bool CScene::ClearScene() {
+bool CScene::DestroyGameObjects() {
 
 	for (auto& gameObject : myGameObjects) {
 		delete gameObject;
@@ -332,7 +360,7 @@ bool CScene::ClearScene() {
 	return true;
 }
 
-bool CScene::ClearSprites() {
+bool CScene::DestroySprites() {
 
 	for (UINT i = 0; i < mySpriteInstances.size() - 1; ++i)
 	{
@@ -345,6 +373,75 @@ bool CScene::ClearSprites() {
 	mySpriteInstances.clear();
 
 	return true;
+}
+
+bool CScene::DestroyPointLights()
+{
+	for (auto& p : myPointLights)
+	{
+		delete p;
+		p = nullptr;
+	}
+	myPointLights.clear();
+	return true;
+}
+
+bool CScene::DestroyParticles()
+{
+	for (auto& particle : myParticles)
+	{
+		delete particle;
+		particle = nullptr;
+	}
+	myParticles.clear();
+	return false;
+}
+
+bool CScene::DestroyVFXInstances()
+{
+	for (auto& vfx : myVFXInstances)
+	{
+		delete vfx;
+		vfx = nullptr;
+	}
+	myVFXInstances.clear();
+	return false;
+}
+
+bool CScene::DestroyLineInstances()
+{
+	for (size_t i = 0; i < myLineInstances.size(); ++i)
+	{
+		if (myLineInstances[i] != nullptr)
+		{
+			delete myLineInstances[i];
+			myLineInstances[i] = nullptr;
+		}
+	}
+	return false;
+}
+
+bool CScene::DestroyAnimatedUIElement()
+{
+	for (size_t i = 0; i < myAnimatedUIElements.size(); ++i)
+	{
+		delete myAnimatedUIElements[i];
+		myAnimatedUIElements[i] = nullptr;
+	}
+	myAnimatedUIElements.clear();
+	return false;
+}
+
+bool CScene::DestroyTextInstances()
+{
+	for (auto& text : myTexts)
+	{
+		delete text;
+		text = nullptr;
+	}
+	myTexts.clear();
+
+	return false;
 }
 
 void CScene::SetModelToOutline(CGameObject* aGameObject)

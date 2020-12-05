@@ -214,7 +214,7 @@ CEngine* CEngine::GetInstance()
 
 const CStateStack::EState CEngine::AddScene(const CStateStack::EState aState, CScene* aScene)
 {
-	if (mySceneMap.find(aState) == mySceneMap.end())
+	if (mySceneMap.find(aState) != mySceneMap.end())
 	{
 		delete mySceneMap[aState];
 		mySceneMap[aState] = nullptr;

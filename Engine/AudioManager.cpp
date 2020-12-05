@@ -106,6 +106,36 @@ CAudioManager::CAudioManager() : myWrapper() {
 CAudioManager::~CAudioManager() 
 {
 	UnsubscribeToMessages();
+	for (auto& channel : myChannels)
+	{
+		delete channel;
+		channel = nullptr;
+	}
+	for (auto& music : myMusicAudio)
+	{
+		delete music;
+		music = nullptr;
+	}
+	for (auto& ambience : myAmbianceAudio)
+	{
+		delete ambience;
+		ambience = nullptr;
+	}
+	for (auto& sfx : mySFXAudio)
+	{
+		delete sfx;
+		sfx = nullptr;
+	}
+	for (auto& ui : myUIAudio)
+	{
+		delete ui;
+		ui = nullptr;
+	}
+	for (auto& voice : myVoicelineAudio)
+	{
+		delete voice;
+		voice = nullptr;
+	}
 }
 
 
