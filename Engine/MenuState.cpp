@@ -38,6 +38,7 @@ CMenuState::CMenuState(CStateStack& aStateStack) :
 
 	myCanvas = new CCanvas();
 	myCanvas->Init("Json/UI_MainMenu_Description.json");
+	myCanvas->AddToScene(myCanvas);
 
 	for (auto buttons : myCanvas->GetButtons())
 	{

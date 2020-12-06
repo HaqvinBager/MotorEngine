@@ -189,6 +189,7 @@ void CTransformComponent::MoveAlongPath()
 
 		dir = (myPath[pathSize - 1] - this->Position());
 		dir.Normalize();
+		
 		this->Move(dir * myMoveSpeed * CTimer::Dt());
 
 		Rotation({ 0, DirectX::XMConvertToDegrees(atan2f(dir.x, dir.z)) + 180.f, 0 });
@@ -211,6 +212,11 @@ void CTransformComponent::SetPath(std::vector<DirectX::SimpleMath::Vector3>& aPa
 		myPath.emplace_back(aPath[i]);
 	}
 	//myPath.emplace_back(this->Position());
+}
+
+void CTransformComponent::ClearPath()
+{
+	myPath.clear();
 }
 
 float CTransformComponent::MovementSpeed() const

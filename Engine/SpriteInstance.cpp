@@ -8,7 +8,6 @@
 CSpriteInstance::CSpriteInstance()
 {
 	mySprite = nullptr;
-	CEngine::GetInstance()->GetActiveScene().AddInstance(this);
 }
 
 CSpriteInstance::~CSpriteInstance()

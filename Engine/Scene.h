@@ -58,7 +58,13 @@ public:
 	bool AddInstance(CLineInstance* aLineInstance);
 	bool AddInstance(CSpriteInstance* aSprite);
 	bool AddInstance(CAnimatedUIElement* anAnimatedUIElement);
+	bool RemoveInstance(CAnimatedUIElement* anAnimatedUIElement);
 	bool AddInstance(CTextInstance* aText);
+	bool AddEnemies(CGameObject* aEnemy);
+	bool AddPlayer(CGameObject* aPlayer);
+
+	std::vector<CGameObject*> GetEnemies() { return myEnemies; }
+	CGameObject* GetPlayer() { return myPlayer; }
 
 	bool RemoveInstance(CGameObject* aGameObject);
 	bool RemoveInstance(CPointLight* aPointLight);
@@ -100,6 +106,8 @@ private:
 	std::vector<CAnimatedUIElement*> myAnimatedUIElements;
 	std::vector<CTextInstance*> myTexts;
 	std::unordered_map<ERenderOrder, std::vector<CSpriteInstance*>> mySpriteInstances;
+	std::vector<CGameObject*> myEnemies;
+	CGameObject* myPlayer;
 
 	CCollisionManager* myCollisionManager;
 

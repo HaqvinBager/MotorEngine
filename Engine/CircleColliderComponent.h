@@ -29,6 +29,7 @@ public:
 	bool Collided(CRectangleColliderComponent* aCollidedGameObject) override;
 	bool Collided(CTriangleColliderComponent* aCollidedGameObject) override;
 	bool Collided(CCollider* aCollidedGameObject) override;
+	bool Collided(float aRadius, Vector3 aPo);
 
 public:
 	void OnEnable() override;

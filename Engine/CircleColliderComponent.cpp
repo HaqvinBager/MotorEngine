@@ -203,6 +203,23 @@ bool CCircleColliderComponent::Collided(CCollider* aCollidedGameObject) {
 	return aCollidedGameObject->Collided(this);
 }
 
+bool CCircleColliderComponent::Collided(float aRadius, Vector3 aPos)
+{
+	//point in circle
+	DirectX::SimpleMath::Vector3 newPos = {this->GetPosition().x + 1.f, this->GetPosition().y, this->GetPosition().z + 1.f};
+	if (this->myRadius + aRadius <
+		DirectX::SimpleMath::Vector3::Distance(newPos, aPos))
+		return false;
+	else
+		return true;
+	//if ((aPos.x - GameObject().myTransform->Position().x) * (aPos.x - GameObject().myTransform->Position().x) + (aPos.z - GameObject().myTransform->Position().z + 1.f) * (aPos.z - GameObject().myTransform->Position().z) < (myRadius * myRadius)) {
+	//	return true;
+	//}
+	//else {
+	//	return false;
+	//}
+}
+
 void CCircleColliderComponent::OnEnable()
 {
 #ifdef _DEBUG

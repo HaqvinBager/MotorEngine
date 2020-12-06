@@ -15,6 +15,8 @@
 #include "rapidjson\document.h"
 #include "rapidjson\istreamwrapper.h"
 #include "..\..\Game\LoadLevelState.h"
+#include "Engine.h"
+#include "Scene.h"
 
 using namespace rapidjson;
 
@@ -101,6 +103,7 @@ void CCanvas::Init(std::string aFilePath)
 			float x = animatedDataArray[i]["Position X"].GetFloat();
 			float y = animatedDataArray[i]["Position Y"].GetFloat();
 			myAnimatedUIs.back()->SetPosition({ x, y });
+			CEngine::GetInstance()->GetActiveScene().AddInstance(myAnimatedUIs.back());
 		}
 	}
 
@@ -228,4 +231,15 @@ void CCanvas::SetEnabled(bool isEnabled)
 			sprite->SetShouldRender(myIsEnabled);
 		}
 	}
+}
+
+void CCanvas::AddToScene(CCanvas* aCanvas)
+{
+	for (const auto& sprite : aCanvas->GetSprites()) {
+		CEngine::GetInstance()->GetActiveScene().AddInstance(sprite);
+	}
+	for (const auto& animatedUI : aCanvas->GetAnimatedUI()) {
+		CEngine::GetInstance()->GetActiveScene().AddInstance(animatedUI);
+	}
+	CEngine::GetInstance()->GetActiveScene().AddInstance(aCanvas->myBackground);
 }

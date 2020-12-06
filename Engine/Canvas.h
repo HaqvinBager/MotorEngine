@@ -25,7 +25,11 @@ public:
 	bool GetEnabled();
 	void SetEnabled(bool isEnabled);
 
+	void AddToScene(CCanvas* aSprite);
+
 	std::vector<CButton*> GetButtons() { return myButtons; }
+	std::vector<CSpriteInstance*> GetSprites() { return mySprites; }
+	std::vector<CAnimatedUIElement*> GetAnimatedUI() { return myAnimatedUIs; }
 
 private:
 	bool myIsEnabled;

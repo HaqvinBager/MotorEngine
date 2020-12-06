@@ -21,7 +21,6 @@ CAnimatedUIElement::CAnimatedUIElement(std::string aFilePath) : mySpriteInstance
     mySpriteInstance = new CSpriteInstance();
     mySpriteInstance->Init(CSpriteFactory::GetInstance()->GetSprite(document["Texture Overlay"].GetString()));
     myData = CSpriteFactory::GetInstance()->GetVFXSprite(aFilePath);
-    CEngine::GetInstance()->GetActiveScene().AddInstance(this);
 }
 
 CAnimatedUIElement::~CAnimatedUIElement()

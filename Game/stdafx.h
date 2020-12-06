@@ -1,5 +1,7 @@
 #pragma once
 #include "Game.h"
+#include "Engine.h"
+#include "Scene.h"
 
 #include <iostream>
 #include <d3d11.h>
