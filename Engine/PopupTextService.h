@@ -8,7 +8,8 @@ enum class EPopupType
 {
 	Damage,
 	Info,
-	Tutorial
+	Tutorial,
+	Warning
 };
 
 struct SDamagePopupData
@@ -26,6 +27,7 @@ struct STextAnimationData
 	DirectX::SimpleMath::Vector2 myStartSpeed;
 	DirectX::SimpleMath::Vector2 mySpeed;
 	float myLifespan;
+	float myFadeOutThreshold;
 	float myTimer;
 };
 
@@ -41,7 +43,7 @@ public:
 
 public:
 	const std::vector<CTextInstance*> GetTexts();
-	const std::vector<CSpriteInstance*>& GetSprites();
+	const std::vector<CSpriteInstance*> GetSprites();
 
 private:
 	std::vector<CTextInstance*> myActiveDamageNumbers;
@@ -57,16 +59,28 @@ private:
 	CTextInstance* myTutorialText;
 	STextAnimationData* myTutorialAnimationData;
 
+	CTextInstance* myActiveWarningText;
+	CTextInstance* myWarningText;
+	STextAnimationData* myWarningAnimationData;
+
+	std::vector<CSpriteInstance*> mySkillIcons;
+	std::vector<std::string> myStoredSkillInfoStrings;
+	CSpriteInstance* myActiveSkillSprite;
+	CSpriteInstance* myInfoBoxBackground;
+	CTextInstance* myActiveInfoBoxText;
+	CTextInstance* myInfoBoxText;
+	STextAnimationData* myInfoAnimationData;
+
 private:
 	CPopupTextService();
 	~CPopupTextService();
 
 	void SpawnDamageNumber(void* someData);
-	void SpawnInfoBox(void* someData);
+	void SpawnInfoBox(std::string someInfoIdentifier);
 	void SpawnTutorialText(std::string aText);
+	void SpawnWarningText(std::string aText);
 
-	void UpdateTexts();
-	void UpdateSprites();
+	void UpdateResources();
 
 	float DamageSizeCurve(float x);
 };

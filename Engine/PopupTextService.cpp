@@ -7,15 +7,22 @@
 #include "Engine.h"
 #include "WindowHandler.h"
 #include "RandomNumberGenerator.h"
+#include "JsonReader.h"
 #include <algorithm>
+
+using namespace rapidjson;
 
 bool CPopupTextService::Init()
 {
-	const unsigned int textPoolSize = 5;
-	for (unsigned int i = 0; i < textPoolSize; ++i)
+	Document document = CJsonReader::LoadDocument("Json/PopupTextServiceInit.json");
+	ENGINE_BOOL_POPUP(!document.HasParseError(), "Could not load 'Json/PopupTextServiceInit.json'!");
+
+	const unsigned int damageNumbersPoolSize = document["Damage Numbers Pool Size"].GetInt();
+	
+	for (unsigned int i = 0; i < damageNumbersPoolSize; ++i)
 	{
 		myTextPool.push(new CTextInstance(false));
-		myTextPool.back()->Init(CTextFactory::GetInstance()->GetText("Text/baskerville16"));
+		myTextPool.back()->Init(CTextFactory::GetInstance()->GetText(document["Damage Numbers Font and Size"].GetString()));
 		myAnimatedDataPool.push(new STextAnimationData());
 	}
 
@@ -26,8 +33,34 @@ bool CPopupTextService::Init()
 	myDamageColors[4] = { 0.0f, 230.0f / 255.0f, 64.0f / 255.0f, 1.0f };			// Healing
 
 	myTutorialText = new CTextInstance(false);
-	myTutorialText->Init(CTextFactory::GetInstance()->GetText("Text/baskerville16"));
+	myTutorialText->Init(CTextFactory::GetInstance()->GetText(document["Tutorial Message Font and Size"].GetString()));
 	myTutorialAnimationData = new STextAnimationData();
+
+	myWarningText = new CTextInstance(false);
+	myWarningText->Init(CTextFactory::GetInstance()->GetText(document["Warning Message Font and Size"].GetString()));
+	myWarningAnimationData = new STextAnimationData();
+
+	auto skillIconPaths = document["Skill Icon Paths"].GetArray();
+	for (unsigned int i = 0; i < skillIconPaths.Size(); ++i)
+	{
+		mySkillIcons.emplace_back(new CSpriteInstance(false));
+		mySkillIcons.back()->Init(CSpriteFactory::GetInstance()->GetSprite(skillIconPaths[i]["Path"].GetString()));
+		mySkillIcons.back()->SetPosition({ document["Skill Icon Position X"].GetFloat(), document["Skill Icon Position Y"].GetFloat() });
+	}
+	
+	myInfoBoxBackground = new CSpriteInstance(false);
+	myInfoBoxBackground->Init(CSpriteFactory::GetInstance()->GetSprite(document["Skill Info Box Background Path"].GetString()));
+	myInfoBoxBackground->SetPosition({ document["Info Box Position X"].GetFloat(), document["Info Box Position Y"].GetFloat() });
+
+	myInfoBoxText = new CTextInstance(false);
+	myInfoBoxText->Init(CTextFactory::GetInstance()->GetText(document["Skill Info Font and Size"].GetString()));
+	myInfoAnimationData = new STextAnimationData();
+
+	auto skillTexts = document["Skill Info Texts"].GetArray();
+	for (unsigned int i = 0; i < skillTexts.Size(); ++i)
+	{
+		myStoredSkillInfoStrings.emplace_back(skillTexts[i]["Text"].GetString());
+	}
 
 	return true;
 }
@@ -59,9 +92,13 @@ void CPopupTextService::SpawnPopup(EPopupType aType, std::string aNameOrText)
 	switch (aType)
 	{
 	case EPopupType::Info:
+		SpawnInfoBox(aNameOrText);
 		break;
 	case EPopupType::Tutorial:
 		SpawnTutorialText(aNameOrText);
+		break;
+	case EPopupType::Warning:
+		SpawnWarningText(aNameOrText);
 		break;
 	default:
 		break;
@@ -70,28 +107,88 @@ void CPopupTextService::SpawnPopup(EPopupType aType, std::string aNameOrText)
 
 const std::vector<CTextInstance*> CPopupTextService::GetTexts()
 {
-	UpdateTexts();
+	UpdateResources();
 	
 	std::vector<CTextInstance*> activeTexts = myActiveDamageNumbers;
 	if (myActiveTutorialText) {
 		activeTexts.emplace_back(myActiveTutorialText);
 	}
 
+	if (myActiveWarningText) {
+		activeTexts.emplace_back(myActiveWarningText);
+	}
+
+	if (myActiveInfoBoxText) {
+		activeTexts.emplace_back(myActiveInfoBoxText);
+	}
+
 	return activeTexts;
 }
 
-const std::vector<CSpriteInstance*>& CPopupTextService::GetSprites()
+const std::vector<CSpriteInstance*> CPopupTextService::GetSprites()
 {
-	UpdateSprites();
-	return myActiveSprites;
+	std::vector<CSpriteInstance*> activeSprites;
+	if (myActiveInfoBoxText) {
+		activeSprites.emplace_back(myInfoBoxBackground);
+		activeSprites.emplace_back(myActiveSkillSprite);
+	}
+
+	return activeSprites;
 }
 
 CPopupTextService::CPopupTextService()
 {
+	myActiveTutorialText = nullptr;
+	myTutorialText = nullptr;
+	myTutorialAnimationData = nullptr;
+
+	myActiveWarningText = nullptr;
+	myWarningText = nullptr;
+	myWarningAnimationData = nullptr;
+
+	myActiveSkillSprite = nullptr;
+	myInfoBoxBackground = nullptr;
+	myActiveInfoBoxText = nullptr;
+	myInfoBoxText = nullptr;
+	myInfoAnimationData = nullptr;
 }
 
 CPopupTextService::~CPopupTextService()
 {
+	delete myActiveTutorialText;
+	myActiveTutorialText = nullptr;
+	delete myTutorialText;
+	myTutorialText = nullptr;
+	delete myTutorialAnimationData;
+	myTutorialAnimationData = nullptr;
+
+	delete myActiveWarningText;
+	myActiveWarningText = nullptr;
+	delete myWarningText;
+	myWarningText = nullptr;
+	delete myWarningAnimationData;
+	myWarningAnimationData = nullptr;
+
+	delete myActiveSkillSprite;
+	myActiveSkillSprite = nullptr;
+	delete myInfoBoxBackground;
+	myInfoBoxBackground = nullptr;
+	delete myActiveInfoBoxText;
+	myActiveInfoBoxText = nullptr;
+	delete myInfoBoxText;
+	myInfoBoxText = nullptr;
+	delete myInfoAnimationData;
+	myInfoAnimationData = nullptr;
+
+	myActiveDamageNumbers.clear();
+	myDamageAnimationData.clear();
+	myActiveSprites.clear();
+
+	std::queue<CTextInstance*>().swap(myTextPool);
+	std::queue<STextAnimationData*>().swap(myAnimatedDataPool);
+
+	mySkillIcons.clear();
+	myStoredSkillInfoStrings.clear();
 }
 
 void CPopupTextService::SpawnDamageNumber(void* someData)
@@ -178,25 +275,69 @@ void CPopupTextService::SpawnDamageNumber(void* someData)
 	myDamageAnimationData.back()->myTimer = 0.0f;
 }
 
-void CPopupTextService::SpawnInfoBox(void* /*someData*/)
+void CPopupTextService::SpawnInfoBox(std::string someInfoIdentifier)
 {
+	unsigned int skillPicker = 0;
+	if (someInfoIdentifier == "Skill 1")
+	{
+		skillPicker = 0;
+	}
+	else if (someInfoIdentifier == "Skill 2") 
+	{
+		skillPicker = 1;
+	}
+	else if (someInfoIdentifier == "Skill 3") 
+	{
+		skillPicker = 2;
+	}
+
+	myActiveSkillSprite = mySkillIcons[skillPicker];
+	myInfoBoxText->SetPivot({ 0.0f, 0.5f });
+	myInfoBoxText->SetPosition({ -0.205f, -0.5f });
+	myInfoBoxText->SetScale({ 1.0f, 1.0f });
+	myInfoBoxText->SetText(myStoredSkillInfoStrings[skillPicker]);
+
+	myInfoAnimationData->myStartColor = { 1.0f, 1.0f, 1.0f, 1.0f };
+	myInfoAnimationData->myEndColor = { 0.0f, 0.0f, 0.0f, 0.0f };
+	myInfoAnimationData->myLifespan = 6.0f;
+	myInfoAnimationData->myFadeOutThreshold = 4.5f;
+	myInfoAnimationData->myTimer = 0.0f;
+
+	myActiveInfoBoxText = myInfoBoxText;
 }
 
 void CPopupTextService::SpawnTutorialText(std::string aText)
 {
 	myTutorialText->SetPivot({ 0.5f, 0.5f });
-	myTutorialText->SetPosition({ 0.0f, 0.0f });
+	myTutorialText->SetPosition({ 0.0f, 0.65f });
 	myTutorialText->SetText(aText);
 	myTutorialAnimationData->myStartColor = { 1.0f, 1.0f, 1.0f, 1.0f };
-	myTutorialAnimationData->myStartColor = { 1.0f, 1.0f, 1.0f, 0.0f };
+	myTutorialAnimationData->myEndColor = { 0.0f, 0.0f, 0.0f, 0.0f };
 	myTutorialAnimationData->myMinScale = { 1.0f, 1.0f };
 	myTutorialAnimationData->myMaxScale = { 1.1f, 1.1f };
 	myTutorialAnimationData->myLifespan = 3.0f;
+	myTutorialAnimationData->myFadeOutThreshold = 2.0f;
 	myTutorialAnimationData->myTimer = 0.0f;
 	myActiveTutorialText = myTutorialText;
 }
 
-void CPopupTextService::UpdateTexts()
+void CPopupTextService::SpawnWarningText(std::string aText)
+{
+	myWarningText->SetPivot({ 0.5f, 0.5f });
+	myWarningText->SetPosition({ 0.0f, -0.75f });
+	myWarningText->SetScale({ 1.0f, 1.0f });
+	myWarningText->SetText(aText);
+	myWarningAnimationData->myStartColor = { 1.0f, 0.0f, 0.0f, 1.0f };
+	myWarningAnimationData->myEndColor = { 0.0f, 0.0f, 0.0f, 0.0f };
+	myWarningAnimationData->myMinScale = { 1.0f, 1.0f };
+	myWarningAnimationData->myMaxScale = { 1.1f, 1.1f };
+	myWarningAnimationData->myLifespan = 3.0f;
+	myWarningAnimationData->myFadeOutThreshold = 2.0f;
+	myWarningAnimationData->myTimer = 0.0f;
+	myActiveWarningText = myWarningText;
+}
+
+void CPopupTextService::UpdateResources()
 {
 	std::vector<int> indicesOfTextsToRemove;
 
@@ -239,21 +380,64 @@ void CPopupTextService::UpdateTexts()
 		myDamageAnimationData.pop_back();
 	}
 
-	if (!myActiveTutorialText) return;
-
-	myTutorialAnimationData->myTimer += CTimer::Dt();
-	quotient = myTutorialAnimationData->myTimer / myTutorialAnimationData->myLifespan;
-	myActiveTutorialText->SetScale(DirectX::SimpleMath::Vector2::Lerp(myTutorialAnimationData->myMinScale, myTutorialAnimationData->myMaxScale, abs(sin(6.0f * 3.14159265f * quotient))));
-	myActiveTutorialText->SetColor(DirectX::SimpleMath::Vector4::Lerp(myTutorialAnimationData->myStartColor, myTutorialAnimationData->myEndColor, quotient));
+	float fadeOutQuotient = 0.0f;
+	if (myActiveTutorialText) {
+		myTutorialAnimationData->myTimer += CTimer::Dt();
+		
+		if (myTutorialAnimationData->myTimer > myTutorialAnimationData->myFadeOutThreshold)
+		{
+			fadeOutQuotient = (myTutorialAnimationData->myTimer - myTutorialAnimationData->myFadeOutThreshold)
+				/ (myTutorialAnimationData->myLifespan - myTutorialAnimationData->myFadeOutThreshold);
+		}
+		
+		quotient = myTutorialAnimationData->myTimer / myTutorialAnimationData->myLifespan;
+		
+		myActiveTutorialText->SetScale(DirectX::SimpleMath::Vector2::Lerp(myTutorialAnimationData->myMinScale, myTutorialAnimationData->myMaxScale, abs(sin(6.0f * 3.14159265f * quotient))));
+		myActiveTutorialText->SetColor(DirectX::SimpleMath::Vector4::Lerp(myTutorialAnimationData->myStartColor, myTutorialAnimationData->myEndColor, fadeOutQuotient));
 	
-	if (myTutorialAnimationData->myTimer > myTutorialAnimationData->myLifespan)
-	{
-		myActiveTutorialText = nullptr;
+		if (myTutorialAnimationData->myTimer > myTutorialAnimationData->myLifespan)
+		{
+			myActiveTutorialText = nullptr;
+		}
 	}
-}
 
-void CPopupTextService::UpdateSprites()
-{
+	fadeOutQuotient = 0.0f;
+	if (myActiveWarningText) {
+		myWarningAnimationData->myTimer += CTimer::Dt();
+
+		if (myWarningAnimationData->myTimer > myWarningAnimationData->myFadeOutThreshold)
+		{
+			fadeOutQuotient = (myWarningAnimationData->myTimer - myWarningAnimationData->myFadeOutThreshold)
+				/ (myWarningAnimationData->myLifespan - myWarningAnimationData->myFadeOutThreshold);
+		}
+
+		myActiveWarningText->SetColor(DirectX::SimpleMath::Vector4::Lerp(myWarningAnimationData->myStartColor, myWarningAnimationData->myEndColor, fadeOutQuotient));
+
+		if (myWarningAnimationData->myTimer > myWarningAnimationData->myLifespan)
+		{
+			myActiveWarningText = nullptr;
+		}
+	}
+
+	fadeOutQuotient = 0.0f;
+	if (myActiveInfoBoxText) {
+		myInfoAnimationData->myTimer += CTimer::Dt();
+
+		if (myInfoAnimationData->myTimer > myInfoAnimationData->myFadeOutThreshold)
+		{
+			fadeOutQuotient = (myInfoAnimationData->myTimer - myInfoAnimationData->myFadeOutThreshold)
+				/ (myInfoAnimationData->myLifespan - myInfoAnimationData->myFadeOutThreshold);
+		}
+
+		myActiveInfoBoxText->SetColor(DirectX::SimpleMath::Vector4::Lerp(myInfoAnimationData->myStartColor, myInfoAnimationData->myEndColor, fadeOutQuotient));
+		myInfoBoxBackground->SetColor(DirectX::SimpleMath::Vector4::Lerp(myInfoAnimationData->myStartColor, myInfoAnimationData->myEndColor, fadeOutQuotient));
+		myActiveSkillSprite->SetColor(DirectX::SimpleMath::Vector4::Lerp(myInfoAnimationData->myStartColor, myInfoAnimationData->myEndColor, fadeOutQuotient));
+		
+		if (myInfoAnimationData->myTimer > myInfoAnimationData->myLifespan)
+		{
+			myActiveInfoBoxText = nullptr;
+		}
+	}
 
 }
 

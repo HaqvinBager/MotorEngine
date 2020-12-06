@@ -204,6 +204,10 @@ void CRenderManager::Render(CScene& aScene)
 	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_ONLYREAD);
 
 	std::vector<CSpriteInstance*> sprites = aScene.CullSprites();
+	std::vector<CSpriteInstance*> popupSprites = CMainSingleton::PopupTextService().GetSprites();
+	if (!popupSprites.empty()) {
+		sprites.insert(sprites.end(), popupSprites.begin(), popupSprites.end());
+	}
 	mySpriteRenderer.Render(sprites);
 
 	std::vector<CSpriteInstance*> animatedUIFrames;
@@ -216,6 +220,8 @@ void CRenderManager::Render(CScene& aScene)
 
 	std::vector<CTextInstance*> textsToRender = aScene.GetTexts();
 	std::vector<CTextInstance*> popupTexts = CMainSingleton::PopupTextService().GetTexts();
-	textsToRender.insert(textsToRender.end(), popupTexts.begin(), popupTexts.end());
+	if (!popupTexts.empty()) {
+		textsToRender.insert(textsToRender.end(), popupTexts.begin(), popupTexts.end());
+	}
 	myTextRenderer.Render(textsToRender);
 }
