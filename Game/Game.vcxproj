@@ -288,6 +288,7 @@
     <ClInclude Include="AuraBehavior.h" />
     <ClInclude Include="BoomerangBehavior.h" />
     <ClInclude Include="BossBehavior.h" />
+    <ClInclude Include="ColliderPushManager.h" />
     <ClInclude Include="DamageUtility.h" />
     <ClInclude Include="DelayedExplosionBehavior.h" />
     <ClInclude Include="DialogueSystem.h" />
@@ -317,6 +318,7 @@
     <ClCompile Include="AuraBehavior.cpp" />
     <ClCompile Include="BoomerangBehavior.cpp" />
     <ClCompile Include="BossBehavior.cpp" />
+    <ClCompile Include="ColliderPushManager.cpp" />
     <ClCompile Include="DelayedExplosionBehavior.cpp" />
     <ClCompile Include="DialogueSystem.cpp" />
     <ClCompile Include="EnemyBehavior.cpp" />

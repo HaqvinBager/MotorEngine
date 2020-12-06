@@ -34,7 +34,7 @@ class CAnimatedUIElement
 public:
 
 public:
-	CAnimatedUIElement(std::string aFilePath);
+	CAnimatedUIElement(std::string aFilePath, bool addToScene = true);
 	~CAnimatedUIElement();
 
 	void Level(float aLevel);

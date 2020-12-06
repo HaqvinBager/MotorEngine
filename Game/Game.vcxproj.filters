@@ -93,6 +93,9 @@
     <ClInclude Include="HealthBarComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ColliderPushManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -165,6 +168,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HealthBarComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ColliderPushManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

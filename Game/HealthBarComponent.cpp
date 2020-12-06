@@ -7,7 +7,7 @@ CHealthBarComponent::CHealthBarComponent(CGameObject& aParant, std::string aPath
 	: CBehaviour(aParant)
 {
 	myCanvas = new CCanvas();
-	myCanvas->Init(aPath);
+	myCanvas->Init(aPath, false);
 }
 
 CHealthBarComponent::~CHealthBarComponent()

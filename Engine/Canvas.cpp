@@ -38,7 +38,7 @@ CCanvas::~CCanvas()
 	myTexts.clear();
 }
 
-void CCanvas::Init(std::string aFilePath)
+void CCanvas::Init(std::string aFilePath, bool addToScene)
 {
 	std::ifstream inputStream(aFilePath);
 	IStreamWrapper inputWrapper(inputStream);
@@ -99,7 +99,7 @@ void CCanvas::Init(std::string aFilePath)
 		auto animatedDataArray = document["Animated UI Elements"].GetArray();
 		for (unsigned int i = 0; i < animatedDataArray.Size(); ++i)
 		{
-			myAnimatedUIs.emplace_back(new CAnimatedUIElement(animatedDataArray[i]["Path"].GetString()));
+			myAnimatedUIs.emplace_back(new CAnimatedUIElement(animatedDataArray[i]["Path"].GetString(), addToScene));
 			float x = animatedDataArray[i]["Position X"].GetFloat();
 			float y = animatedDataArray[i]["Position Y"].GetFloat();
 			myAnimatedUIs.back()->SetPosition({ x, y });
@@ -109,7 +109,7 @@ void CCanvas::Init(std::string aFilePath)
 
 	if (document.HasMember("Background"))
 	{
-		myBackground = new CSpriteInstance();
+		myBackground = new CSpriteInstance(addToScene);
 		myBackground->Init(CSpriteFactory::GetInstance()->GetSprite(document["Background"]["Path"].GetString()));
 		myBackground->SetRenderOrder(ERenderOrder::BackgroundLayer);
 	}
@@ -119,7 +119,7 @@ void CCanvas::Init(std::string aFilePath)
 		auto spriteDataArray = document["Sprites"].GetArray();
 		for (unsigned int i = 0; i < spriteDataArray.Size(); ++i)
 		{
-			CSpriteInstance* spriteInstance = new CSpriteInstance();
+			CSpriteInstance* spriteInstance = new CSpriteInstance(addToScene);
 			spriteInstance->Init(CSpriteFactory::GetInstance()->GetSprite(spriteDataArray[i]["Path"].GetString()));
 			mySprites.emplace_back(spriteInstance);
 			float x = spriteDataArray[i]["Position X"].GetFloat();
@@ -231,15 +231,4 @@ void CCanvas::SetEnabled(bool isEnabled)
 			sprite->SetShouldRender(myIsEnabled);
 		}
 	}
-}
-
-void CCanvas::AddToScene(CCanvas* aCanvas)
-{
-	for (const auto& sprite : aCanvas->GetSprites()) {
-		CEngine::GetInstance()->GetActiveScene().AddInstance(sprite);
-	}
-	for (const auto& animatedUI : aCanvas->GetAnimatedUI()) {
-		CEngine::GetInstance()->GetActiveScene().AddInstance(animatedUI);
-	}
-	CEngine::GetInstance()->GetActiveScene().AddInstance(aCanvas->myBackground);
 }

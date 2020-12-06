@@ -42,7 +42,6 @@ void CMouseSelection::FindSelectedEnemy()
 		//float dist = DirectX::SimpleMath::Vector3::DistanceSquared(pos, enemy->GetComponent<CTransformComponent>()->Position());
 		if (enemy->GetComponent<CCircleColliderComponent>()->Collided(1.5f, pos)) {
 			enemy->GetComponent<CHealthBarComponent>()->OnEnable();
-			std::cout << "Found Enemy: " << enemy << std::endl;
 		}
 		else {
 			enemy->GetComponent<CHealthBarComponent>()->OnDisable();
