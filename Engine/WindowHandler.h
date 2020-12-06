@@ -41,7 +41,5 @@ private:
 	CWindowHandler::SWindowData myWindowData;
 	HWND myWindowHandle;
 	DirectX::SimpleMath::Vector2* myResolution;
-	//CKeyboard myKeyboard;
-	//CMouse myMouse;
 };
 

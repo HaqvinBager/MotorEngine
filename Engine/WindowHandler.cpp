@@ -40,6 +40,8 @@ bool CWindowHandler::Init(CWindowHandler::SWindowData someWindowData)
 {
     myWindowData = someWindowData;
 
+    //HCURSOR customCursor = LoadCursorFromFileW(L"Assets/3D/UI/UI_In_Cursor_01_19G4.cur");
+
     WNDCLASSEX windowclass = {};
     windowclass.cbSize = sizeof(WNDCLASSEX);
     windowclass.style = CS_VREDRAW | CS_HREDRAW | CS_OWNDC;
@@ -48,7 +50,7 @@ bool CWindowHandler::Init(CWindowHandler::SWindowData someWindowData)
     windowclass.cbWndExtra = 0;
     windowclass.hInstance = GetModuleHandle(nullptr);
     windowclass.hIcon = (HICON)LoadImage(NULL, L"ironwrought.ico", IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE);
-    windowclass.hCursor = LoadCursor(nullptr, IDC_ARROW);
+    windowclass.hCursor = /*customCursor*/LoadCursor(nullptr, IDC_ARROW);
     windowclass.lpszClassName = L"3DEngine";
     RegisterClassEx(&windowclass);
 

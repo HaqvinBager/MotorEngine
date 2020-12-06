@@ -31,6 +31,8 @@
 #include "TransformComponent.h"
 #include "PauseState.h"
 #include "PostMaster.h"
+#include "PopupTextService.h"
+#include "RandomNumberGenerator.h"
 #include "MainSingleton.h"
 #include <iostream>
 
@@ -38,6 +40,8 @@
 #include "AIBehaviorComponent.h"
 #include "BossBehavior.h"
 #include "NavMeshComponent.h"
+#include "CameraComponent.h"
+#include "Scene.h"
 #include "MouseSelection.h"
 
 CInGameState::CInGameState(CStateStack& aStateStack) : CState(aStateStack) {
@@ -75,7 +79,7 @@ void CInGameState::Awake()
 	size_t newSize = gameObjects.size();
 
 	//Late awake
-	for (size_t j = currentSize; j < newSize; ++j) 
+	for (size_t j = currentSize; j < newSize; ++j)
 	{
 		if (gameObjects[j])
 		{
@@ -92,8 +96,8 @@ void CInGameState::Awake()
 	//myEnemy->myTransform->Position({ -2.0f, 0.0f, 6.0f });
 	//myEnemy->AddComponent<CCircleColliderComponent>(*myEnemy, 0.5f, ECollisionLayer::ENEMY, static_cast<int>(ECollisionLayer::PLAYER));
 	//CEngine::GetInstance()->GetActiveScene().AddInstance(myEnemy);
-	//myEnemy->Awake();	
-	
+	//myEnemy->Awake();
+
 	//NO TOUCHY UNLESS BOSS TEST
 	//myTestBoss = new CGameObject();
 	//CBossBehavior* bossBehavior = new CBossBehavior(&CEngine::GetInstance()->GetActiveScene().FindObjectOfType<CPlayerControllerComponent>()->GameObject());
@@ -148,7 +152,7 @@ void CInGameState::Update()
 				float len = penLength.Length();
 
 				float penDepth = enemies[i]->GetComponent<CCircleColliderComponent>()->GetRadius() + enemies[y]->GetComponent<CCircleColliderComponent>()->GetRadius() - len;
-				
+
 				DirectX::SimpleMath::Vector3 enemyAPos = { enemies[i]->myTransform->Position().x + (0.5f * penDepth), enemies[i]->myTransform->Position().y, enemies[i]->myTransform->Position().z + (0.5f * penDepth) };
 				if (CEngine::GetInstance()->GetActiveScene().GetNavMesh()->GetTriangleAtPoint(enemyAPos)) {
 					enemies[i]->myTransform->Position(enemyAPos);
@@ -176,12 +180,37 @@ void CInGameState::Update()
 		}
 	}
 
-	mySelection->FindSelectedEnemy();
-	//static float health = 1.0f;
+		mySelection->FindSelectedEnemy();
+	//static SDamagePopupData damage;
+	//damage.myDamage = 32.0f;
+	//damage.myHitType = Random(0, 4);
+	//if (Input::GetInstance()->IsKeyPressed('U')) {
+	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &damage);
+	//}
+
+	//static std::string tutorial = "Press Space to Continue";
+	//if (Input::GetInstance()->IsKeyPressed('I')) {
+	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Tutorial, tutorial);
+	//}
+
+	//static std::string warning = "You require more Mana";
+	//if (Input::GetInstance()->IsKeyPressed('O')) {
+	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Warning, warning);
+	//}
+
+	//static std::string text1 = "Skill 1";
+	//if (Input::GetInstance()->IsKeyPressed('J')) {
+	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text1);
+	//}
+
+	//static std::string text2 = "Skill 2";
 	//if (Input::GetInstance()->IsKeyPressed('K')) {
-	//	health -= 0.25f;
-	//	CMainSingleton::PostMaster().Send({ EMessageType::PlayerHealthChanged, &health });
-	//	std::cout << "Ingame: " << health << std::endl;
+	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text2);
+	//}
+
+	//static std::string text3 = "Skill 3";
+	//if (Input::GetInstance()->IsKeyPressed('L')) {
+	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text3);
 	//}
 }
 
