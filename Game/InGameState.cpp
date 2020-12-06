@@ -140,10 +140,14 @@ void CInGameState::Update()
 
 	//static SDamagePopupData damage;
 	//damage.myDamage = 32.0f;
-	//damage.myHitType = Random(0, 3);
+	//damage.myHitType = Random(0, 4);
 	//if (Input::GetInstance()->IsKeyPressed('K')) {
 	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &damage);
 	//}
+	static std::string text = "Press Space to Continue";
+	if (Input::GetInstance()->IsKeyPressed('K')) {
+		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Tutorial, text);
+	}
 }
 
 void CInGameState::ReceiveEvent(const EInputEvent aEvent)
