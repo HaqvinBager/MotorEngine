@@ -2,7 +2,7 @@
 #include "SceneReader.h"
 
 
-CSceneReader::CSceneReader()
+CSceneReader::CSceneReader() : myCurrentBinPath("NA")
 {
 }
 
@@ -26,21 +26,33 @@ CSceneReader::~CSceneReader()
 
 bool CSceneReader::OpenBin(const std::string& aBinFilePath)
 {
+	myCurrentBinPath = aBinFilePath;
 	myStream.open(aBinFilePath, std::ios::binary);
 	if (!myStream.is_open())
 	{
 		return false;
 	}
-
     return true;
 }
 
 SInGameData& CSceneReader::ReadInGameData()
 {
+	for (unsigned int i = 0; i < myInGameData.size(); ++i)
+	{
+		if (myInGameData[i]->myBinPath == myCurrentBinPath)
+		{
+			myStream.close();
+			myStreamPtr = nullptr;
+			myCurrentBinPath = "NA";
+			return *myInGameData[i];
+		}
+	}
+
 	std::string binaryData((std::istreambuf_iterator<char>(myStream)), std::istreambuf_iterator<char>());
 	myStreamPtr = &binaryData[0];
 
 	myInGameData.emplace_back(new SInGameData());
+	myInGameData.back()->myBinPath = myCurrentBinPath;
 
 	SCameraData cameraData = {};
 	myStreamPtr += Read(cameraData);
@@ -112,16 +124,28 @@ SInGameData& CSceneReader::ReadInGameData()
 
 	myStream.close();
 	myStreamPtr = nullptr;
-
+	myCurrentBinPath = "NA";
 	return *myInGameData.back();
 }
 
 SLoadScreenData& CSceneReader::ReadLoadScreenData()
 {
+	for (unsigned int i = 0; i < myLoadScreenData.size(); ++i)
+	{
+		if (myLoadScreenData[i]->myBinPath == myCurrentBinPath)
+		{
+			myStream.close();
+			myStreamPtr = nullptr;
+			myCurrentBinPath = "NA";
+			return *myLoadScreenData[i];
+		}
+	}
+
 	std::string binaryData((std::istreambuf_iterator<char>(myStream)), std::istreambuf_iterator<char>());
 	myStreamPtr = &binaryData[0];
 
 	myLoadScreenData.emplace_back(new SLoadScreenData());
+	myLoadScreenData.back()->myBinPath = myCurrentBinPath;
 
 	SCameraData cameraData = {};
 	myStreamPtr += Read(cameraData);
@@ -152,6 +176,7 @@ SLoadScreenData& CSceneReader::ReadLoadScreenData()
 
 	myStream.close();
 	myStreamPtr = nullptr;
+	myCurrentBinPath = "NA";
 
 	return *myLoadScreenData.back();
 }
