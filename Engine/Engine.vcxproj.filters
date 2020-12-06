@@ -350,6 +350,7 @@
       <Filter>Audio</Filter>
     </ClCompile>
     <ClCompile Include="PopupTextService.cpp" />
+    <ClCompile Include="PerlinNoise.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EnemyFactory.h" />
@@ -661,6 +662,7 @@
       <Filter>Audio</Filter>
     </ClInclude>
     <ClInclude Include="PopupTextService.h" />
+    <ClInclude Include="PerlinNoise.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PBRDirectionalLight.hlsli">

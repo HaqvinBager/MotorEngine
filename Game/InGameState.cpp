@@ -40,6 +40,8 @@
 #include "AIBehaviorComponent.h"
 #include "BossBehavior.h"
 #include "NavMeshComponent.h"
+#include "CameraComponent.h"
+#include "Scene.h"
 
 CInGameState::CInGameState(CStateStack& aStateStack) : CState(aStateStack) {
 	myCanvas = new CCanvas();

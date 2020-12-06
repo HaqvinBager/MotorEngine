@@ -348,6 +348,7 @@
     <ClInclude Include="MessageType.h" />
     <ClInclude Include="NavMeshComponent.h" />
     <ClInclude Include="Observer.h" />
+    <ClInclude Include="PerlinNoise.h" />
     <ClInclude Include="PointLightComponent.h" />
     <ClInclude Include="PopupTextService.h" />
     <ClInclude Include="PostMaster.h" />
@@ -457,6 +458,7 @@
     <ClCompile Include="NavMeshComponent.cpp" />
     <ClCompile Include="ObjectPool.cpp" />
     <ClCompile Include="ParticleEmitterComponent.cpp" />
+    <ClCompile Include="PerlinNoise.cpp" />
     <ClCompile Include="PlayerControllerComponent.cpp" />
     <ClCompile Include="PointLightComponent.cpp" />
     <ClCompile Include="PopupTextService.cpp" />
