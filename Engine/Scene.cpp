@@ -69,7 +69,7 @@ CScene::~CScene()
 	myEnvironmentLight = nullptr;
 
 	this->DestroyGameObjects();
-	this->DestroySprites();
+	//this->DestroySprites();// Canvas seems to delete its own sprites and so does AnimatedUIElement
 	this->DestroyPointLights();
 	this->DestroyParticles();
 	this->DestroyVFXInstances();

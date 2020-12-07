@@ -63,7 +63,7 @@ void CInGameState::Start()
 
 	myCanvas = new CCanvas();
 	myCanvas->Init("Json/UI_InGame_Description.json", CEngine::GetInstance()->GetActiveScene());
-
+	
 	myTokenPool = new CTokenPool(4, 4.0f);
 
 	std::vector<CGameObject*>& gameObjects = CEngine::GetInstance()->GetActiveScene().myGameObjects;

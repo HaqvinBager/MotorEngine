@@ -52,18 +52,12 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 	switch (aEvent)
 	{
 	case IInputObserver::EInputEvent::MoveClick:
-		this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
-		// TEMP, Ok to remove
-		if (this->GameObject().GetComponent<CAnimationComponent>() != nullptr)
-			this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::Run);
-		// ! TEMP
+		if(this->GameObject().GetComponent<CNavMeshComponent>() != nullptr)// Temp, ok to remove. Used for testing barebones scene
+			this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
 		break;
 	case IInputObserver::EInputEvent::MoveDown:
-		this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
-		// TEMP, Ok to remove
-		if (this->GameObject().GetComponent<CAnimationComponent>() != nullptr)
-			this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::Run);
-		// ! TEMP
+		if(this->GameObject().GetComponent<CNavMeshComponent>() != nullptr)// Temp, ok to remove. Used for testing barebones scene
+			this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
 		break;
 	case IInputObserver::EInputEvent::AttackClick:
 		this->GameObject().GetComponent<CAnimationComponent>()->DeadState();// for testing

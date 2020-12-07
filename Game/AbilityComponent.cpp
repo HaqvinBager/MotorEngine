@@ -60,17 +60,15 @@ CAbilityComponent::CAbilityComponent(CGameObject& aParent, std::vector<std::pair
 
 CAbilityComponent::~CAbilityComponent()
 {
-	delete myCurrentCooldowns;// delete[]? , see constructor for reason for question
+	delete[] myCurrentCooldowns;// delete[]? , see constructor for reason for question
 	myCurrentCooldowns = nullptr;
 
-	delete myMaxCooldowns;// delete[]?
+	delete[] myMaxCooldowns;// delete[]?
 	myMaxCooldowns = nullptr;
 }
 
 void CAbilityComponent::Awake()
 {
-	
-
 	// Setting up pools
 	for (unsigned int i = 0; i < myAbilityPoolDescriptions.size(); ++i) {
 		std::vector<CGameObject*> gameObjectsToPool;

@@ -64,11 +64,14 @@ void CLoadLevelState::Update()
 		//CEngine::GetInstance()->SetActiveScene();
 		myStateStack.PopTopAndPush(CStateStack::EState::InGame);
 	}
-
-	for (auto& gameObject : CEngine::GetInstance()->GetActiveScene().GetActiveGameObjects())
+	else
 	{
-		gameObject->Update();
+		for (auto& gameObject : CEngine::GetInstance()->GetActiveScene().GetActiveGameObjects())
+		{
+			gameObject->Update();
+		}
 	}
+
 }
 
 ///
@@ -108,6 +111,7 @@ const CStateStack::EState CLoadLevelState::Load(const ELevel aLevel)
 			SLoadScreenData& data = mySceneReader.ReadLoadScreenData();
 			CScene* loadScreenScene = new CScene();// myLoadScreenScene
 			myUnityFactory.FillScene(data, BinModelPaths(aLevel), *loadScreenScene);
+		
 			std::cout << "Adding Loading Screen" << std::endl;
 			return CEngine::GetInstance()->AddScene(CStateStack::EState::LoadLevel, loadScreenScene);
 		}

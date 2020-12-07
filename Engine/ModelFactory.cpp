@@ -41,6 +41,27 @@ CModelFactory::~CModelFactory()
 {
 	ourInstance = nullptr;
 	myEngine = nullptr;
+
+	auto it = myModelMap.begin();
+	while (it != myModelMap.end())
+	{
+		delete it->second;
+		it->second = nullptr;
+	}
+	
+	auto itPBR = myModelMapPBR.begin();
+	while (itPBR != myModelMapPBR.end())
+	{
+		delete itPBR->second;
+		itPBR->second = nullptr;
+	}
+	
+	auto itInstaned = myInstancedModelMapPBR.begin();
+	while (itInstaned != myInstancedModelMapPBR.end())
+	{
+		delete itInstaned->second;
+		itInstaned->second = nullptr;
+	}
 }
 
 
@@ -523,6 +544,20 @@ CModel* CModelFactory::GetOutlineModelSubset()
 	return myOutlineModelSubset;
 }
 
+CModel* CModelFactory::GetInstancedModel(std::string aFilePath, int aNumberOfInstanced)
+{
+	SInstancedModel instancedModel = {aFilePath, aNumberOfInstanced};
+	std::cout << aFilePath << " " << aNumberOfInstanced << " Hash: "<< instancedModel.myModelTypeHashCode << std::endl;
+	if (myInstancedModelMapPBR.find(instancedModel) == myInstancedModelMapPBR.end())
+	{
+		std::cout << "Creating new \n___\n" << std::endl;
+		return CreateInstancedModels(aFilePath, aNumberOfInstanced);
+	}
+	std::cout << "Fetching : "<< aFilePath << " " << aNumberOfInstanced << " Hash: "<< instancedModel.myModelTypeHashCode << std::endl;
+	std::cout << "___\n" << std::endl;
+	return myInstancedModelMapPBR[instancedModel];
+}
+
 CModel* CModelFactory::CreateInstancedModels(std::string aFilePath, int aNumberOfInstanced)
 {
 	const size_t last_slash_idx = aFilePath.find_last_of("\\/");
@@ -689,7 +724,9 @@ CModel* CModelFactory::CreateInstancedModels(std::string aFilePath, int aNumberO
 	modelInstanceData.myTexture[2] = normalResourceView;
 
 	model->Init(modelInstanceData);
+	SInstancedModel instancedModel = { aFilePath, aNumberOfInstanced };
 
+	myInstancedModelMapPBR[instancedModel] = model;
 	return model;
 }
 

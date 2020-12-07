@@ -63,6 +63,7 @@ CEngine::CEngine()
 	myAudioManager = new CAudioManager();
 	//myActiveScene = 0; //muc bad
 	myActiveState = CStateStack::EState::MainMenu;
+	myInGameScene = nullptr;
 }
 
 CEngine::~CEngine()
@@ -159,7 +160,14 @@ float CEngine::BeginFrame()
 
 void CEngine::RenderFrame()
 {
-	myRenderManager->Render(*mySceneMap[myActiveState]);
+	if (myActiveState == CStateStack::EState::InGame)
+	{
+		myRenderManager->Render(*myInGameScene);
+	}
+	else
+	{
+		myRenderManager->Render(*mySceneMap[myActiveState]);
+	}
 	//if(myScenes.size() > 0 && myActiveScene < myScenes.size())
 	//	myRenderManager->Render(*myScenes[myActiveScene]);
 }
@@ -214,10 +222,26 @@ CEngine* CEngine::GetInstance()
 
 const CStateStack::EState CEngine::AddScene(const CStateStack::EState aState, CScene* aScene)
 {
-	if (mySceneMap.find(aState) != mySceneMap.end())
+	if (aState == CStateStack::EState::InGame)
 	{
-		delete mySceneMap[aState];
-		mySceneMap[aState] = nullptr;
+		if (myInGameScene != nullptr)
+		{
+			delete myInGameScene;
+			myInGameScene = nullptr;
+		}
+		myInGameScene = aScene;
+		return aState;
+	}
+
+	auto it = mySceneMap.find(aState);
+	if (it/*mySceneMap.find(aState)*/ != mySceneMap.end())
+	{
+		std::cout << __FUNCTION__ << " Deleteing scene for " << static_cast<int>(aState) << std::endl;
+		delete it->second;
+		it->second = nullptr;
+		//delete mySceneMap[aState];
+		//mySceneMap[aState] = nullptr;
+		mySceneMap.erase(it);
 	}
 	mySceneMap[aState] = aScene;
 
@@ -249,6 +273,10 @@ void CEngine::SetActiveScene(const CStateStack::EState aState)
 
 CScene& CEngine::GetActiveScene()
 {
+	if (myActiveState == CStateStack::EState::InGame)
+	{
+		return *myInGameScene;
+	}
 	return *mySceneMap[myActiveState];
 	//return *myScenes[myActiveScene];
 }

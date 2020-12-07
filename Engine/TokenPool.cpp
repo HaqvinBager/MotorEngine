@@ -17,6 +17,11 @@ CTokenPool::CTokenPool(int aMaxTokens, float aTokenCooldown)
 CTokenPool::~CTokenPool()
 {
 	ourInstance = nullptr;
+	for (auto& token : myTokens)
+	{
+		delete token;
+		token = nullptr;
+	}
 }
 
 void CTokenPool::Update()
