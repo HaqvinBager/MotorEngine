@@ -39,4 +39,6 @@ void CProjectileBehavior::Init(CGameObject* aCaster)
 {
 	myDirection = MouseTracker::ScreenPositionToWorldPosition() - aCaster->GetComponent<CTransformComponent>()->Position();
 	myDirection.Normalize();
+
+	aCaster->myTransform->Rotation({0, DirectX::XMConvertToDegrees(atan2f(myDirection.x, myDirection.z)) + 180.f, 0});
 }

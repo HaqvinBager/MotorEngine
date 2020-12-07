@@ -10,6 +10,7 @@ IAbilityBehavior::IAbilityBehavior() :
 	myResourceCost(0.0f),
 	myDamageMultiplier(0.0f)
 {
+	myDirection = {0.0f, 0.0f, 0.0f};
 }
 
 IAbilityBehavior::~IAbilityBehavior()
