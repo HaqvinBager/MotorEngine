@@ -19,9 +19,11 @@
 #include "CollisionEventComponent.h"
 #include "RectangleColliderComponent.h"
 #include "CircleColliderComponent.h"
+#include "VFXComponent.h"
 
 #include "CollisionManager.h"
 #include "LightFactory.h"
+#include "VFXFactory.h"
 #include "PointLight.h"
 #include "StatsComponent.h"
 #include "EnemyBehavior.h"
@@ -144,6 +146,11 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 		if (modelIndexMap.find(key) != modelIndexMap.end()) {
 			aScene.AddInstance(CreateGameObjectInstanced(aBinModelPaths[key], modelIndexMap[key], transformIndexMap[key]));
 		}
+	}
+
+	for (auto& environmentFX : aData.myEnvironmentFXs)
+	{
+		aScene.AddInstance(CreateGameObject(environmentFX, aData.myEnvironmentFXStringMap.at(environmentFX.myInstanceID)));
 	}
 
 	return true;
@@ -273,4 +280,19 @@ CGameObject* CUnityFactory::CreateGameObject(const SEventData& aData, const std:
 		ECollisionLayer::EVENT, 
 		static_cast<uint64_t>(ECollisionLayer::PLAYER));
     return gameObject;
+}
+
+CGameObject* CUnityFactory::CreateGameObject(const SEnvironmentFXData& aData, std::string aEnvironmentFXName)
+{
+	CGameObject* gameObject = new CGameObject();
+	gameObject->myTransform->Position(aData.myPosition);
+	gameObject->myTransform->Rotation(aData.myRotation);
+	gameObject->myTransform->Scale(aData.myScale.x);
+
+	std::string jsonPath = "json/VFXData_";
+	jsonPath.append(aEnvironmentFXName.c_str());
+	jsonPath.append(".json");
+	gameObject->AddComponent<CVFXComponent>(*gameObject)->Init(CVFXFactory::GetInstance()->GetVFXBaseSet({ jsonPath }));
+
+	return gameObject;
 }
