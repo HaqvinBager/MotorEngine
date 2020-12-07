@@ -24,7 +24,11 @@
 #include "AbilityBehavior.h"
 #include "RandomNumberGenerator.h"
 #include "DamageUtility.h"
+#include "PostMaster.h"
 #include "PopupTextService.h"
+#include "HealthBarComponent.h"
+#include "Canvas.h"
+#include "AnimatedUIElement.h"
 
 CEnemyBehavior::CEnemyBehavior(CGameObject* aPlayerObject)
 	: myPlayer(aPlayerObject)
@@ -40,14 +44,6 @@ void CEnemyBehavior::Update(CGameObject* aParent)
 	//enemy logic
 	SBaseStats baseStats = myCurrentParent->GetComponent<CStatsComponent>()->GetBaseStats();
 	SStats stats = myCurrentParent->GetComponent<CStatsComponent>()->GetStats();
-
-	if (stats.myCanTakeDamage == false) {
-		stats.myDamageCooldown -= CTimer::Dt();
-		if (stats.myDamageCooldown <= 0) {
-			stats.myCanTakeDamage = true;
-			stats.myDamageCooldown = baseStats.myBaseDamageCooldown;
-		}
-	}
 
 	if (stats.myHealth <= 0) {
 		CMainSingleton::PostMaster().Send({ EMessageType::EnemyDied, this });
@@ -154,12 +150,19 @@ void CEnemyBehavior::TakeDamage(float aDamageMultiplier, CGameObject* aGameObjec
 	EHitType hitType = EHitType::Normal;
 	float damage = CDamageUtility::CalculateDamage(hitType, myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myDamage, aDamageMultiplier, 0.25f, 1.5f);
 
-	stats.myHealth -= damage;
-	SDamagePopupData data = {damage, static_cast<int>(hitType)};
-	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &data);
-	std::cout << __FUNCTION__ << " Enemy current health: " << stats.myHealth << std::endl;
-	CMainSingleton::PostMaster().Send({ EMessageType::EnemyHealthChanged, &stats.myHealth });
-	
+	if (myCurrentParent->GetComponent<CStatsComponent>()->AddDamage(damage)) {
+		SDamagePopupData data = {damage, static_cast<int>(hitType)};
+		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &data);
+		std::cout << __FUNCTION__ << " Enemy current health: " << stats.myHealth << std::endl;
+		float baseHealth = myCurrentParent->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
+		float difference = baseHealth - myCurrentParent->GetComponent<CStatsComponent>()->GetStats().myHealth;
+		difference = (baseHealth - difference) / baseHealth;
+		if (difference <= 0.0)
+			difference = 0.0f;
+
+		myCurrentParent->GetComponent<CHealthBarComponent>()->GetCanvas()->GetAnimatedUI()[0]->Level(difference);
+	}
+
 	if (stats.myHealth <= 0)
 	{
 		Die();
@@ -174,5 +177,6 @@ void CEnemyBehavior::Die()
 	myCurrentParent->GetComponent<CAbilityComponent>()->Enabled(false);
 	myCurrentParent->GetComponent<CNavMeshComponent>()->Enabled(false);
 	myCurrentParent->GetComponent<CAnimationComponent>()->DeadState();
+	myCurrentParent->GetComponent<CHealthBarComponent>()->Enabled(false);
 	CMainSingleton::PostMaster().Send({ EMessageType::EnemyDied, 0 });
 }

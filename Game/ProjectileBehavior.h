@@ -14,7 +14,6 @@ public:
 	~CProjectileBehavior() override;
 
 	void Update(CGameObject* aParent) override;
-	void Collided(CGameObject* aGameObject) override;
 	void Init(CGameObject* aCaster) override;
 
 private:
