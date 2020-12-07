@@ -291,7 +291,6 @@
     <ClInclude Include="ColliderPushManager.h" />
     <ClInclude Include="DamageUtility.h" />
     <ClInclude Include="DelayedExplosionBehavior.h" />
-    <ClInclude Include="DialogueSystem.h" />
     <ClInclude Include="EnemyBehavior.h" />
     <ClInclude Include="FireConeBehavior.h" />
     <ClInclude Include="Game.h" />
@@ -320,7 +319,6 @@
     <ClCompile Include="BossBehavior.cpp" />
     <ClCompile Include="ColliderPushManager.cpp" />
     <ClCompile Include="DelayedExplosionBehavior.cpp" />
-    <ClCompile Include="DialogueSystem.cpp" />
     <ClCompile Include="EnemyBehavior.cpp" />
     <ClCompile Include="FireConeBehavior.cpp" />
     <ClCompile Include="Game.cpp" />

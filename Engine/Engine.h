@@ -23,6 +23,7 @@ class CForwardRenderer;
 class CVFXFactory;
 class CLineFactory;
 class CAudioManager;
+//class CDialogueSystem;
 
 class CEngine
 {
@@ -78,4 +79,5 @@ private:
 	CEnemyFactory* myEnemyFactory;
 	CMainSingleton* myMainSingleton;
 	CAudioManager* myAudioManager;
+	//CDialogueSystem* myDialogueSystem;
 };

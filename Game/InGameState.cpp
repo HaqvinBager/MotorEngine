@@ -122,6 +122,9 @@ void CInGameState::Awake()
 
 	//CEngine::GetInstance()->GetActiveScene().AddInstance(myTestBoss);
 	//myTestBoss->Awake();
+
+	//int sceneIndex = 0;
+	//CMainSingleton::PostMaster().Send({ EMessageType::LoadDialogue, &sceneIndex });
 }
 
 void CInGameState::Start()

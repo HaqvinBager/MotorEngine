@@ -351,6 +351,7 @@
     </ClCompile>
     <ClCompile Include="PopupTextService.cpp" />
     <ClCompile Include="PerlinNoise.cpp" />
+    <ClCompile Include="DialogueSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EnemyFactory.h" />
@@ -663,6 +664,7 @@
     </ClInclude>
     <ClInclude Include="PopupTextService.h" />
     <ClInclude Include="PerlinNoise.h" />
+    <ClInclude Include="DialogueSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PBRDirectionalLight.hlsli">

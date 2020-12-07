@@ -105,35 +105,34 @@ void CPopupTextService::SpawnPopup(EPopupType aType, std::string aNameOrText)
 	}
 }
 
-const std::vector<CTextInstance*> CPopupTextService::GetTexts()
+void CPopupTextService::EmplaceTexts(std::vector<CTextInstance*>& someTexts)
 {
 	UpdateResources();
 	
-	std::vector<CTextInstance*> activeTexts = myActiveDamageNumbers;
+	for (unsigned int i = 0; i < myActiveDamageNumbers.size(); ++i)
+	{
+		someTexts.emplace_back(myActiveDamageNumbers[i]);
+	}
+
 	if (myActiveTutorialText) {
-		activeTexts.emplace_back(myActiveTutorialText);
+		someTexts.emplace_back(myActiveTutorialText);
 	}
 
 	if (myActiveWarningText) {
-		activeTexts.emplace_back(myActiveWarningText);
+		someTexts.emplace_back(myActiveWarningText);
 	}
 
 	if (myActiveInfoBoxText) {
-		activeTexts.emplace_back(myActiveInfoBoxText);
+		someTexts.emplace_back(myActiveInfoBoxText);
 	}
-
-	return activeTexts;
 }
 
-const std::vector<CSpriteInstance*> CPopupTextService::GetSprites()
+void CPopupTextService::EmplaceSprites(std::vector<CSpriteInstance*>& someSprites) const
 {
-	std::vector<CSpriteInstance*> activeSprites;
 	if (myActiveInfoBoxText) {
-		activeSprites.emplace_back(myInfoBoxBackground);
-		activeSprites.emplace_back(myActiveSkillSprite);
+		someSprites.emplace_back(myInfoBoxBackground);
+		someSprites.emplace_back(myActiveSkillSprite);
 	}
-
-	return activeSprites;
 }
 
 CPopupTextService::CPopupTextService()

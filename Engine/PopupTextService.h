@@ -42,8 +42,8 @@ public:
 	void SpawnPopup(EPopupType aType, std::string aNameOrText);
 
 public:
-	const std::vector<CTextInstance*> GetTexts();
-	const std::vector<CSpriteInstance*> GetSprites();
+	void EmplaceSprites(std::vector<CSpriteInstance*>& someSprites) const;
+	void EmplaceTexts(std::vector<CTextInstance*>& someTexts);
 
 private:
 	std::vector<CTextInstance*> myActiveDamageNumbers;

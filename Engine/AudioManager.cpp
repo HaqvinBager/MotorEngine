@@ -125,6 +125,10 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	}
 }
 
+void CAudioManager::Update()
+{
+}
+
 void CAudioManager::SubscribeToMessages()
 {
 	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);

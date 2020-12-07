@@ -21,3 +21,8 @@ CPopupTextService& CMainSingleton::PopupTextService()
 {
 	return ourInstance->myPopupTextService;
 }
+
+CDialogueSystem& CMainSingleton::DialogueSystem()
+{
+	return ourInstance->myDialogueSystem;
+}

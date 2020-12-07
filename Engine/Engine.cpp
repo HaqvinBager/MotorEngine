@@ -59,6 +59,7 @@ CEngine::CEngine()
 	myMainSingleton = new CMainSingleton();
 	// Audio Manager must be constructed after main singleton, since it subscribes to postmaster messages
 	myAudioManager = new CAudioManager();
+	//myDialogueSystem = new CDialogueSystem();
 	myActiveScene = 0; //muc bad
 }
 
@@ -105,6 +106,9 @@ CEngine::~CEngine()
 	delete myAudioManager;
 	myAudioManager = nullptr;
 
+	//delete myDialogueSystem;
+	//myDialogueSystem = nullptr;
+
 	delete myMainSingleton;
 	myMainSingleton = nullptr;
 
@@ -129,7 +133,9 @@ bool CEngine::Init(CWindowHandler::SWindowData& someWindowData)
 	ENGINE_ERROR_BOOL_MESSAGE(mySpriteFactory->Init(myFramework), "Sprite Factory could not be initialized.");
 	ENGINE_ERROR_BOOL_MESSAGE(myTextFactory->Init(myFramework), "Text Factory could not be initialized.");
 	ENGINE_ERROR_BOOL_MESSAGE(myInputMapper->Init(), "InputMapper could not be initialized.");
+
 	ENGINE_ERROR_BOOL_MESSAGE(CMainSingleton::PopupTextService().Init(), "Popup Text Service could not be initialized.");
+	ENGINE_ERROR_BOOL_MESSAGE(CMainSingleton::DialogueSystem().Init(), "Dialogue System could not be initialized.");
 	InitWindowsImaging();
 	return true;
 }
@@ -143,13 +149,16 @@ float CEngine::BeginFrame()
 	myWindowHandler->SetWindowTitle("IronWrought | FPS: " + fpsString);
 #endif // _DEBUG
 
-	std::array<float, 4> clearColor = { 0.5f, 0.5f, 0.5f, 1.0f };
+	std::array<float, 4> clearColor = { 0.15f, 0.15f, 0.15f, 1.0f };
 	myFramework->BeginFrame(clearColor);
 
 #ifdef _DEBUG
 	myDebug->Update();
 	//CDebug::GetInstance()->Update();
 #endif
+
+	myAudioManager->Update();
+	CMainSingleton::DialogueSystem().Update();
 
 	return myTimer->Mark();
 }

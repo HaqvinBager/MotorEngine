@@ -14,7 +14,7 @@ public:
 
 public:
 	void Init(std::string aFilePath, bool addToScene = true);
-	void Update(/*float aDeltaTime*/);
+	void Update();
 
 public:
 	void Receive(const SMessage& aMessage) override;
