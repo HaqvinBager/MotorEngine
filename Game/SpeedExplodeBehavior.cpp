@@ -9,6 +9,8 @@
 #include "VFXComponent.h"
 #include "StatsComponent.h"
 #include "MainSingleton.h"
+#include "AIBehavior.h"
+#include "AIBehaviorComponent.h"
 
 CSpeedExplodeBehavior::CSpeedExplodeBehavior(float aDuration, float aResourceCost, float aExplosionDelay, float aMovementSpeedMultiplier, float aDamage, CGameObject* aParent)
 {
@@ -22,7 +24,7 @@ CSpeedExplodeBehavior::CSpeedExplodeBehavior(float aDuration, float aResourceCos
 	myParent = aParent;
 	myCasterTransform = nullptr;
 	myCaster = nullptr;
-	myDamage = aDamage;
+	myDamageMultiplier = aDamage;
 }
 
 CSpeedExplodeBehavior::~CSpeedExplodeBehavior()
@@ -81,6 +83,14 @@ void CSpeedExplodeBehavior::Update(CGameObject* aParent)
 	else
 	{
 		aParent->Active(false);
+	}
+}
+
+void CSpeedExplodeBehavior::Collided(CGameObject* aGameObject)
+{
+	CAIBehaviorComponent* AIBehavior = aGameObject->GetComponent<CAIBehaviorComponent>();
+	if (AIBehavior) {
+		AIBehavior->AIBehavior()->TakeDamage(myDamageMultiplier, aGameObject);
 	}
 }
 

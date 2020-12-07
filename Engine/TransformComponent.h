@@ -44,6 +44,7 @@ public:
 
 	void MoveAlongPath();
 	void SetPath(std::vector<DirectX::SimpleMath::Vector3>& aPath, DirectX::SimpleMath::Vector3 aFinalPosition);
+	void ClearPath();
 
 	float MovementSpeed() const;
 	void MovementSpeed(float aMovementSpeed);

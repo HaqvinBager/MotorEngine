@@ -33,7 +33,6 @@ void CTextRenderer::Render(std::vector<CTextInstance*>& aTextInstanceList)
     CTextInstance* instance = nullptr;
     CText::STextData textData;
 
-    float scale = 1.0f;
     DirectX::SimpleMath::Vector2 dimensions;
 
     mySpriteBatch->Begin();
@@ -45,8 +44,9 @@ void CTextRenderer::Render(std::vector<CTextInstance*>& aTextInstanceList)
         dimensions = { DirectX::XMVectorGetX(result), DirectX::XMVectorGetY(result) };
         dimensions *= instance->GetPivot();
 
-        textData.mySpriteFont->DrawString(mySpriteBatch, instance->GetText().c_str(), instance->GetPosition() + dropShadowOffset - dimensions, dropShadowColor, 0.0f, { 0.0f, 0.0f }, { scale, scale });
-        textData.mySpriteFont->DrawString(mySpriteBatch, instance->GetText().c_str(), instance->GetPosition() - dimensions, instance->GetColor(), 0.0f, { 0.0f, 0.0f }, { scale, scale });
+        dropShadowColor.w = instance->GetColor().w;
+        textData.mySpriteFont->DrawString(mySpriteBatch, instance->GetText().c_str(), instance->GetPosition() + dropShadowOffset - dimensions, dropShadowColor, 0.0f, { 0.0f, 0.0f }, instance->GetScale());
+        textData.mySpriteFont->DrawString(mySpriteBatch, instance->GetText().c_str(), instance->GetPosition() - dimensions, instance->GetColor(), 0.0f, { 0.0f, 0.0f }, instance->GetScale());
     }
     mySpriteBatch->End();
 }

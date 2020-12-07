@@ -17,6 +17,7 @@ public:
 	~CFireConeBehavior() override;
 
 	void Init(CGameObject* aCaster) override;
+	void Collided(CGameObject* aGameObject) override;
 	void Update(CGameObject* aParent) override;
 
 private:

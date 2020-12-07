@@ -5,6 +5,7 @@
 //class CRectangleColliderComponent;
 class CGameObject;
 enum class ECollisionLayer;
+
 class CCollisionEventComponent : public CComponent
 {
 public:

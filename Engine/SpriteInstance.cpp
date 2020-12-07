@@ -5,9 +5,11 @@
 #include "Engine.h"
 #include "WindowHandler.h"
 
-CSpriteInstance::CSpriteInstance()
+CSpriteInstance::CSpriteInstance(bool aAddToScene)
 {
 	mySprite = nullptr;
+
+	if (aAddToScene)
 	CEngine::GetInstance()->GetActiveScene().AddInstance(this);
 }
 
@@ -48,9 +50,9 @@ void CSpriteInstance::SetRenderOrder(ERenderOrder aRenderOrder)
 }
 
 /// <summary>
-///The y-position is flipped in this function so that we go from Shader space 
-///([-1, -1] in the lower left corner) to Shader space with [-1, -1] in the 
-/// upper left corner. I think this is more intuitive, but might as well 
+///The y-position is flipped in this function so that we go from Shader space
+///([-1, -1] in the lower left corner) to Shader space with [-1, -1] in the
+/// upper left corner. I think this is more intuitive, but might as well
 /// revert this.
 /// </summary>
 /// <param name="aPosition"></param>

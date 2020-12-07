@@ -14,7 +14,7 @@ public:
 
 	void FindATarget();
 
-	void TakeDamage(float someDamage);
+	void TakeDamage(float someDamage, CGameObject* aGameObject) override;
 
 	void Die();
 

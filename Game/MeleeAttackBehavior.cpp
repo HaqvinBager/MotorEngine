@@ -6,6 +6,8 @@
 #include "MouseTracker.h"
 #include "Engine.h"
 #include "TriangleColliderComponent.h"
+#include "AIBehavior.h"
+#include "AIBehaviorComponent.h"
 
 CMeleeAttackBehavior::CMeleeAttackBehavior(float aDuration, float aDamage, CGameObject* aParent)
 {
@@ -14,7 +16,7 @@ CMeleeAttackBehavior::CMeleeAttackBehavior(float aDuration, float aDamage, CGame
 	myTimer = 0.0f;
 	myParent = aParent;
 	myCaster = nullptr;
-	myDamage = aDamage;
+	myDamageMultiplier = aDamage;
 }
 
 CMeleeAttackBehavior::~CMeleeAttackBehavior()
@@ -36,6 +38,11 @@ void CMeleeAttackBehavior::Init(CGameObject* aCaster)
 
 	myDirection = MouseTracker::ScreenPositionToWorldPosition() - aCaster->GetComponent<CTransformComponent>()->Position();
 	myDirection.Normalize();
+}
+
+void CMeleeAttackBehavior::Collided(CGameObject* /*aGameObject*/)
+{
+	//TODO add damage
 }
 
 void CMeleeAttackBehavior::Update(CGameObject* aParent)

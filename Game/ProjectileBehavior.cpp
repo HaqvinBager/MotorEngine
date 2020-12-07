@@ -5,6 +5,8 @@
 #include "Timer.h"
 #include "MouseTracker.h"
 #include "Engine.h"
+#include "AIBehavior.h"
+#include "AIBehaviorComponent.h"
 
 namespace SM = DirectX::SimpleMath;
 
@@ -15,7 +17,7 @@ CProjectileBehavior::CProjectileBehavior(float aSpeed, float aDuration, float aD
 
 	myDuration = aDuration;
 	myTimer = 0.0f;
-	myDamage = aDamage;
+	myDamageMultiplier = aDamage;
 }
 
 CProjectileBehavior::~CProjectileBehavior()
@@ -30,6 +32,14 @@ void CProjectileBehavior::Update(CGameObject* aParent)
 		aParent->Active(false);
 	}
 	aParent->GetComponent<CTransformComponent>()->Move(myDirection * mySpeed * CTimer::Dt());
+}
+
+void CProjectileBehavior::Collided(CGameObject* aGameObject)
+{
+	CAIBehaviorComponent* AIBehavior = aGameObject->GetComponent<CAIBehaviorComponent>();
+	if (AIBehavior) {
+		AIBehavior->AIBehavior()->TakeDamage(myDamageMultiplier, aGameObject);
+	}
 }
 
 void CProjectileBehavior::Init(CGameObject* aCaster)

@@ -39,3 +39,8 @@ void CAIBehaviorComponent::OnEnable()
 void CAIBehaviorComponent::OnDisable()
 {
 }
+
+IAIBehavior* CAIBehaviorComponent::AIBehavior()
+{
+	return myBehavior;
+}

@@ -14,6 +14,7 @@ struct SBaseStats {
 	const float myBaseDamageCooldown;
 	const float myBaseVisionRange;
 	const float myBaseAttackRange;
+	const float mBaseRandomWalkTime;
 };
 
 struct SStats {
@@ -24,6 +25,7 @@ struct SStats {
 	bool myCanTakeDamage;
 	bool myCanAttack;
 	CToken* myTokenSlot;
+	float myRandomWalkTime;
 };
 
 class CStatsComponent : public CBehaviour

@@ -13,7 +13,7 @@ public:
 	~CCanvas();
 
 public:
-	void Init(std::string aFilePath);
+	void Init(std::string aFilePath, bool addToScene = true);
 	void Update(/*float aDeltaTime*/);
 
 public:
@@ -26,6 +26,8 @@ public:
 	void SetEnabled(bool isEnabled);
 
 	std::vector<CButton*> GetButtons() { return myButtons; }
+	std::vector<CSpriteInstance*> GetSprites() { return mySprites; }
+	std::vector<CAnimatedUIElement*> GetAnimatedUI() { return myAnimatedUIs; }
 
 private:
 	bool myIsEnabled;

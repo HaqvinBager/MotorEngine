@@ -15,6 +15,7 @@ public:
 
 	void Update(CGameObject* aParent) override;
 	void CalculateDirection(DirectX::SimpleMath::Vector3 aFirstPosition, DirectX::SimpleMath::Vector3 aSecondPosition);
+	void Collided(CGameObject* aGameObject) override;
 	void Init(CGameObject* aCaster) override;
 
 private:

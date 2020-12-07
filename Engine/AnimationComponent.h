@@ -36,7 +36,7 @@ public:
 	void GetAnimatedTransforms(float dt, SlimMatrix44* transforms);
 
 	void MovingState();
-	void DeadState();// After calling this no other animation will be able to be called.
+	bool DeadState();// After calling this no other animation will be able to be called.
 	void ForceToIdleState();
 
 	template <class T>

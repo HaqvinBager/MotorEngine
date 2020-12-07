@@ -5,6 +5,9 @@
 class CTokenPool;
 class CCanvas;
 class CGameObject;
+class CMouseSelection;
+class CColliderPushManager;
+
 class CInGameState : public CState, public IInputObserver
 {
 
@@ -24,4 +27,6 @@ private:
 	CTokenPool* myTokenPool;
 	CGameObject* myEnemy;
 	CGameObject* myTestBoss;
+	CMouseSelection* mySelection;
+	CColliderPushManager* myColliderPusher;
 };

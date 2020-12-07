@@ -28,13 +28,13 @@ bool CEnvironmentLight::Init(CDirectXFramework* aFramework, std::string aFilePat
 
 	delete[] cubeMapPathWide;
 
-	// 2020 12 04 - Seems to not be used anywhere.
-		//ID3D11Resource* cubeResource;
-		//myCubeShaderResourceView->GetResource(&cubeResource);
-		//ID3D11Texture2D* cubeTexture = reinterpret_cast<ID3D11Texture2D*>(cubeResource);
-		//D3D11_TEXTURE2D_DESC cubeDescription = { 0 };
-		//cubeTexture->GetDesc(&cubeDescription);
-		//myMipLevels = cubeDescription.MipLevels;
+	ID3D11Resource* cubeResource;
+	myCubeShaderResourceView->GetResource(&cubeResource);
+	ID3D11Texture2D* cubeTexture = reinterpret_cast<ID3D11Texture2D*>(cubeResource);
+	D3D11_TEXTURE2D_DESC cubeDescription = { 0 };
+	cubeTexture->GetDesc(&cubeDescription);
+
+	ENGINE_BOOL_POPUP((cubeDescription.MiscFlags & D3D11_RESOURCE_MISC_TEXTURECUBE), "Cubemap texture could not be read as a cubemap! Is loaded as a Texture2D instead of TextureCube.")
 
 	return true;
 }

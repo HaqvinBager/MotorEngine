@@ -8,12 +8,12 @@ public:
 	virtual ~IAbilityBehavior() = 0;
 
 	virtual void Update(CGameObject* aParent) = 0;
-
+	virtual void Collided(CGameObject* aGameObject) = 0;
 	virtual void Init(CGameObject* aCaster) = 0;
 
 public:
 	float myDuration;
 	float myTimer;
 	float myResourceCost;
-	float myDamage;
+	float myDamageMultiplier;
 };

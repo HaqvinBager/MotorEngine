@@ -9,6 +9,8 @@
 #include "StatsComponent.h"
 #include "PostMaster.h"
 #include "MainSingleton.h"
+#include "AIBehaviorComponent.h"
+#include "AIBehavior.h"
 
 namespace SM = DirectX::SimpleMath;
 
@@ -23,7 +25,7 @@ CBoomerangBehavior::CBoomerangBehavior(float aSpeed, float aDuration, float aRes
 	myResourceCost = aResourceCost;
 	myRotationalSpeed = aRotationalSpeed;
 	myHalfLife = myDuration / 2.0f;
-	myDamage = aDamage;
+	myDamageMultiplier = aDamage;
 }
 
 CBoomerangBehavior::~CBoomerangBehavior()
@@ -61,6 +63,15 @@ void CBoomerangBehavior::CalculateDirection(DirectX::SimpleMath::Vector3 aFirstP
 {
 	myDirection = aFirstPosition - aSecondPosition;
 	myDirection.Normalize();
+}
+
+void CBoomerangBehavior::Collided(CGameObject* aGameObject)
+{
+	//TODO add damage
+	CAIBehaviorComponent* AIBehavior = aGameObject->GetComponent<CAIBehaviorComponent>();
+	if (AIBehavior) {
+		AIBehavior->AIBehavior()->TakeDamage(myDamageMultiplier, aGameObject);
+	}
 }
 
 void CBoomerangBehavior::Init(CGameObject* aCaster)

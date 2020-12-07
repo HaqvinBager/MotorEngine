@@ -8,6 +8,8 @@
 #include "StatsComponent.h"
 #include "MainSingleton.h"
 #include "TriangleColliderComponent.h"
+#include "AIBehavior.h"
+#include "AIBehaviorComponent.h"
 
 CFireConeBehavior::CFireConeBehavior(float aDuration, float aResourceCost, float aDamage, CGameObject* aParent)
 {
@@ -17,7 +19,7 @@ CFireConeBehavior::CFireConeBehavior(float aDuration, float aResourceCost, float
 	myTimer = 0.0f;
 	myParent = aParent;
 	myCaster = nullptr;
-	myDamage = aDamage;
+	myDamageMultiplier = aDamage;
 }
 
 CFireConeBehavior::~CFireConeBehavior()
@@ -51,6 +53,14 @@ void CFireConeBehavior::Init(CGameObject* aCaster)
 		message.myMessageType = EMessageType::PlayerResourceChanged;
 		message.data = &difference;
 		CMainSingleton::PostMaster().Send(message);
+	}
+}
+
+void CFireConeBehavior::Collided(CGameObject* aGameObject)
+{
+	CAIBehaviorComponent* AIBehavior = aGameObject->GetComponent<CAIBehaviorComponent>();
+	if (AIBehavior) {
+		AIBehavior->AIBehavior()->TakeDamage(myDamageMultiplier, aGameObject);
 	}
 }
 

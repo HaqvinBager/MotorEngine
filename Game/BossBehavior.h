@@ -15,7 +15,7 @@ public:
 
 	bool FindATarget(CGameObject& aParent);
 
-	void TakeDamage(float aDamage);
+	void TakeDamage(float aDamage, CGameObject* aGameObject) override;
 
 private:
 	void IdlePhase(CGameObject* aParent);

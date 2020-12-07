@@ -81,7 +81,7 @@ bool CBossBehavior::FindATarget(CGameObject& aParent)
 	return true;
 }
 
-void CBossBehavior::TakeDamage(float /*aDamage*/)
+void CBossBehavior::TakeDamage(float /*aDamage*/, CGameObject* /*aGameObject*/)
 {
 	//TODO: decrease stats.myHealth
 }

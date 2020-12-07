@@ -314,7 +314,6 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-   
     <ClInclude Include="AnimatedUIElement.h" />
     <ClInclude Include="Animation.h" />
     <ClInclude Include="AnimationComponent.h" />
@@ -349,7 +348,9 @@
     <ClInclude Include="MessageType.h" />
     <ClInclude Include="NavMeshComponent.h" />
     <ClInclude Include="Observer.h" />
+    <ClInclude Include="PerlinNoise.h" />
     <ClInclude Include="PointLightComponent.h" />
+    <ClInclude Include="PopupTextService.h" />
     <ClInclude Include="PostMaster.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="DL_Debug.h" />
@@ -423,7 +424,6 @@
     <ClInclude Include="WinInclude.h" />
   </ItemGroup>
   <ItemGroup>
-    
     <ClCompile Include="AnimatedUIElement.cpp" />
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="AnimationComponent.cpp" />
@@ -458,8 +458,10 @@
     <ClCompile Include="NavMeshComponent.cpp" />
     <ClCompile Include="ObjectPool.cpp" />
     <ClCompile Include="ParticleEmitterComponent.cpp" />
+    <ClCompile Include="PerlinNoise.cpp" />
     <ClCompile Include="PlayerControllerComponent.cpp" />
     <ClCompile Include="PointLightComponent.cpp" />
+    <ClCompile Include="PopupTextService.cpp" />
     <ClCompile Include="PostMaster.cpp" />
     <ClCompile Include="RectangleColliderComponent.cpp" />
     <ClCompile Include="StackWalker.cpp" />

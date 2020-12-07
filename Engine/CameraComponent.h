@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+#include "PerlinNoise.h"
 
 class CGameObject;
 
@@ -15,7 +16,21 @@ public:
 
 	DirectX::SimpleMath::Matrix GetProjection() const { return myProjection; }
 
+	void SetTrauma(float aValue);
+	void SetStartingRotation(DirectX::SimpleMath::Vector3 aRotation);
+
+private:
+	void Shake();
+
 private:
 	DirectX::SimpleMath::Matrix myProjection;
+	DirectX::SimpleMath::Vector3 myStartingRotation;
+	DirectX::SimpleMath::Vector3 myMaxShakeRotation;
+	PerlinNoise myNoise;
+	float myTrauma;
+	float myShake;
+	float myShakeSpeed;
+	float myDecayInSeconds;
+	float myShakeTimer;
 };
 

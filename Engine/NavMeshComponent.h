@@ -18,7 +18,7 @@ public:
 	void OnEnable() override;
 	void OnDisable() override;
 
-	// For enemy pathfinding?
+	// For enemy pathfinding? Correct men kan vara annat aswell //Alexander
 	/*std::vector<DirectX::SimpleMath::Vector3>*/void CalculatePath(DirectX::SimpleMath::Vector3 aDestination);
 	void CalculatePath();
 
