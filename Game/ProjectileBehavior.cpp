@@ -7,6 +7,7 @@
 #include "Engine.h"
 #include "AIBehavior.h"
 #include "AIBehaviorComponent.h"
+#include "PlayerControllerComponent.h"
 
 namespace SM = DirectX::SimpleMath;
 
@@ -32,14 +33,6 @@ void CProjectileBehavior::Update(CGameObject* aParent)
 		aParent->Active(false);
 	}
 	aParent->GetComponent<CTransformComponent>()->Move(myDirection * mySpeed * CTimer::Dt());
-}
-
-void CProjectileBehavior::Collided(CGameObject* aGameObject)
-{
-	CAIBehaviorComponent* AIBehavior = aGameObject->GetComponent<CAIBehaviorComponent>();
-	if (AIBehavior) {
-		AIBehavior->AIBehavior()->TakeDamage(myDamageMultiplier, aGameObject);
-	}
 }
 
 void CProjectileBehavior::Init(CGameObject* aCaster)

@@ -40,11 +40,6 @@ void CMeleeAttackBehavior::Init(CGameObject* aCaster)
 	myDirection.Normalize();
 }
 
-void CMeleeAttackBehavior::Collided(CGameObject* /*aGameObject*/)
-{
-	//TODO add damage
-}
-
 void CMeleeAttackBehavior::Update(CGameObject* aParent)
 {
 	if (myCaster)

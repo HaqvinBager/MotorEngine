@@ -189,6 +189,9 @@ void CCanvas::Receive(const SMessage& aMessage)
 	case EMessageType::PlayerResourceChanged:
 		myAnimatedUIs[4]->Level(*static_cast<float*>(aMessage.data));
 		break;
+	case EMessageType::EnemyHealthChanged:
+		myAnimatedUIs[0]->Level(*static_cast<float*>(aMessage.data));
+		break;
 	default:
 		break;
 	}

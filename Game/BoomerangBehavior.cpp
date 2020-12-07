@@ -65,15 +65,6 @@ void CBoomerangBehavior::CalculateDirection(DirectX::SimpleMath::Vector3 aFirstP
 	myDirection.Normalize();
 }
 
-void CBoomerangBehavior::Collided(CGameObject* aGameObject)
-{
-	//TODO add damage
-	CAIBehaviorComponent* AIBehavior = aGameObject->GetComponent<CAIBehaviorComponent>();
-	if (AIBehavior) {
-		AIBehavior->AIBehavior()->TakeDamage(myDamageMultiplier, aGameObject);
-	}
-}
-
 void CBoomerangBehavior::Init(CGameObject* aCaster)
 {
 	if (aCaster->GetComponent<CStatsComponent>()->GetStats().myResource > myResourceCost) {

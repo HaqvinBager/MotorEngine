@@ -3,7 +3,7 @@
 #include "Canvas.h"
 #include "AnimatedUIElement.h"
 
-CHealthBarComponent::CHealthBarComponent(CGameObject& aParant, std::string aPath) 
+CHealthBarComponent::CHealthBarComponent(CGameObject& aParant, std::string aPath)
 	: CBehaviour(aParant)
 {
 	myCanvas = new CCanvas();
@@ -31,8 +31,10 @@ void CHealthBarComponent::Update()
 
 void CHealthBarComponent::OnEnable()
 {
-	for (auto sprite : myCanvas->GetAnimatedUI()) {
-		sprite->GetInstance()->SetShouldRender(true);
+	if (myEnabled) {
+		for (auto sprite : myCanvas->GetAnimatedUI()) {
+			sprite->GetInstance()->SetShouldRender(true);
+		}
 	}
 }
 

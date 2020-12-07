@@ -216,8 +216,8 @@ CGameObject* CUnityFactory::CreateGameObject(const SPlayerData& aData, const std
     gameObject->AddComponent<CPlayerControllerComponent>(*gameObject);
     gameObject->AddComponent<CNavMeshComponent>(*gameObject);
 
-    gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 0.3f, ECollisionLayer::PLAYER, static_cast<uint64_t>(ECollisionLayer::ALL));
-    gameObject->AddComponent<CStatsComponent>(*gameObject, 100.0f, 10.0f, 3.0f, 0.0f, 0.0f, 1.0f);
+    gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 0.3f, ECollisionLayer::PLAYER, static_cast<uint64_t>(ECollisionLayer::ENEMYABILITY));
+    gameObject->AddComponent<CStatsComponent>(*gameObject, 100.0f, 10.0f, 3.0f, 1.0f, 0.0f, 1.0f);
 
     std::pair<EAbilityType, unsigned int> ab1 = { EAbilityType::PlayerAbility1, 1 };
     std::pair<EAbilityType, unsigned int> ab2 = { EAbilityType::PlayerAbility2, 1 };

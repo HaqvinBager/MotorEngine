@@ -8,7 +8,7 @@ public:
 	virtual ~IAbilityBehavior() = 0;
 
 	virtual void Update(CGameObject* aParent) = 0;
-	virtual void Collided(CGameObject* aGameObject) = 0;
+	void Collided(CGameObject* aGameObject);
 	virtual void Init(CGameObject* aCaster) = 0;
 
 public:

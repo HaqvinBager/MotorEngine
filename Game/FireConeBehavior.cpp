@@ -56,14 +56,6 @@ void CFireConeBehavior::Init(CGameObject* aCaster)
 	}
 }
 
-void CFireConeBehavior::Collided(CGameObject* aGameObject)
-{
-	CAIBehaviorComponent* AIBehavior = aGameObject->GetComponent<CAIBehaviorComponent>();
-	if (AIBehavior) {
-		AIBehavior->AIBehavior()->TakeDamage(myDamageMultiplier, aGameObject);
-	}
-}
-
 void CFireConeBehavior::Update(CGameObject* aParent)
 {
 	if (myCaster)
