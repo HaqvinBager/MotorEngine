@@ -11,6 +11,7 @@
 #include "MainSingleton.h"
 #include "AIBehaviorComponent.h"
 #include "AIBehavior.h"
+#include "PlayerControllerComponent.h"
 
 namespace SM = DirectX::SimpleMath;
 
@@ -75,7 +76,10 @@ void CBoomerangBehavior::Init(CGameObject* aCaster)
 
 		myCaster->GetComponent<CStatsComponent>()->GetStats().myResource -= myResourceCost;
 
-		myCaster->myTransform->Rotation({0, DirectX::XMConvertToDegrees(atan2f(myDirection.x, myDirection.z)) + 180.f, 0});
+		CPlayerControllerComponent* playerController = aCaster->GetComponent<CPlayerControllerComponent>();
+		if (playerController) {
+			aCaster->myTransform->Rotation({0, DirectX::XMConvertToDegrees(atan2f(myDirection.x, myDirection.z)) + 180.f, 0});
+		}
 
 		float difference = myCaster->GetComponent<CStatsComponent>()->GetBaseStats().myBaseResource - myCaster->GetComponent<CStatsComponent>()->GetStats().myResource;
 		difference = (100.0f - difference) / 100.0f;
