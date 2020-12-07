@@ -1,5 +1,6 @@
 #include "WindowHandler.h"
 #include "Input.h"
+#include "JsonReader.h"
 
 LRESULT CWindowHandler::WinProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)
 {
@@ -40,7 +41,17 @@ bool CWindowHandler::Init(CWindowHandler::SWindowData someWindowData)
 {
     myWindowData = someWindowData;
 
-    HCURSOR customCursor = LoadCursorFromFileW(L"Assets/3D/UI/Ingame/UI_In_Cursor_01_19G4.cur");
+    rapidjson::Document document = CJsonReader::LoadDocument("Json/WindowSettings.json");
+
+    HCURSOR customCursor = NULL;
+    if (document.HasMember("Cursor Path")) 
+    {
+        customCursor = LoadCursorFromFileA(document["Cursor Path"].GetString());
+    }
+    if (customCursor == NULL) 
+    {
+        customCursor = LoadCursor(nullptr, IDC_ARROW);
+    }
 
     WNDCLASSEX windowclass = {};
     windowclass.cbSize = sizeof(WNDCLASSEX);
