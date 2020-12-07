@@ -45,13 +45,17 @@ bool CWindowHandler::Init(CWindowHandler::SWindowData someWindowData)
 
     HCURSOR customCursor = NULL;
     if (document.HasMember("Cursor Path")) 
-    {
         customCursor = LoadCursorFromFileA(document["Cursor Path"].GetString());
-    }
+
     if (customCursor == NULL) 
-    {
         customCursor = LoadCursor(nullptr, IDC_ARROW);
-    }
+
+    HICON customIcon = NULL;
+    if (document.HasMember("Icon Path"))
+        customIcon = LoadIconA(GetModuleHandle(nullptr), document["Icon Path"].GetString());
+
+    if (customIcon == NULL) 
+        customIcon = (HICON)LoadImageA(NULL, "ironwrought.ico", IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE);
 
     WNDCLASSEX windowclass = {};
     windowclass.cbSize = sizeof(WNDCLASSEX);
@@ -60,7 +64,7 @@ bool CWindowHandler::Init(CWindowHandler::SWindowData someWindowData)
     windowclass.cbClsExtra = 0;
     windowclass.cbWndExtra = 0;
     windowclass.hInstance = GetModuleHandle(nullptr);
-    windowclass.hIcon = (HICON)LoadImage(NULL, L"ironwrought.ico", IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE);
+    windowclass.hIcon = customIcon;
     windowclass.hCursor = customCursor;
     windowclass.lpszClassName = L"3DEngine";
     RegisterClassEx(&windowclass);
