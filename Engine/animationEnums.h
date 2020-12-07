@@ -10,13 +10,13 @@ enum class EPlayerAnimationID
 	AbilityOne		= 5001,
 	AbilityTwo		= 5002,
 	AbilityThree	= 5002,
-	AttackLight		= 5003,
-	AttackHeavy		= 5003,
-	Dying			= 5004,
-	Dead			= 5004,
+	AttackLight		= 5006,
+	AttackHeavy		= 5004,
+	Dying			= 5003,
+	Dead			= 5003,
 	Idle			= 5005,
 	IdleCombat		= 5005,
-	Run				= 5006
+	Run				= 5007
 };
 
 enum class EEnemyAnimationID
