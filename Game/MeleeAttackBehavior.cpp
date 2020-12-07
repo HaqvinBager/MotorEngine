@@ -8,6 +8,7 @@
 #include "TriangleColliderComponent.h"
 #include "AIBehavior.h"
 #include "AIBehaviorComponent.h"
+#include "PlayerControllerComponent.h"
 
 CMeleeAttackBehavior::CMeleeAttackBehavior(float aDuration, float aDamage, CGameObject* aParent)
 {
@@ -38,11 +39,11 @@ void CMeleeAttackBehavior::Init(CGameObject* aCaster)
 
 	myDirection = MouseTracker::ScreenPositionToWorldPosition() - aCaster->GetComponent<CTransformComponent>()->Position();
 	myDirection.Normalize();
-}
 
-void CMeleeAttackBehavior::Collided(CGameObject* /*aGameObject*/)
-{
-	//TODO add damage
+	CPlayerControllerComponent* playerController = myCaster->GetComponent<CPlayerControllerComponent>();
+	if (playerController) {
+		myCaster->myTransform->Rotation({0, DirectX::XMConvertToDegrees(atan2f(myDirection.x, myDirection.z)) + 180.f, 0});
+	}
 }
 
 void CMeleeAttackBehavior::Update(CGameObject* aParent)

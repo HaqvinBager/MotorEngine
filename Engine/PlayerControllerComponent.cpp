@@ -7,6 +7,8 @@
 #include "AnimationComponent.h"
 #include "MainSingleton.h"
 #include "TransformComponent.h"
+#include "PopupTextService.h"
+#include <DamageUtility.h>
 
 CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent):
 	CBehaviour(aParent),
@@ -105,6 +107,22 @@ bool CPlayerControllerComponent::PlayerIsAlive()
 	}
 
 	return myLastHP > 0.0f;
+}
+
+void CPlayerControllerComponent::TakeDamage(float aDamageMultiplier, CGameObject* aGameObject)
+{
+	SStats& stats = GameObject().GetComponent<CStatsComponent>()->GetStats();
+
+	EHitType hitType = EHitType::Normal;
+	float damage = CDamageUtility::CalculateDamage(hitType, aGameObject->GetComponent<CStatsComponent>()->GetBaseStats().myDamage, aDamageMultiplier, 0.0f, 0.0f);
+
+	if (GameObject().GetComponent<CStatsComponent>()->AddDamage(damage)) {
+		SDamagePopupData data = {damage, static_cast<int>(hitType)};
+		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &data);
+		std::cout << __FUNCTION__ << " Player current health: " << stats.myHealth << std::endl;/*
+		CMainSingleton::PostMaster().Send({EMessageType::PlayerHealthChanged, &stats.myHealth});*/
+	}
+	//stats.myCanTakeDamage = false;
 }
 
 

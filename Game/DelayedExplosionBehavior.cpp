@@ -51,14 +51,6 @@ void CDelayedExplosionBehavior::Update(CGameObject* aParent)
 	}
 }
 
-void CDelayedExplosionBehavior::Collided(CGameObject* aGameObject)
-{
-	CAIBehaviorComponent* AIBehavior = aGameObject->GetComponent<CAIBehaviorComponent>();
-	if (AIBehavior) {
-		AIBehavior->AIBehavior()->TakeDamage(myDamageMultiplier, aGameObject);
-	}
-}
-
 void CDelayedExplosionBehavior::Init(CGameObject* aCaster)
 {
 	if (aCaster->GetComponent<CStatsComponent>()->GetStats().myResource > myResourceCost) {

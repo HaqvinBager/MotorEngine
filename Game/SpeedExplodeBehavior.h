@@ -20,7 +20,6 @@ public:
 
 	void Init(CGameObject* aCaster) override;
 	void Update(CGameObject* aParent) override;
-	void Collided(CGameObject* aGameObject) override;
 	float ResourceCost() const;
 
 private:

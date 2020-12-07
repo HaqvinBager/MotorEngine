@@ -19,9 +19,11 @@
 #include "CollisionEventComponent.h"
 #include "RectangleColliderComponent.h"
 #include "CircleColliderComponent.h"
+#include "VFXComponent.h"
 
 #include "CollisionManager.h"
 #include "LightFactory.h"
+#include "VFXFactory.h"
 #include "PointLight.h"
 #include "StatsComponent.h"
 #include "EnemyBehavior.h"
@@ -146,6 +148,11 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 		}
 	}
 
+	for (auto& environmentFX : aData.myEnvironmentFXs)
+	{
+		aScene.AddInstance(CreateGameObject(environmentFX, aData.myEnvironmentFXStringMap.at(environmentFX.myInstanceID)));
+	}
+
 	return true;
 }
 
@@ -216,8 +223,8 @@ CGameObject* CUnityFactory::CreateGameObject(const SPlayerData& aData, const std
     gameObject->AddComponent<CPlayerControllerComponent>(*gameObject);
     gameObject->AddComponent<CNavMeshComponent>(*gameObject);
 
-    gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 0.3f, ECollisionLayer::PLAYER, static_cast<uint64_t>(ECollisionLayer::ALL));
-    gameObject->AddComponent<CStatsComponent>(*gameObject, 100.0f, 10.0f, 3.0f, 0.0f, 0.0f, 1.0f);
+    gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 0.3f, ECollisionLayer::PLAYER, static_cast<uint64_t>(ECollisionLayer::ENEMYABILITY));
+    gameObject->AddComponent<CStatsComponent>(*gameObject, 100.0f, 10.0f, 3.0f, 1.0f, 0.0f, 1.0f);
 
     std::pair<EAbilityType, unsigned int> ab1 = { EAbilityType::PlayerAbility1, 1 };
     std::pair<EAbilityType, unsigned int> ab2 = { EAbilityType::PlayerAbility2, 1 };
@@ -273,4 +280,19 @@ CGameObject* CUnityFactory::CreateGameObject(const SEventData& aData, const std:
 		ECollisionLayer::EVENT, 
 		static_cast<uint64_t>(ECollisionLayer::PLAYER));
     return gameObject;
+}
+
+CGameObject* CUnityFactory::CreateGameObject(const SEnvironmentFXData& aData, std::string aEnvironmentFXName)
+{
+	CGameObject* gameObject = new CGameObject();
+	gameObject->myTransform->Position(aData.myPosition);
+	gameObject->myTransform->Rotation(aData.myRotation);
+	gameObject->myTransform->Scale(aData.myScale.x);
+
+	std::string jsonPath = "json/VFXData_";
+	jsonPath.append(aEnvironmentFXName.c_str());
+	jsonPath.append(".json");
+	gameObject->AddComponent<CVFXComponent>(*gameObject)->Init(CVFXFactory::GetInstance()->GetVFXBaseSet({ jsonPath }));
+
+	return gameObject;
 }

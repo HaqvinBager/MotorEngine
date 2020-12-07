@@ -10,6 +10,7 @@
 #include "TriangleColliderComponent.h"
 #include "AIBehavior.h"
 #include "AIBehaviorComponent.h"
+#include "PlayerControllerComponent.h"
 
 CFireConeBehavior::CFireConeBehavior(float aDuration, float aResourceCost, float aDamage, CGameObject* aParent)
 {
@@ -46,6 +47,11 @@ void CFireConeBehavior::Init(CGameObject* aCaster)
 		myDirection = MouseTracker::ScreenPositionToWorldPosition() - aCaster->GetComponent<CTransformComponent>()->Position();
 		myDirection.Normalize();
 
+		CPlayerControllerComponent* playerController = aCaster->GetComponent<CPlayerControllerComponent>();
+		if (playerController) {
+			aCaster->myTransform->Rotation({0, DirectX::XMConvertToDegrees(atan2f(myDirection.x, myDirection.z)) + 180.f, 0});
+		}
+
 		float difference = myCaster->GetComponent<CStatsComponent>()->GetBaseStats().myBaseResource - myCaster->GetComponent<CStatsComponent>()->GetStats().myResource;
 		difference = (100.0f - difference) / 100.0f;
 
@@ -53,14 +59,6 @@ void CFireConeBehavior::Init(CGameObject* aCaster)
 		message.myMessageType = EMessageType::PlayerResourceChanged;
 		message.data = &difference;
 		CMainSingleton::PostMaster().Send(message);
-	}
-}
-
-void CFireConeBehavior::Collided(CGameObject* aGameObject)
-{
-	CAIBehaviorComponent* AIBehavior = aGameObject->GetComponent<CAIBehaviorComponent>();
-	if (AIBehavior) {
-		AIBehavior->AIBehavior()->TakeDamage(myDamageMultiplier, aGameObject);
 	}
 }
 
