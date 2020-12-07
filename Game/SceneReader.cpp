@@ -96,7 +96,7 @@ SInGameData& CSceneReader::ReadInGameData()
 
 	int myGameObjectDataCount = 0;
 	myStreamPtr += Read(myGameObjectDataCount);
-	assert(myGameObjectDataCount < 25000 && "Something went wrong when reading GameObjectData");
+	assert(myGameObjectDataCount < 35000 && "Something went wrong when reading GameObjectData");
 	myInGameData.back()->myGameObjects.reserve(myGameObjectDataCount);
 	for (int i = 0; i < myGameObjectDataCount; ++i)
 	{

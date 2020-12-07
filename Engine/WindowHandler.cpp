@@ -1,5 +1,6 @@
 #include "WindowHandler.h"
 #include "Input.h"
+#include "JsonReader.h"
 
 LRESULT CWindowHandler::WinProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)
 {
@@ -40,7 +41,21 @@ bool CWindowHandler::Init(CWindowHandler::SWindowData someWindowData)
 {
     myWindowData = someWindowData;
 
-    //HCURSOR customCursor = LoadCursorFromFileW(L"Assets/3D/UI/UI_In_Cursor_01_19G4.cur");
+    rapidjson::Document document = CJsonReader::LoadDocument("Json/WindowSettings.json");
+
+    HCURSOR customCursor = NULL;
+    if (document.HasMember("Cursor Path")) 
+        customCursor = LoadCursorFromFileA(document["Cursor Path"].GetString());
+
+    if (customCursor == NULL) 
+        customCursor = LoadCursor(nullptr, IDC_ARROW);
+
+    HICON customIcon = NULL;
+    if (document.HasMember("Icon Path"))
+        customIcon = LoadIconA(GetModuleHandle(nullptr), document["Icon Path"].GetString());
+
+    if (customIcon == NULL) 
+        customIcon = (HICON)LoadImageA(NULL, "ironwrought.ico", IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE);
 
     WNDCLASSEX windowclass = {};
     windowclass.cbSize = sizeof(WNDCLASSEX);
@@ -49,8 +64,8 @@ bool CWindowHandler::Init(CWindowHandler::SWindowData someWindowData)
     windowclass.cbClsExtra = 0;
     windowclass.cbWndExtra = 0;
     windowclass.hInstance = GetModuleHandle(nullptr);
-    windowclass.hIcon = (HICON)LoadImage(NULL, L"ironwrought.ico", IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE);
-    windowclass.hCursor = /*customCursor*/LoadCursor(nullptr, IDC_ARROW);
+    windowclass.hIcon = customIcon;
+    windowclass.hCursor = customCursor;
     windowclass.lpszClassName = L"3DEngine";
     RegisterClassEx(&windowclass);
 
