@@ -1,50 +1,55 @@
 #pragma once
 // Toggle by commenting before compilation.
-//#define ANIMATIONS_GROUP_3
-#define ANIMATIONS_GROUP_4
+#define ANIMATIONS_GROUP_3
+//#define ANIMATIONS_GROUP_4
 
 // The values used for the Enums are from Json/StringIDs_Animation.json
 #ifdef ANIMATIONS_GROUP_3
 enum class EPlayerAnimationID
 {
-	AbilityThrow	= 5004,
-	AbilityExplo	= 5003,
-	AttackLight		= 5005,
-	AttackHeavy		= 5006,
-	Dying			= 5001,
-	Dead			= 5002,
-	Idle			= 5007,
-	IdleCombat		= 5008,
-	Run				= 5009
+	AbilityOne		= 5001,
+	AbilityTwo		= 5002,
+	AbilityThree	= 5002,
+	AttackLight		= 5003,
+	AttackHeavy		= 5003,
+	Dying			= 5004,
+	Dead			= 5004,
+	Idle			= 5005,
+	IdleCombat		= 5005,
+	Run				= 5006
 };
 
 enum class EEnemyAnimationID
 {
-	Attack		= 5010,
-	Dead		= 5011,
-	Idle		= 5012,
-	Walk		= 5013
+	Attack		= 5005,
+	Dead		= 5005,
+	Idle		= 5005,
+	Walk		= 5005
 };
 
 enum class EBossAnimationID
 {
-	Attack		= 5014,
-	Dead		= 5015,
-	Idle		= 5016,
-	Walk		= 5017
+	AttackOne	= 5005,
+	AttackTwo	= 5005,
+	AttackThree	= 5005,
+	Dead		= 5005,
+	Idle		= 5005,
+	Walk		= 5005,
+	Spawn		= 5005
 };
 
 enum class ECrateAnimationID
 {
-	Explode
+	Explode		= 5005
 };
 #endif
 
 #ifdef ANIMATIONS_GROUP_4
 enum class EPlayerAnimationID
 {
-	AbilityThrow	= 5004,
-	AbilityExplo	= 5003,
+	AbilityOne		= 5004,
+	AbilityTwo		= 5003,
+	AbilityThree	= 5003,
 	AttackLight		= 5005,
 	AttackHeavy		= 5006,
 	Dying			= 5001,
@@ -64,10 +69,13 @@ enum class EEnemyAnimationID
 
 enum class EBossAnimationID
 {
-	Attack		= 5014,
+	AttackOne	= 5014,
+	AttackTwo	= 5014,
+	AttackThree	= 5014,
 	Dead		= 5015,
 	Idle		= 5016,
-	Walk		= 5017
+	Walk		= 5017,
+	Spawn		= 5017
 };
 
 enum class ECrateAnimationID

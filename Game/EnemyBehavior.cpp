@@ -171,8 +171,7 @@ void CEnemyBehavior::TakeDamage(float aDamageMultiplier, CGameObject* aGameObjec
 
 void CEnemyBehavior::Die()
 {
-	CCircleColliderComponent *collider = myCurrentParent->GetComponent<CCircleColliderComponent>();
-	assert(collider != nullptr && "Was nullptr");
+	assert(myCurrentParent->GetComponent<CCircleColliderComponent>() != nullptr && "Was nullptr");
 	myCurrentParent->GetComponent<CCircleColliderComponent>()->Enabled(false);
 	myCurrentParent->GetComponent<CAIBehaviorComponent>()->Enabled(false);
 	myCurrentParent->GetComponent<CAbilityComponent>()->Enabled(false);

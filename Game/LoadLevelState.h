@@ -14,7 +14,8 @@ enum class ELevel
 	Dungeon,
 	Gardens,
 	Castle,
-	NavTest
+	NavTest,
+	BossRoom
 };
 
 
