@@ -20,7 +20,7 @@
 #include "TriangleColliderComponent.h"
 #include "CircleColliderComponent.h"
 #include "AIBehaviorComponent.h"
-#include "AbilityBehavior.h"
+#include "BoomerangBehavior.h"
 
 CEnemyBehavior::CEnemyBehavior(CGameObject* aPlayerObject)
 	: myPlayer(aPlayerObject)
@@ -77,8 +77,12 @@ void CEnemyBehavior::Collided(CGameObject* aParent, CGameObject* aCollidedWithGa
 		std::cout << __FUNCTION__ << " Enemy collided with player ability " << std::endl;
 		//CStatsComponent* playerStats = myPlayer->GetComponent<CStatsComponent>();
 		myCurrentParent = aParent;
-		
-		//TakeDamage(aCollidedWithGameObject->GetComponent<>);
+		std::cout << aCollidedWithGameObject->GetComponent<CAbilityComponent>().->myDamage << std::endl;
+#ifdef _G4_DEBUG
+		TakeDamage(aCollidedWithGameObject->GetComponent<CBoomerangBehavior>()->myDamage);
+
+#endif // _G4_DEBUG
+
 		return;
 	}
 

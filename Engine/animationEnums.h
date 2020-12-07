@@ -106,35 +106,40 @@ enum class ECrateAnimationID
 {
 	Explode
 };
-#elif defined(_G4_DEBUG) || defined(G4_NDEBUG)
+#endif
 
+#ifdef _G4_DEBUG
 enum class EPlayerAnimationID
 {
-	AbilityThrow	= 5001,
-	AbilityExplo	= 5002,
-	Attack01		= 5003,
-	Attack02		= 5004,
-	Die				= 5005,
-	Idle01			= 5006,
-	Idle02			= 5007,
-	Run01			= 5008
+	AbilityThrow = 5004,
+	AbilityExplo = 5003,
+	AttackLight = 5005,
+	AttackHeavy = 5006,
+	Dying = 5001,
+	Dead = 5002,
+	Idle = 5007,
+	IdleCombat = 5008,
+	Run = 5009
 };
 
 enum class EEnemyAnimationID
 {
-	Attack01	= 5009,
-	Dead		= 5010,
-	Idle		= 5011,
-	Walk		= 5012
+	Attack = 5010,
+	Dead = 5011,
+	Idle = 5012,
+	Walk = 5013
 };
 
 enum class EBossAnimationID
 {
+	Attack = 5014,
+	Dead = 5015,
+	Idle = 5016,
+	Walk = 5017
 };
 
 enum class ECrateAnimationID
 {
 	Explode
 };
-
 #endif
