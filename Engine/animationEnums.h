@@ -1,7 +1,7 @@
 #pragma once
 // Toggle by commenting before compilation.
 //#define ANIMATIONS_GROUP_3
-#define ANIMATIONS_GROUP_4
+#define ANIMATIONS_GROUP_3
 
 // The values used for the Enums are from Json/StringIDs_Animation.json
 #ifdef ANIMATIONS_GROUP_3
