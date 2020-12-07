@@ -314,7 +314,6 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-   
     <ClInclude Include="AnimatedUIElement.h" />
     <ClInclude Include="Animation.h" />
     <ClInclude Include="AnimationComponent.h" />
@@ -334,6 +333,7 @@
     <ClInclude Include="CapsuleColliderComponent.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="CollisionEventComponent.h" />
+    <ClInclude Include="DestructibleComponent.h" />
     <ClInclude Include="FMod.h" />
     <ClInclude Include="CircleColliderComponent.h" />
     <ClInclude Include="CollisionManager.h" />
@@ -423,7 +423,6 @@
     <ClInclude Include="WinInclude.h" />
   </ItemGroup>
   <ItemGroup>
-    
     <ClCompile Include="AnimatedUIElement.cpp" />
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="AnimationComponent.cpp" />
@@ -441,6 +440,7 @@
     <ClCompile Include="CapsuleColliderComponent.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="CollisionEventComponent.cpp" />
+    <ClCompile Include="DestructibleComponent.cpp" />
     <ClCompile Include="FMod.cpp" />
     <ClCompile Include="CircleColliderComponent.cpp" />
     <ClCompile Include="CollisionManager.cpp" />

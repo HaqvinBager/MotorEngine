@@ -19,6 +19,7 @@
 #include "CollisionEventComponent.h"
 #include "RectangleColliderComponent.h"
 #include "CircleColliderComponent.h"
+#include "DestructibleComponent.h"
 
 #include "CollisionManager.h"
 #include "LightFactory.h"
@@ -152,6 +153,13 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 		}
 	}
 
+	SGameObjectData goData = {};
+	goData.myPosition = aData.myPlayerData.myPosition;
+	goData.myPosition.x += 3.0f;
+	goData.myRotation = aData.myPlayerData.myRotation;
+	CGameObject* crate = CreateDestructibleGameObject(goData, "Assets\\3D\\Environment\\EN_P_L1Crate_01_19G4_01_19\\EN_P_L1Crate_01_19G4_01_19_DX_SK.fbx");
+	aScene.AddInstance(crate);
+
 	return true;
 }
 
@@ -221,7 +229,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SPlayerData& aData, const std
     gameObject->AddComponent<CPlayerControllerComponent>(*gameObject);
     gameObject->AddComponent<CNavMeshComponent>(*gameObject);
 
-	gameObject->AddComponent<CRectangleColliderComponent>(*gameObject, 1.f, 1.f, ECollisionLayer::PLAYER , static_cast<uint64_t>(ECollisionLayer::ALL));
+	//gameObject->AddComponent<CRectangleColliderComponent>(*gameObject, 1.f, 1.f, ECollisionLayer::PLAYER , static_cast<uint64_t>(ECollisionLayer::ALL));
     gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 1.f, ECollisionLayer::PLAYER, static_cast<uint64_t>(ECollisionLayer::ALL));
     gameObject->AddComponent<CStatsComponent>(*gameObject, 100.0f, 10.0f, 3.0f, 0.0f, 0.0f, 1.0f);
 
@@ -274,6 +282,21 @@ CGameObject* CUnityFactory::CreateGameObject(const SEventData& aData, const std:
 		ECollisionLayer::EVENT, 
 		static_cast<uint64_t>(ECollisionLayer::PLAYER));
     return gameObject;
+}
+
+CGameObject* CUnityFactory::CreateDestructibleGameObject(const SGameObjectData& aData, const std::string& aModelPath)
+{
+	CGameObject* gameObject = new CGameObject();
+	gameObject->myTransform->Position(aData.myPosition);
+	gameObject->myTransform->Rotation(aData.myRotation);
+	gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
+	gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 0.8f, ECollisionLayer::ALL, static_cast<uint64_t>(ECollisionLayer::PLAYER));
+	gameObject->AddComponent<DestructibleComponent>(*gameObject);
+
+	AddAnimationsToGameObject(*gameObject, aModelPath);
+	gameObject->GetComponent<CAnimationComponent>()->SetStateIDs(ECrateAnimationID::Idle, ECrateAnimationID::Walk, ECrateAnimationID::Dead);
+	
+	return gameObject;
 }
 
 #endif

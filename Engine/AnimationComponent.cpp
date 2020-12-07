@@ -99,6 +99,9 @@ void CAnimationComponent::MovingState()
 
 void CAnimationComponent::DeadState()
 {
+	if (myCurrentAnimationID == myDyingAnimationID)
+		return;
+
 	PlayAnimation(GetIndexFromList(myDyingAnimationID));
 	myCurrentAnimationID = myDyingAnimationID;
 	myAnimation->GetMyController().ResetAnimationTimeCurrent();
@@ -151,6 +154,9 @@ void CAnimationComponent::ResetIdleTimer()
 
 void CAnimationComponent::SwitchBackToIdle()
 {
+	if (myIdleAnimationID == 0)
+		return; 
+
 	if (myCurrentAnimationID != myDyingAnimationID)
 	{
 		PlayAnimation(GetIndexFromList(myIdleAnimationID), true);

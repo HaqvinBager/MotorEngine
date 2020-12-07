@@ -30,4 +30,6 @@ private:
 
 	CGameObject* CreateGameObject(const SEnemyData& aData, const std::string& aModelPath, IAIBehavior* aBehavior);
 	CGameObject* CreateGameObject(const SEventData& aData, const std::string anEventString);
+
+	CGameObject* CreateDestructibleGameObject(const SGameObjectData& aData, const std::string& aModelPath);
 };

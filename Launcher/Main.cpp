@@ -34,14 +34,16 @@ void operator delete(void* memory, size_t size)
 	free(memory);
 }
 
+
+#endif
 static void PrintMemoryUsage()
 {
+#ifdef _DEBUG
 	std::cout << "Our total allocated memory: " << gOurAllocationMetrics.myTotalAllocated / static_cast<UINT32>(1048576) << " mb" << std::endl;
 	std::cout << "Our current memory usage:   " << gOurAllocationMetrics.CurrentUsage() / static_cast<uint32_t>(1048576) << " mb" << std::endl;
 	std::cout << "Our total freed memory:     " << gOurAllocationMetrics.myTotalFreed / static_cast<UINT32>(1048576) << " mb" << std::endl;
-}
 #endif
-
+}
 #ifdef _DEBUG
 #pragma comment(lib, "Game_Debug.lib")
 #pragma comment(lib, "dbghelp.lib")
@@ -169,7 +171,7 @@ void RunGame(LPWSTR lpCmdLine)
 		if (!shouldRun)
 			break;
 
-		PrintMemoryUsage();
+		//PrintMemoryUsage();
 		engine.BeginFrame();
 		shouldRun = game.Update();
 		engine.RenderFrame();

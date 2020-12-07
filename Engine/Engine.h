@@ -53,6 +53,7 @@ public:
 	void SetActiveScene(const CStateStack::EState aState);
 	CScene& GetActiveScene();
 
+	void ModelViewerSetScene(CScene* aScene);
 	//void PopBackScene();
 	//void SetActiveScene(CScene* aScene);
 	

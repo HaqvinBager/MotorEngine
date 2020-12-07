@@ -346,12 +346,10 @@
       <Filter>Sprite</Filter>
     </ClCompile>
     <ClCompile Include="InstancedModelComponent.cpp" />
-    <ClCompile Include="..\Game\AudioManager.cpp">
-      <Filter>Audio</Filter>
-    </ClCompile>
     <ClCompile Include="AudioManager.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
+    <ClCompile Include="DestructibleComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EnemyFactory.h" />
@@ -659,12 +657,10 @@
     <ClInclude Include="CameraControllerComponent.h">
       <Filter>GameObject and Component\Component</Filter>
     </ClInclude>
-    <ClInclude Include="..\Game\AudioManager.h">
-      <Filter>Audio</Filter>
-    </ClInclude>
     <ClInclude Include="AudioManager.h">
       <Filter>Audio</Filter>
     </ClInclude>
+    <ClInclude Include="DestructibleComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PBRDirectionalLight.hlsli">

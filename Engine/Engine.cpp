@@ -160,14 +160,14 @@ float CEngine::BeginFrame()
 
 void CEngine::RenderFrame()
 {
-	if (myActiveState == CStateStack::EState::InGame)
-	{
-		myRenderManager->Render(*myInGameScene);
-	}
-	else
-	{
+	//if (myActiveState == CStateStack::EState::InGame)
+	//{
+	//	myRenderManager->Render(*myInGameScene);
+	//}
+	//else
+	//{
 		myRenderManager->Render(*mySceneMap[myActiveState]);
-	}
+	//}
 	//if(myScenes.size() > 0 && myActiveScene < myScenes.size())
 	//	myRenderManager->Render(*myScenes[myActiveScene]);
 }
@@ -222,16 +222,16 @@ CEngine* CEngine::GetInstance()
 
 const CStateStack::EState CEngine::AddScene(const CStateStack::EState aState, CScene* aScene)
 {
-	if (aState == CStateStack::EState::InGame)
-	{
-		if (myInGameScene != nullptr)
-		{
-			delete myInGameScene;
-			myInGameScene = nullptr;
-		}
-		myInGameScene = aScene;
-		return aState;
-	}
+	//if (aState == CStateStack::EState::InGame)
+	//{
+	//	if (myInGameScene != nullptr)
+	//	{
+	//		delete myInGameScene;
+	//		myInGameScene = nullptr;
+	//	}
+	//	myInGameScene = aScene;
+	//	return aState;
+	//}
 
 	auto it = mySceneMap.find(aState);
 	if (it/*mySceneMap.find(aState)*/ != mySceneMap.end())
@@ -273,12 +273,18 @@ void CEngine::SetActiveScene(const CStateStack::EState aState)
 
 CScene& CEngine::GetActiveScene()
 {
-	if (myActiveState == CStateStack::EState::InGame)
-	{
-		return *myInGameScene;
-	}
+	//if (myActiveState == CStateStack::EState::InGame)
+	//{
+	//	return *myInGameScene;
+	//}
 	return *mySceneMap[myActiveState];
 	//return *myScenes[myActiveScene];
+}
+
+void CEngine::ModelViewerSetScene(CScene* aScene)
+{
+	myActiveState = CStateStack::EState::InGame;
+	mySceneMap[myActiveState] = aScene;
 }
 
 //unsigned int CEngine::ScenesSize()
