@@ -79,7 +79,6 @@ private:
 	CStateStack::EState myActiveState;
 	//std::vector<CScene*> myScenes;
 	std::unordered_map<CStateStack::EState, CScene*> mySceneMap;
-	CScene* myInGameScene;
 
 	CModelFactory* myModelFactory;
 	CCameraFactory* myCameraFactory;

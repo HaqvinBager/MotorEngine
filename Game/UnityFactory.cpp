@@ -102,6 +102,11 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 			aScene.AddEnemies(enemy);
 	}
 
+	for (const auto& destructibleData : aData.myDestructibleData) {
+		CGameObject* destructible = CreateGameObject(destructibleData, aBinModelPaths.at(destructibleData.myModelIndex));
+		aScene.AddInstance(destructible);
+	}
+
 	std::unordered_map<int, int> modelIndexMap;
 	for (const auto& gameObjectData : aData.myGameObjects)
 	{
@@ -283,7 +288,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SEventData& aData, const std:
     return gameObject;
 }
 
-CGameObject* CUnityFactory::CreateDestructibleGameObject(const SGameObjectData& aData, const std::string& aModelPath)
+CGameObject* CUnityFactory::CreateGameObject(const SDestructibleData& aData, const std::string& aModelPath)
 {
 	CGameObject* gameObject = new CGameObject();
 	gameObject->myTransform->Position(aData.myPosition);
