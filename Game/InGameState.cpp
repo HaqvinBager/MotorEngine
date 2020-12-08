@@ -140,8 +140,9 @@ void CInGameState::Start()
 		gameObject->Start();
 	}
 
-	int aSceneIndex = 0;
-	CMainSingleton::PostMaster().Send({EMessageType::LoadDialogue, &aSceneIndex});
+	//int aSceneIndex = 2;
+	//CMainSingleton::PostMaster().Send({EMessageType::LoadDialogue, &aSceneIndex});
+	//CMainSingleton::PostMaster().Send({EMessageType::IntroStarted, nullptr});
 }
 
 void CInGameState::Stop()
