@@ -47,6 +47,7 @@ CModelFactory::~CModelFactory()
 	{
 		delete it->second;
 		it->second = nullptr;
+		++it;
 	}
 	
 	auto itPBR = myModelMapPBR.begin();
@@ -54,6 +55,7 @@ CModelFactory::~CModelFactory()
 	{
 		delete itPBR->second;
 		itPBR->second = nullptr;
+		++itPBR;
 	}
 	
 	auto itInstaned = myInstancedModelMapPBR.begin();
@@ -61,6 +63,7 @@ CModelFactory::~CModelFactory()
 	{
 		delete itInstaned->second;
 		itInstaned->second = nullptr;
+		++itInstaned;
 	}
 }
 
