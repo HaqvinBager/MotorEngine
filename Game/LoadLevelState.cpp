@@ -15,17 +15,24 @@
 using namespace rapidjson;
 CLoadLevelState::CLoadLevelState(CStateStack& aStateStack, const CStateStack::EState aState) 
 	: CState(aStateStack, aState)
-	, myLevelToLoad(ELevel::Dungeon) //Testa om Dungeon FungeraR!
+	, myLevelToLoad(ELevel::NavTest) //Testa om Dungeon FungeraR!
 {}
 
 CLoadLevelState::~CLoadLevelState()
 {
+	CMainSingleton::PostMaster().Unsubscribe("Dungeon", this);
+	CMainSingleton::PostMaster().Unsubscribe("Gardens", this);
+	CMainSingleton::PostMaster().Unsubscribe("Castle", this);
+	CMainSingleton::PostMaster().Unsubscribe("BossRoom", this);
 }
 
 void CLoadLevelState::Awake()
 {
 	SaveLevelNames();	
 	CMainSingleton::PostMaster().Subscribe("Dungeon", this);
+	CMainSingleton::PostMaster().Subscribe("Gardens", this);
+	CMainSingleton::PostMaster().Subscribe("Castle", this);
+	CMainSingleton::PostMaster().Subscribe("BossRoom", this);
 }
 
 void CLoadLevelState::Start()

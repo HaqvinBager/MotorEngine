@@ -79,6 +79,9 @@ void CInGameState::Start()
 	myExitLevel = false;
 	CMainSingleton::DialogueSystem().Enabled(true);
 	CMainSingleton::PostMaster().Subscribe("Dungeon", this);
+	CMainSingleton::PostMaster().Subscribe("Gardens", this);
+	CMainSingleton::PostMaster().Subscribe("Castle", this);
+	CMainSingleton::PostMaster().Subscribe("BossRoom", this);
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::PauseGame, this);
 
 	CEngine::GetInstance()->SetActiveScene(myState);
@@ -161,6 +164,11 @@ void CInGameState::Stop()
 
 	delete myCanvas;
 	myCanvas = nullptr;
+
+	CMainSingleton::PostMaster().Unsubscribe("Dungeon", this);
+	CMainSingleton::PostMaster().Unsubscribe("Gardens", this);
+	CMainSingleton::PostMaster().Unsubscribe("Castle", this);
+	CMainSingleton::PostMaster().Unsubscribe("BossRoom", this);
 }
 
 void CInGameState::Update()
