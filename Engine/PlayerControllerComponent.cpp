@@ -139,7 +139,7 @@ void CPlayerControllerComponent::TakeDamage(float aDamageMultiplier, CGameObject
 	float damage = CDamageUtility::CalculateDamage(hitType, aGameObject->GetComponent<CStatsComponent>()->GetBaseStats().myDamage, aDamageMultiplier, 0.0f, 0.0f);
 
 	if (GameObject().GetComponent<CStatsComponent>()->AddDamage(damage)) {
-		SDamagePopupData data = {damage, static_cast<int>(hitType)};
+		SDamagePopupData data = {damage, static_cast<int>(hitType), &GameObject()};
 		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &data);
 		std::cout << __FUNCTION__ << " Player current health: " << stats.myHealth << std::endl;/*
 		CMainSingleton::PostMaster().Send({EMessageType::PlayerHealthChanged, &stats.myHealth});*/
