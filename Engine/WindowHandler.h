@@ -31,7 +31,8 @@ public:
 	void SetResolution();
 
 	void SetWindowTitle(std::string aString);
-	//void HandleInput(float dt);
+	
+	const float GetResolutionScale() const;
 
 private:
 	UINT GetWidth() const;
@@ -41,5 +42,6 @@ private:
 	CWindowHandler::SWindowData myWindowData;
 	HWND myWindowHandle;
 	DirectX::SimpleMath::Vector2* myResolution;
+	float myResolutionScale;
 };
 

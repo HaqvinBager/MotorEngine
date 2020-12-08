@@ -237,9 +237,6 @@
     <ClCompile Include="TextInstance.cpp">
       <Filter>Text</Filter>
     </ClCompile>
-    <ClCompile Include="TextRenderer.cpp">
-      <Filter>Text</Filter>
-    </ClCompile>
     <ClCompile Include="VFXBase.cpp">
       <Filter>VFX</Filter>
     </ClCompile>
@@ -353,6 +350,9 @@
     <ClCompile Include="PopupTextService.cpp" />
     <ClCompile Include="PerlinNoise.cpp" />
     <ClCompile Include="DialogueSystem.cpp" />
+    <ClCompile Include="TextRenderer.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EnemyFactory.h" />
@@ -518,9 +518,6 @@
     <ClInclude Include="TextInstance.h">
       <Filter>Text</Filter>
     </ClInclude>
-    <ClInclude Include="TextRenderer.h">
-      <Filter>Text</Filter>
-    </ClInclude>
     <ClInclude Include="VFXBase.h">
       <Filter>VFX</Filter>
     </ClInclude>
@@ -668,6 +665,9 @@
     <ClInclude Include="PerlinNoise.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="DialogueSystem.h" />
+    <ClInclude Include="TextRenderer.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="PBRDirectionalLight.hlsli">

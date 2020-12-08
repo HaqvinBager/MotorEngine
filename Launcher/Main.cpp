@@ -140,6 +140,7 @@ void RunGame(LPWSTR lpCmdLine)
 	DL_Debug::CDebug::GetInstance()->WriteLog("ingame", "ingame message");
 	DL_Debug::CDebug::GetInstance()->WriteLog("engine", "engine message");
 
+	// THIS IS KEPT FOR SAFETY ONLY. To change resolution, change in Json/WindowSettings.json
 	CWindowHandler::SWindowData windowData;
 	windowData.myX = 100;
 	windowData.myY = 100;
