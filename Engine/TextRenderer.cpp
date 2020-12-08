@@ -42,11 +42,11 @@ void CTextRenderer::Render(std::vector<CTextInstance*>& aTextInstanceList)
         
         DirectX::XMVECTOR result = textData.mySpriteFont->MeasureString(instance->GetText().c_str());
         dimensions = { DirectX::XMVectorGetX(result), DirectX::XMVectorGetY(result) };
-        dimensions *= instance->GetPivot();
+        dimensions *= instance->GetPivot() * instance->GetScale();
 
         dropShadowColor.w = instance->GetColor().w;
-        textData.mySpriteFont->DrawString(mySpriteBatch, instance->GetText().c_str(), instance->GetPosition() + dropShadowOffset - dimensions, dropShadowColor, 0.0f, { 0.0f, 0.0f }, instance->GetScale());
-        textData.mySpriteFont->DrawString(mySpriteBatch, instance->GetText().c_str(), instance->GetPosition() - dimensions, instance->GetColor(), 0.0f, { 0.0f, 0.0f }, instance->GetScale());
+        textData.mySpriteFont->DrawString(mySpriteBatch, instance->GetText().c_str(), (instance->GetPosition() + instance->GetGameObjectPosition()) + dropShadowOffset - dimensions, dropShadowColor, 0.0f, { 0.0f, 0.0f }, instance->GetScale());
+        textData.mySpriteFont->DrawString(mySpriteBatch, instance->GetText().c_str(), (instance->GetPosition() + instance->GetGameObjectPosition()) - dimensions, instance->GetColor(), 0.0f, { 0.0f, 0.0f }, instance->GetScale());
     }
     mySpriteBatch->End();
 }

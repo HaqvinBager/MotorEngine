@@ -76,7 +76,7 @@ CScene::~CScene()
 	this->DestroyVFXInstances();
 	//this->DestroyLineInstances();// Taken care of in Canvas
 	//this->DestroyAnimatedUIElement();// Taken care of in Canvas
-	this->DestroyTextInstances();
+	//this->DestroyTextInstances();// Taken care of in Canvas
 	
 	// This must be deleted after gameobjects have let go of their pointer to it
 	

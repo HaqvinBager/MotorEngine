@@ -226,7 +226,9 @@ void CPopupTextService::SpawnDamageNumber(void* someData)
 	DirectX::SimpleMath::Vector2 screen = CUtility::WorldToScreen(worldPos);
 
 	myActiveDamageNumbers.back()->SetPivot({ 0.5f, 0.5f });
-	myActiveDamageNumbers.back()->SetPosition({ screen.x, screen.y });
+	myActiveDamageNumbers.back()->SetGameObjectPosition({ screen.x, screen.y });
+	//Needs to be -1.f, -1.f!
+	myActiveDamageNumbers.back()->SetPosition({ -1.f,-1.f });
 	myActiveDamageNumbers.back()->SetText(text);
 
 	hitType = data.myHitType;
@@ -364,6 +366,15 @@ void CPopupTextService::UpdateResources()
 			indicesOfTextsToRemove.push_back(i);
 		}
 
+		//Text space position
+		DirectX::SimpleMath::Vector2 newPos = text->GetPosition();
+		newPos.x /= CEngine::GetInstance()->GetWindowHandler()->GetResolution().x;
+		newPos.y /= CEngine::GetInstance()->GetWindowHandler()->GetResolution().y;
+		newPos.x -= 0.5f;
+		newPos.y -= 0.5f;
+		newPos *= 2.0f;
+
+		//Attached Gameobject space position
 		DirectX::SimpleMath::Vector3 worldPos = myActiveGameObject[text->GetText()]->myTransform->Position();
 		DirectX::SimpleMath::Vector2 screen = CUtility::WorldToScreen(worldPos);
 
@@ -373,8 +384,14 @@ void CPopupTextService::UpdateResources()
 		text->SetScale(DirectX::SimpleMath::Vector2::Lerp(animationData->myMinScale, animationData->myMaxScale, DamageSizeCurve(quotient)));
 		text->SetColor(DirectX::SimpleMath::Vector4::Lerp(animationData->myStartColor, animationData->myEndColor, quotient));
 
-		screen += animationData->mySpeed * CTimer::Dt();
-		text->SetPosition(screen);
+		newPos += animationData->mySpeed * CTimer::Dt();
+		
+		//offset for text to be over attached Gameobject
+		screen.x -= 0.05f;
+		screen.y -= 0.4f;
+
+		text->SetPosition(newPos);
+		text->SetGameObjectPosition(screen);
 	}
 
 	std::sort(indicesOfTextsToRemove.begin(), indicesOfTextsToRemove.end(), [](UINT a, UINT b) { return a > b; });
