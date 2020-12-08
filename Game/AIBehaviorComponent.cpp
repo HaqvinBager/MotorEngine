@@ -10,7 +10,6 @@ CAIBehaviorComponent::CAIBehaviorComponent(CGameObject& aParent, IAIBehavior* aB
 
 CAIBehaviorComponent::~CAIBehaviorComponent()
 {
-	delete myBehavior;
 	myBehavior = nullptr;
 }
 

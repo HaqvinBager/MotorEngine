@@ -440,8 +440,9 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		origin->SetScale(1.2f);
 		scene->AddInstance(origin);
 
-	CEngine::GetInstance()->AddScene(scene);
-	CEngine::GetInstance()->SetActiveScene(0);
+	CEngine::GetInstance()->ModelViewerSetScene(scene);
+	//CEngine::GetInstance()->AddScene(scene);
+	//CEngine::GetInstance()->SetActiveScene(0);
 	CGameObject* currentGameObject = nullptr;
 
 	CCanvas* canvas = nullptr; 
@@ -558,7 +559,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
 		if (Input::GetInstance()->IsKeyPressed('I') && !showUI)
 		{
-			canvas = SpriteViewer::Init();
+			canvas = SpriteViewer::Init(scene);
 			showUI = true;
 		}
 		SpriteViewer::Update(*canvas, showUI);

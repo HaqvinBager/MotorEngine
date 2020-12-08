@@ -2,11 +2,12 @@
 #include "SimpleMath.h"
 
 class CText;
-
+class CScene;
 class CTextInstance
 {
 public:
-	CTextInstance(bool aAddToScene = true);
+	CTextInstance(CScene& aScene, bool aAddToScene = true);
+	CTextInstance();
 	~CTextInstance();
 
 	bool Init(CText* aText);

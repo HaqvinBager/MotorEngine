@@ -5,12 +5,17 @@
 #include "Engine.h"
 #include "WindowHandler.h"
 
-CSpriteInstance::CSpriteInstance(bool aAddToScene)
+CSpriteInstance::CSpriteInstance(CScene& aScene, bool aAddToScene)
+	: mySprite(nullptr)
+	, myRenderOrder(ERenderOrder::BackgroundLayer)
 {
-	mySprite = nullptr;
-
 	if (aAddToScene)
-	CEngine::GetInstance()->GetActiveScene().AddInstance(this);
+		aScene.AddInstance(this);
+}
+CSpriteInstance::CSpriteInstance()
+	: mySprite(nullptr)
+	, myRenderOrder(ERenderOrder::BackgroundLayer)
+{
 }
 
 CSpriteInstance::~CSpriteInstance()

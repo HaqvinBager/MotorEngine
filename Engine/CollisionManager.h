@@ -40,16 +40,11 @@ public:
 	~CCollisionManager();
 
 	void RegisterCollider(CCollider* aCollider);
+	void ClearColliders();
 	bool CheckIfAbility(CCollider* anAbilityCollider, CGameObject* aCollidedWithGameObject);
 	void Update();
 
 private:
 	std::vector<CCollider*> myColliders;
-
-public:
-	static CCollisionManager* GetInstance();
-
-private:
-	static CCollisionManager* ourInstance;
 
 };

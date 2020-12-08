@@ -9,14 +9,15 @@ enum class EAbilityType {
 	PlayerAbility1,
 	PlayerAbility2,
 	PlayerAbility3,
-	PlayerAbility4,
-	PlayerAbility5,
+	PlayerMelee,
+	PlayerHeavyMelee,
 	EnemyAbility,
 	BossAbility1,
 	BossAbility2,
 	BossAbility3,
+
 	AbilityTest,
-	WHIRLWIND
+	Count = AbilityTest
 };
 
 class CAbilityComponent : public CBehaviour, public IInputObserver
@@ -36,6 +37,7 @@ public:
 
 	void SendEvent();
 	void ReceiveEvent(const EInputEvent aEvent) override;
+	const float MeleeAttackRange() const;
 
 private:
 	CGameObject* LoadAbilityFromFile(EAbilityType anAbilityType);
@@ -47,4 +49,5 @@ private:
 	std::vector<CGameObject*> myActiveAbilities;
 	float* myCurrentCooldowns;
 	float* myMaxCooldowns;
+	float myMeleeAttackRange;
 };

@@ -12,6 +12,7 @@ public:
 	virtual void Init(CGameObject* aCaster) = 0;
 
 public:
+	DirectX::SimpleMath::Vector3 myDirection;
 	float myDuration;
 	float myTimer;
 	float myResourceCost;

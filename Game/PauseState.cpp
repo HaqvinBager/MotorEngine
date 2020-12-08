@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PauseState.h"
+
 #include "Canvas.h"
 #include "MainSingleton.h"
 #include "Scene.h"
@@ -9,11 +10,24 @@
 #include "CameraControllerComponent.h"
 #include "CameraComponent.h"
 
-CPauseState::CPauseState(CStateStack& aStateStack): CState(aStateStack), myCanvas(nullptr) {
+CPauseState::CPauseState(CStateStack& aStateStack, const CStateStack::EState aState) 
+	: CState(aStateStack, aState)
+	, myCanvas(nullptr) 
+	, myScene(nullptr)
+{}
+
+CPauseState::~CPauseState() 
+{
+	delete myScene;
+	myScene = nullptr;
+
+	delete myCanvas;
+	myCanvas = nullptr;
+}
+
+void CPauseState::Awake() 
+{
 	myScene = new CScene();
-	CEngine::GetInstance()->AddScene(myScene);
-	unsigned int index = static_cast<unsigned int>(CEngine::GetInstance()->myScenes.size() - 1);
-	CEngine::GetInstance()->SetActiveScene(index);
 
 	CGameObject* camera = new CGameObject();
 	camera->AddComponent<CCameraComponent>(*camera, 70.0f);
@@ -29,28 +43,26 @@ CPauseState::CPauseState(CStateStack& aStateStack): CState(aStateStack), myCanva
 	myScene->SetEnvironmentLight(envLight->GetComponent<CEnviromentLightComponent>()->GetEnviromentLight());
 
 	myCanvas = new CCanvas();
-	myCanvas->Init("Json/UI_PauseMenu_Description.json");
+	myCanvas->Init("Json/UI_PauseMenu_Description.json", *myScene);
 
-	myState = CStateStack::EStates::PauseMenu;
+	CEngine::GetInstance()->AddScene(myState, myScene);
 }
 
-CPauseState::~CPauseState() {
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::MainMenu,this);
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::Resume,this);
-	CEngine::GetInstance()->PopBackScene();
-	//CEngine::GetInstance()->GetActiveScene().ClearScene();
-	//CEngine::GetInstance()->GetActiveScene().ClearSprites();
-}
-
-void CPauseState::Awake() {
+void CPauseState::Start()  
+{
+	CEngine::GetInstance()->SetActiveScene(myState);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::Resume, this);
 }
 
-void CPauseState::Start()  {
+void CPauseState::Stop()
+{
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::MainMenu,this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::Resume,this);
 }
 
-void CPauseState::Update() {
+void CPauseState::Update() 
+{
 	myCanvas->Update();
 }
 
@@ -59,7 +71,7 @@ void CPauseState::Receive(const SMessage& aMessage) {
 	if (this == myStateStack.GetTop()) {
 		switch (aMessage.myMessageType) {
 		case EMessageType::MainMenu:
-			myStateStack.PopUntil(CStateStack::EStates::MainMenu);
+			myStateStack.PopUntil(CStateStack::EState::MainMenu);
 			break;
 		case EMessageType::Resume:
 			std::cout << "Should not pop yet" << std::endl;
@@ -69,9 +81,4 @@ void CPauseState::Receive(const SMessage& aMessage) {
 			break;
 		}
 	}
-}
-
-void CPauseState::MakeSceneActive() {
-	CEngine::GetInstance()->SetActiveScene(myActiveScene);
-
 }

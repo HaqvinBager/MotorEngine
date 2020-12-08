@@ -3,6 +3,8 @@
 #include "InputObserver.h"
 #include "PostMaster.h"
 
+class CMouseSelection;
+
 class CPlayerControllerComponent : public CBehaviour, public IInputObserver
 {
 public:
@@ -23,4 +25,8 @@ public:
 private:
 	float myLastHP;
 	float myRegenerationSpeed;
+	CMouseSelection* mySelection;
+	CGameObject* myTargetEnemy;
+	bool myIsMoving;
+	DirectX::SimpleMath::Vector3 myLastPosition;
 };

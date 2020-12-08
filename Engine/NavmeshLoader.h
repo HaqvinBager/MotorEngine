@@ -42,6 +42,9 @@ struct SNavMesh {
 	std::vector<STriangle*> myTriangles;
 
 	STriangle* GetTriangleAtPoint(DirectX::SimpleMath::Vector3 aPosition);
+
+public:
+	~SNavMesh();
 };
 
 class CNavmeshLoader

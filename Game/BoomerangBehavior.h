@@ -18,7 +18,6 @@ public:
 	void Init(CGameObject* aCaster) override;
 
 private:
-	DirectX::SimpleMath::Vector3 myDirection;
 	DirectX::SimpleMath::Vector3 myTargetPosition;
 	CGameObject* myCaster;
 

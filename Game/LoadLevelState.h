@@ -18,24 +18,25 @@ enum class ELevel
 	BossRoom
 };
 
+class CScene;
 
-class CLoadLevelState : public CState, public IObserver {
+class CLoadLevelState : public CState
+{
 public:
-	CLoadLevelState(CStateStack& aStateStack);
+	CLoadLevelState(CStateStack& aStateStack, const CStateStack::EState aState = CStateStack::EState::LoadLevel);
 	~CLoadLevelState() override;
 
-	void Awake() override;
 	void Start() override;
+	void Stop() override;
 	void Update() override;
-	void MakeSceneActive() override;
 
-	void Receive(const SMessage& aMessage) override;
 private:
+	void Awake() override;
 
 	/// <summary>
 	/// Returns the Index this Scene will use in CEngine::myScenes
 	/// </summary>
-	unsigned int Load(const ELevel aLevel);
+	const CStateStack::EState Load(const ELevel aLevel);
 
 	void SaveLevelNames();
 	void SaveModelPaths(const ELevel aLevel);
@@ -45,7 +46,7 @@ private:
 	CSceneReader mySceneReader;
 	CUnityFactory myUnityFactory;
 
-	std::future<unsigned int> myLoadLevelFuture;
+	std::future<CStateStack::EState> myLoadLevelFuture;
 	std::vector<std::string> myLevelNames;
 	std::vector<std::string> myBinPaths;
 	std::unordered_map<ELevel, std::string> myModelJsonFileMap;

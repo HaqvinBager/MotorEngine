@@ -1,5 +1,6 @@
 #pragma once
 #include "State.h"
+#include "StateStack.h"
 #include "InputObserver.h"
 
 class CTokenPool;
@@ -10,18 +11,16 @@ class CColliderPushManager;
 
 class CInGameState : public CState, public IInputObserver
 {
-
 public:
-	CInGameState(CStateStack& aStateStack);
+	CInGameState(CStateStack& aStateStack, const CStateStack::EState aState = CStateStack::EState::InGame);
 	~CInGameState() override;
 
 	void Awake() override;
 	void Start() override;
+	void Stop() override;
 	void Update() override;
 
 	void ReceiveEvent(const EInputEvent aEvent) override;
-	void MakeSceneActive() override;
-
 private:
 	CCanvas* myCanvas;
 	CTokenPool* myTokenPool;

@@ -3,11 +3,11 @@
 #include "Canvas.h"
 #include "AnimatedUIElement.h"
 
-CHealthBarComponent::CHealthBarComponent(CGameObject& aParant, std::string aPath)
+CHealthBarComponent::CHealthBarComponent(CGameObject& aParant, CScene& aScene, std::string aPath)
 	: CBehaviour(aParant)
 {
 	myCanvas = new CCanvas();
-	myCanvas->Init(aPath, false);
+	myCanvas->Init(aPath, aScene, false);
 }
 
 CHealthBarComponent::~CHealthBarComponent()

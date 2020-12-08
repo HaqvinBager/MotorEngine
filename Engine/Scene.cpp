@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Scene.h"
+
 #include "EnvironmentLight.h"
 #include "ModelComponent.h"
 #include "GameObject.h"
@@ -21,22 +22,26 @@
 #include "ModelFactory.h"
 #include "Model.h"
 #include "InstancedModelComponent.h"
+#include "TextInstance.h"
+#include "../Game/EnemyBehavior.h"
 
-CScene* CScene::ourInstance = nullptr;
+//CScene* CScene::ourInstance = nullptr;
 
-CScene* CScene::GetInstance()
-{
-	return ourInstance;
-}
+//CScene* CScene::GetInstance()
+//{
+//	return ourInstance;
+//}
 
 CScene::CScene()
+	: myIsReadyToRender(false)
+	, myMainCamera(nullptr)
+	, myModelToOutline(nullptr)
+	, myEnvironmentLight(nullptr)
+	, myNavMesh(nullptr)
+	, myNavMeshGrid(nullptr)
+	, myEnemyBehavior(nullptr)
+	, myPlayer(nullptr)
 {
-	myIsReadyToRender = false;
-	ourInstance = this;
-	myMainCamera = nullptr;
-	myCollisionManager = new CCollisionManager();
-	myModelToOutline = nullptr;
-	myEnvironmentLight = nullptr;
 
 #ifdef _DEBUG
 	myShouldRenderLineInstance = true;
@@ -45,10 +50,43 @@ CScene::CScene()
 
 CScene::~CScene()
 {
-	ourInstance = nullptr;
+	//ourInstance = nullptr;
 	myMainCamera = nullptr;
-	delete myCollisionManager;
-	myCollisionManager = nullptr;
+	
+	//delete myCollisionManager;
+	//myCollisionManager = nullptr;
+	if (myNavMesh)// Any CScene that is not InGame's scene will not hold a NavMesh
+	{
+		delete myNavMesh;
+		myNavMesh = nullptr;
+	}
+	if (myNavMeshGrid)// -||-
+	{
+		delete myNavMeshGrid;
+		myNavMeshGrid = nullptr;
+	}
+
+	delete myEnvironmentLight;
+	myEnvironmentLight = nullptr;
+
+	this->DestroyGameObjects();
+	//this->DestroySprites();// Canvas seems to delete its own sprites and so does AnimatedUIElement
+	this->DestroyPointLights();
+	this->DestroyParticles();
+	this->DestroyVFXInstances();
+	//this->DestroyLineInstances();// Taken care of in Canvas
+	//this->DestroyAnimatedUIElement();// Taken care of in Canvas
+	this->DestroyTextInstances();
+	
+	// This must be deleted after gameobjects have let go of their pointer to it
+	
+	if (myEnemyBehavior)
+	{
+		delete myEnemyBehavior;
+		myEnemyBehavior = nullptr;
+	}
+
+	// Even with this the memory still increases on every load!
 }
 
 
@@ -350,9 +388,9 @@ bool CScene::RemoveInstance(CPointLight* aPointLight)
 	return true;
 }
 
-bool CScene::ClearScene() {
+bool CScene::DestroyGameObjects() {
 
-	for (auto gameObject : myGameObjects) {
+	for (auto& gameObject : myGameObjects) {
 		delete gameObject;
 		gameObject = nullptr;
 	}
@@ -360,7 +398,7 @@ bool CScene::ClearScene() {
 	return true;
 }
 
-bool CScene::ClearSprites() {
+bool CScene::DestroySprites() {
 
 	for (UINT i = 0; i < mySpriteInstances.size() - 1; ++i)
 	{
@@ -373,6 +411,75 @@ bool CScene::ClearSprites() {
 	mySpriteInstances.clear();
 
 	return true;
+}
+
+bool CScene::DestroyPointLights()
+{
+	for (auto& p : myPointLights)
+	{
+		delete p;
+		p = nullptr;
+	}
+	myPointLights.clear();
+	return true;
+}
+
+bool CScene::DestroyParticles()
+{
+	for (auto& particle : myParticles)
+	{
+		delete particle;
+		particle = nullptr;
+	}
+	myParticles.clear();
+	return false;
+}
+
+bool CScene::DestroyVFXInstances()
+{
+	for (auto& vfx : myVFXInstances)
+	{
+		delete vfx;
+		vfx = nullptr;
+	}
+	myVFXInstances.clear();
+	return false;
+}
+
+bool CScene::DestroyLineInstances()
+{
+	for (size_t i = 0; i < myLineInstances.size(); ++i)
+	{
+		if (myLineInstances[i] != nullptr)
+		{
+			delete myLineInstances[i];
+			myLineInstances[i] = nullptr;
+		}
+	}
+	return false;
+}
+
+bool CScene::DestroyAnimatedUIElement()
+{
+	for (size_t i = 0; i < myAnimatedUIElements.size(); ++i)
+	{
+		delete myAnimatedUIElements[i];
+		myAnimatedUIElements[i] = nullptr;
+	}
+	myAnimatedUIElements.clear();
+	return false;
+}
+
+bool CScene::DestroyTextInstances()
+{
+	for (auto& text : myTexts)
+	{
+		delete text;
+		text = nullptr;
+	}
+	myTexts.clear();
+
+	return false;
 }
 
 void CScene::SetModelToOutline(CGameObject* aGameObject)
@@ -398,4 +505,9 @@ void CScene::SetShouldRenderLineInstance(const bool aShouldRender)
 #else
 	aShouldRender;
 #endif //  _DEBUG
+}
+
+void CScene::TakeOwnershipOfAIBehavior(CEnemyBehavior* aBehavior)
+{
+	myEnemyBehavior = aBehavior;
 }

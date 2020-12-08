@@ -32,7 +32,7 @@ void CDirectXFramework::BeginFrame(std::array<float, 4> /*aClearColor*/) {
 
 void CDirectXFramework::EndFrame()
 {
-	mySwapChain->Present(1, 0);
+	mySwapChain->Present(0, 0);
 }
 
 bool CDirectXFramework::Init(CWindowHandler* aWindowHandler)

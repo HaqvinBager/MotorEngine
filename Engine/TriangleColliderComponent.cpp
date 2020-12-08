@@ -2,9 +2,11 @@
 #include "TriangleColliderComponent.h"
 #include "CircleColliderComponent.h"
 #include "RectangleColliderComponent.h"
-#include "CollisionManager.h"
 #include "TransformComponent.h"
 #include "Debug.h"
+
+//#include "CollisionManager.h"
+#include "MainSingleton.h"
 
 #ifdef _DEBUG
 #include "LineInstance.h"
@@ -18,7 +20,7 @@ CTriangleColliderComponent::CTriangleColliderComponent(CGameObject& aParent) :
 	myWidth(0.5f),
 	myHeight(0.5f)
 {
-	CCollisionManager::GetInstance()->RegisterCollider(this);
+	CMainSingleton::CollisionManager().RegisterCollider(this);
 #ifdef _DEBUG
 	myVisualizer = nullptr;
 #endif
@@ -29,7 +31,7 @@ CTriangleColliderComponent::CTriangleColliderComponent(CGameObject& aParent, flo
 	myWidth(aWidth),
 	myHeight(aHeight)
 {
-	CCollisionManager::GetInstance()->RegisterCollider(this);
+	CMainSingleton::CollisionManager().RegisterCollider(this);
 #ifdef _DEBUG
 	myVisualizer = nullptr;
 #endif
@@ -40,7 +42,7 @@ CTriangleColliderComponent::CTriangleColliderComponent(CGameObject& aParent, flo
 	myWidth(aWidth),
 	myHeight(aHeight)
 {
-	CCollisionManager::GetInstance()->RegisterCollider(this);
+	CMainSingleton::CollisionManager().RegisterCollider(this);
 #ifdef _DEBUG
 	myVisualizer = nullptr;
 #endif
