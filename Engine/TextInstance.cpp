@@ -2,6 +2,7 @@
 #include "TextInstance.h"
 #include "Scene.h"
 #include "Engine.h"
+#include "WindowHandler.h"
 
 namespace SM = DirectX::SimpleMath;
 
@@ -29,6 +30,7 @@ bool CTextInstance::Init(CText* aText)
     }
 
     myScale = { 1.0f, 1.0f };
+    myScale *= CEngine::GetInstance()->GetWindowHandler()->GetResolutionScale();
 
     return true;
 }
@@ -44,6 +46,14 @@ void CTextInstance::SetPosition(DirectX::SimpleMath::Vector2 aPosition)
     aPosition.x += 0.5f;
     aPosition.y += 0.5f;
     myPosition = aPosition * CEngine::GetInstance()->GetWindowHandler()->GetResolution();
+}
+
+void CTextInstance::SetGameObjectPosition(DirectX::SimpleMath::Vector2 aPosition)
+{
+    aPosition /= 2.0f;
+    aPosition.x += 0.5f;
+    aPosition.y += 0.5f;
+    myGameObjectPosition = aPosition * CEngine::GetInstance()->GetWindowHandler()->GetResolution();
 }
 
 void CTextInstance::SetColor(DirectX::SimpleMath::Vector4 aColor)

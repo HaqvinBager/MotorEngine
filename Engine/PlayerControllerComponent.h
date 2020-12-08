@@ -29,5 +29,6 @@ private:
 	CMouseSelection* mySelection;
 	CGameObject* myTargetEnemy;
 	bool myIsMoving;
+	bool myMiddleMousePressed;
 	DirectX::SimpleMath::Vector3 myLastPosition;
 };
