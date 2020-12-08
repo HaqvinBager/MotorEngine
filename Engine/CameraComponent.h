@@ -19,11 +19,14 @@ public:
 	void SetTrauma(float aValue);
 	void SetStartingRotation(DirectX::SimpleMath::Vector3 aRotation);
 
+	const Matrix& GetViewMatrix();
+
 private:
 	void Shake();
 
 private:
 	DirectX::SimpleMath::Matrix myProjection;
+	DirectX::SimpleMath::Matrix myView;
 	DirectX::SimpleMath::Vector3 myStartingRotation;
 	DirectX::SimpleMath::Vector3 myMaxShakeRotation;
 	PerlinNoise myNoise;

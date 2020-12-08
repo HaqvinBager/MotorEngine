@@ -8,6 +8,7 @@
 #include "Engine.h"
 #include "WindowHandler.h"
 #include "Debug.h"
+#include "Utility.h"
 
 //namespace MouseTracker {
 
@@ -79,7 +80,8 @@ public:
 
 		DirectX::SimpleMath::Vector3 target = camTransform->Position() - camTransform->Transform().Forward();
 
-		DirectX::SimpleMath::Matrix viewMatrix = DirectX::XMMatrixLookAtLH(camTransform->Position(), target, camTransform->Transform().Up());
+		//DirectX::SimpleMath::Matrix viewMatrix = DirectX::XMMatrixLookAtLH(camTransform->Position(), target, camTransform->Transform().Up());
+		DirectX::SimpleMath::Matrix viewMatrix = cam->GetViewMatrix();
 		DirectX::SimpleMath::Matrix viewMatrixInv = viewMatrix.Invert();
 
 		DirectX::SimpleMath::Vector4 origin = { 0.0f, 0.0f, 0.0f, 1.0f };

@@ -31,8 +31,10 @@ void CHealthBarComponent::Update()
 
 void CHealthBarComponent::OnEnable()
 {
-	for (auto sprite : myCanvas->GetAnimatedUI()) {
-		sprite->GetInstance()->SetShouldRender(true);
+	if (myEnabled == true) {
+		for (auto sprite : myCanvas->GetAnimatedUI()) {
+			sprite->GetInstance()->SetShouldRender(true);
+		}
 	}
 }
 

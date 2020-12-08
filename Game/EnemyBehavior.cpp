@@ -155,7 +155,7 @@ void CEnemyBehavior::TakeDamage(float aDamageMultiplier, CGameObject* aGameObjec
 	float damage = CDamageUtility::CalculateDamage(hitType, myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myDamage, aDamageMultiplier, 0.25f, 1.5f);
 
 	stats.myHealth -= damage;
-	SDamagePopupData data = {damage, static_cast<int>(hitType)};
+	SDamagePopupData data = {damage, static_cast<int>(hitType), myCurrentParent};
 	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &data);
 	std::cout << __FUNCTION__ << " Enemy current health: " << stats.myHealth << std::endl;
 	CMainSingleton::PostMaster().Send({ EMessageType::EnemyHealthChanged, &stats.myHealth });

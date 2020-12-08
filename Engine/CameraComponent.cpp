@@ -7,6 +7,7 @@ CCameraComponent::CCameraComponent(CGameObject& aParent, const float aFoV/*, flo
 	: CComponent(aParent)
 {
 	myProjection = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(aFoV), (1600.0f / 900.0f), 10.0f, 10000.0f);
+	myView = DirectX::XMMatrixLookAtLH(GameObject().myTransform->Position(), Vector3::Forward, Vector3::Up);
 	myTrauma = 0.0f;
 	myShake = 0.0f;
 	myDecayInSeconds = 1.0f;
@@ -49,6 +50,12 @@ void CCameraComponent::SetTrauma(float aValue)
 void CCameraComponent::SetStartingRotation(DirectX::SimpleMath::Vector3 aRotation)
 {
 	myStartingRotation = aRotation;
+}
+
+const Matrix& CCameraComponent::GetViewMatrix()
+{
+	myView = DirectX::XMMatrixLookAtLH(GameObject().myTransform->Position(), GameObject().myTransform->Position() - GameObject().myTransform->Transform().Forward(), GameObject().myTransform->Transform().Up());
+	return myView;
 }
 
 void CCameraComponent::Shake()

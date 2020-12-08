@@ -3,6 +3,7 @@
 
 class CSpriteInstance;
 class CTextInstance;
+class CGameObject;
 
 enum class EPopupType
 {
@@ -16,6 +17,7 @@ struct SDamagePopupData
 {
 	float myDamage;
 	int myHitType;
+	CGameObject* myGameObject;
 };
 
 struct STextAnimationData
@@ -70,6 +72,8 @@ private:
 	CTextInstance* myActiveInfoBoxText;
 	CTextInstance* myInfoBoxText;
 	STextAnimationData* myInfoAnimationData;
+
+	std::unordered_map<std::string, CGameObject*> myActiveGameObject;
 
 private:
 	CPopupTextService();

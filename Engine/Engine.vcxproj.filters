@@ -663,6 +663,7 @@
     </ClInclude>
     <ClInclude Include="PopupTextService.h" />
     <ClInclude Include="PerlinNoise.h" />
+    <ClInclude Include="Utility.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PBRDirectionalLight.hlsli">

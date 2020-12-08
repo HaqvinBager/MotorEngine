@@ -1,5 +1,6 @@
 #pragma once
 #include "SimpleMath.h"
+#include "GameObject.h"
 
 class CText;
 
@@ -23,6 +24,7 @@ public:
 	DirectX::SimpleMath::Vector4 GetColor() { return myColor; }
 	DirectX::SimpleMath::Vector2 GetPivot() { return myPivot; }
 	DirectX::SimpleMath::Vector2 GetScale() { return myScale; }
+	CGameObject* myGameObject;
 
 private:
 	CText* myTextData;
