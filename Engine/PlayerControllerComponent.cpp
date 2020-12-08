@@ -21,7 +21,7 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent):
 	myLastHP(0.0f),
 	myRegenerationSpeed(5.0f), //TODO: read from unity
 	mySelection(new CMouseSelection()),
-	myIsMoving(false),
+	myIsMoving(true),
 	myTargetEnemy(nullptr)
 {
 	myLastPosition = {0.0f,0.0f,0.0f};
@@ -34,6 +34,8 @@ CPlayerControllerComponent::~CPlayerControllerComponent()
 	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::MoveDown, this);
 	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::AttackClick, this);
 	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::StandStill, this);
+	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::MiddleMouseMove, this);
+	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Moving, this);
 }
 
 void CPlayerControllerComponent::Awake()
@@ -42,33 +44,35 @@ void CPlayerControllerComponent::Awake()
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::MoveDown, this);
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::AttackClick, this);
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::StandStill, this);
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::MiddleMouseMove, this);
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Moving, this);
 }
 
 void CPlayerControllerComponent::Start() {}
 
 void CPlayerControllerComponent::Update()
 {
-	this->GameObject().myTransform->MoveAlongPath();
+	if (myIsMoving) {
+		this->GameObject().myTransform->MoveAlongPath();
+	}
 
-	if(myTargetEnemy){
-		if(myTargetEnemy->GetComponent<CStatsComponent>()->GetStats().myHealth > 0){
-			if (myIsMoving) {
-				float abilityLength = GameObject().GetComponent<CAbilityComponent>()->MeleeAttackRange();
-				if (DirectX::SimpleMath::Vector3::Distance(myTargetEnemy->myTransform->Position(), GameObject().myTransform->Position())
-					< (myTargetEnemy->GetComponent<CCircleColliderComponent>()->GetRadius() + abilityLength)) {
-					this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::AttackLight);
-					GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position());
-				}
+	if (myTargetEnemy) {
+		if (myTargetEnemy->GetComponent<CStatsComponent>()->GetStats().myHealth > 0) {
+			float abilityLength = GameObject().GetComponent<CAbilityComponent>()->MeleeAttackRange();
+			if (DirectX::SimpleMath::Vector3::Distance(myTargetEnemy->myTransform->Position(), GameObject().myTransform->Position())
+				< (myTargetEnemy->GetComponent<CCircleColliderComponent>()->GetRadius() + abilityLength)) {
+				this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position());
+				this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::AttackLight);
 			}
 		}
 	}
 
-	if (myLastPosition != GameObject().myTransform->Position()) {
+	/*if (myLastPosition != GameObject().myTransform->Position()) {
 		myIsMoving = true;
 		myLastPosition = GameObject().myTransform->Position();
 	} else {
 		myIsMoving = false;
-	}
+	}*/
 
 	if (!PlayerIsAlive()) {
 		ResetPlayer();
@@ -86,15 +90,36 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 	switch (aEvent)
 	{
 	case  IInputObserver::EInputEvent::StandStill:
+		myMiddleMousePressed = false;
+
+		myIsMoving = false;
+		this->GameObject().GetComponent<CTransformComponent>()->ClearPath();
+		break;
+	case  IInputObserver::EInputEvent::Moving:
+		myMiddleMousePressed = false;
+		myIsMoving = true;
 		break;
 	case IInputObserver::EInputEvent::MoveDown:
-		this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
-		myTargetEnemy = mySelection->FindSelectedEnemy();
+		myMiddleMousePressed = false;
+
+		if (myIsMoving) {
+			this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
+			myTargetEnemy = mySelection->FindSelectedEnemy();
+		} else {
+			this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position());
+			this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::AttackLight);
+		}
 		break;
 	case IInputObserver::EInputEvent::AttackClick:
+		myMiddleMousePressed = false;
+
 		this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::AttackLight);
 		break;
-
+	case IInputObserver::EInputEvent::MiddleMouseMove:
+		if (myIsMoving) {
+			this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
+		}
+		break;
 	default:
 		break;
 	}
