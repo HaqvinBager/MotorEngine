@@ -2,6 +2,7 @@
 #include "TextInstance.h"
 #include "Scene.h"
 #include "Engine.h"
+#include "WindowHandler.h"
 
 namespace SM = DirectX::SimpleMath;
 
@@ -29,6 +30,7 @@ bool CTextInstance::Init(CText* aText)
     }
 
     myScale = { 1.0f, 1.0f };
+    myScale *= CEngine::GetInstance()->GetWindowHandler()->GetResolutionScale();
 
     return true;
 }
