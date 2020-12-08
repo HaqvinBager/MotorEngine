@@ -84,15 +84,7 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 		CGameObject* pointLight = CreateGameObject(pointLightData);
 		aScene.AddInstance(pointLight);
 		aScene.AddInstance(pointLight->GetComponent<CPointLightComponent>()->GetPointLight());
-
-#ifdef _DEBUG
-		//Vector3 otherPosition;
-		//otherPosition = pointLightData.myPosition;
-		//otherPosition.x += pointLightData.myRange;
-		//CDebug::GetInstance()->DrawLine(pointLightData.myPosition, otherPosition, 50.0f);
-#endif
 	}
-	// "Assets\\3D\\Character\\CH_PL_Daughter_01_19G4_1_19\\CH_PL_Daughter_01_19G4_1_19_SK.fbx" // Animated player
 	CGameObject* player = CreateGameObject(aData.myPlayerData, aBinModelPaths[aData.myPlayerData.myModelIndex]);
 	aScene.AddInstance(player);
 	aScene.AddPlayer(player);
@@ -280,11 +272,14 @@ CGameObject* CUnityFactory::CreateGameObject(const SEventData& aData, const std:
     gameObject->myTransform->Position(aData.myPosition);
     gameObject->AddComponent<CCollisionEventComponent>(*gameObject,
 		static_cast<EMessageType>(aData.myEvent),
-		anEventString,
+		anEventString);
+
+	gameObject->AddComponent<CRectangleColliderComponent>(*gameObject, 
 		aData.myColliderData.x,
 		aData.myColliderData.y,
 		ECollisionLayer::EVENT,
 		static_cast<uint64_t>(ECollisionLayer::PLAYER));
+
     return gameObject;
 }
 

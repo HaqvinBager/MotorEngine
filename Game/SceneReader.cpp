@@ -43,6 +43,7 @@ SInGameData& CSceneReader::ReadInGameData()
 			myStream.close();
 			myStreamPtr = nullptr;
 			myCurrentBinPath = "NA";
+			std::cout << "Reloading" << std::endl;
 			return *myInGameData[i];
 		}
 	}
@@ -169,6 +170,7 @@ SLoadScreenData& CSceneReader::ReadLoadScreenData()
 			myStream.close();
 			myStreamPtr = nullptr;
 			myCurrentBinPath = "NA";
+			std::cout << "Reloading" << std::endl;
 			return *myLoadScreenData[i];
 		}
 	}
