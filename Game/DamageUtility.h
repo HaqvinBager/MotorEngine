@@ -29,9 +29,8 @@ public:
 			aHitType = EHitType::Crit;
 			return aBase * anAbilityMultiplier * aCriticalHitMultiplier;
 		}
-
 		aHitType = EHitType::Normal;
-		if (aCriticalHitChance < 0.0f) { aHitType = EHitType::Enemy; }
+		if (aCriticalHitChance <= 0.0f) { aHitType = EHitType::Enemy; }
 
 		return aBase;
 	}

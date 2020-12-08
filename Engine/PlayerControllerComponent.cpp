@@ -105,7 +105,10 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 
 		if (myIsMoving) {
 			this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
-			myTargetEnemy = mySelection->FindSelectedEnemy();
+			if (mySelection)
+			{
+				myTargetEnemy = mySelection->FindSelectedEnemy();
+			}
 		} else {
 			this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position());
 			this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::AttackLight);
@@ -202,8 +205,8 @@ void CPlayerControllerComponent::TakeDamage(float aDamageMultiplier, CGameObject
 {
 	SStats& stats = GameObject().GetComponent<CStatsComponent>()->GetStats();
 
-	EHitType hitType = EHitType::Normal;
-	float damage = CDamageUtility::CalculateDamage(hitType, aGameObject->GetComponent<CStatsComponent>()->GetBaseStats().myDamage, aDamageMultiplier, 0.0f, 0.0f);
+	EHitType hitType = EHitType::Enemy;
+	float damage = CDamageUtility::CalculateDamage(hitType, aGameObject->GetComponent<CStatsComponent>()->GetBaseStats().myDamage, aDamageMultiplier);
 
 	if (GameObject().GetComponent<CStatsComponent>()->AddDamage(damage)) {
 		SDamagePopupData data = {damage, static_cast<int>(hitType), &GameObject()};

@@ -15,21 +15,30 @@
 using namespace rapidjson;
 CLoadLevelState::CLoadLevelState(CStateStack& aStateStack, const CStateStack::EState aState) 
 	: CState(aStateStack, aState)
+	, myLevelToLoad()
 {}
 
 CLoadLevelState::~CLoadLevelState()
 {
+	CMainSingleton::PostMaster().Unsubscribe("Dungeon", this);
+	CMainSingleton::PostMaster().Unsubscribe("Gardens", this);
+	CMainSingleton::PostMaster().Unsubscribe("Castle", this);
+	CMainSingleton::PostMaster().Unsubscribe("BossRoom", this);
 }
 
 void CLoadLevelState::Awake()
 {
 	SaveLevelNames();	
+	CMainSingleton::PostMaster().Subscribe("Dungeon", this);
+	CMainSingleton::PostMaster().Subscribe("Gardens", this);
+	CMainSingleton::PostMaster().Subscribe("Castle", this);
+	CMainSingleton::PostMaster().Subscribe("BossRoom", this);
 }
 
 void CLoadLevelState::Start()
 {
-	//myActiveScene = ;
 	CEngine::GetInstance()->SetActiveScene(Load(ELevel::LoadScreen));
+	CEngine::GetInstance()->SetRenderScene(true);
 
 	Document latestExportedLevelDoc = CJsonReader::LoadDocument("Levels/DebugLevel.json");
 	int levelIndex = latestExportedLevelDoc["LevelIndex"].GetInt();
@@ -50,6 +59,7 @@ void CLoadLevelState::Start()
 
 void CLoadLevelState::Stop()
 {
+	
 }
 
 void CLoadLevelState::Update()
@@ -72,6 +82,22 @@ void CLoadLevelState::Update()
 		}
 	}
 
+}
+
+void CLoadLevelState::Receive(const SStringMessage& aMessage)
+{
+	std::string level = "Levels/";
+	level.append(aMessage.myMessageType);
+	ELevel eLevel = ELevel::NavTest;
+	for (int i = 0; i < myLevelNames.size(); ++i)
+	{
+		if (myLevelNames[i] == level)
+		{
+			eLevel = static_cast<ELevel>(i);
+			break;
+		}
+	}
+	myLevelToLoad = eLevel;
 }
 
 ///

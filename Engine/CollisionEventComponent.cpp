@@ -8,12 +8,12 @@
 #include "PostMaster.h"
 #include "Debug.h"
 
-CCollisionEventComponent::CCollisionEventComponent(CGameObject& aGameObject, EMessageType aMessageType, std::string anEventString, float /*aWidth*/, float /*aHeight*/, ECollisionLayer /*aCollisionLayer*/, uint64_t /*someCollisionFlags*/)
+CCollisionEventComponent::CCollisionEventComponent(CGameObject& aGameObject, EMessageType aMessageType, std::string anEventString)
 	: CComponent(aGameObject)
 	, myMessageType(aMessageType)
 	, myTextMessage(anEventString)
 {	
-	//aGameObject.AddComponent<CRectangleColliderComponent>(aGameObject, aWidth, aHeight, aCollisionLayer, someCollisionFlags);
+	//
 }
 
 CCollisionEventComponent::~CCollisionEventComponent()
@@ -33,10 +33,10 @@ void CCollisionEventComponent::Update()
 {
 }
 
-void CCollisionEventComponent::Collided(CGameObject* /*aCollidedGameObject*/)
+void CCollisionEventComponent::Collided(CGameObject* aCollidedGameObject)
 {
-	//SStringMessage stringMessage = { myTextMessage.c_str(), aCollidedGameObject };
-	//CMainSingleton::PostMaster().Send(stringMessage);
+	SStringMessage stringMessage = { myTextMessage.c_str(), aCollidedGameObject };
+	CMainSingleton::PostMaster().Send(stringMessage);
 }
 
 const std::string& CCollisionEventComponent::GetEventMessage() const

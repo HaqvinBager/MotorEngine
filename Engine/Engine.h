@@ -60,6 +60,8 @@ public:
 	
 	//unsigned int ScenesSize();
 
+	void SetRenderScene(const bool aRenderSceneActive) { myRenderSceneActive = aRenderSceneActive; }
+
 private:
 	static CEngine* ourInstance;
 	
@@ -90,4 +92,6 @@ private:
 	CMainSingleton* myMainSingleton;
 	CAudioManager* myAudioManager;
 	//CDialogueSystem* myDialogueSystem;
+
+	bool myRenderSceneActive = false;
 };

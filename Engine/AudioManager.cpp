@@ -156,7 +156,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		break;
 	case EMessageType::PlayAmbienceCastle:
 	{
-		myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
+		//myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
 	}
 		break;
 	case EMessageType::PlayAmbienceCave1:
@@ -167,19 +167,19 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::PlayAmbienceDungeon:
 	{
-		myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
+		//myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
 	}
 		break;
 
 	case EMessageType::PlayAmbienceSwamp1:
 	{
-		myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
+		//myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
 	}
 		break;
 	
 	case EMessageType::EnemyHealthChanged:
 	{
-		myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyPain)], myChannels[CAST(EChannels::SFX)]);
+		//myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyPain)], myChannels[CAST(EChannels::SFX)]);
 	}
 	break;
 

@@ -9,7 +9,7 @@ enum class ECollisionLayer;
 class CCollisionEventComponent : public CComponent
 {
 public:
-	CCollisionEventComponent(CGameObject& aGameObject, EMessageType aMessageType, std::string anEventString, float aWidth, float aHeight, ECollisionLayer aCollisionLayer, uint64_t someCollisionFlags);
+	CCollisionEventComponent(CGameObject& aGameObject, EMessageType aMessageType, std::string anEventString);
 	~CCollisionEventComponent() override;
 
 	void Awake() override;
