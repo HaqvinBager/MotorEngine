@@ -15,6 +15,8 @@
 #include "rapidjson\document.h"
 #include "rapidjson\istreamwrapper.h"
 #include "..\..\Game\LoadLevelState.h"
+#include "Engine.h"
+#include "Scene.h"
 
 using namespace rapidjson;
 
@@ -55,7 +57,7 @@ CCanvas::~CCanvas()
 	myTexts.clear();
 }
 
-void CCanvas::Init(std::string aFilePath, CScene& aScene)
+void CCanvas::Init(std::string aFilePath, CScene& aScene, bool addToScene)
 {
 	std::ifstream inputStream(aFilePath);
 	IStreamWrapper inputWrapper(inputStream);
@@ -70,7 +72,7 @@ void CCanvas::Init(std::string aFilePath, CScene& aScene)
 			SButtonData data;
 			auto buttonData = buttonDataArray[i].GetObjectW();
 			
-			myTexts.emplace_back(new CTextInstance(aScene));
+			myTexts.emplace_back(new CTextInstance(aScene, addToScene));
 			myTexts.back()->Init(CTextFactory::GetInstance()->GetText(buttonData["FontAndFontSize"].GetString()));
 			myTexts.back()->SetText(buttonData["Text"].GetString());
 			myTexts.back()->SetColor({ buttonData["Text Color R"].GetFloat(), buttonData["Text Color G"].GetFloat(), buttonData["Text Color B"].GetFloat(), 1.0f });
@@ -102,7 +104,7 @@ void CCanvas::Init(std::string aFilePath, CScene& aScene)
 		for (unsigned int i = 0; i < textDataArray.Size(); ++i)
 		{
 			auto textData = textDataArray[i].GetObjectW();
-			myTexts.emplace_back(new CTextInstance(aScene));
+			myTexts.emplace_back(new CTextInstance(aScene, addToScene));
 			myTexts.back()->Init(CTextFactory::GetInstance()->GetText(textData["FontAndFontSize"].GetString()));
 			myTexts.back()->SetText(textData["Text"].GetString());
 			myTexts.back()->SetColor({ textData["Color R"].GetFloat(), textData["Color G"].GetFloat(), textData["Color B"].GetFloat(), 1.0f });
@@ -116,16 +118,17 @@ void CCanvas::Init(std::string aFilePath, CScene& aScene)
 		auto animatedDataArray = document["Animated UI Elements"].GetArray();
 		for (unsigned int i = 0; i < animatedDataArray.Size(); ++i)
 		{
-			myAnimatedUIs.emplace_back(new CAnimatedUIElement(animatedDataArray[i]["Path"].GetString(), aScene));
+			myAnimatedUIs.emplace_back(new CAnimatedUIElement(animatedDataArray[i]["Path"].GetString(), aScene, addToScene));
 			float x = animatedDataArray[i]["Position X"].GetFloat();
 			float y = animatedDataArray[i]["Position Y"].GetFloat();
 			myAnimatedUIs.back()->SetPosition({ x, y });
+			aScene.AddInstance(myAnimatedUIs.back());
 		}
 	}
 
 	if (document.HasMember("Background"))
 	{
-		myBackground = new CSpriteInstance(aScene);
+		myBackground = new CSpriteInstance(aScene, addToScene);
 		myBackground->Init(CSpriteFactory::GetInstance()->GetSprite(document["Background"]["Path"].GetString()));
 		myBackground->SetRenderOrder(ERenderOrder::BackgroundLayer);
 	}
@@ -135,7 +138,7 @@ void CCanvas::Init(std::string aFilePath, CScene& aScene)
 		auto spriteDataArray = document["Sprites"].GetArray();
 		for (unsigned int i = 0; i < spriteDataArray.Size(); ++i)
 		{
-			CSpriteInstance* spriteInstance = new CSpriteInstance(aScene);
+			CSpriteInstance* spriteInstance = new CSpriteInstance(aScene, addToScene);
 			spriteInstance->Init(CSpriteFactory::GetInstance()->GetSprite(spriteDataArray[i]["Path"].GetString()));
 			mySprites.emplace_back(spriteInstance);
 			float x = spriteDataArray[i]["Position X"].GetFloat();
@@ -204,6 +207,9 @@ void CCanvas::Receive(const SMessage& aMessage)
 		break;
 	case EMessageType::PlayerResourceChanged:
 		myAnimatedUIs[4]->Level(*static_cast<float*>(aMessage.data));
+		break;
+	case EMessageType::EnemyHealthChanged:
+		myAnimatedUIs[0]->Level(*static_cast<float*>(aMessage.data));
 		break;
 	default:
 		break;

@@ -8,11 +8,13 @@ public:
 	virtual ~IAbilityBehavior() = 0;
 
 	virtual void Update(CGameObject* aParent) = 0;
-
+	void Collided(CGameObject* aGameObject);
 	virtual void Init(CGameObject* aCaster) = 0;
 
 public:
+	DirectX::SimpleMath::Vector3 myDirection;
 	float myDuration;
 	float myTimer;
 	float myResourceCost;
+	float myDamageMultiplier;
 };

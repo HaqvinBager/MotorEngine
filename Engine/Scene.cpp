@@ -318,12 +318,40 @@ bool CScene::AddInstance(CAnimatedUIElement* anAnimatedUIElement)
 	return true;
 }
 
+bool CScene::RemoveInstance(CAnimatedUIElement* anAnimatedUIElement)
+{
+	for (int i = 0; i < myAnimatedUIElements.size(); ++i) {
+		if (myAnimatedUIElements[i] == anAnimatedUIElement) {
+			myAnimatedUIElements.erase(myAnimatedUIElements.begin() + i);
+		}
+	}
+	return true;
+}
+
 bool CScene::AddInstance(CTextInstance* aText)
 {
 	if (!aText) {
 		return false;
 	}
 	myTexts.emplace_back(aText);
+	return true;
+}
+
+bool CScene::AddEnemies(CGameObject* aEnemy)
+{
+	if (!aEnemy) {
+		return false;
+	}
+	myEnemies.emplace_back(aEnemy);
+	return true;
+}
+
+bool CScene::AddPlayer(CGameObject* aPlayer)
+{
+	if (!aPlayer) {
+		return false;
+	}
+	myPlayer = aPlayer;
 	return true;
 }
 

@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "AStar.h"
 #include "Heap.h"
+#include "Engine.h"
+#include "Scene.h"
+#include "TransformComponent.h"
 
 
 

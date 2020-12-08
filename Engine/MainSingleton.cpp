@@ -17,7 +17,17 @@ CPostMaster& CMainSingleton::PostMaster()
 	return ourInstance->myPostMaster;
 }
 
-CCollisionManager& CMainSingleton::CollisionManager()
+CCollisionManager & CMainSingleton::CollisionManager()
 {
 	return ourInstance->myCollisionManager;
+}
+
+CPopupTextService& CMainSingleton::PopupTextService()
+{
+	return ourInstance->myPopupTextService;
+}
+
+CDialogueSystem& CMainSingleton::DialogueSystem()
+{
+	return ourInstance->myDialogueSystem;
 }

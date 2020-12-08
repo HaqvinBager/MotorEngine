@@ -9,19 +9,23 @@
 #include "StatsComponent.h"
 #include "PostMaster.h"
 #include "MainSingleton.h"
+#include "AIBehaviorComponent.h"
+#include "AIBehavior.h"
+#include "PlayerControllerComponent.h"
 
 namespace SM = DirectX::SimpleMath;
 
-CBoomerangBehavior::CBoomerangBehavior(float aSpeed, float aDuration, float aResourceCost)
+CBoomerangBehavior::CBoomerangBehavior(float aSpeed, float aDuration, float aResourceCost, float aRotationalSpeed, float aDamage)
 {
-	myDirection = {0.0f, 0.0f, 0.0f};
 	mySpeed = aSpeed;
 	myTimer = 0.0f;
 	myCaster = nullptr;
 	myIsReturning = false;
 	myDuration = aDuration;
 	myResourceCost = aResourceCost;
+	myRotationalSpeed = aRotationalSpeed;
 	myHalfLife = myDuration / 2.0f;
+	myDamageMultiplier = aDamage;
 }
 
 CBoomerangBehavior::~CBoomerangBehavior()
@@ -46,10 +50,13 @@ void CBoomerangBehavior::Update(CGameObject* aParent)
 			myTimer = 0.0f;
 			aParent->Active(false);
 		}
+		aParent->GetComponent<CTransformComponent>()->Position({aParent->GetComponent<CTransformComponent>()->Position().x, 1.25f, aParent->GetComponent<CTransformComponent>()->Position().z});
 	} else {
 		aParent->Active(false);
 	}
 
+	DirectX::SimpleMath::Vector3 rotation = {0.0f, myRotationalSpeed * CTimer::Dt(), 0.0f};
+	aParent->GetComponent<CTransformComponent>()->Rotate(rotation);
 }
 
 void CBoomerangBehavior::CalculateDirection(DirectX::SimpleMath::Vector3 aFirstPosition, DirectX::SimpleMath::Vector3 aSecondPosition)
@@ -68,6 +75,11 @@ void CBoomerangBehavior::Init(CGameObject* aCaster)
 		myIsReturning = false;
 
 		myCaster->GetComponent<CStatsComponent>()->GetStats().myResource -= myResourceCost;
+
+		CPlayerControllerComponent* playerController = aCaster->GetComponent<CPlayerControllerComponent>();
+		if (playerController) {
+			aCaster->myTransform->Rotation({0, DirectX::XMConvertToDegrees(atan2f(myDirection.x, myDirection.z)) + 180.f, 0});
+		}
 
 		float difference = myCaster->GetComponent<CStatsComponent>()->GetBaseStats().myBaseResource - myCaster->GetComponent<CStatsComponent>()->GetStats().myResource;
 		difference = (100.0f - difference) / 100.0f;

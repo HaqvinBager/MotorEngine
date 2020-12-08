@@ -10,7 +10,6 @@ public:
 	~CAuraBehavior() override;
 
 	void Update(CGameObject* aParent) override;
-
 	void Init(CGameObject* aCaster) override;
 
 private:

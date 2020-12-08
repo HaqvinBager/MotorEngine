@@ -22,5 +22,11 @@ enum class EMessageType
 	BossPhase2,
 	BossPhase3,
 	BossDied,
+	BossHealthChanged,
+	EnemyHealthChanged,
+	PlayerTakeDamage,
+	LoadDialogue,
+	IntroStarted,
+	IntroEnded,
 	Count
 };

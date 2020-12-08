@@ -16,19 +16,21 @@ class CCapsuleColliderComponent;
 class CTriangleColliderComponent;
 class CCircleColliderComponent;
 class CRectangleColliderComponent;
+class CGameObject;
 class CCollider;
+
 enum class ECollisionLayer {
-	NONE			= 1 << 0,
-	PLAYER			= 1 << 1,
-	ENEMY			= 1 << 2,
-	BOSS			= 1 << 3,
-	PLAYERABILITY	= 1 << 4,
-	ENEMYABILITY	= 1 << 5,
-	BOSSABILITY		= 1 << 6,
-	WALL			= 1 << 7,
-	FLOOR			= 1 << 8,
-	EVENT			= 1 << 9,
-	ALL				= 1 << 10
+	NONE				= 1 << 0,
+	PLAYER				= 1 << 1,
+	ENEMY				= 1 << 2,
+	BOSS				= 1 << 3,
+	PLAYERABILITY		= 1 << 4,
+	ENEMYABILITY		= 1 << 5,
+	BOSSABILITY			= 1 << 6,
+	WALL				= 1 << 7,
+	FLOOR				= 1 << 8,
+	EVENT				= 1 << 9,
+	ALL					= 1 << 10
 };
 
 class CCollisionManager
@@ -39,15 +41,10 @@ public:
 
 	void RegisterCollider(CCollider* aCollider);
 	void ClearColliders();
+	bool CheckIfAbility(CCollider* anAbilityCollider, CGameObject* aCollidedWithGameObject);
 	void Update();
 
 private:
 	std::vector<CCollider*> myColliders;
-
-//public:
-//	//static CCollisionManager* GetInstance();
-
-private:
-	static CCollisionManager* ourInstance;
 
 };

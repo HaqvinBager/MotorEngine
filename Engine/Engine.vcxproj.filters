@@ -350,6 +350,9 @@
       <Filter>Audio</Filter>
     </ClCompile>
     <ClCompile Include="DestructibleComponent.cpp" />
+    <ClCompile Include="PopupTextService.cpp" />
+    <ClCompile Include="PerlinNoise.cpp" />
+    <ClCompile Include="DialogueSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EnemyFactory.h" />
@@ -661,6 +664,9 @@
       <Filter>Audio</Filter>
     </ClInclude>
     <ClInclude Include="DestructibleComponent.h" />
+    <ClInclude Include="PopupTextService.h" />
+    <ClInclude Include="PerlinNoise.h" />
+    <ClInclude Include="DialogueSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PBRDirectionalLight.hlsli">

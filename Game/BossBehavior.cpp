@@ -13,9 +13,13 @@
 #include "AbilityComponent.h"
 #include "NavMeshComponent.h"
 
+#include <iostream>
+
 CBossBehavior::CBossBehavior(CGameObject* aPlayerObject)
 	: myPlayer(aPlayerObject)
 {
+	myPhase = Phase::Idle;
+	myTempAttackTimer = 0.0f;
 }
 
 CBossBehavior::~CBossBehavior()
@@ -24,52 +28,94 @@ CBossBehavior::~CBossBehavior()
 
 void CBossBehavior::Update(CGameObject* aParent)
 {
-	//enemy logic
 	SBaseStats baseStats = aParent->GetComponent<CStatsComponent>()->GetBaseStats();
 	SStats stats = aParent->GetComponent<CStatsComponent>()->GetStats();
 
-	if (stats.myCanTakeDamage == false) {
+	if (stats.myCanTakeDamage == false)
+	{
 		stats.myDamageCooldown -= CTimer::Dt();
-		if (stats.myDamageCooldown <= 0) {
+		if (stats.myDamageCooldown <= 0)
+		{
 			stats.myCanTakeDamage = true;
 			stats.myDamageCooldown = baseStats.myBaseDamageCooldown;
 		}
 	}
 
-	if (stats.myHealth <= 0) {
+	if (stats.myHealth <= 0)
+	{
 		CMainSingleton::PostMaster().Send({ EMessageType::BossDied, this });
 	}
 
-	FindATarget(*aParent);
+	switch (myPhase)
+	{
+	case CBossBehavior::Phase::Idle:
+		IdlePhase(aParent);
+		break;
+	case CBossBehavior::Phase::Start:
+		StartPhase(aParent);
+		break;
+	case CBossBehavior::Phase::Mid:
+		MidPhase(aParent);
+		break;
+	case CBossBehavior::Phase::Final:
+		FinalPhase(aParent);
+		break;
+	default:
+		break;
+	}
 }
 
-void CBossBehavior::Collided(CGameObject* /*aGameObject*/)
+void CBossBehavior::Collided(CGameObject* /*aParent*/, CGameObject* /*aCollidedWithGameObject*/)
 {
 }
 
-void CBossBehavior::FindATarget(CGameObject& aParent)
+bool CBossBehavior::FindATarget(CGameObject& aParent)
 {
-	DirectX::SimpleMath::Vector3 parentPos = aParent.GetComponent<CTransformComponent>()->Position();
 	DirectX::SimpleMath::Vector3 targetPos = myPlayer->GetComponent<CTransformComponent>()->Position();
-	SBaseStats baseStats = aParent.GetComponent<CStatsComponent>()->GetBaseStats();
-	SStats stats = aParent.GetComponent<CStatsComponent>()->GetStats();
 
-	float dist = DirectX::SimpleMath::Vector3::DistanceSquared(parentPos, targetPos);
-	if (dist <= baseStats.myBaseVisionRange) {
+	float dist = DirectX::SimpleMath::Vector3::DistanceSquared(aParent.GetComponent<CTransformComponent>()->Position(), targetPos);
+	if (!(dist <= aParent.GetComponent<CStatsComponent>()->GetBaseStats().myBaseVisionRange))
+		return false;
 
-		aParent.GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
-		if (dist <= baseStats.myBaseAttackRange) {
-			myPlayer->GetComponent<CStatsComponent>();
-			if (aParent.GetComponent<CAnimationComponent>())
-			{
-				aParent.GetComponent<CAnimationComponent>()->PlayAnimation(EEnemyAnimationID::Attack);
-			}
-			aParent.GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility1, aParent.myTransform->Position());
+	aParent.GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
+	return true;
+}
+
+void CBossBehavior::TakeDamage(float /*aDamage*/, CGameObject* /*aGameObject*/)
+{
+	//TODO: decrease stats.myHealth
+}
+
+void CBossBehavior::IdlePhase(CGameObject* aParent)
+{
+	if (FindATarget(*aParent))
+		myPhase = Phase::Start;
+}
+
+void CBossBehavior::StartPhase(CGameObject* aParent)
+{
+	aParent->GetComponent<CStatsComponent>()->GetStats().myDamageCooldown += CTimer::Dt();
+
+	aParent->GetComponent<CNavMeshComponent>()->CalculatePath(myPlayer->GetComponent<CTransformComponent>()->Position());
+	float dist = DirectX::SimpleMath::Vector3::DistanceSquared(aParent->myTransform->Position(), myPlayer->GetComponent<CTransformComponent>()->Position());
+
+	if (dist <= aParent->GetComponent<CStatsComponent>()->GetBaseStats().myBaseAttackRange)
+	{
+		if (aParent->GetComponent<CStatsComponent>()->GetStats().myDamageCooldown >= aParent->GetComponent<CStatsComponent>()->GetBaseStats().myBaseDamageCooldown)
+		{
+			if (aParent->GetComponent<CAnimationComponent>())
+				aParent->GetComponent<CAnimationComponent>()->PlayAnimation(EEnemyAnimationID::Attack);
+
+			aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility1, aParent->myTransform->Position());
+			aParent->GetComponent<CStatsComponent>()->GetStats().myDamageCooldown -= aParent->GetComponent<CStatsComponent>()->GetStats().myDamageCooldown;
 		}
 	}
 }
 
-void CBossBehavior::TakeDamage(float /*aDamage*/)
+void CBossBehavior::MidPhase(CGameObject* /*aParent*/)
 {
-	//TODO: decrease stats.myHealth
+}
+
+void CBossBehavior::FinalPhase(CGameObject* /*aParent*/)
+{
 }

@@ -60,10 +60,10 @@ CAbilityComponent::CAbilityComponent(CGameObject& aParent, std::vector<std::pair
 
 CAbilityComponent::~CAbilityComponent()
 {
-	delete[] myCurrentCooldowns;// delete[]? , see constructor for reason for question
+	delete[] myCurrentCooldowns;
 	myCurrentCooldowns = nullptr;
 
-	delete[] myMaxCooldowns;// delete[]?
+	delete[] myMaxCooldowns;
 	myMaxCooldowns = nullptr;
 }
 
@@ -180,7 +180,7 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 
 		if (UseAbility(EAbilityType::PlayerAbility1, GameObject().myTransform->Position()))
 		{
-			myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
+			myMessage.myMessageType = EMessageType::AbilityOneCooldown;
 			myCurrentCooldowns[0] = myMaxCooldowns[0];
 			myMessage.data = &messageValue;
 			CMainSingleton::PostMaster().Send(myMessage);
@@ -192,7 +192,7 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 
 		if (UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position()))
 		{
-			myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
+			myMessage.myMessageType = EMessageType::AbilityTwoCooldown;
 			myCurrentCooldowns[1] = myMaxCooldowns[1];
 			myMessage.data = &messageValue;
 			CMainSingleton::PostMaster().Send(myMessage);
@@ -290,32 +290,32 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	}
 	else if (behavior["Type"].GetString() == std::string("Projectile"))
 	{
-		projectileBehavior = new CProjectileBehavior(behavior["Speed"].GetFloat(), behavior["Duration"].GetFloat());
+		projectileBehavior = new CProjectileBehavior(behavior["Speed"].GetFloat(), behavior["Duration"].GetFloat(), document["Damage"].GetFloat());
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, projectileBehavior, anAbilityType);
 	}
 	else if (behavior["Type"].GetString() == std::string("Boomerang"))
 	{
-		boomerangBehavior = new CBoomerangBehavior(behavior["Speed"].GetFloat(), behavior["Duration"].GetFloat(), behavior["ResourceCost"].GetFloat());
+		boomerangBehavior = new CBoomerangBehavior(behavior["Speed"].GetFloat(), behavior["Duration"].GetFloat(), behavior["ResourceCost"].GetFloat(), behavior["RotationalSpeed"].GetFloat(), document["Damage"].GetFloat());
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, boomerangBehavior, anAbilityType);
 	}
 	else if (behavior["Type"].GetString() == std::string("MeleeAttack"))
 	{
-		meleeAttackBehavior = new CMeleeAttackBehavior(behavior["Duration"].GetFloat());
+		meleeAttackBehavior = new CMeleeAttackBehavior(behavior["Duration"].GetFloat(), document["Damage"].GetFloat(), abilityObject);
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, meleeAttackBehavior, anAbilityType);
 	}
 	else if (behavior["Type"].GetString() == std::string("FireCone"))
 	{
-		fireConeBehavior = new CFireConeBehavior(behavior["Duration"].GetFloat(), behavior["ResourceCost"].GetFloat(), abilityObject);
+		fireConeBehavior = new CFireConeBehavior(behavior["Duration"].GetFloat(), behavior["ResourceCost"].GetFloat(), document["Damage"].GetFloat(), abilityObject);
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, fireConeBehavior, anAbilityType);
 	}
 	else if (behavior["Type"].GetString() == std::string("SpeedExplode"))
 	{
-		speedExplodeBehavior = new CSpeedExplodeBehavior(behavior["Duration"].GetFloat(), behavior["ResourceCost"].GetFloat(), behavior["ExplodeAfter"].GetFloat(), behavior["SpeedMultiplier"].GetFloat(), abilityObject);
+		speedExplodeBehavior = new CSpeedExplodeBehavior(behavior["Duration"].GetFloat(), behavior["ResourceCost"].GetFloat(), behavior["ExplodeAfter"].GetFloat(), behavior["SpeedMultiplier"].GetFloat(), document["Damage"].GetFloat(), abilityObject);
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, speedExplodeBehavior, anAbilityType);
 	}
 	else if (behavior["Type"].GetString() == std::string("DelayedExplosion"))
 	{
-		delayedExplosionBehavior = new CDelayedExplosionBehavior(document["Duration"].GetFloat(), behavior["Delay"].GetFloat(), behavior["ResourceCost"].GetFloat(), abilityObject);
+		delayedExplosionBehavior = new CDelayedExplosionBehavior(behavior["Duration"].GetFloat(), behavior["Delay"].GetFloat(), behavior["ResourceCost"].GetFloat(), document["Damage"].GetFloat(), abilityObject);
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, delayedExplosionBehavior, anAbilityType);
 	}
 	//!BEHAVIOR

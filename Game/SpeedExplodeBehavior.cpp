@@ -9,8 +9,11 @@
 #include "VFXComponent.h"
 #include "StatsComponent.h"
 #include "MainSingleton.h"
+#include "AIBehavior.h"
+#include "AIBehaviorComponent.h"
+#include "PlayerControllerComponent.h"
 
-CSpeedExplodeBehavior::CSpeedExplodeBehavior(float aDuration, float aResourceCost, float aExplosionDelay, float aMovementSpeedMultiplier, CGameObject* aParent)
+CSpeedExplodeBehavior::CSpeedExplodeBehavior(float aDuration, float aResourceCost, float aExplosionDelay, float aMovementSpeedMultiplier, float aDamage, CGameObject* aParent)
 {
 	myDuration = aDuration;
 	myTimer = 0.0f;
@@ -22,6 +25,7 @@ CSpeedExplodeBehavior::CSpeedExplodeBehavior(float aDuration, float aResourceCos
 	myParent = aParent;
 	myCasterTransform = nullptr;
 	myCaster = nullptr;
+	myDamageMultiplier = aDamage;
 }
 
 CSpeedExplodeBehavior::~CSpeedExplodeBehavior()

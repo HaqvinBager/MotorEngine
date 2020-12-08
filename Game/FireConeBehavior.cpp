@@ -8,8 +8,11 @@
 #include "StatsComponent.h"
 #include "MainSingleton.h"
 #include "TriangleColliderComponent.h"
+#include "AIBehavior.h"
+#include "AIBehaviorComponent.h"
+#include "PlayerControllerComponent.h"
 
-CFireConeBehavior::CFireConeBehavior(float aDuration, float aResourceCost, CGameObject* aParent)
+CFireConeBehavior::CFireConeBehavior(float aDuration, float aResourceCost, float aDamage, CGameObject* aParent)
 {
 	myDirection = { 0.0f, 0.0f, 0.0f };
 	myDuration = aDuration;
@@ -17,6 +20,7 @@ CFireConeBehavior::CFireConeBehavior(float aDuration, float aResourceCost, CGame
 	myTimer = 0.0f;
 	myParent = aParent;
 	myCaster = nullptr;
+	myDamageMultiplier = aDamage;
 }
 
 CFireConeBehavior::~CFireConeBehavior()
@@ -42,6 +46,11 @@ void CFireConeBehavior::Init(CGameObject* aCaster)
 
 		myDirection = MouseTracker::ScreenPositionToWorldPosition() - aCaster->GetComponent<CTransformComponent>()->Position();
 		myDirection.Normalize();
+
+		CPlayerControllerComponent* playerController = aCaster->GetComponent<CPlayerControllerComponent>();
+		if (playerController) {
+			aCaster->myTransform->Rotation({0, DirectX::XMConvertToDegrees(atan2f(myDirection.x, myDirection.z)) + 180.f, 0});
+		}
 
 		float difference = myCaster->GetComponent<CStatsComponent>()->GetBaseStats().myBaseResource - myCaster->GetComponent<CStatsComponent>()->GetStats().myResource;
 		difference = (100.0f - difference) / 100.0f;

@@ -65,6 +65,14 @@ struct SGameObjectData
 	int myModelIndex;
 };
 
+struct SEnvironmentFXData
+{
+	int myInstanceID;
+	DirectX::SimpleMath::Vector3 myPosition;
+	DirectX::SimpleMath::Vector3 myRotation;
+	DirectX::SimpleMath::Vector3 myScale;
+};
+
 
 //class SData { 
 //public:
@@ -81,8 +89,12 @@ struct SInGameData
 	std::vector<SEventData> myEventData;
 	std::vector<SEnemyData> myEnemyData;
 	std::vector<SGameObjectData> myGameObjects;
-	int mySceneIndex;
+	//int mySceneIndex;
+	std::vector<SEnvironmentFXData> myEnvironmentFXs;
+	
+	
 	std::unordered_map<int, std::string> myEventStringMap;
+	std::unordered_map<int, std::string> myEnvironmentFXStringMap;
 
 	std::string myBinPath;
 

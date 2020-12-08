@@ -44,6 +44,7 @@ static void PrintMemoryUsage()
 	std::cout << "Our total freed memory:     " << gOurAllocationMetrics.myTotalFreed / static_cast<UINT32>(1048576) << " mb" << std::endl;
 #endif
 }
+
 #ifdef _DEBUG
 #pragma comment(lib, "Game_Debug.lib")
 #pragma comment(lib, "dbghelp.lib")

@@ -23,6 +23,7 @@ CAudioManager::CAudioManager() : myWrapper() {
 	Document document;
 	document.ParseStream(inputWrapper);
 	
+	if (document.HasParseError()) { return; }
 
 	// Init Channels
 	for (unsigned int i = 0; i < static_cast<unsigned int>(EChannels::Count); ++i) {
@@ -151,6 +152,10 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	default:
 		break;
 	}
+}
+
+void CAudioManager::Update()
+{
 }
 
 void CAudioManager::SubscribeToMessages()

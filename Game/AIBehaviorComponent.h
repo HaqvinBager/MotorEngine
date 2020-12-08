@@ -18,7 +18,7 @@ public:
 
 	void OnEnable() override;
 	void OnDisable() override;
-
+	IAIBehavior* AIBehavior();
 private:
 	IAIBehavior* myBehavior;
 };

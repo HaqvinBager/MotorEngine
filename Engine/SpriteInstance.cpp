@@ -5,10 +5,17 @@
 #include "Engine.h"
 #include "WindowHandler.h"
 
-CSpriteInstance::CSpriteInstance(CScene& aScene)
+CSpriteInstance::CSpriteInstance(CScene& aScene, bool aAddToScene)
+	: mySprite(nullptr)
+	, myRenderOrder(ERenderOrder::BackgroundLayer)
 {
-	mySprite = nullptr;
-	aScene.AddInstance(this);
+	if (aAddToScene)
+		aScene.AddInstance(this);
+}
+CSpriteInstance::CSpriteInstance()
+	: mySprite(nullptr)
+	, myRenderOrder(ERenderOrder::BackgroundLayer)
+{
 }
 
 CSpriteInstance::~CSpriteInstance()
@@ -48,9 +55,9 @@ void CSpriteInstance::SetRenderOrder(ERenderOrder aRenderOrder)
 }
 
 /// <summary>
-///The y-position is flipped in this function so that we go from Shader space 
-///([-1, -1] in the lower left corner) to Shader space with [-1, -1] in the 
-/// upper left corner. I think this is more intuitive, but might as well 
+///The y-position is flipped in this function so that we go from Shader space
+///([-1, -1] in the lower left corner) to Shader space with [-1, -1] in the
+/// upper left corner. I think this is more intuitive, but might as well
 /// revert this.
 /// </summary>
 /// <param name="aPosition"></param>

@@ -63,7 +63,7 @@ CEngine::CEngine()
 	myAudioManager = new CAudioManager();
 	//myActiveScene = 0; //muc bad
 	myActiveState = CStateStack::EState::MainMenu;
-	myInGameScene = nullptr;
+	//myDialogueSystem = new CDialogueSystem();
 }
 
 CEngine::~CEngine()
@@ -109,9 +109,11 @@ CEngine::~CEngine()
 	delete myAudioManager;
 	myAudioManager = nullptr;
 
+	//delete myDialogueSystem;
+	//myDialogueSystem = nullptr;
+
 	delete myMainSingleton;
 	myMainSingleton = nullptr;
-
 
 	ourInstance = nullptr;
 }
@@ -132,8 +134,10 @@ bool CEngine::Init(CWindowHandler::SWindowData& someWindowData)
 	ENGINE_ERROR_BOOL_MESSAGE(myLineFactory->Init(myFramework), "Line Factory could not be initialized.");
 	ENGINE_ERROR_BOOL_MESSAGE(mySpriteFactory->Init(myFramework), "Sprite Factory could not be initialized.");
 	ENGINE_ERROR_BOOL_MESSAGE(myTextFactory->Init(myFramework), "Text Factory could not be initialized.");
-	ENGINE_ERROR_BOOL_MESSAGE(myInputMapper->Init(), "InputMapper could not be initialized");
+	ENGINE_ERROR_BOOL_MESSAGE(myInputMapper->Init(), "InputMapper could not be initialized.");
 
+	ENGINE_ERROR_BOOL_MESSAGE(CMainSingleton::PopupTextService().Init(), "Popup Text Service could not be initialized.");
+	ENGINE_ERROR_BOOL_MESSAGE(CMainSingleton::DialogueSystem().Init(), "Dialogue System could not be initialized.");
 	InitWindowsImaging();
 	return true;
 }
@@ -147,7 +151,7 @@ float CEngine::BeginFrame()
 	myWindowHandler->SetWindowTitle("IronWrought | FPS: " + fpsString);
 #endif // _DEBUG
 
-	std::array<float, 4> clearColor = { 0.5f, 0.5f, 0.5f, 1.0f };
+	std::array<float, 4> clearColor = { 0.15f, 0.15f, 0.15f, 1.0f };
 	myFramework->BeginFrame(clearColor);
 
 #ifdef _DEBUG
@@ -155,21 +159,15 @@ float CEngine::BeginFrame()
 	//CDebug::GetInstance()->Update();
 #endif
 
+	myAudioManager->Update();
+	CMainSingleton::DialogueSystem().Update();
+
 	return myTimer->Mark();
 }
 
 void CEngine::RenderFrame()
 {
-	//if (myActiveState == CStateStack::EState::InGame)
-	//{
-	//	myRenderManager->Render(*myInGameScene);
-	//}
-	//else
-	//{
-		myRenderManager->Render(*mySceneMap[myActiveState]);
-	//}
-	//if(myScenes.size() > 0 && myActiveScene < myScenes.size())
-	//	myRenderManager->Render(*myScenes[myActiveScene]);
+	myRenderManager->Render(*mySceneMap[myActiveState]);
 }
 
 void CEngine::EndFrame()
@@ -222,25 +220,11 @@ CEngine* CEngine::GetInstance()
 
 const CStateStack::EState CEngine::AddScene(const CStateStack::EState aState, CScene* aScene)
 {
-	//if (aState == CStateStack::EState::InGame)
-	//{
-	//	if (myInGameScene != nullptr)
-	//	{
-	//		delete myInGameScene;
-	//		myInGameScene = nullptr;
-	//	}
-	//	myInGameScene = aScene;
-	//	return aState;
-	//}
-
 	auto it = mySceneMap.find(aState);
-	if (it/*mySceneMap.find(aState)*/ != mySceneMap.end())
+	if (it != mySceneMap.end())
 	{
-		std::cout << __FUNCTION__ << " Deleteing scene for " << static_cast<int>(aState) << std::endl;
 		delete it->second;
 		it->second = nullptr;
-		//delete mySceneMap[aState];
-		//mySceneMap[aState] = nullptr;
 		mySceneMap.erase(it);
 	}
 	mySceneMap[aState] = aScene;
@@ -248,37 +232,14 @@ const CStateStack::EState CEngine::AddScene(const CStateStack::EState aState, CS
 	return aState;
 }
 
-//void CEngine::PopBackScene()
-//{
-//	myScenes.back()->ClearScene();
-//	myScenes.pop_back();
-//}
-
 void CEngine::SetActiveScene(const CStateStack::EState aState)
 {
 	myActiveState = aState;
 }
 
-//void CEngine::SetActiveScene(CScene* aScene)
-//{
-//	for (unsigned int i = 0; i < myScenes.size(); ++i)
-//	{
-//		if (myScenes[i] == aScene)
-//		{
-//			myActiveScene = i;
-//			std::cout << "Active Scene Index: " << i << std::endl;
-//		}
-//	}
-//}
-
 CScene& CEngine::GetActiveScene()
 {
-	//if (myActiveState == CStateStack::EState::InGame)
-	//{
-	//	return *myInGameScene;
-	//}
 	return *mySceneMap[myActiveState];
-	//return *myScenes[myActiveScene];
 }
 
 void CEngine::ModelViewerSetScene(CScene* aScene)
@@ -286,8 +247,3 @@ void CEngine::ModelViewerSetScene(CScene* aScene)
 	myActiveState = CStateStack::EState::InGame;
 	mySceneMap[myActiveState] = aScene;
 }
-
-//unsigned int CEngine::ScenesSize()
-//{
-//	return static_cast<unsigned int>(myScenes.size() - 1);
-//}

@@ -7,6 +7,7 @@
 #include <iostream>
 #include "Engine.h"
 #include "WindowHandler.h"
+#include "Debug.h"
 
 //namespace MouseTracker {
 
@@ -87,6 +88,7 @@ public:
 		origin = DirectX::XMVector4Transform(origin, viewMatrixInv);
 		dir = DirectX::XMVector4Transform(dir, viewMatrixInv);
 		dir.Normalize();
+		//CDebug::GetInstance()->DrawLine({ origin.x + dir.x * 100, origin.y + dir.y * 100, origin.z + dir.z * 100} , camTransform->Position(), 20.f);
 
 		return DirectX::SimpleMath::Ray({ origin.x, origin.y, origin.z }, { dir.x, dir.y, dir.z });
 	}

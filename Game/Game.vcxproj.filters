@@ -21,9 +21,6 @@
     <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DialogueSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="InGameState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -84,15 +81,24 @@
     <ClInclude Include="BossBehavior.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DamageUtility.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseSelection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthBarComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ColliderPushManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DialogueSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InGameState.cpp">
@@ -150,6 +156,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BossBehavior.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseSelection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthBarComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ColliderPushManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

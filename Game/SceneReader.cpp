@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "SceneReader.h"
 
-
 CSceneReader::CSceneReader() : myCurrentBinPath("NA")
 {
 }
@@ -108,7 +107,9 @@ SInGameData& CSceneReader::ReadInGameData()
 
 	int myGameObjectDataCount = 0;
 	myStreamPtr += Read(myGameObjectDataCount);
+
 	assert(myGameObjectDataCount < 100000 && "Something went wrong when reading GameObjectData");
+
 	myInGameData.back()->myGameObjects.reserve(myGameObjectDataCount);
 	for (int i = 0; i < myGameObjectDataCount; ++i)
 	{
@@ -118,13 +119,29 @@ SInGameData& CSceneReader::ReadInGameData()
 	}
 
 
-	int mySceneIndex = 0;
+	/*int mySceneIndex = 0;
 	myStreamPtr += Read(mySceneIndex);
-	myInGameData.back()->mySceneIndex = mySceneIndex;
+	myInGameData.back()->mySceneIndex = mySceneIndex;*/
+
+
+	int myEnvironmentFXCount = 0;
+	myStreamPtr += Read(myEnvironmentFXCount);
+	for (int i = 0; i < myEnvironmentFXCount; ++i)
+	{
+		SEnvironmentFXData data = {};
+		myStreamPtr += Read(data);
+		
+		std::string jsonName = "";
+		jsonName = ReadStringAuto();
+		
+		myInGameData.back()->myEnvironmentFXs.emplace_back(data);
+		myInGameData.back()->myEnvironmentFXStringMap[data.myInstanceID] = std::string(jsonName);
+	}
 
 	myStream.close();
 	myStreamPtr = nullptr;
 	myCurrentBinPath = "NA";
+
 	return *myInGameData.back();
 }
 

@@ -1,5 +1,5 @@
 #pragma once
-#include <Behaviour.h>
+#include "Behaviour.h"
 #include "AbilityComponent.h"
 
 class CGameObject;

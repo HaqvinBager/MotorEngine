@@ -14,8 +14,8 @@ public:
 	~CCanvas();
 
 public:
-	void Init(std::string aFilePath, CScene& aScene);
-	void Update(/*float aDeltaTime*/);
+	void Init(std::string aFilePath, CScene& aScene, bool addToScene = true);
+	void Update();
 
 public:
 	void Receive(const SMessage& aMessage) override;
@@ -27,6 +27,8 @@ public:
 	void SetEnabled(bool isEnabled);
 
 	std::vector<CButton*> GetButtons() { return myButtons; }
+	std::vector<CSpriteInstance*> GetSprites() { return mySprites; }
+	std::vector<CAnimatedUIElement*> GetAnimatedUI() { return myAnimatedUIs; }
 
 private:
 	bool myIsEnabled;

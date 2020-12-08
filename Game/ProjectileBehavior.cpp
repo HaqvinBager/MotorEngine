@@ -5,16 +5,20 @@
 #include "Timer.h"
 #include "MouseTracker.h"
 #include "Engine.h"
+#include "AIBehavior.h"
+#include "AIBehaviorComponent.h"
+#include "PlayerControllerComponent.h"
 
 namespace SM = DirectX::SimpleMath;
 
-CProjectileBehavior::CProjectileBehavior(float aSpeed, float aDuration)
+CProjectileBehavior::CProjectileBehavior(float aSpeed, float aDuration, float aDamage)
 {
 	myDirection = {0.0f, 0.0f, 0.0f};
 	mySpeed = aSpeed;
 
 	myDuration = aDuration;
 	myTimer = 0.0f;
+	myDamageMultiplier = aDamage;
 }
 
 CProjectileBehavior::~CProjectileBehavior()
@@ -35,4 +39,8 @@ void CProjectileBehavior::Init(CGameObject* aCaster)
 {
 	myDirection = MouseTracker::ScreenPositionToWorldPosition() - aCaster->GetComponent<CTransformComponent>()->Position();
 	myDirection.Normalize();
+	CPlayerControllerComponent* playerController = aCaster->GetComponent<CPlayerControllerComponent>();
+	if (playerController) {
+		aCaster->myTransform->Rotation({0, DirectX::XMConvertToDegrees(atan2f(myDirection.x, myDirection.z)) + 180.f, 0});
+	}
 }

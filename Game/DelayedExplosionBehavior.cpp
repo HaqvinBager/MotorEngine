@@ -8,8 +8,10 @@
 #include "StatsComponent.h"
 #include "PostMaster.h"
 #include "MainSingleton.h"
+#include "AIBehavior.h"
+#include "AIBehaviorComponent.h"
 
-CDelayedExplosionBehavior::CDelayedExplosionBehavior(float aDuration, float aDelay, float aResourceCost, CGameObject* aParent):
+CDelayedExplosionBehavior::CDelayedExplosionBehavior(float aDuration, float aDelay, float aResourceCost, float aDamage, CGameObject* aParent):
 	myDelay(aDelay),
 	myParent(aParent),
 	myCaster(nullptr)
@@ -17,6 +19,7 @@ CDelayedExplosionBehavior::CDelayedExplosionBehavior(float aDuration, float aDel
 	myDuration = aDuration;
 	myTimer = 0.0f;
 	myResourceCost = aResourceCost;
+	myDamageMultiplier = aDamage;
 }
 
 CDelayedExplosionBehavior::~CDelayedExplosionBehavior()

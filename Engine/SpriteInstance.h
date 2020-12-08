@@ -14,7 +14,8 @@ enum class ERenderOrder {
 class CSpriteInstance
 {
 public:
-	CSpriteInstance(CScene& aScene);
+	CSpriteInstance(CScene& aScene, bool aAddToScene = true);
+	CSpriteInstance();
 	~CSpriteInstance();
 
 	bool Init(CSprite* aSprite);

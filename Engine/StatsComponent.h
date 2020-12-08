@@ -14,15 +14,18 @@ struct SBaseStats {
 	const float myBaseDamageCooldown;
 	const float myBaseVisionRange;
 	const float myBaseAttackRange;
+	const float mBaseRandomWalkTime;
 };
 
 struct SStats {
 	float myHealth;
 	float myResource;
 	float myDamageCooldown;
+	float myDamageMultiplier;
 	bool myCanTakeDamage;
 	bool myCanAttack;
 	CToken* myTokenSlot;
+	float myRandomWalkTime;
 };
 
 class CStatsComponent : public CBehaviour
@@ -37,7 +40,7 @@ public:
 
 	void OnEnable() override;
 	void OnDisable() override;
-
+	bool AddDamage(float someHealth);
 	const SBaseStats& GetBaseStats() const;
 	SStats& GetStats();
 

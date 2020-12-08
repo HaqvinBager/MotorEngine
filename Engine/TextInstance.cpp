@@ -5,11 +5,16 @@
 
 namespace SM = DirectX::SimpleMath;
 
-CTextInstance::CTextInstance(CScene& aScene) 
+CTextInstance::CTextInstance(CScene& aScene, bool aAddToScene) 
     : myTextData(nullptr)
 {
-    aScene.AddInstance(this);
+    if (aAddToScene)
+       aScene.AddInstance(this);
 }
+
+CTextInstance::CTextInstance()
+    : myTextData(nullptr)
+{}
 
 CTextInstance::~CTextInstance()
 {
@@ -22,6 +27,8 @@ bool CTextInstance::Init(CText* aText)
     if (!myTextData) {
         return false;
     }
+
+    myScale = { 1.0f, 1.0f };
 
     return true;
 }
@@ -47,4 +54,9 @@ void CTextInstance::SetColor(DirectX::SimpleMath::Vector4 aColor)
 void CTextInstance::SetPivot(DirectX::SimpleMath::Vector2 aPivot)
 {
     myPivot = aPivot;
+}
+
+void CTextInstance::SetScale(DirectX::SimpleMath::Vector2 aScale)
+{
+    myScale = aScale;
 }

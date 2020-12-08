@@ -9,6 +9,8 @@
 #include "CameraComponent.h"
 #include "ModelComponent.h"
 #include "InstancedModelComponent.h"
+#include "MainSingleton.h"
+#include "PopupTextService.h"
 
 CRenderManager::CRenderManager() /*: myScene(*CScene::GetInstance())*/
 {
@@ -85,8 +87,8 @@ void CRenderManager::Render(CScene& aScene)
 	//	return;
 
 	myRenderStateManager.SetAllDefault();
-	myBackbuffer.ClearTexture({ 0.5f,0.5f,0.5f,1.0f });
-	myIntermediateTexture.ClearTexture({ 0.5f,0.5f,0.5f,1.0f });
+	myBackbuffer.ClearTexture({ 0.1f,0.1f,0.1f,1.0f });
+	myIntermediateTexture.ClearTexture({ 0.1f,0.1f,0.1f,1.0f });
 	myIntermediateDepth.ClearDepth();
 
 	myIntermediateTexture.SetAsActiveTarget(&myIntermediateDepth);
@@ -202,6 +204,8 @@ void CRenderManager::Render(CScene& aScene)
 	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_ONLYREAD);
 
 	std::vector<CSpriteInstance*> sprites = aScene.CullSprites();
+	CMainSingleton::PopupTextService().EmplaceSprites(sprites);
+	CMainSingleton::DialogueSystem().EmplaceSprites(sprites);
 	mySpriteRenderer.Render(sprites);
 
 	std::vector<CSpriteInstance*> animatedUIFrames;
@@ -213,5 +217,7 @@ void CRenderManager::Render(CScene& aScene)
 	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_DEFAULT);
 
 	std::vector<CTextInstance*> textsToRender = aScene.GetTexts();
+	CMainSingleton::PopupTextService().EmplaceTexts(textsToRender);
+	CMainSingleton::DialogueSystem().EmplaceTexts(textsToRender);
 	myTextRenderer.Render(textsToRender);
 }
