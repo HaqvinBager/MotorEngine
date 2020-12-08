@@ -24,10 +24,10 @@ void IAbilityBehavior::Collided(CGameObject* aGameObject)
 		aPlayer->TakeDamage(myDamageMultiplier, aGameObject);
 		return;
 	}
+
 	CAIBehaviorComponent* AIBehavior = aGameObject->GetComponent<CAIBehaviorComponent>();
 	if (AIBehavior) {
 		AIBehavior->AIBehavior()->TakeDamage(myDamageMultiplier, aGameObject);
 		return;
 	}
-	
 }

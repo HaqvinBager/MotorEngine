@@ -84,6 +84,7 @@ CSprite* CSpriteFactory::LoadSprite(std::string aTexturePath)
 	spriteData.myDimensions = spriteDimensions;
 
 	sprite->Init(spriteData);
+	mySpriteMap[aTexturePath] = sprite;
 	return sprite;
 }
 
@@ -146,6 +147,7 @@ SAnimatedSpriteData* CSpriteFactory::LoadVFXSprite(std::string aFilePath)
 	spriteData->myTexture[3] = textureFourShaderResourceView;
 	spriteData->myTexture[4] = textureFiveShaderResourceView;
 
+	myVFXSpriteMap[aFilePath] = spriteData;
 	return spriteData;
 }
 

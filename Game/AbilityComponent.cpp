@@ -31,11 +31,13 @@
 using namespace rapidjson;
 
 CAbilityComponent::CAbilityComponent(CGameObject& aParent, std::vector<std::pair<EAbilityType, unsigned int>> someAbilities)
-	: CBehaviour(aParent), myAbilityPoolDescriptions(someAbilities), myCurrentCooldowns(new float[3]), myMaxCooldowns(new float[3])
+	: CBehaviour(aParent), myAbilityPoolDescriptions(someAbilities), myCurrentCooldowns(new float[static_cast<int>(EAbilityType::Count)]), myMaxCooldowns(new float[static_cast<int>(EAbilityType::Count)]), myMeleeAttackRange(0.0)
 {
 	myCurrentCooldowns[0] = 0.0f;
 	myCurrentCooldowns[1] = 0.0f;
 	myCurrentCooldowns[2] = 0.0f;
+	myCurrentCooldowns[3] = 0.0f;
+	myCurrentCooldowns[4] = 0.0f;
 
 	std::ifstream inputStream("Json/AbilityPaths.json");
 	ENGINE_BOOL_POPUP(inputStream.good(), "Ability json paths could not be found! Looking for Json/AbilityPaths.json");
@@ -46,8 +48,8 @@ CAbilityComponent::CAbilityComponent(CGameObject& aParent, std::vector<std::pair
 	myFilePaths.emplace(EAbilityType::PlayerAbility1, document["Player Ability 1"].GetString());
 	myFilePaths.emplace(EAbilityType::PlayerAbility2, document["Player Ability 2"].GetString());
 	myFilePaths.emplace(EAbilityType::PlayerAbility3, document["Player Ability 3"].GetString());
-	myFilePaths.emplace(EAbilityType::PlayerAbility4, document["Player Ability 4"].GetString());
-	myFilePaths.emplace(EAbilityType::PlayerAbility5, document["Player Ability 5"].GetString());
+	myFilePaths.emplace(EAbilityType::PlayerMelee, document["Player Ability 4"].GetString());
+	myFilePaths.emplace(EAbilityType::PlayerHeavyMelee, document["Player Ability 5"].GetString());
 
 	myFilePaths.emplace(EAbilityType::EnemyAbility, document["Enemy Ability"].GetString());
 	myFilePaths.emplace(EAbilityType::BossAbility1, document["Boss Ability 1"].GetString());
@@ -55,29 +57,19 @@ CAbilityComponent::CAbilityComponent(CGameObject& aParent, std::vector<std::pair
 	myFilePaths.emplace(EAbilityType::BossAbility3, document["Boss Ability 3"].GetString());
 
 	myFilePaths.emplace(EAbilityType::AbilityTest, document["Ability Test"].GetString());
-	myFilePaths.emplace(EAbilityType::WHIRLWIND, document["Ability Test"].GetString());
 }
 
 CAbilityComponent::~CAbilityComponent()
 {
-	delete myCurrentCooldowns;
+	delete[] myCurrentCooldowns;
 	myCurrentCooldowns = nullptr;
 
-	delete myMaxCooldowns;
+	delete[] myMaxCooldowns;
 	myMaxCooldowns = nullptr;
-	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability1, this);
-	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability2, this);
-	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability3, this);
-	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::AttackClick, this);
 }
 
 void CAbilityComponent::Awake()
 {
-	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability1, this);
-	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability2, this);
-	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability3, this);
-	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::AttackClick, this);
-
 	// Setting up pools
 	for (unsigned int i = 0; i < myAbilityPoolDescriptions.size(); ++i) {
 		std::vector<CGameObject*> gameObjectsToPool;
@@ -108,10 +100,16 @@ void CAbilityComponent::Update()
 
 void CAbilityComponent::OnEnable()
 {
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability1, this);
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability2, this);
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability3, this);
 }
 
 void CAbilityComponent::OnDisable()
 {
+	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability1, this);
+	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability2, this);
+	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability3, this);
 }
 
 bool CAbilityComponent::UseAbility(EAbilityType anAbilityType, DirectX::SimpleMath::Vector3 aSpawnPosition)
@@ -217,7 +215,7 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 		if (myCurrentCooldowns[3] > 0)
 			break;
 
-		if (UseAbility(EAbilityType::PlayerAbility4, GameObject().myTransform->Position()))
+		if (UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position()))
 		{
 		}
 		/*myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
@@ -229,7 +227,7 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 		if (myCurrentCooldowns[4] > 0)
 			break;
 
-		if (UseAbility(EAbilityType::PlayerAbility5, GameObject().myTransform->Position()))
+		if (UseAbility(EAbilityType::PlayerHeavyMelee, GameObject().myTransform->Position()))
 		{
 		}
 		/*myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
@@ -242,15 +240,23 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 	}
 }
 
+const float CAbilityComponent::MeleeAttackRange() const
+{
+	return myMeleeAttackRange;
+}
+
 CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 {
 	std::ifstream inputStream(myFilePaths[anAbilityType]);
-	if (!inputStream.good()) { return nullptr; }
+	if (!inputStream.good()) {
+		return nullptr;
+	}
 	IStreamWrapper inputWrapper(inputStream);
 	Document document;
 	document.ParseStream(inputWrapper);
 
 	CGameObject* abilityObject = new CGameObject();
+	std::cout << "LoadAbilityFromFile: " << *&abilityObject << std::endl;
 	CProjectileBehavior* projectileBehavior = nullptr;
 	CAuraBehavior* auraBehavior = nullptr;
 	CBoomerangBehavior* boomerangBehavior = nullptr;
@@ -261,11 +267,12 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	std::string colliderType;
 
 	//COOLDOWNS
-	myMaxCooldowns[static_cast<int>(anAbilityType)] = document.HasMember("Cooldown") ? document["Cooldown"].GetFloat() : 0.5f;
+	int cdIdx = static_cast<int>(anAbilityType);
+	myMaxCooldowns[cdIdx] = document.HasMember("Cooldown") ? document["Cooldown"].GetFloat() : 0.5f;
 	//!COOLDOWNS
 
 	//VFX
-	abilityObject->myTransform->Position({ 0.0f, 0.0f, 0.0f });
+	abilityObject->myTransform->Position({0.0f, 0.0f, 0.0f});
 	std::vector<std::string> paths;
 	for (unsigned int i = 0; i < document["VFX"].Size(); ++i) {
 		paths.emplace_back(document["VFX"][i]["Path"].GetString());
@@ -289,33 +296,29 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	{
 		auraBehavior = new CAuraBehavior(&GameObject(), behavior["Rotational Speed"].GetFloat());
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, auraBehavior, anAbilityType);
-	}
-	else if (behavior["Type"].GetString() == std::string("Projectile"))
+	} else if (behavior["Type"].GetString() == std::string("Projectile"))
 	{
 		projectileBehavior = new CProjectileBehavior(behavior["Speed"].GetFloat(), behavior["Duration"].GetFloat(), document["Damage"].GetFloat());
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, projectileBehavior, anAbilityType);
-	}
-	else if (behavior["Type"].GetString() == std::string("Boomerang"))
+	} else if (behavior["Type"].GetString() == std::string("Boomerang"))
 	{
 		boomerangBehavior = new CBoomerangBehavior(behavior["Speed"].GetFloat(), behavior["Duration"].GetFloat(), behavior["ResourceCost"].GetFloat(), behavior["RotationalSpeed"].GetFloat(), document["Damage"].GetFloat());
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, boomerangBehavior, anAbilityType);
-	}
-	else if (behavior["Type"].GetString() == std::string("MeleeAttack"))
+	} else if (behavior["Type"].GetString() == std::string("MeleeAttack"))
 	{
 		meleeAttackBehavior = new CMeleeAttackBehavior(behavior["Duration"].GetFloat(), document["Damage"].GetFloat(), abilityObject);
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, meleeAttackBehavior, anAbilityType);
-	}
-	else if (behavior["Type"].GetString() == std::string("FireCone"))
+
+		myMeleeAttackRange = document["Collider"]["Height"].GetFloat();
+	} else if (behavior["Type"].GetString() == std::string("FireCone"))
 	{
 		fireConeBehavior = new CFireConeBehavior(behavior["Duration"].GetFloat(), behavior["ResourceCost"].GetFloat(), document["Damage"].GetFloat(), abilityObject);
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, fireConeBehavior, anAbilityType);
-	}
-	else if (behavior["Type"].GetString() == std::string("SpeedExplode"))
+	} else if (behavior["Type"].GetString() == std::string("SpeedExplode"))
 	{
 		speedExplodeBehavior = new CSpeedExplodeBehavior(behavior["Duration"].GetFloat(), behavior["ResourceCost"].GetFloat(), behavior["ExplodeAfter"].GetFloat(), behavior["SpeedMultiplier"].GetFloat(), document["Damage"].GetFloat(), abilityObject);
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, speedExplodeBehavior, anAbilityType);
-	}
-	else if (behavior["Type"].GetString() == std::string("DelayedExplosion"))
+	} else if (behavior["Type"].GetString() == std::string("DelayedExplosion"))
 	{
 		delayedExplosionBehavior = new CDelayedExplosionBehavior(behavior["Duration"].GetFloat(), behavior["Delay"].GetFloat(), behavior["ResourceCost"].GetFloat(), document["Damage"].GetFloat(), abilityObject);
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, delayedExplosionBehavior, anAbilityType);
@@ -332,8 +335,7 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 				static_cast<ECollisionLayer>(document["Collider"]["Collision Layer"].GetInt()),
 				document["Collider"]["Collides With"].GetInt()
 				);
-	}
-	else if (colliderType == "Rectangle") {
+	} else if (colliderType == "Rectangle") {
 		abilityObject->AddComponent<CRectangleColliderComponent>
 			(
 				*abilityObject,
@@ -342,8 +344,7 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 				static_cast<ECollisionLayer>(document["Collider"]["Collision Layer"].GetInt()),
 				document["Collider"]["Collides With"].GetInt()
 				);
-	}
-	else if (colliderType == "Triangle") {
+	} else if (colliderType == "Triangle") {
 		abilityObject->AddComponent<CTriangleColliderComponent>
 			(
 				*abilityObject,
@@ -356,7 +357,7 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	//!COLLIDER
 
 	abilityObject->Active(false);
-	CEngine::GetInstance()->GetActiveScene().AddInstance(abilityObject);
+	//CEngine::GetInstance()->GetActiveScene().AddInstance(abilityObject);
 
 	return abilityObject;
 }

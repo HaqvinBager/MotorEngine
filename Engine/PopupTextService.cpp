@@ -21,7 +21,7 @@ bool CPopupTextService::Init()
 	
 	for (unsigned int i = 0; i < damageNumbersPoolSize; ++i)
 	{
-		myTextPool.push(new CTextInstance(false));
+		myTextPool.push(new CTextInstance());
 		myTextPool.back()->Init(CTextFactory::GetInstance()->GetText(document["Damage Numbers Font and Size"].GetString()));
 		myAnimatedDataPool.push(new STextAnimationData());
 	}
@@ -32,27 +32,27 @@ bool CPopupTextService::Init()
 	myDamageColors[3] = { 1.0f, 0.0f, 0.0f, 1.0f };									// Enemy
 	myDamageColors[4] = { 0.0f, 230.0f / 255.0f, 64.0f / 255.0f, 1.0f };			// Healing
 
-	myTutorialText = new CTextInstance(false);
+	myTutorialText = new CTextInstance();
 	myTutorialText->Init(CTextFactory::GetInstance()->GetText(document["Tutorial Message Font and Size"].GetString()));
 	myTutorialAnimationData = new STextAnimationData();
 
-	myWarningText = new CTextInstance(false);
+	myWarningText = new CTextInstance();
 	myWarningText->Init(CTextFactory::GetInstance()->GetText(document["Warning Message Font and Size"].GetString()));
 	myWarningAnimationData = new STextAnimationData();
 
 	auto skillIconPaths = document["Skill Icon Paths"].GetArray();
 	for (unsigned int i = 0; i < skillIconPaths.Size(); ++i)
 	{
-		mySkillIcons.emplace_back(new CSpriteInstance(false));
+		mySkillIcons.emplace_back(new CSpriteInstance());
 		mySkillIcons.back()->Init(CSpriteFactory::GetInstance()->GetSprite(skillIconPaths[i]["Path"].GetString()));
 		mySkillIcons.back()->SetPosition({ document["Skill Icon Position X"].GetFloat(), document["Skill Icon Position Y"].GetFloat() });
 	}
 	
-	myInfoBoxBackground = new CSpriteInstance(false);
+	myInfoBoxBackground = new CSpriteInstance();
 	myInfoBoxBackground->Init(CSpriteFactory::GetInstance()->GetSprite(document["Skill Info Box Background Path"].GetString()));
 	myInfoBoxBackground->SetPosition({ document["Info Box Position X"].GetFloat(), document["Info Box Position Y"].GetFloat() });
 
-	myInfoBoxText = new CTextInstance(false);
+	myInfoBoxText = new CTextInstance();
 	myInfoBoxText->Init(CTextFactory::GetInstance()->GetText(document["Skill Info Font and Size"].GetString()));
 	myInfoAnimationData = new STextAnimationData();
 
@@ -105,35 +105,34 @@ void CPopupTextService::SpawnPopup(EPopupType aType, std::string aNameOrText)
 	}
 }
 
-const std::vector<CTextInstance*> CPopupTextService::GetTexts()
+void CPopupTextService::EmplaceTexts(std::vector<CTextInstance*>& someTexts)
 {
 	UpdateResources();
 	
-	std::vector<CTextInstance*> activeTexts = myActiveDamageNumbers;
+	for (unsigned int i = 0; i < myActiveDamageNumbers.size(); ++i)
+	{
+		someTexts.emplace_back(myActiveDamageNumbers[i]);
+	}
+
 	if (myActiveTutorialText) {
-		activeTexts.emplace_back(myActiveTutorialText);
+		someTexts.emplace_back(myActiveTutorialText);
 	}
 
 	if (myActiveWarningText) {
-		activeTexts.emplace_back(myActiveWarningText);
+		someTexts.emplace_back(myActiveWarningText);
 	}
 
 	if (myActiveInfoBoxText) {
-		activeTexts.emplace_back(myActiveInfoBoxText);
+		someTexts.emplace_back(myActiveInfoBoxText);
 	}
-
-	return activeTexts;
 }
 
-const std::vector<CSpriteInstance*> CPopupTextService::GetSprites()
+void CPopupTextService::EmplaceSprites(std::vector<CSpriteInstance*>& someSprites) const
 {
-	std::vector<CSpriteInstance*> activeSprites;
 	if (myActiveInfoBoxText) {
-		activeSprites.emplace_back(myInfoBoxBackground);
-		activeSprites.emplace_back(myActiveSkillSprite);
+		someSprites.emplace_back(myInfoBoxBackground);
+		someSprites.emplace_back(myActiveSkillSprite);
 	}
-
-	return activeSprites;
 }
 
 CPopupTextService::CPopupTextService()

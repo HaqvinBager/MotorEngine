@@ -9,6 +9,6 @@ CAudio::CAudio(FMOD::Sound* aSoundPointer)
 
 CAudio::~CAudio()
 {
-	delete myFModSound;
-	myFModSound = nullptr;
+	//delete myFModSound;
+	//myFModSound = nullptr;
 }

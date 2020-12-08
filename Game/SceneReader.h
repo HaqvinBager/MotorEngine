@@ -47,6 +47,7 @@ private:
 		return sizeof(char) * aLength;
 	}
 
+	std::string myCurrentBinPath;
 	char* myStreamPtr;
 	std::ifstream myStream;
 

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "CollisionManager.h"
+
 #include "IntersectionManager.h"
 #include "CapsuleColliderComponent.h"
 #include "TriangleColliderComponent.h"
@@ -19,20 +20,12 @@
 
 using namespace DirectX::SimpleMath;
 
-CCollisionManager* CCollisionManager::ourInstance = nullptr;
-CCollisionManager* CCollisionManager::GetInstance()
-{
-	return ourInstance;
-}
-
 CCollisionManager::CCollisionManager()
 {
-	ourInstance = this;
 }
 
 CCollisionManager::~CCollisionManager()
 {
-	ourInstance = nullptr;
 }
 
 void CCollisionManager::RegisterCollider(CCollider* aCollider)
@@ -43,7 +36,6 @@ void CCollisionManager::RegisterCollider(CCollider* aCollider)
 
 bool CCollisionManager::CheckIfAbility(CCollider* anAbilityCollider, CGameObject* aCollidedWithGameObject)
 {
-
 	if (anAbilityCollider->GetCollisionLayer() != ECollisionLayer::PLAYERABILITY) {
 		if (anAbilityCollider->GetCollisionLayer() != ECollisionLayer::ENEMYABILITY) {
 			if (anAbilityCollider->GetCollisionLayer() != ECollisionLayer::BOSSABILITY) {
@@ -53,7 +45,9 @@ bool CCollisionManager::CheckIfAbility(CCollider* anAbilityCollider, CGameObject
 	}
 
 	CGameObject* abilityGameObject = &anAbilityCollider->GameObject();
+
 	CAbilityBehaviorComponent* abilityBehavior = abilityGameObject->GetComponent<CAbilityBehaviorComponent>();
+
 	IAbilityBehavior* behavior = abilityBehavior->AbilityBehavior();
 	if (!abilityBehavior) {
 		return false;
@@ -61,6 +55,11 @@ bool CCollisionManager::CheckIfAbility(CCollider* anAbilityCollider, CGameObject
 
 	behavior->Collided(aCollidedWithGameObject);
 	return true;
+}
+
+void CCollisionManager::ClearColliders()
+{
+    myColliders.clear();
 }
 
 void CCollisionManager::Update()
@@ -86,8 +85,9 @@ void CCollisionManager::Update()
 					{
 						myColliders[outer]->GameObject().Collided(myColliders[inner]->GameObject());
 						myColliders[inner]->GameObject().Collided(myColliders[outer]->GameObject());
-						if (!CheckIfAbility(myColliders[outer], &myColliders[inner]->GameObject())) {
-							CheckIfAbility(myColliders[inner], &myColliders[outer]->GameObject());
+						
+						if (!CheckIfAbility(myColliders[inner], &myColliders[outer]->GameObject())) {
+							CheckIfAbility(myColliders[outer], &myColliders[inner]->GameObject());
 						}
 					}
 				}
@@ -99,6 +99,10 @@ void CCollisionManager::Update()
 					{
 						myColliders[outer]->GameObject().Collided(myColliders[inner]->GameObject());
 						myColliders[inner]->GameObject().Collided(myColliders[outer]->GameObject());
+
+						if (!CheckIfAbility(myColliders[inner], &myColliders[outer]->GameObject())) {
+							CheckIfAbility(myColliders[outer], &myColliders[inner]->GameObject());
+						}
 					}
 				}
 			}

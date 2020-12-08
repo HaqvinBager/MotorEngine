@@ -38,6 +38,8 @@ public:
 	void Receive(const SMessage& aMessage);
 
 
+	void Update();
+
 
 private:
 	void SubscribeToMusic();

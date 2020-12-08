@@ -15,11 +15,11 @@ public:
 	void Mute(bool aDoMute);
 	
 	//Pitch
-
+public:
+	~CAudioChannel();// 2020 12 04  - Destruction of CAudioChannel is not taken care of by FMOD
 private:
 	// CAudioChannel should be created from CFModWrapper
 	CAudioChannel(FMOD::ChannelGroup* aChannelPointer);
-	~CAudioChannel();
 
 private:
 	FMOD::ChannelGroup* myFModChannel;

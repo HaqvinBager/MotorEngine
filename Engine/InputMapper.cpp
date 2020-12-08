@@ -24,6 +24,7 @@ bool CInputMapper::Init()
 	MapEvent(IInputObserver::EInputAction::MouseLeftPressed, IInputObserver::EInputEvent::MoveClick);
 	MapEvent(IInputObserver::EInputAction::MouseLeftDown, IInputObserver::EInputEvent::MoveDown);
 	MapEvent(IInputObserver::EInputAction::MouseRight, IInputObserver::EInputEvent::AttackClick);
+	MapEvent(IInputObserver::EInputAction::MouseMiddle, IInputObserver::EInputEvent::MiddleMouseMove);
 	MapEvent(IInputObserver::EInputAction::Key1, IInputObserver::EInputEvent::Ability1);
 	MapEvent(IInputObserver::EInputAction::Key2, IInputObserver::EInputEvent::Ability2);
 	MapEvent(IInputObserver::EInputAction::Key3, IInputObserver::EInputEvent::Ability3);
@@ -59,13 +60,11 @@ void CInputMapper::UpdateKeyboardInput()
 {
 	if (myInput->IsKeyPressed(VK_ESCAPE))
 	{
-		std::cout << "I AM PRESSSINGG!!!!\n";
 		TranslateActionToEvent(IInputObserver::EInputAction::KeyEscape);
 	}
 	
-	if (myInput->IsKeyPressed(VK_SHIFT))
+	if (myInput->IsKeyDown(VK_SHIFT))
 	{
-		std::cout << "I AM PRESSSINGG!!!!\n";
 		TranslateActionToEvent(IInputObserver::EInputAction::KeyShift);
 	}
 
@@ -99,6 +98,10 @@ void CInputMapper::UpdateKeyboardInput()
 void CInputMapper::UpdateMouseInput()
 {
 
+	if (myInput->IsMousePressed(Input::MouseButton::Middle))
+	{
+		TranslateActionToEvent(IInputObserver::EInputAction::MouseMiddle);
+	}
 	if (myInput->IsMousePressed(Input::MouseButton::Left))
 	{
 		TranslateActionToEvent(IInputObserver::EInputAction::MouseLeftPressed);

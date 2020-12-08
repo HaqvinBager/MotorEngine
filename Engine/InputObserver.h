@@ -31,7 +31,8 @@ public:
 		Ability3,
 		LoadLevel,
 		PauseGame,
-		QuitGame
+		QuitGame,
+		MiddleMouseMove
 	};
 
 public:
