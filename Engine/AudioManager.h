@@ -57,7 +57,7 @@ private:
 	std::string TranslateVoiceLine(EVoiceLine enumerator) const;
 
 private:
-	std::string myAmbiancePath = "Audio/Ambiance/";
+	std::string myAmbiancePath = "Audio/Ambience/";
 	std::string myMusicPath = "Audio/Music/";
 	std::string mySFXPath = "Audio/SFX/";
 	std::string myUIPath = "Audio/UI/";
