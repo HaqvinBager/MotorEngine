@@ -33,10 +33,10 @@ void CCollisionEventComponent::Update()
 {
 }
 
-void CCollisionEventComponent::Collided(CGameObject* /*aCollidedGameObject*/)
+void CCollisionEventComponent::Collided(CGameObject* aCollidedGameObject)
 {
-	//SStringMessage stringMessage = { myTextMessage.c_str(), aCollidedGameObject };
-	//CMainSingleton::PostMaster().Send(stringMessage);
+	SStringMessage stringMessage = { myTextMessage.c_str(), aCollidedGameObject };
+	CMainSingleton::PostMaster().Send(stringMessage);
 }
 
 const std::string& CCollisionEventComponent::GetEventMessage() const

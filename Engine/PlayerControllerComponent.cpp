@@ -104,7 +104,10 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 
 		if (myIsMoving) {
 			this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
-			myTargetEnemy = mySelection->FindSelectedEnemy();
+			if (mySelection)
+			{
+				myTargetEnemy = mySelection->FindSelectedEnemy();
+			}
 		} else {
 			this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position());
 			this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::AttackLight);

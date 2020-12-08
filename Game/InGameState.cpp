@@ -28,6 +28,7 @@
 #include "DialogueSystem.h"
 #include "InputMapper.h"
 
+
 #include "Model.h"
 #include "Animation.h"
 #include "SpriteInstance.h"
@@ -48,11 +49,14 @@
 
 #include <iostream>
 
+
+
 CInGameState::CInGameState(CStateStack& aStateStack, const CStateStack::EState aState)
 	: CState(aStateStack, aState)
 	, myCanvas(nullptr)
 	, myTokenPool(nullptr)
 	, myColliderPusher(nullptr)
+	, myExitLevel(false)
 {}
 
 CInGameState::~CInGameState()
@@ -72,6 +76,12 @@ void CInGameState::Awake()
 
 void CInGameState::Start()
 {
+	myExitLevel = false;
+	CMainSingleton::DialogueSystem().Enabled(true);
+	CMainSingleton::PostMaster().Subscribe("Dungeon", this);
+	CMainSingleton::PostMaster().Subscribe("Gardens", this);
+	CMainSingleton::PostMaster().Subscribe("Castle", this);
+	CMainSingleton::PostMaster().Subscribe("BossRoom", this);
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::PauseGame, this);
 
 	CEngine::GetInstance()->SetActiveScene(myState);
@@ -155,6 +165,11 @@ void CInGameState::Stop()
 
 	delete myCanvas;
 	myCanvas = nullptr;
+
+	CMainSingleton::PostMaster().Unsubscribe("Dungeon", this);
+	CMainSingleton::PostMaster().Unsubscribe("Gardens", this);
+	CMainSingleton::PostMaster().Unsubscribe("Castle", this);
+	CMainSingleton::PostMaster().Unsubscribe("BossRoom", this);
 }
 
 void CInGameState::Update()
@@ -206,6 +221,15 @@ void CInGameState::Update()
 		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text3);
 	}
 
+	if (myExitLevel)
+	{
+		myExitLevel = false;
+		CEngine::GetInstance()->SetRenderScene(false);
+		CMainSingleton::CollisionManager().ClearColliders();
+		CMainSingleton::DialogueSystem().Enabled(false);
+
+		myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
+	}
 }
 
 void CInGameState::ReceiveEvent(const EInputEvent aEvent)
@@ -223,5 +247,10 @@ void CInGameState::ReceiveEvent(const EInputEvent aEvent)
 			break;
 		}
 	}
+}
+
+void CInGameState::Receive(const SStringMessage& /*aMessage*/)
+{
+	myExitLevel = true;
 }
 
