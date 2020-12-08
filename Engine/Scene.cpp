@@ -73,8 +73,8 @@ CScene::~CScene()
 	this->DestroyPointLights();
 	this->DestroyParticles();
 	this->DestroyVFXInstances();
-	//this->DestroyLineInstances();// Seems they are taken care of where by their creators (the class that created them... that is).
-	this->DestroyAnimatedUIElement();// Seems they are taken care of where they are created.
+	//this->DestroyLineInstances();// Taken care of in Canvas
+	//this->DestroyAnimatedUIElement();// Taken care of in Canvas
 	this->DestroyTextInstances();
 	// Even with this the memory still increases on every load!
 }

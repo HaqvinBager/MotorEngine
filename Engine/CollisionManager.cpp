@@ -36,7 +36,6 @@ void CCollisionManager::RegisterCollider(CCollider* aCollider)
 
 bool CCollisionManager::CheckIfAbility(CCollider* anAbilityCollider, CGameObject* aCollidedWithGameObject)
 {
-
 	if (anAbilityCollider->GetCollisionLayer() != ECollisionLayer::PLAYERABILITY) {
 		if (anAbilityCollider->GetCollisionLayer() != ECollisionLayer::ENEMYABILITY) {
 			if (anAbilityCollider->GetCollisionLayer() != ECollisionLayer::BOSSABILITY) {
@@ -46,7 +45,9 @@ bool CCollisionManager::CheckIfAbility(CCollider* anAbilityCollider, CGameObject
 	}
 
 	CGameObject* abilityGameObject = &anAbilityCollider->GameObject();
+
 	CAbilityBehaviorComponent* abilityBehavior = abilityGameObject->GetComponent<CAbilityBehaviorComponent>();
+
 	IAbilityBehavior* behavior = abilityBehavior->AbilityBehavior();
 	if (!abilityBehavior) {
 		return false;
@@ -84,8 +85,9 @@ void CCollisionManager::Update()
 					{
 						myColliders[outer]->GameObject().Collided(myColliders[inner]->GameObject());
 						myColliders[inner]->GameObject().Collided(myColliders[outer]->GameObject());
-						if (!CheckIfAbility(myColliders[outer], &myColliders[inner]->GameObject())) {
-							CheckIfAbility(myColliders[inner], &myColliders[outer]->GameObject());
+						
+						if (!CheckIfAbility(myColliders[inner], &myColliders[outer]->GameObject())) {
+							CheckIfAbility(myColliders[outer], &myColliders[inner]->GameObject());
 						}
 					}
 				}
@@ -97,6 +99,10 @@ void CCollisionManager::Update()
 					{
 						myColliders[outer]->GameObject().Collided(myColliders[inner]->GameObject());
 						myColliders[inner]->GameObject().Collided(myColliders[outer]->GameObject());
+
+						if (!CheckIfAbility(myColliders[inner], &myColliders[outer]->GameObject())) {
+							CheckIfAbility(myColliders[outer], &myColliders[inner]->GameObject());
+						}
 					}
 				}
 			}

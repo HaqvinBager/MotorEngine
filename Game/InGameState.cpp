@@ -134,42 +134,13 @@ void CInGameState::Start()
 	//CEngine::GetInstance()->GetActiveScene().AddInstance(myTestBoss);
 	//myTestBoss->Awake();
 
-	static SDamagePopupData damage;
-	damage.myDamage = 32.0f;
-	damage.myHitType = Random(0, 4);
-	if (Input::GetInstance()->IsKeyPressed('U')) {
-	    CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &damage);
-	}
-
-	static std::string tutorial = "Press Space to Continue";
-	if (Input::GetInstance()->IsKeyPressed('I')) {
-	    CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Tutorial, tutorial);
-	}
-
-	static std::string warning = "You require more Mana";
-	if (Input::GetInstance()->IsKeyPressed('O')) {
-	    CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Warning, warning);
-	}
-
-	static std::string text1 = "Skill 1";
-	if (Input::GetInstance()->IsKeyPressed('J')) {
-	    CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text1);
-	}
-
-	static std::string text2 = "Skill 2";
-	if (Input::GetInstance()->IsKeyPressed('K')) {
-	    CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text2);
-	}
-
-	static std::string text3 = "Skill 3";
-	if (Input::GetInstance()->IsKeyPressed('L')) {
-	    CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text3);
-	}
-
 	for (auto& gameObject : CEngine::GetInstance()->GetActiveScene().myGameObjects)
 	{
 		gameObject->Start();
 	}
+
+	int aSceneIndex = 0;
+	CMainSingleton::PostMaster().Send({ EMessageType::LoadDialogue, &aSceneIndex });
 }
 
 void CInGameState::Stop()
@@ -200,37 +171,39 @@ void CInGameState::Update()
 	myColliderPusher->PlayerPushOutEnemies();
 
 	mySelection->FindSelectedEnemy();
-	//static SDamagePopupData damage;
-	//damage.myDamage = 32.0f;
-	//damage.myHitType = Random(0, 4);
-	//if (Input::GetInstance()->IsKeyPressed('U')) {
-	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &damage);
-	//}
 
-	//static std::string tutorial = "Press Space to Continue";
-	//if (Input::GetInstance()->IsKeyPressed('I')) {
-	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Tutorial, tutorial);
-	//}
+	static SDamagePopupData damage;
+	damage.myDamage = 32.0f;
+	damage.myHitType = Random(0, 4);
+	if (Input::GetInstance()->IsKeyPressed('U')) {
+		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &damage);
+	}
 
-	//static std::string warning = "You require more Mana";
-	//if (Input::GetInstance()->IsKeyPressed('O')) {
-	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Warning, warning);
-	//}
+	static std::string tutorial = "Press Space to Continue";
+	if (Input::GetInstance()->IsKeyPressed('I')) {
+		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Tutorial, tutorial);
+	}
 
-	//static std::string text1 = "Skill 1";
-	//if (Input::GetInstance()->IsKeyPressed('J')) {
-	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text1);
-	//}
+	static std::string warning = "You require more Mana";
+	if (Input::GetInstance()->IsKeyPressed('O')) {
+		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Warning, warning);
+	}
 
-	//static std::string text2 = "Skill 2";
-	//if (Input::GetInstance()->IsKeyPressed('K')) {
-	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text2);
-	//}
+	static std::string text1 = "Skill 1";
+	if (Input::GetInstance()->IsKeyPressed('J')) {
+		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text1);
+	}
 
-	//static std::string text3 = "Skill 3";
-	//if (Input::GetInstance()->IsKeyPressed('L')) {
-	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text3);
-	//}
+	static std::string text2 = "Skill 2";
+	if (Input::GetInstance()->IsKeyPressed('K')) {
+		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text2);
+	}
+
+	static std::string text3 = "Skill 3";
+	if (Input::GetInstance()->IsKeyPressed('L')) {
+		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text3);
+	}
+
 }
 
 void CInGameState::ReceiveEvent(const EInputEvent aEvent)

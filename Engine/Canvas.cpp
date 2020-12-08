@@ -33,7 +33,12 @@ CCanvas::~CCanvas()
 	delete myBackground;
 	myBackground = nullptr;
 
-	myAnimatedUIs.clear();// Destruction is done in CScene
+	for (size_t i = 0; i < myAnimatedUIs.size(); ++i)
+	{
+		delete myAnimatedUIs[i];
+		myAnimatedUIs[i] = nullptr;
+	}
+	myAnimatedUIs.clear();
 
 	for (size_t i = 0; i < myButtons.size(); ++i)
 	{

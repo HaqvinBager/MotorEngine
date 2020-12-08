@@ -7,7 +7,8 @@ public:
 
 	DirectX::SimpleMath::Vector3 GetPositionAtNavmesh();
 
-	void FindSelectedEnemy();
+	CGameObject* FindSelectedEnemy();
 private:
+	CGameObject* myEnemy;
 };
 
