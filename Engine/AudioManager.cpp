@@ -161,7 +161,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		break;
 	case EMessageType::PlayAmbienceCave1:
 	{
-		myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Cave1)], myChannels[CAST(EChannels::Ambiance)]);
+		//myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Cave1)], myChannels[CAST(EChannels::Ambiance)]);
 	}
 		break;
 

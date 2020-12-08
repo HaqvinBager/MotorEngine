@@ -23,6 +23,8 @@ public:
 
 	CModel* GetInstancedModel(std::string aFilePath, int aNumberOfInstanced);
 
+	void ClearFactory();
+
 private:
 	struct SInstancedModel
 	{	

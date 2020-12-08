@@ -62,6 +62,8 @@ public:
 
 	void SetRenderScene(const bool aRenderSceneActive) { myRenderSceneActive = aRenderSceneActive; }
 
+	void ClearModelFactory();
+
 private:
 	static CEngine* ourInstance;
 	

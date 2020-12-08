@@ -248,3 +248,8 @@ void CEngine::ModelViewerSetScene(CScene* aScene)
 	myActiveState = CStateStack::EState::InGame;
 	mySceneMap[myActiveState] = aScene;
 }
+
+void CEngine::ClearModelFactory()
+{
+	myModelFactory->ClearFactory();
+}
