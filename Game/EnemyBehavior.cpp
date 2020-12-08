@@ -137,7 +137,7 @@ void CEnemyBehavior::FindATarget()
 			DirectX::SimpleMath::Vector3 randomPos = { myCurrentParent->myTransform->Position().x + X, myCurrentParent->myTransform->Position().y, myCurrentParent->myTransform->Position().z + Y};
 			if (CEngine::GetInstance()->GetActiveScene().GetNavMesh()->GetTriangleAtPoint(randomPos)) {
 				myCurrentParent->GetComponent<CNavMeshComponent>()->CalculatePath(randomPos);
-				stats.myRandomWalkTime = Random(baseStats.mBaseRandomWalkTime - 1.f, baseStats.mBaseRandomWalkTime);
+				stats.myRandomWalkTime = Random(baseStats.myBaseRandomWalkTime - 1.f, baseStats.myBaseRandomWalkTime);
 			}
 		}
 	}
@@ -178,5 +178,9 @@ void CEnemyBehavior::Die()
 	myCurrentParent->GetComponent<CNavMeshComponent>()->Enabled(false);
 	myCurrentParent->GetComponent<CAnimationComponent>()->DeadState();
 	myCurrentParent->GetComponent<CHealthBarComponent>()->Enabled(false);
-	CMainSingleton::PostMaster().Send({ EMessageType::EnemyDied, 0 });
+	myCurrentParent->GetComponent<CStatsComponent>()->Enabled(false);
+	SMessage message;
+	message.myMessageType = EMessageType::EnemyDied;
+	message.data = &myCurrentParent->GetComponent<CStatsComponent>()->GetStats().myExperience;
+	CMainSingleton::PostMaster().Send(message);
 }

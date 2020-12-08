@@ -23,7 +23,7 @@
 #include "Engine.h"
 #include "EngineException.h"
 #include "StatsComponent.h"
-
+#include "AnimationComponent.h"
 #include <fstream>
 #include "rapidjson\document.h"
 #include "rapidjson\istreamwrapper.h"
@@ -71,6 +71,7 @@ CAbilityComponent::~CAbilityComponent()
 		CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability1, this);
 		CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability2, this);
 		CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability3, this);
+		CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::AttackClick, this);
 	}
 }
 
@@ -109,6 +110,7 @@ void CAbilityComponent::OnEnable()
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability1, this);
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability2, this);
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability3, this);
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::AttackClick, this);
 }
 
 void CAbilityComponent::OnDisable()
@@ -116,6 +118,7 @@ void CAbilityComponent::OnDisable()
 	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability1, this);
 	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability2, this);
 	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability3, this);
+	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::AttackClick, this);
 }
 
 bool CAbilityComponent::UseAbility(EAbilityType anAbilityType, DirectX::SimpleMath::Vector3 aSpawnPosition)
@@ -166,6 +169,9 @@ void CAbilityComponent::SendEvent() {
 		SMessage myMessage;
 		myCurrentCooldowns[2] -= CTimer::Dt();
 
+		std::cout << "Current cooldown: " << myCurrentCooldowns[2] << std::endl;
+		std::cout << "Max cooldown: " << myMaxCooldowns[2] << std::endl;
+
 		float messageValue = myCurrentCooldowns[2] / myMaxCooldowns[2];
 		myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
 
@@ -182,59 +188,66 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 	{
 		SMessage myMessage;
 	case EInputEvent::Ability1:
-		if (myCurrentCooldowns[0] > 0)
-			break;
+		if (this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel > 0) {
+			if (myCurrentCooldowns[0] > 0)
+				break;
 
-		if (UseAbility(EAbilityType::PlayerAbility1, GameObject().myTransform->Position()))
-		{
-			myMessage.myMessageType = EMessageType::AbilityOneCooldown;
-			myCurrentCooldowns[0] = myMaxCooldowns[0];
-			myMessage.data = &messageValue;
-			CMainSingleton::PostMaster().Send(myMessage);
+			if (UseAbility(EAbilityType::PlayerAbility1, GameObject().myTransform->Position()))
+			{
+				myMessage.myMessageType = EMessageType::AbilityOneCooldown;
+				myCurrentCooldowns[0] = myMaxCooldowns[0];
+				myMessage.data = &messageValue;
+				CMainSingleton::PostMaster().Send(myMessage);
+			}
 		}
 		break;
 	case EInputEvent::Ability2:
-		if (myCurrentCooldowns[1] > 0)
-			break;
+		if (this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel > 1) {
+			if (myCurrentCooldowns[1] > 0)
+				break;
 
-		if (UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position()))
-		{
-			myMessage.myMessageType = EMessageType::AbilityTwoCooldown;
-			myCurrentCooldowns[1] = myMaxCooldowns[1];
-			myMessage.data = &messageValue;
-			CMainSingleton::PostMaster().Send(myMessage);
+			if (UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position()))
+			{
+				myMessage.myMessageType = EMessageType::AbilityTwoCooldown;
+				myCurrentCooldowns[1] = myMaxCooldowns[1];
+				myMessage.data = &messageValue;
+				CMainSingleton::PostMaster().Send(myMessage);
+			}
 		}
 		break;
 	case EInputEvent::Ability3:
-		if (myCurrentCooldowns[2] > 0)
-			break;
+		if (this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel > 2) {
+			if (myCurrentCooldowns[2] > 0)
+				break;
 
-		if (UseAbility(EAbilityType::PlayerAbility3, GameObject().myTransform->Position()))
-		{
-			myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
-			myCurrentCooldowns[2] = myMaxCooldowns[2];
-			myMessage.data = &messageValue;
-			CMainSingleton::PostMaster().Send(myMessage);
+			if (UseAbility(EAbilityType::PlayerAbility3, GameObject().myTransform->Position()))
+			{
+				myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
+				myCurrentCooldowns[2] = myMaxCooldowns[2];
+				myMessage.data = &messageValue;
+				CMainSingleton::PostMaster().Send(myMessage);
+			}
 		}
 		break;
-	case EInputEvent::MoveClick:
-		if (myCurrentCooldowns[3] > 0)
-			break;
+	//case EInputEvent::MoveClick:
+	//	if (myCurrentCooldowns[3] > 0)
+	//		break;
 
-		if (UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position()))
-		{
-		}
-		/*myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
-		myCurrentCooldowns[2] = myMaxCooldowns[2];
-		myMessage.data = &messageValue;
-		CMainSingleton::PostMaster().Send(myMessage);*/
-		break;
+	//	if (UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position()))
+	//	{
+	//	}
+	//	/*myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
+	//	myCurrentCooldowns[2] = myMaxCooldowns[2];
+	//	myMessage.data = &messageValue;
+	//	CMainSingleton::PostMaster().Send(myMessage);*/
+	//	break;
 	case EInputEvent::AttackClick:
 		if (myCurrentCooldowns[4] > 0)
 			break;
 
 		if (UseAbility(EAbilityType::PlayerHeavyMelee, GameObject().myTransform->Position()))
 		{
+			this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::AttackLight);
 		}
 		/*myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
 		myCurrentCooldowns[2] = myMaxCooldowns[2];
@@ -249,6 +262,27 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 const float CAbilityComponent::MeleeAttackRange() const
 {
 	return myMeleeAttackRange;
+}
+
+void CAbilityComponent::ResetCooldown(int anIndex)
+{
+	SMessage message;
+	if (anIndex == 1) {
+		message.myMessageType = EMessageType::AbilityOneCooldown;
+		myCurrentCooldowns[anIndex - 1] = 0.0;
+		message.data = &myCurrentCooldowns[anIndex - 1];
+		CMainSingleton::PostMaster().Send(message);
+	} else if (anIndex == 2) {
+		message.myMessageType = EMessageType::AbilityTwoCooldown;
+		myCurrentCooldowns[anIndex - 1] = 0.0;
+		message.data = &myCurrentCooldowns[anIndex - 1];
+		CMainSingleton::PostMaster().Send(message);
+	} else if (anIndex == 3) {
+		message.myMessageType = EMessageType::AbilityThreeCooldown;
+		myCurrentCooldowns[anIndex - 1] = 0.0;
+		message.data = &myCurrentCooldowns[anIndex - 1];
+		CMainSingleton::PostMaster().Send(message);
+	}
 }
 
 CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
