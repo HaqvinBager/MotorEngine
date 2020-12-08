@@ -55,16 +55,7 @@ CScene::~CScene()
 	
 	//delete myCollisionManager;
 	//myCollisionManager = nullptr;
-	if (myNavMesh)// Any CScene that is not InGame's scene will not hold a NavMesh
-	{
-		delete myNavMesh;
-		myNavMesh = nullptr;
-	}
-	if (myNavMeshGrid)// -||-
-	{
-		delete myNavMeshGrid;
-		myNavMeshGrid = nullptr;
-	}
+	
 
 	delete myEnvironmentLight;
 	myEnvironmentLight = nullptr;
@@ -86,6 +77,16 @@ CScene::~CScene()
 		myEnemyBehavior = nullptr;
 	}
 
+	if (myNavMesh)// Any CScene that is not InGame's scene will not hold a NavMesh
+	{
+		delete myNavMesh;
+		myNavMesh = nullptr;
+	}
+	if (myNavMeshGrid)// -||-
+	{
+		delete myNavMeshGrid;
+		myNavMeshGrid = nullptr;
+	}
 	// Even with this the memory still increases on every load!
 }
 
@@ -117,9 +118,9 @@ bool CScene::InitNavMesh(std::string aPath)
 		positions[i + 5] = myNavMesh->myTriangles[j]->myVertexPositions[2];
 	}
 
-	myNavMeshGrid = new CLineInstance();
-	myNavMeshGrid->Init(CLineFactory::GetInstance()->CreatePolygon(positions));
-	this->AddInstance(myNavMeshGrid);
+	//myNavMeshGrid = new CLineInstance();
+	//myNavMeshGrid->Init(CLineFactory::GetInstance()->CreatePolygon(positions));
+	//this->AddInstance(myNavMeshGrid);
 
 	delete loader;
 	return true;

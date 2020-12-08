@@ -20,7 +20,7 @@ enum class ELevel
 
 class CScene;
 
-class CLoadLevelState : public CState
+class CLoadLevelState : public CState, public IStringObserver
 {
 public:
 	CLoadLevelState(CStateStack& aStateStack, const CStateStack::EState aState = CStateStack::EState::LoadLevel);
@@ -29,6 +29,7 @@ public:
 	void Start() override;
 	void Stop() override;
 	void Update() override;
+	void Receive(const SStringMessage& aMessage) override;
 
 private:
 	void Awake() override;
@@ -42,6 +43,9 @@ private:
 	void SaveModelPaths(const ELevel aLevel);
 	std::string& BinPath(const ELevel aLevel);
 	std::vector<std::string>& BinModelPaths(const ELevel aLevel);
+
+	ELevel myLevelToLoad;
+	
 
 	CSceneReader mySceneReader;
 	CUnityFactory myUnityFactory;
