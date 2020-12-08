@@ -1,10 +1,10 @@
 #pragma once
 #include "Behaviour.h"
 
-class DestructibleComponent : public CBehaviour// dont forget to C it
+class CDestructibleComponent : public CBehaviour// dont forget to C it
 {
 public:
-	DestructibleComponent(CGameObject& aParent);
+	CDestructibleComponent(CGameObject& aParent);
 
 	void Awake() override;
 	void Start() override;

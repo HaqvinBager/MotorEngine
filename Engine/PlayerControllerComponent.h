@@ -22,6 +22,7 @@ public:
 	bool PlayerIsAlive();
 	void TakeDamage(float aDamageMultiplier, CGameObject* aGameObject);
 	void RegenerateMana();
+
 private:
 	float myLastHP;
 	float myRegenerationSpeed;

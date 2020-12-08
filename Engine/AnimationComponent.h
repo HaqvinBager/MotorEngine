@@ -39,6 +39,30 @@ public:
 	bool DeadState();// After calling this no other animation will be able to be called.
 	void ForceToIdleState();
 
+	// Temporary for project 6
+	void PlayAttack01ID();
+	void PlayAttack02ID();
+	void PlayAbility01ID();
+	void PlayAbility02ID();
+	void PlayAbility03ID();
+	void PlayAbility04ID();
+	void PlayAbility05ID();
+	void PlayAbility06ID();
+
+	void SetIdleID(const int anIdleID);
+	void SetMovingID(const int aMovingID);
+	void SetDyingID(const int aDyingID);
+
+	void SetAttack01ID(const int aID);
+	void SetAttack02ID(const int aID);
+	void SetAbility01ID(const int aID);
+	void SetAbility02ID(const int aID);
+	void SetAbility03ID(const int aID);
+	void SetAbility04ID(const int aID);
+	void SetAbility05ID(const int aID);
+	void SetAbility06ID(const int aID);
+	// ! Temporary for project 6
+
 	template <class T>
 	void PlayAnimation(const T anEAnimationID);// Use with E- Player/Enemy/Boss/Other -AnimationID
 	template <class T>
@@ -81,11 +105,23 @@ private:
 	float myAnimationSpeed;
 	std::vector<CStringID> myAnimationIds;
 
+
 	int myCurrentAnimationID;// Current State
 	int myIdleAnimationID;// Idle State
 	int myMovingAnimationID;// Moving State
 	int myDyingAnimationID;// Dying / Dead State
+	
 	float myReturnToIdleTimer;
+
+	// Temporary for project 6
+	int myAttack01ID;
+	int myAttack02ID;
+	int myAbility01ID;
+	int myAbility02ID;
+	int myAbility03ID;
+	int myAbility04ID;
+	int myAbility05ID;
+	int myAbility06ID;
 
 private: // Needed for template functions
 	// This works if the ids are in a sorted list. But if the animations are added at random to the project the ids aren't sorted, making this function unsafe.

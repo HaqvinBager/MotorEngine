@@ -8,7 +8,10 @@
 #include "EngineException.h"
 #include "DL_Debug.h"
 
+//#define USE_ALLOCATION_METRICS
+
 #ifdef _DEBUG
+#ifdef USE_ALLOCATION_METRICS
 struct AllocationMetrics
 {
 	uint32_t myTotalAllocated = 0;
@@ -34,14 +37,16 @@ void operator delete(void* memory, size_t size)
 	free(memory);
 }
 
-
+#endif
 #endif
 static void PrintMemoryUsage()
 {
 #ifdef _DEBUG
+#ifdef  USE_ALLOCATION_METRICS
 	std::cout << "Our total allocated memory: " << gOurAllocationMetrics.myTotalAllocated / static_cast<UINT32>(1048576) << " mb" << std::endl;
 	std::cout << "Our current memory usage:   " << gOurAllocationMetrics.CurrentUsage() / static_cast<uint32_t>(1048576) << " mb" << std::endl;
 	std::cout << "Our total freed memory:     " << gOurAllocationMetrics.myTotalFreed / static_cast<UINT32>(1048576) << " mb" << std::endl;
+#endif //  USE_ALLOCATION_METRICS
 #endif
 }
 
@@ -173,7 +178,7 @@ void RunGame(LPWSTR lpCmdLine)
 		if (!shouldRun)
 			break;
 
-		//PrintMemoryUsage();
+		PrintMemoryUsage();
 		engine.BeginFrame();
 		shouldRun = game.Update();
 		engine.RenderFrame();

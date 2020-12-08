@@ -48,10 +48,11 @@
 
 #include <iostream>
 
-CInGameState::CInGameState(CStateStack& aStateStack, const CStateStack::EState aState) 
-	: CState(aStateStack, aState) 
+CInGameState::CInGameState(CStateStack& aStateStack, const CStateStack::EState aState)
+	: CState(aStateStack, aState)
 	, myCanvas(nullptr)
 	, myTokenPool(nullptr)
+	, myColliderPusher(nullptr)
 {}
 
 CInGameState::~CInGameState()
@@ -72,12 +73,12 @@ void CInGameState::Awake()
 void CInGameState::Start()
 {
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::PauseGame, this);
-	
+
 	CEngine::GetInstance()->SetActiveScene(myState);
 
 	myCanvas = new CCanvas();
 	myCanvas->Init("Json/UI_InGame_Description.json", CEngine::GetInstance()->GetActiveScene());
-	
+
 	myTokenPool = new CTokenPool(4, 4.0f);// todo: fix reset
 
 	std::vector<CGameObject*>& gameObjects = CEngine::GetInstance()->GetActiveScene().myGameObjects;
@@ -140,7 +141,7 @@ void CInGameState::Start()
 	}
 
 	int aSceneIndex = 0;
-	CMainSingleton::PostMaster().Send({ EMessageType::LoadDialogue, &aSceneIndex });
+	CMainSingleton::PostMaster().Send({EMessageType::LoadDialogue, &aSceneIndex});
 }
 
 void CInGameState::Stop()
@@ -166,7 +167,7 @@ void CInGameState::Update()
 	{
 		gameObject->Update();
 	}
-	
+
 	myColliderPusher->EnemiesPushOutEnemies();
 	myColliderPusher->PlayerPushOutEnemies();
 
@@ -211,7 +212,11 @@ void CInGameState::ReceiveEvent(const EInputEvent aEvent)
 	if (this == myStateStack.GetTop()) {
 		switch (aEvent) {
 		case IInputObserver::EInputEvent::PauseGame:
-			myStateStack.PushState(CStateStack::EState::PauseMenu);
+			if (CMainSingleton::DialogueSystem().Enabled()) {
+				CMainSingleton::DialogueSystem().Enabled(false);
+			} else {
+				myStateStack.PushState(CStateStack::EState::PauseMenu);
+			}
 			break;
 		default:
 			break;

@@ -31,8 +31,6 @@ void CCollisionEventComponent::Start()
 
 void CCollisionEventComponent::Update()
 {
-	//CRectangleColliderComponent* collider = GameObject().GetComponent<CRectangleColliderComponent>();
-	//CDebug::GetInstance()->DrawLine(collider->GetPosition(), { collider->GetPosition().x + 1.0f, collider->GetPosition().y, collider->GetPosition().z + 1.0f });
 }
 
 void CCollisionEventComponent::Collided(CGameObject* /*aCollidedGameObject*/)

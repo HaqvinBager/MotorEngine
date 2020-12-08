@@ -10,8 +10,8 @@ class CAudio;
 class CAudioChannel;
 
 enum class EMusic { MainMenu, Count };
-enum class EAmbiance { Count };
-enum class ESFX { Count };
+enum class EAmbiance { Castle, Cave1, Cave2,  Dungeon, Garden, Swamp1, Swamp2, Count };
+enum class ESFX { EnemyPain, Count };
 enum class EUI { Count };
 enum class EVoiceLine { Count };
 
@@ -37,9 +37,12 @@ public:
 	// Listen to PostMaster
 	void Receive(const SMessage& aMessage);
 
+
 	void Update();
 
+
 private:
+	
 	void SubscribeToMessages();
 	void UnsubscribeToMessages();
 
@@ -77,6 +80,7 @@ private:
 	CAudio* mySound;
 	CAudioChannel* myChannel;
 
+	std::vector<EMusic> myMusics;
 
 };
 

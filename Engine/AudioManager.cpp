@@ -22,12 +22,27 @@ CAudioManager::CAudioManager() : myWrapper() {
 	IStreamWrapper inputWrapper(inputStream);
 	Document document;
 	document.ParseStream(inputWrapper);
-	
+
 	if (document.HasParseError()) { return; }
 
 	// Init Channels
 	for (unsigned int i = 0; i < static_cast<unsigned int>(EChannels::Count); ++i) {
 		myChannels.emplace_back(myWrapper.RequestChannel(TranslateChannels(static_cast<EChannels>(i))));
+	}
+
+
+	
+
+	if (document.HasMember("Ambience"))
+	{
+		auto audioDataArray = document["Ambience"].GetArray();
+		for (unsigned int i = 0; i < audioDataArray.Size(); ++i)
+		{
+			auto audioData = audioDataArray[i].GetObjectW();
+			myAmbianceAudio.emplace_back(myWrapper.RequestSound(myAmbiancePath + audioData["Path"].GetString()));
+
+		}
+
 	}
 
 	if (document.HasMember("Music"))
@@ -37,18 +52,6 @@ CAudioManager::CAudioManager() : myWrapper() {
 		{
 			auto audioData = audioDataArray[i].GetObjectW();
 			myMusicAudio.emplace_back(myWrapper.RequestSound(myMusicPath + audioData["Path"].GetString()));
-
-		}
-
-	}
-
-	if (document.HasMember("Ambience"))
-	{
-		auto audioDataArray = document["Ambience"].GetArray();
-		for (unsigned int i = 0; i < audioDataArray.Size(); ++i)
-		{
-			auto audioData = audioDataArray[i].GetObjectW();
-			myAmbianceAudio.emplace_back(myWrapper.RequestSound(myAmbiancePath + audioData["Path"].GetString()));
 
 		}
 
@@ -68,7 +71,7 @@ CAudioManager::CAudioManager() : myWrapper() {
 
 	if (document.HasMember("UI"))
 	{
-		auto audioDataArray = document["Ambience"].GetArray();
+		auto audioDataArray = document["UI"].GetArray();
 		for (unsigned int i = 0; i < audioDataArray.Size(); ++i)
 		{
 			auto audioData = audioDataArray[i].GetObjectW();
@@ -80,7 +83,7 @@ CAudioManager::CAudioManager() : myWrapper() {
 
 	if (document.HasMember("VoiceLine"))
 	{
-		auto audioDataArray = document["Ambience"].GetArray();
+		auto audioDataArray = document["VoiceLine"].GetArray();
 		for (unsigned int i = 0; i < audioDataArray.Size(); ++i)
 		{
 			auto audioData = audioDataArray[i].GetObjectW();
@@ -90,21 +93,23 @@ CAudioManager::CAudioManager() : myWrapper() {
 
 	}
 
-	//// Init Music
-	//for (unsigned int i = 0; i < static_cast<unsigned int>(EMusic::Count); ++i) {
-	//	myMusicAudio.emplace_back(myWrapper.RequestSound(GetPath(static_cast<EMusic>(i))));
-	//}	
-
 	// Set starting volume
 	for (auto& channel : myChannels) {
 		channel->SetVolume(0.1f);
 	}
 
 	// SEND MESSAGE TO START PLAYING MUSIC
+
 	//CMainSingleton::PostMaster().Send({ EMessageType::MainMenu, NULL });
+
+	//CMainSingleton::PostMaster().Send({ EMessageType::EnemyHealthChanged, NULL });
+
+	CMainSingleton::PostMaster().Send({ EMessageType::PlayAmbienceCave1, NULL });
+
+
 }
 
-CAudioManager::~CAudioManager() 
+CAudioManager::~CAudioManager()
 {
 	UnsubscribeToMessages();
 	// 2020 12 06 - CAudio attempts to delete myFModSound, seems to be shared. 
@@ -146,21 +151,59 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	{
 	case EMessageType::MainMenu:
 	{
-		//myWrapper.Play(myMusicAudio[CAST(EMusic::MainMenu)], myChannels[CAST(EChannels::Music)]);
+	    //myWrapper.Play(myMusicAudio[CAST(EMusic::MainMenu)], myChannels[CAST(EChannels::Music)]);
 	}
 		break;
+	case EMessageType::PlayAmbienceCastle:
+	{
+		myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
+	}
+		break;
+	case EMessageType::PlayAmbienceCave1:
+	{
+		myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Cave1)], myChannels[CAST(EChannels::Ambiance)]);
+	}
+		break;
+
+	case EMessageType::PlayAmbienceDungeon:
+	{
+		myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
+	}
+		break;
+
+	case EMessageType::PlayAmbienceSwamp1:
+	{
+		myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
+	}
+		break;
+	
+	case EMessageType::EnemyHealthChanged:
+	{
+		myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyPain)], myChannels[CAST(EChannels::SFX)]);
+	}
+	break;
+
+
 	default:
 		break;
 	}
 }
 
+
 void CAudioManager::Update()
 {
+
 }
 
 void CAudioManager::SubscribeToMessages()
 {
+
 	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayAmbienceCastle, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayAmbienceCave1, this);
+
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyHealthChanged, this);
+
 }
 
 void CAudioManager::UnsubscribeToMessages()
@@ -176,7 +219,7 @@ std::string CAudioManager::GetPath(EMusic type) const
 	return path;
 }
 
-std::string CAudioManager::GetPath(EAmbiance type) const 
+std::string CAudioManager::GetPath(EAmbiance type) const
 {
 	std::string path = myAmbiancePath;
 	path.append(TranslateAmbiance(type));
@@ -184,7 +227,7 @@ std::string CAudioManager::GetPath(EAmbiance type) const
 	return path;
 }
 
-std::string CAudioManager::GetPath(ESFX type) const 
+std::string CAudioManager::GetPath(ESFX type) const
 {
 	std::string path = mySFXPath;
 	path.append(TranslateSFX(type));
@@ -192,7 +235,7 @@ std::string CAudioManager::GetPath(ESFX type) const
 	return path;
 }
 
-std::string CAudioManager::GetPath(EUI type) const 
+std::string CAudioManager::GetPath(EUI type) const
 {
 	std::string path = myUIPath;
 	path.append(TranslateUI(type));
@@ -200,7 +243,7 @@ std::string CAudioManager::GetPath(EUI type) const
 	return path;
 }
 
-std::string CAudioManager::GetPath(EVoiceLine type) const 
+std::string CAudioManager::GetPath(EVoiceLine type) const
 {
 	std::string path = myVoxPath;
 	path.append(TranslateVoiceLine(type));
@@ -239,16 +282,19 @@ std::string CAudioManager::TranslateMusic(EMusic enumerator) const
 
 std::string CAudioManager::TranslateAmbiance(EAmbiance enumerator) const {
 	switch (enumerator) {
-	case EAmbiance::Count:
-		return "";
+	case EAmbiance::Castle:
+		return "Castle";
+		break;
+	case EAmbiance::Cave1:
+		return "Cave1";
 	default:
 		return "";
 	}
 }
 std::string CAudioManager::TranslateSFX(ESFX enumerator) const {
 	switch (enumerator) {
-	case ESFX::Count:
-		return "";
+	case ESFX::EnemyPain:
+		return "EnemyPain";
 	default:
 		return "";
 	}

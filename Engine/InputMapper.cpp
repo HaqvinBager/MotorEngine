@@ -25,6 +25,7 @@ bool CInputMapper::Init()
 	MapEvent(IInputObserver::EInputAction::MouseLeftDown, IInputObserver::EInputEvent::MoveDown);
 	MapEvent(IInputObserver::EInputAction::MouseRight, IInputObserver::EInputEvent::AttackClick);
 	MapEvent(IInputObserver::EInputAction::MouseMiddle, IInputObserver::EInputEvent::MiddleMouseMove);
+	MapEvent(IInputObserver::EInputAction::KeyShift, IInputObserver::EInputEvent::StandStill);
 	MapEvent(IInputObserver::EInputAction::Key1, IInputObserver::EInputEvent::Ability1);
 	MapEvent(IInputObserver::EInputAction::Key2, IInputObserver::EInputEvent::Ability2);
 	MapEvent(IInputObserver::EInputAction::Key3, IInputObserver::EInputEvent::Ability3);

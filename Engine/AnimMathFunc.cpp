@@ -75,8 +75,9 @@ uint FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim)
 		}
 	}
 
-	assert(0);
-	return 0xFFFFFFFF;
+	return pNodeAnim->mNumScalingKeys - 2;
+	//assert(0);
+	//return 0xFFFFFFFF;
 }
 
 void CalcInterpolatedScaling(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
@@ -93,6 +94,10 @@ void CalcInterpolatedScaling(aiVector3D& Out, float AnimationTime, const aiNodeA
 	assert(NextScalingIndex < pNodeAnim->mNumScalingKeys);
 	float DeltaTime = static_cast<float>(pNodeAnim->mScalingKeys[NextScalingIndex].mTime - pNodeAnim->mScalingKeys[ScalingIndex].mTime);
 	float Factor = (AnimationTime - (float)pNodeAnim->mScalingKeys[ScalingIndex].mTime) / DeltaTime;
+	if (!(Factor >= 0.0f && Factor <= 1.0f))
+	{
+		Factor = 0.0f;
+	}
 	assert(Factor >= 0.0f && Factor <= 1.0f);
 	const aiVector3D& StartScaling = pNodeAnim->mScalingKeys[ScalingIndex].mValue;
 	const aiVector3D& EndScaling = pNodeAnim->mScalingKeys[NextScalingIndex].mValue;
@@ -111,8 +116,9 @@ uint FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim)
 		}
 	}
 
-	assert(0);
-	return 0xFFFFFFFF;
+	return pNodeAnim->mNumPositionKeys - 2;
+	//assert(0);
+	//return 0xFFFFFFFF;
 }
 
 void CalcInterpolatedPosition(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
@@ -129,6 +135,10 @@ void CalcInterpolatedPosition(aiVector3D& Out, float AnimationTime, const aiNode
 	assert(NextPositionIndex < pNodeAnim->mNumPositionKeys);
 	float DeltaTime = static_cast<float>(pNodeAnim->mPositionKeys[NextPositionIndex].mTime - pNodeAnim->mPositionKeys[PositionIndex].mTime);
 	float Factor = (AnimationTime - (float)pNodeAnim->mPositionKeys[PositionIndex].mTime) / DeltaTime;
+	if (!(Factor >= 0.0f && Factor <= 1.0f))
+	{
+		Factor = 0.0f;
+	}
 	assert(Factor >= 0.0f && Factor <= 1.0f);
 	const aiVector3D& StartPosition = pNodeAnim->mPositionKeys[PositionIndex].mValue;
 	const aiVector3D& EndPosition = pNodeAnim->mPositionKeys[NextPositionIndex].mValue;
