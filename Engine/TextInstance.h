@@ -1,5 +1,6 @@
 #pragma once
 #include "SimpleMath.h"
+#include "GameObject.h"
 
 class CText;
 class CScene;
