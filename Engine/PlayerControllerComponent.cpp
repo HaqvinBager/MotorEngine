@@ -29,6 +29,8 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent):
 
 CPlayerControllerComponent::~CPlayerControllerComponent()
 {
+	delete mySelection;
+	mySelection = nullptr;
 	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::MoveClick, this);
 	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::MoveDown, this);
 	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::AttackClick, this);

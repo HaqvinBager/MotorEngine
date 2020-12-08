@@ -22,6 +22,8 @@ public:
 	bool PlayerIsAlive();
 	void TakeDamage(float aDamageMultiplier, CGameObject* aGameObject);
 	void RegenerateMana();
+	CGameObject* FindSelectedEnemy(CScene aScene);
+
 private:
 	float myLastHP;
 	float myRegenerationSpeed;
