@@ -19,6 +19,7 @@ class CCameraComponent;
 struct SLineTime;
 struct SNavMesh;
 class CModel;
+class CEnemyBehavior;
 
 class CScene {
 	friend class CEngine;
@@ -85,6 +86,8 @@ public:
 
 	void SetShouldRenderLineInstance(const bool aShouldRender);
 
+	void TakeOwnershipOfAIBehavior(CEnemyBehavior* aBehavior);
+
 	const std::vector<CGameObject*>& GetActiveGameObjects() const { return myGameObjects; }
 
 	template <class T>
@@ -114,6 +117,7 @@ private:
 	std::unordered_map<ERenderOrder, std::vector<CSpriteInstance*>> mySpriteInstances;
 	std::vector<CGameObject*> myEnemies;
 	CGameObject* myPlayer;
+	CEnemyBehavior* myEnemyBehavior;
 
 	//CCollisionManager* myCollisionManager;
 

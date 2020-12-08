@@ -23,6 +23,7 @@
 #include "Model.h"
 #include "InstancedModelComponent.h"
 #include "TextInstance.h"
+#include "../Game/EnemyBehavior.h"
 
 //CScene* CScene::ourInstance = nullptr;
 
@@ -32,15 +33,15 @@
 //}
 
 CScene::CScene()
+	: myIsReadyToRender(false)
+	, myMainCamera(nullptr)
+	, myModelToOutline(nullptr)
+	, myEnvironmentLight(nullptr)
+	, myNavMesh(nullptr)
+	, myNavMeshGrid(nullptr)
+	, myEnemyBehavior(nullptr)
+	, myPlayer(nullptr)
 {
-	myIsReadyToRender = false;
-	//ourInstance = this;
-	myMainCamera = nullptr;
-	//myCollisionManager = new CCollisionManager();// ? i dont understand why / Aki
-	myModelToOutline = nullptr;
-	myEnvironmentLight = nullptr;
-	myNavMesh = nullptr;
-	myNavMeshGrid = nullptr;
 
 #ifdef _DEBUG
 	myShouldRenderLineInstance = true;
@@ -76,6 +77,15 @@ CScene::~CScene()
 	//this->DestroyLineInstances();// Taken care of in Canvas
 	//this->DestroyAnimatedUIElement();// Taken care of in Canvas
 	this->DestroyTextInstances();
+	
+	// This must be deleted after gameobjects have let go of their pointer to it
+	
+	if (myEnemyBehavior)
+	{
+		delete myEnemyBehavior;
+		myEnemyBehavior = nullptr;
+	}
+
 	// Even with this the memory still increases on every load!
 }
 
@@ -495,4 +505,9 @@ void CScene::SetShouldRenderLineInstance(const bool aShouldRender)
 #else
 	aShouldRender;
 #endif //  _DEBUG
+}
+
+void CScene::TakeOwnershipOfAIBehavior(CEnemyBehavior* aBehavior)
+{
+	myEnemyBehavior = aBehavior;
 }

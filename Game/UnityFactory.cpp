@@ -102,7 +102,8 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 	    aScene.AddInstance(CreateGameObject(eventdata, aData.myEventStringMap.at(eventdata.myInstanceID)));
 	}
 
-	CEnemyBehavior* enemyBehavior = new CEnemyBehavior(player);// Who deletes this?
+	CEnemyBehavior* enemyBehavior = new CEnemyBehavior(player); // Deleted by scene
+	aScene.TakeOwnershipOfAIBehavior(enemyBehavior);
 	for (const auto& enemyData : aData.myEnemyData) {
 		CGameObject* enemy = CreateGameObject(enemyData, aBinModelPaths[enemyData.myModelIndex], enemyBehavior, aScene);
 			aScene.AddInstance(enemy);
