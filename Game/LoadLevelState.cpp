@@ -44,7 +44,8 @@ void CLoadLevelState::Start()
 	int levelIndex = latestExportedLevelDoc["LevelIndex"].GetInt();
 
 	//Start Loading the ELevel::<Level> on a seperate thread.
-	myLoadLevelFuture = std::async(std::launch::async, &CLoadLevelState::Load, this, static_cast<ELevel>(levelIndex));
+	myLoadLevelFuture = std::async(std::launch::async, &CLoadLevelState::Load, this, static_cast<ELevel>(levelIndex)/*myLevelToLoad*/);
+
 	
 	for (auto& gameObject : CEngine::GetInstance()->GetActiveScene().GetActiveGameObjects())
 	{
