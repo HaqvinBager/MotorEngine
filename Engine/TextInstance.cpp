@@ -46,6 +46,14 @@ void CTextInstance::SetPosition(DirectX::SimpleMath::Vector2 aPosition)
     myPosition = aPosition * CEngine::GetInstance()->GetWindowHandler()->GetResolution();
 }
 
+void CTextInstance::SetGameObjectPosition(DirectX::SimpleMath::Vector2 aPosition)
+{
+    aPosition /= 2.0f;
+    aPosition.x += 0.5f;
+    aPosition.y += 0.5f;
+    myGameObjectPosition = aPosition * CEngine::GetInstance()->GetWindowHandler()->GetResolution();
+}
+
 void CTextInstance::SetColor(DirectX::SimpleMath::Vector4 aColor)
 {
     myColor = aColor;

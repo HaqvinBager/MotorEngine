@@ -45,8 +45,8 @@ void CTextRenderer::Render(std::vector<CTextInstance*>& aTextInstanceList)
         dimensions *= instance->GetPivot();
 
         dropShadowColor.w = instance->GetColor().w;
-        textData.mySpriteFont->DrawString(mySpriteBatch, instance->GetText().c_str(), instance->GetPosition() + dropShadowOffset - dimensions, dropShadowColor, 0.0f, { 0.0f, 0.0f }, instance->GetScale());
-        textData.mySpriteFont->DrawString(mySpriteBatch, instance->GetText().c_str(), instance->GetPosition() - dimensions, instance->GetColor(), 0.0f, { 0.0f, 0.0f }, instance->GetScale());
+        textData.mySpriteFont->DrawString(mySpriteBatch, instance->GetText().c_str(), (instance->GetPosition() + instance->GetGameObjectPosition()) + dropShadowOffset - dimensions, dropShadowColor, 0.0f, { 0.0f, 0.0f }, instance->GetScale());
+        textData.mySpriteFont->DrawString(mySpriteBatch, instance->GetText().c_str(), (instance->GetPosition() + instance->GetGameObjectPosition()) - dimensions, instance->GetColor(), 0.0f, { 0.0f, 0.0f }, instance->GetScale());
     }
     mySpriteBatch->End();
 }
