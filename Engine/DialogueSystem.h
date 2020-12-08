@@ -45,7 +45,7 @@ public:
 	void ExitDialogue();
 private:
 	void LoadDialogue(int aSceneIndex);
-	void LoadNarration(const char* aSceneName);
+	void LoadNarration();
 
 	void HandleInput();
 	void SetDialogueSpeed(float aSpeed, int aLineLength);
@@ -61,8 +61,8 @@ private:
 	CTextInstance* myCurrentSpeakerName;
 	std::vector<CTextInstance*> mySpeakerNames;
 
-	CTextInstance* myDialogueLine;
 	CTextInstance* myAnimatedDialogue;
+	CTextInstance* myAnimatedNarration;
 
 	std::vector<SSpeakerLine> myDialogueBuffer;
 	std::string myCurrentLine = "";
@@ -80,6 +80,7 @@ private:
 	float myHeldButtonTimer = 0.0f;
 	float myDialogueTimer = 0.0f;
 	float myDialogueSpeed = 0.05f;
+	float myDialogueSlowSpeed = 0.05f;
 	float myDialogueFastSpeed = 0.01f;
 };
 
