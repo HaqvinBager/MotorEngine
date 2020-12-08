@@ -5,6 +5,7 @@ class CButton;
 class CSpriteInstance;
 class CTextInstance;
 class CAnimatedUIElement;
+class CScene;
 
 class CCanvas : public IObserver
 {
@@ -13,8 +14,8 @@ public:
 	~CCanvas();
 
 public:
-	void Init(std::string aFilePath, bool addToScene = true);
-	void Update(/*float aDeltaTime*/);
+	void Init(std::string aFilePath, CScene& aScene, bool addToScene = true);
+	void Update();
 
 public:
 	void Receive(const SMessage& aMessage) override;

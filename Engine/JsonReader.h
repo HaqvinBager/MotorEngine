@@ -1,4 +1,5 @@
 #pragma once
+#include <fstream>
 #include "../Includes/rapidjson/document.h"
 #include "../Includes/rapidjson/istreamwrapper.h"
 

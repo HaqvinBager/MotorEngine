@@ -37,7 +37,7 @@ public:
 	// Listen to PostMaster
 	void Receive(const SMessage& aMessage);
 
-	
+	void Update();
 
 private:
 	void SubscribeToMessages();
@@ -57,7 +57,7 @@ private:
 	std::string TranslateVoiceLine(EVoiceLine enumerator) const;
 
 private:
-	std::string myAmbiancePath = "Audio/Ambiance/";
+	std::string myAmbiancePath = "Audio/Ambience/";
 	std::string myMusicPath = "Audio/Music/";
 	std::string mySFXPath = "Audio/SFX/";
 	std::string myUIPath = "Audio/UI/";

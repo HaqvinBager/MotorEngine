@@ -3,11 +3,12 @@
 #include "GameObject.h"
 
 class CText;
-
+class CScene;
 class CTextInstance
 {
 public:
-	CTextInstance(bool aAddToScene = true);
+	CTextInstance(CScene& aScene, bool aAddToScene = true);
+	CTextInstance();
 	~CTextInstance();
 
 	bool Init(CText* aText);
@@ -24,7 +25,6 @@ public:
 	DirectX::SimpleMath::Vector4 GetColor() { return myColor; }
 	DirectX::SimpleMath::Vector2 GetPivot() { return myPivot; }
 	DirectX::SimpleMath::Vector2 GetScale() { return myScale; }
-	CGameObject* myGameObject;
 
 private:
 	CText* myTextData;

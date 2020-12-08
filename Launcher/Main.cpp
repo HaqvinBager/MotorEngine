@@ -9,6 +9,43 @@
 #include "DL_Debug.h"
 
 #ifdef _DEBUG
+struct AllocationMetrics
+{
+	uint32_t myTotalAllocated = 0;
+	uint32_t myTotalFreed = 0;
+
+	uint32_t CurrentUsage() { return myTotalAllocated - myTotalFreed; }
+};
+
+static AllocationMetrics gOurAllocationMetrics;
+
+#include <iostream>
+void* operator new(size_t size)
+{
+	/*std::cout << "Allocating " << size << " bytes " << std::endl;*/
+	gOurAllocationMetrics.myTotalAllocated += static_cast<uint32_t>(size);
+	return malloc(size);
+}
+
+void operator delete(void* memory, size_t size)
+{
+	/*std::cout << "Freeing " << size << " bytes" << std::endl;*/
+	gOurAllocationMetrics.myTotalFreed += static_cast<uint32_t>(size);
+	free(memory);
+}
+
+
+#endif
+static void PrintMemoryUsage()
+{
+#ifdef _DEBUG
+	std::cout << "Our total allocated memory: " << gOurAllocationMetrics.myTotalAllocated / static_cast<UINT32>(1048576) << " mb" << std::endl;
+	std::cout << "Our current memory usage:   " << gOurAllocationMetrics.CurrentUsage() / static_cast<uint32_t>(1048576) << " mb" << std::endl;
+	std::cout << "Our total freed memory:     " << gOurAllocationMetrics.myTotalFreed / static_cast<UINT32>(1048576) << " mb" << std::endl;
+#endif
+}
+
+#ifdef _DEBUG
 #pragma comment(lib, "Game_Debug.lib")
 #pragma comment(lib, "dbghelp.lib")
 #define USE_DEBUG_LOG
@@ -18,7 +55,6 @@
 #pragma comment(lib, "Game_Release.lib")
 #pragma comment(lib, "dbghelp.lib")
 #endif // NDEBUG
-
 
 #ifdef _DEBUG
 #define USE_CONSOLE_COMMAND
@@ -136,6 +172,7 @@ void RunGame(LPWSTR lpCmdLine)
 		if (!shouldRun)
 			break;
 
+		//PrintMemoryUsage();
 		engine.BeginFrame();
 		shouldRun = game.Update();
 		engine.RenderFrame();

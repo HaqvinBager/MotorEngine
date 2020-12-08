@@ -19,6 +19,7 @@ class CCameraComponent;
 struct SLineTime;
 struct SNavMesh;
 class CModel;
+class CEnemyBehavior;
 
 class CScene {
 	friend class CEngine;
@@ -29,7 +30,7 @@ public:
 	CScene();
 	~CScene();
 
-	static CScene* GetInstance();
+	//static CScene* GetInstance();
 	bool Init();
 	bool InitNavMesh(std::string aPath);
 	void SetMainCamera(CCameraComponent* aCamera);
@@ -69,8 +70,14 @@ public:
 	bool RemoveInstance(CGameObject* aGameObject);
 	bool RemoveInstance(CPointLight* aPointLight);
 
-	bool ClearScene();
-	bool ClearSprites();
+	bool DestroyGameObjects();
+	bool DestroySprites();
+	bool DestroyPointLights();
+	bool DestroyParticles();
+	bool DestroyVFXInstances();
+	bool DestroyLineInstances();
+	bool DestroyAnimatedUIElement();
+	bool DestroyTextInstances();
 
 	void SetModelToOutline(CGameObject* aGameObject);
 
@@ -78,6 +85,8 @@ public:
 	void Ready(bool aReady) { myIsReadyToRender = aReady; }
 
 	void SetShouldRenderLineInstance(const bool aShouldRender);
+
+	void TakeOwnershipOfAIBehavior(CEnemyBehavior* aBehavior);
 
 	const std::vector<CGameObject*>& GetActiveGameObjects() const { return myGameObjects; }
 
@@ -96,7 +105,7 @@ private:
 	CCameraComponent* myMainCamera;
 	CEnvironmentLight* myEnvironmentLight;
 
-	//Ev Remove
+	//Ev Remove // Ev? / Aki
 	//std::vector<CCamera*> myCameras;
 	//std::vector<CEnvironmentLight*> myEnvironmentLights;
 	std::vector<CPointLight*> myPointLights;
@@ -108,15 +117,16 @@ private:
 	std::unordered_map<ERenderOrder, std::vector<CSpriteInstance*>> mySpriteInstances;
 	std::vector<CGameObject*> myEnemies;
 	CGameObject* myPlayer;
+	CEnemyBehavior* myEnemyBehavior;
 
-	CCollisionManager* myCollisionManager;
+	//CCollisionManager* myCollisionManager;
 
 	SNavMesh* myNavMesh;
 	CLineInstance* myNavMeshGrid;
 
 	bool myIsReadyToRender;
 
-	static CScene* ourInstance;
+	//static CScene* ourInstance;
 
 	CGameObject* myModelToOutline;
 

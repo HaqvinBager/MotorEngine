@@ -40,7 +40,7 @@ public:
 
 	void OnEnable() override;
 	void OnDisable() override;
-
+	bool AddDamage(float someHealth);
 	const SBaseStats& GetBaseStats() const;
 	SStats& GetStats();
 

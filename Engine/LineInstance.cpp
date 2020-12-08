@@ -15,8 +15,11 @@ CLineInstance::CLineInstance()
 }
 CLineInstance::~CLineInstance()
 {
-	delete myLine;
-	myLine = nullptr;
+	if (myLine != nullptr)
+	{
+		delete myLine;
+		myLine = nullptr;
+	}
 }
 CLineInstance& CLineInstance::Init(CLine* aLine )
 {

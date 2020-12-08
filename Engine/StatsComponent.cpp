@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "StatsComponent.h"
 #include "TokenPool.h"
+#include "Timer.h"
 
 CStatsComponent::CStatsComponent(CGameObject& aParent, float aHealth, float aDamage, float aMoveSpeed, float aDamageCooldown, float aVisionRange, float aAttackRange)
 	: CBehaviour(aParent)
@@ -25,6 +26,13 @@ void CStatsComponent::Start()
 
 void CStatsComponent::Update()
 {
+	if (!myStats.myCanTakeDamage) {
+		if (myStats.myDamageCooldown <= 0.0f) {
+			myStats.myCanTakeDamage = true;
+		} else {
+			myStats.myDamageCooldown -= CTimer::Dt();
+		}
+	}
 }
 
 void CStatsComponent::OnEnable()
@@ -33,6 +41,17 @@ void CStatsComponent::OnEnable()
 
 void CStatsComponent::OnDisable()
 {
+}
+
+bool CStatsComponent::AddDamage(float someDamage)
+{
+	if (myStats.myCanTakeDamage) {
+		myStats.myHealth -= someDamage;
+		myStats.myCanTakeDamage = false;
+		myStats.myDamageCooldown = myBaseStats.myBaseDamageCooldown;
+		return true;
+	}
+	return false;
 }
 
 const SBaseStats& CStatsComponent::GetBaseStats() const 

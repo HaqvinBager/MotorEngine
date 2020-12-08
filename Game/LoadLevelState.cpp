@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "LoadLevelState.h"
+
 #include "InGameState.h"
 #include "StateStack.h"
 #include "Scene.h"
@@ -12,43 +13,43 @@
 #include "CollisionEventComponent.h"
 
 using namespace rapidjson;
-CLoadLevelState::CLoadLevelState(CStateStack& aStateStack) : CState(aStateStack)
-{
-	SaveLevelNames();
-	myState = CStateStack::EStates::LoadLevel;
-	myActiveScene = CEngine::GetInstance()->ScenesSize();
-	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel, this);
-}
+CLoadLevelState::CLoadLevelState(CStateStack& aStateStack, const CStateStack::EState aState) 
+	: CState(aStateStack, aState)
+{}
 
 CLoadLevelState::~CLoadLevelState()
 {
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel, this);
-	CEngine::GetInstance()->PopBackScene();
 }
 
 void CLoadLevelState::Awake()
 {
-	myActiveScene = Load(ELevel::LoadScreen);
-	CEngine::GetInstance()->SetActiveScene(myActiveScene);
+	SaveLevelNames();	
+}
+
+void CLoadLevelState::Start()
+{
+	//myActiveScene = ;
+	CEngine::GetInstance()->SetActiveScene(Load(ELevel::LoadScreen));
 
 	Document latestExportedLevelDoc = CJsonReader::LoadDocument("Levels/DebugLevel.json");
 	int levelIndex = latestExportedLevelDoc["LevelIndex"].GetInt();
 
 	//Start Loading the ELevel::<Level> on a seperate thread.
 	myLoadLevelFuture = std::async(std::launch::async, &CLoadLevelState::Load, this, static_cast<ELevel>(levelIndex));
-
+	
 	for (auto& gameObject : CEngine::GetInstance()->GetActiveScene().GetActiveGameObjects())
 	{
 		gameObject->Awake();
 	}
-}
 
-void CLoadLevelState::Start()
-{
 	for (auto& gameObject : CEngine::GetInstance()->GetActiveScene().GetActiveGameObjects())
 	{
 		gameObject->Start();
 	}
+}
+
+void CLoadLevelState::Stop()
+{
 }
 
 void CLoadLevelState::Update()
@@ -58,20 +59,48 @@ void CLoadLevelState::Update()
 	{
 		//myLoadedLevelFuture returnType is the same as the CLoadLevelState::Load return type.
 		//The value it will get is the Scene index in which the SceneLoaded will use in CEngine::myScenes
-		myActiveScene = myLoadLevelFuture.get();
-		CEngine::GetInstance()->SetActiveScene(myActiveScene);
-		myStateStack.PushState(new CInGameState(myStateStack));
-		myStateStack.Awake();
-		myStateStack.Start();
+		//myActiveScene = ;
+		myLoadLevelFuture.get();
+		//CEngine::GetInstance()->SetActiveScene();
+		myStateStack.PopTopAndPush(CStateStack::EState::InGame);
+	}
+	else
+	{
+		for (auto& gameObject : CEngine::GetInstance()->GetActiveScene().GetActiveGameObjects())
+		{
+			gameObject->Update();
+		}
 	}
 
-	for (auto& gameObject : CEngine::GetInstance()->GetActiveScene().GetActiveGameObjects())
-	{
-		gameObject->Update();
-	}
 }
 
-unsigned int CLoadLevelState::Load(const ELevel aLevel)
+///
+///	Engine::AddScene(enum EState, CScene* scene)
+/// {
+///		if(sceneMap contains EState)
+///			delete sceneMap[EState]
+///			
+///		sceneMap[EState] = scene;
+/// 
+///	Engine::ClearScene(enum EState)
+/// {
+///		if(sceneMap containts EState)
+///			sceneMap[EState]->ClearScene();
+/// 
+/// Engine::SetActiveScene(int aEState)
+/// {
+///		EState state = static_cast<EState>(aEState)
+///		if(sceneMap containts EState)
+///			myActiveState = EState
+/// 
+/// CScene* Engine::GetActiveScene()
+/// {
+///		return sceneMap[myActiveState];
+/// 
+/// 
+/// Future: CScene => CState
+
+const CStateStack::EState CLoadLevelState::Load(const ELevel aLevel)
 {
 	if (mySceneReader.OpenBin(BinPath(aLevel)))
 	{
@@ -80,9 +109,11 @@ unsigned int CLoadLevelState::Load(const ELevel aLevel)
 		if (aLevel == ELevel::LoadScreen) //LoadScreen uses a different Type (Which kind of Data it will Load from Unity) 
 		{
 			SLoadScreenData& data = mySceneReader.ReadLoadScreenData();
-			CScene* loadScreenScene = new CScene();
+			CScene* loadScreenScene = new CScene();// myLoadScreenScene
 			myUnityFactory.FillScene(data, BinModelPaths(aLevel), *loadScreenScene);
-			return CEngine::GetInstance()->AddScene(loadScreenScene);
+		
+			std::cout << "Adding Loading Screen" << std::endl;
+			return CEngine::GetInstance()->AddScene(CStateStack::EState::LoadLevel, loadScreenScene);
 		}
 		else //All other Scenes are regarded as "InGame" scenes. And will have to contain at least a Camera, Directional Light & Player (player is currently "utkommenterad", Fix Monday)
 		{
@@ -94,10 +125,11 @@ unsigned int CLoadLevelState::Load(const ELevel aLevel)
 			inGameScene->InitNavMesh(navMeshPath);
 
 			myUnityFactory.FillScene(data, BinModelPaths(aLevel), *inGameScene);
-			return CEngine::GetInstance()->AddScene(inGameScene);
+			//std::cout << "Adding Loading Screen" << std::endl;
+			return CEngine::GetInstance()->AddScene(CStateStack::EState::InGame, inGameScene);
 		}
 	}
-	return 0;
+	return CStateStack::EState::NoState;
 }
 
 void CLoadLevelState::SaveLevelNames()
@@ -136,20 +168,4 @@ std::string& CLoadLevelState::BinPath(const ELevel aLevel)
 std::vector<std::string>& CLoadLevelState::BinModelPaths(const ELevel aLevel)
 {
 	return myBinModelPaths[aLevel];
-}
-
-void CLoadLevelState::MakeSceneActive() {
-	CEngine::GetInstance()->SetActiveScene(myActiveScene);
-
-}
-
-void CLoadLevelState::Receive(const SMessage& aMessage)
-{
-	switch (aMessage.myMessageType)
-	{
-	case EMessageType::LoadLevel:		
-		CCollisionEventComponent* eventComponent = reinterpret_cast<CCollisionEventComponent*>(aMessage.data);
-		std::cout << "Load Level Event Message: " << eventComponent->GetEventMessage() << std::endl;
-		break;
-	}
 }

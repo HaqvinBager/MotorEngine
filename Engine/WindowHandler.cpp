@@ -34,6 +34,8 @@ CWindowHandler::CWindowHandler()
 CWindowHandler::~CWindowHandler()
 {
     myWindowHandle = 0;
+    delete myResolution;
+    myResolution = nullptr;
     UnregisterClass(L"3DEngine", GetModuleHandle(nullptr));
 }
 
@@ -90,7 +92,7 @@ const HWND CWindowHandler::GetWindowHandle() const
 }
 
 UINT CWindowHandler::GetWidth() const {
-    LPRECT rect = new RECT{ 0, 0, 0, 0 };
+    LPRECT rect = new RECT{ 0, 0, 0, 0 };// does this need to be newed?
     if (GetClientRect(myWindowHandle, rect) != 0) {
         return rect->right;
     }
@@ -99,7 +101,7 @@ UINT CWindowHandler::GetWidth() const {
 }
 
 UINT CWindowHandler::GetHeight() const {
-    LPRECT rect = new RECT{ 0, 0, 0, 0 };
+    LPRECT rect = new RECT{ 0, 0, 0, 0 };// does this need to be newed?
     if (GetClientRect(myWindowHandle, rect) != 0) {
         return rect->bottom;
     }

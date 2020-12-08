@@ -1,7 +1,7 @@
 #pragma once
 
 class CSpriteInstance;
-
+class CScene;
 struct SAnimatedSpriteData
 {
 	ID3D11PixelShader* myPixelShader = nullptr;
@@ -34,7 +34,7 @@ class CAnimatedUIElement
 public:
 
 public:
-	CAnimatedUIElement(std::string aFilePath, bool addToScene = true);
+	CAnimatedUIElement(std::string aFilePath, CScene& aScene, bool addToScene = true);
 	~CAnimatedUIElement();
 
 	void Level(float aLevel);

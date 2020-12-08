@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "MenuState.h"
+
 #include "SpriteInstance.h"
 #include "SpriteFactory.h"
 #include "Scene.h"
@@ -17,11 +18,24 @@
 #include "PostMaster.h"
 #include "MainSingleton.h"
 
-CMenuState::CMenuState(CStateStack& aStateStack) :
-	CState(aStateStack)
+CMenuState::CMenuState(CStateStack& aStateStack, const CStateStack::EState aState) 
+	: CState(aStateStack, aState)
+	, myCanvas(nullptr)
+	, myScene(nullptr)
+{}
+
+CMenuState::~CMenuState() 
+{
+	delete myScene;
+	myScene = nullptr;
+
+	delete myCanvas;
+	myCanvas = nullptr;
+}
+
+void CMenuState::Awake() 
 {
 	myScene = new CScene();
-	CEngine::GetInstance()->AddScene(myScene);
 
 	CGameObject* camera = new CGameObject();
 	camera->AddComponent<CCameraComponent>(*camera, 70.0f);
@@ -37,27 +51,25 @@ CMenuState::CMenuState(CStateStack& aStateStack) :
 	myScene->SetEnvironmentLight(envLight->GetComponent<CEnviromentLightComponent>()->GetEnviromentLight());
 
 	myCanvas = new CCanvas();
-	myCanvas->Init("Json/UI_MainMenu_Description.json");
+	myCanvas->Init("Json/UI_MainMenu_Description.json", *myScene);
 
 	for (auto buttons : myCanvas->GetButtons())
 	{
 		for (auto messageType : buttons->GetMessagesToSend())
-		CMainSingleton::PostMaster().Subscribe(messageType, this);
+			CMainSingleton::PostMaster().Subscribe(messageType, this);
 	}
 
-	myState = CStateStack::EStates::MainMenu;
-	myActiveScene = CEngine::GetInstance()->ScenesSize();
+	CEngine::GetInstance()->AddScene(myState, myScene);
 }
 
-CMenuState::~CMenuState() {
-	CEngine::GetInstance()->PopBackScene();
-
+void CMenuState::Start() 
+{
+	CEngine::GetInstance()->SetActiveScene(myState);
 }
 
-void CMenuState::Awake() {
-}
+void CMenuState::Stop()
+{
 
-void CMenuState::Start() {
 }
 
 void CMenuState::Update() {
@@ -69,9 +81,7 @@ void CMenuState::Receive(const SMessage &aMessage) {
 		switch (aMessage.myMessageType) {
 		case EMessageType::StartGame:
 		{
-			myStateStack.PushState(new CLoadLevelState(myStateStack));
-			myStateStack.Awake();
-			myStateStack.Start();
+			myStateStack.PushState(CStateStack::EState::LoadLevel);
 		} break;
 		case EMessageType::Quit:
 		{
@@ -79,8 +89,4 @@ void CMenuState::Receive(const SMessage &aMessage) {
 		} break;
 		}
 	}
-}
-
-void CMenuState::MakeSceneActive() {
-	CEngine::GetInstance()->SetActiveScene(myActiveScene);
 }

@@ -7,12 +7,24 @@
 #include "AnimationComponent.h"
 #include "MainSingleton.h"
 #include "TransformComponent.h"
+#include "PopupTextService.h"
+#include "MouseSelection.h"
+#include <DamageUtility.h>
+#include <AbilityBehaviorComponent.h>
+#include <AbilityBehavior.h>
+#include "CircleColliderComponent.h"
+#include "TriangleColliderComponent.h"
+#include "TransformComponent.h"
 
 CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent):
 	CBehaviour(aParent),
 	myLastHP(0.0f),
-	myRegenerationSpeed(5.0f) //TODO: read from unity
+	myRegenerationSpeed(5.0f), //TODO: read from unity
+	mySelection(new CMouseSelection()),
+	myIsMoving(false),
+	myTargetEnemy(nullptr)
 {
+	myLastPosition = {0.0f,0.0f,0.0f};
 }
 
 CPlayerControllerComponent::~CPlayerControllerComponent()
@@ -36,6 +48,26 @@ void CPlayerControllerComponent::Update()
 {
 	this->GameObject().myTransform->MoveAlongPath();
 
+	if(myTargetEnemy){
+		if(myTargetEnemy->GetComponent<CStatsComponent>()->GetStats().myHealth > 0){
+			if (myIsMoving) {
+				float abilityLength = GameObject().GetComponent<CAbilityComponent>()->MeleeAttackRange();
+				if (DirectX::SimpleMath::Vector3::Distance(myTargetEnemy->myTransform->Position(), GameObject().myTransform->Position())
+					< (myTargetEnemy->GetComponent<CCircleColliderComponent>()->GetRadius() + abilityLength)) {
+					this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::AttackLight);
+					GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position());
+				}
+			}
+		}
+	}
+
+	if (myLastPosition != GameObject().myTransform->Position()) {
+		myIsMoving = true;
+		myLastPosition = GameObject().myTransform->Position();
+	} else {
+		myIsMoving = false;
+	}
+
 	if (!PlayerIsAlive()) {
 		ResetPlayer();
 	} else {
@@ -52,23 +84,15 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 	switch (aEvent)
 	{
 	case IInputObserver::EInputEvent::MoveClick:
-		this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
-		// TEMP, Ok to remove
-		if (this->GameObject().GetComponent<CAnimationComponent>() != nullptr)
-			this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::Run);
-		// ! TEMP
+		if(this->GameObject().GetComponent<CNavMeshComponent>() != nullptr)// Temp, ok to remove. Used for testing barebones scene
+			this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
 		break;
 	case IInputObserver::EInputEvent::MoveDown:
 		this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
-		// TEMP, Ok to remove
-		if (this->GameObject().GetComponent<CAnimationComponent>() != nullptr)
-			this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::Run);
-		// ! TEMP
+		myTargetEnemy = mySelection->FindSelectedEnemy();
 		break;
 	case IInputObserver::EInputEvent::AttackClick:
-		//this->GameObject().GetComponent<CAnimationComponent>()->DeadState();// for testing
 		this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::AttackLight);
-
 		break;
 
 	default:
@@ -105,6 +129,22 @@ bool CPlayerControllerComponent::PlayerIsAlive()
 	}
 
 	return myLastHP > 0.0f;
+}
+
+void CPlayerControllerComponent::TakeDamage(float aDamageMultiplier, CGameObject* aGameObject)
+{
+	SStats& stats = GameObject().GetComponent<CStatsComponent>()->GetStats();
+
+	EHitType hitType = EHitType::Normal;
+	float damage = CDamageUtility::CalculateDamage(hitType, aGameObject->GetComponent<CStatsComponent>()->GetBaseStats().myDamage, aDamageMultiplier, 0.0f, 0.0f);
+
+	if (GameObject().GetComponent<CStatsComponent>()->AddDamage(damage)) {
+		SDamagePopupData data = {damage, static_cast<int>(hitType)};
+		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &data);
+		std::cout << __FUNCTION__ << " Player current health: " << stats.myHealth << std::endl;/*
+		CMainSingleton::PostMaster().Send({EMessageType::PlayerHealthChanged, &stats.myHealth});*/
+	}
+	//stats.myCanTakeDamage = false;
 }
 
 
