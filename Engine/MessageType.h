@@ -35,5 +35,7 @@ enum class EMessageType
 	PlayAmbienceSwamp1,
 	PlayAmbienceSwamp2,
 	PlayerExperienceChanged,
+	PlayVoiceLine,
+	StopDialogue,
 	Count
 };

@@ -161,14 +161,17 @@ void CDialogueSystem::LoadNarration()
 }
 
 void CDialogueSystem::ExitDialogue() {
+	CMainSingleton::PostMaster().Send({ EMessageType::StopDialogue, NULL });
+	
 	myIsActive = false;
 	myCurrentDialogueIndex = 0;
 	myLastSpeakerIndex = -1;
+	myLastDialogueIndex = -1;
 	myHeldButtonTimer = 0.0f;
 	myDialogueTimer = 0.0f;
 	myLineBreakCounter = 0;
 
-	myAnimatedDialogue;
+	myAnimatedDialogue->SetText("");
 	myCurrentSpeakerName = nullptr;
 	myCurrentSpeakerPortrait = nullptr;
 
@@ -180,9 +183,9 @@ void CDialogueSystem::ExitDialogue() {
 }
 
 void CDialogueSystem::Update() {
-	if (!myEnabled) {
-		return;
-	}
+	//if (!myEnabled) {
+	//	return;
+	//}
 	
 	if (!myIsActive) {
 		return;
@@ -198,13 +201,14 @@ void CDialogueSystem::Update() {
 	}
 
 	HandleInput();
-
-	if (myCurrentDialogueIndex != myLastDialogueIndex)
+	
+	if (myIsActive && (myCurrentDialogueIndex != myLastDialogueIndex))
 	{
+		CMainSingleton::PostMaster().Send({ EMessageType::PlayVoiceLine, &myDialogueBuffer[myCurrentDialogueIndex].myVoiceLine });
 		ProcessLineBreaks();
 	}
 
-	if (myCurrentDialogueIndex < myDialogueBuffer.size()) {
+	if (myIsActive && (myCurrentDialogueIndex < myDialogueBuffer.size())) {
 
 		myDialogueTimer += CTimer::Dt();
 		int length = static_cast<int>(myDialogueBuffer[myCurrentDialogueIndex].myText.length());

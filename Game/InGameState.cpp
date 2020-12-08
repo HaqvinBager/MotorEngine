@@ -152,10 +152,6 @@ void CInGameState::Start()
 	{
 		gameObject->Start();
 	}
-
-	//int aSceneIndex = 2;
-	//CMainSingleton::PostMaster().Send({EMessageType::LoadDialogue, &aSceneIndex});
-	//CMainSingleton::PostMaster().Send({EMessageType::IntroStarted, nullptr});
 }
 
 void CInGameState::Stop()
@@ -222,6 +218,29 @@ void CInGameState::Update()
 	static std::string text3 = "Skill 3";
 	if (Input::GetInstance()->IsKeyPressed('L')) {
 		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text3);
+	}
+
+	if (Input::GetInstance()->IsKeyPressed('7'))
+	{
+		int aSceneIndex = 0;
+		CMainSingleton::PostMaster().Send({ EMessageType::LoadDialogue, &aSceneIndex });
+	}
+
+	if (Input::GetInstance()->IsKeyPressed('8'))
+	{
+		int aSceneIndex = 1;
+		CMainSingleton::PostMaster().Send({ EMessageType::LoadDialogue, &aSceneIndex });
+	}
+
+	if (Input::GetInstance()->IsKeyPressed('9'))
+	{
+		int aSceneIndex = 2;
+		CMainSingleton::PostMaster().Send({ EMessageType::LoadDialogue, &aSceneIndex });
+	}
+
+	if (Input::GetInstance()->IsKeyPressed('0'))
+	{
+		CMainSingleton::PostMaster().Send({ EMessageType::IntroStarted, NULL });
 	}
 
 	if (myExitLevel)

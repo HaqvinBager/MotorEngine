@@ -104,7 +104,7 @@ CAudioManager::CAudioManager() : myWrapper() {
 
 	//CMainSingleton::PostMaster().Send({ EMessageType::EnemyHealthChanged, NULL });
 
-	CMainSingleton::PostMaster().Send({ EMessageType::PlayAmbienceCave1, NULL });
+	//CMainSingleton::PostMaster().Send({ EMessageType::PlayAmbienceCave1, NULL });
 
 
 }
@@ -156,33 +156,50 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		break;
 	case EMessageType::PlayAmbienceCastle:
 	{
-		myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
+		//myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
 	}
 		break;
 	case EMessageType::PlayAmbienceCave1:
 	{
-		myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Cave1)], myChannels[CAST(EChannels::Ambiance)]);
+		//myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Cave1)], myChannels[CAST(EChannels::Ambiance)]);
 	}
 		break;
 
 	case EMessageType::PlayAmbienceDungeon:
 	{
-		myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
+		//myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
 	}
 		break;
 
 	case EMessageType::PlayAmbienceSwamp1:
 	{
-		myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
+		//myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
 	}
 		break;
 	
 	case EMessageType::EnemyHealthChanged:
 	{
-		myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyPain)], myChannels[CAST(EChannels::SFX)]);
+		//myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyPain)], myChannels[CAST(EChannels::SFX)]);
 	}
-	break;
+		break;
 
+	case EMessageType::PlayVoiceLine:
+	{
+		if (!myVoicelineAudio.empty()) {
+			int index = *static_cast<int*>(aMessage.data);
+			myChannels[CAST(EChannels::VOX)]->Stop();
+			myWrapper.Play(myVoicelineAudio[index], myChannels[CAST(EChannels::VOX)]);
+		}
+	}
+		break;
+
+	case EMessageType::StopDialogue:
+	{
+		if (!myVoicelineAudio.empty()) {
+			myChannels[CAST(EChannels::VOX)]->Stop();
+		}
+	}
+		break;
 
 	default:
 		break;
@@ -204,11 +221,16 @@ void CAudioManager::SubscribeToMessages()
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyHealthChanged, this);
 
+	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayVoiceLine, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::StopDialogue, this);
+
 }
 
 void CAudioManager::UnsubscribeToMessages()
 {
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::MainMenu, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayVoiceLine, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::StopDialogue, this);
 }
 
 std::string CAudioManager::GetPath(EMusic type) const
