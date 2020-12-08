@@ -118,12 +118,6 @@ SInGameData& CSceneReader::ReadInGameData()
 		myInGameData.back()->myGameObjects.emplace_back(gameObjectData);
 	}
 
-
-	/*int mySceneIndex = 0;
-	myStreamPtr += Read(mySceneIndex);
-	myInGameData.back()->mySceneIndex = mySceneIndex;*/
-
-
 	int myEnvironmentFXCount = 0;
 	myStreamPtr += Read(myEnvironmentFXCount);
 	for (int i = 0; i < myEnvironmentFXCount; ++i)
@@ -137,6 +131,27 @@ SInGameData& CSceneReader::ReadInGameData()
 		myInGameData.back()->myEnvironmentFXs.emplace_back(data);
 		myInGameData.back()->myEnvironmentFXStringMap[data.myInstanceID] = std::string(jsonName);
 	}
+
+	int myParticleFXCount = 0;
+	myStreamPtr += Read(myParticleFXCount);
+	for (int i = 0; i < myParticleFXCount; ++i)
+	{
+		SParticleFXData data = {};
+		myStreamPtr += Read(data);
+
+		myInGameData.back()->myParticleFXs.emplace_back(data);
+
+		int myJsonNameCount = 0;
+		myStreamPtr += Read(myJsonNameCount);
+
+		for (int j = 0; j < myJsonNameCount; ++j)
+		{	
+			std::string jsonName = "";
+			jsonName = ReadStringAuto();
+			myInGameData.back()->myParticleFXStringMap[data.myInstanceID].emplace_back(std::string(jsonName));
+		}
+	}
+
 
 	myStream.close();
 	myStreamPtr = nullptr;

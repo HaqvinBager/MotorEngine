@@ -19,7 +19,7 @@ void CColliderPushManager::EnemiesPushOutEnemies()
 	std::vector<CGameObject*> enemies = CEngine::GetInstance()->GetActiveScene().GetEnemies();
 	for (int i = 0; i < enemies.size(); ++i) {
 		for (int y = i + 1; y < enemies.size(); ++y) {
-			if (enemies[i]->GetComponent<CCircleColliderComponent>()->Collided(enemies[y]->GetComponent<CCircleColliderComponent>())) {
+			if (enemies[i]->GetComponent<CCircleColliderComponent>()->Collided(enemies[y]->GetComponent<CCircleColliderComponent>()) && enemies[i]->GetComponent<CCircleColliderComponent>()->Enabled() && enemies[y]->GetComponent<CCircleColliderComponent>()->Enabled()) {
 				Vector3 penLength = enemies[i]->myTransform->Position() - enemies[y]->myTransform->Position();
 				float len = penLength.Length();
 
@@ -43,7 +43,7 @@ void CColliderPushManager::PlayerPushOutEnemies()
 	std::vector<CGameObject*> enemies = CEngine::GetInstance()->GetActiveScene().GetEnemies();
 	CGameObject* player = CEngine::GetInstance()->GetActiveScene().GetPlayer();
 	for (int i = 0; i < enemies.size(); ++i) {
-		if (enemies[i]->GetComponent<CCircleColliderComponent>()->Collided(player->GetComponent<CCircleColliderComponent>())) {
+		if (enemies[i]->GetComponent<CCircleColliderComponent>()->Collided(player->GetComponent<CCircleColliderComponent>()) && enemies[i]->GetComponent<CCircleColliderComponent>()->Enabled()) {
 			Vector3 penLength = enemies[i]->myTransform->Position() - player->myTransform->Position();
 			float len = penLength.Length();
 

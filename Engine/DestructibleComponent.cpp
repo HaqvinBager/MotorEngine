@@ -3,26 +3,26 @@
 
 #include "AnimationComponent.h"
 
-DestructibleComponent::DestructibleComponent(CGameObject& aParent)
+CDestructibleComponent::CDestructibleComponent(CGameObject& aParent)
 	: CBehaviour(aParent)
 {}
 
-void DestructibleComponent::Awake()
+void CDestructibleComponent::Awake()
 {}
 
-void DestructibleComponent::Start()
+void CDestructibleComponent::Start()
 {}
 
-void DestructibleComponent::Update()
+void CDestructibleComponent::Update()
 {}
 
-void DestructibleComponent::Collided(CGameObject* /*aCollidedGameObject*/)
+void CDestructibleComponent::Collided(CGameObject* /*aCollidedGameObject*/)
 {
 	GameObject().GetComponent<CAnimationComponent>()->DeadState();
 }
 
-void DestructibleComponent::OnEnable()
+void CDestructibleComponent::OnEnable()
 {}
 
-void DestructibleComponent::OnDisable()
+void CDestructibleComponent::OnDisable()
 {}
