@@ -417,6 +417,7 @@
     <ClInclude Include="TokenPool.h" />
     <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="TriangleColliderComponent.h" />
+    <ClInclude Include="Utility.h" />
     <ClInclude Include="VFXBase.h" />
     <ClInclude Include="VFXComponent.h" />
     <ClInclude Include="VFXFactory.h" />

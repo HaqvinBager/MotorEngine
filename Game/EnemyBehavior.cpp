@@ -61,7 +61,7 @@ void CEnemyBehavior::Update(CGameObject* aParent)
 void CEnemyBehavior::Collided(CGameObject* /*aParent*/, CGameObject* /*aCollidedWithGameObject*/)
 {
 //	CCollider* collider = reinterpret_cast<CCollider*>(aCollidedWithGameObject->GetComponent<CTriangleColliderComponent>());
-//	if (!collider) 
+//	if (!collider)
 //	{
 //			collider = reinterpret_cast<CCollider*>(aCollidedWithGameObject->GetComponent<CCircleColliderComponent>());
 //		if (!collider)
@@ -151,7 +151,7 @@ void CEnemyBehavior::TakeDamage(float aDamageMultiplier, CGameObject* aGameObjec
 	float damage = CDamageUtility::CalculateDamage(hitType, myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myDamage, aDamageMultiplier, 0.25f, 1.5f);
 
 	if (myCurrentParent->GetComponent<CStatsComponent>()->AddDamage(damage)) {
-		SDamagePopupData data = {damage, static_cast<int>(hitType)};
+		SDamagePopupData data = {damage, static_cast<int>(hitType), myCurrentParent};
 		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &data);
 		std::cout << __FUNCTION__ << " Enemy current health: " << stats.myHealth << std::endl;
 		float baseHealth = myCurrentParent->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;

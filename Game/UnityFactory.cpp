@@ -160,12 +160,12 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 		}
 	}
 
-	SGameObjectData goData = {};
-	goData.myPosition = aData.myPlayerData.myPosition;
-	goData.myPosition.x += 3.0f;
-	goData.myRotation = aData.myPlayerData.myRotation;
-	CGameObject* crate = CreateDestructibleGameObject(goData, "Assets\\3D\\Environment\\EN_P_L1Crate_01_19G4_01_19\\EN_P_L1Crate_01_19G4_01_19_DX_SK.fbx");
-	aScene.AddInstance(crate);
+	//SGameObjectData goData = {};
+	//goData.myPosition = aData.myPlayerData.myPosition;
+	//goData.myPosition.x += 3.0f;
+	//goData.myRotation = aData.myPlayerData.myRotation;
+	//CGameObject* crate = CreateDestructibleGameObject(goData, "Assets\\3D\\Environment\\EN_P_L1Crate_01_19G4_01_19\\EN_P_L1Crate_01_19G4_01_19_DX_SK.fbx");
+	//aScene.AddInstance(crate);
 
 	for (auto& environmentFX : aData.myEnvironmentFXs)
 	{

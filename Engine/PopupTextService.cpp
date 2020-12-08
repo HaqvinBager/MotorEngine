@@ -10,6 +10,12 @@
 #include "JsonReader.h"
 #include <algorithm>
 
+#include "GameObject.h"
+#include "TransformComponent.h"
+#include "Scene.h"
+#include "Engine.h"
+#include "Utility.h"
+
 using namespace rapidjson;
 
 bool CPopupTextService::Init()
@@ -196,6 +202,7 @@ void CPopupTextService::SpawnDamageNumber(void* someData)
 
 	float damage = 0.0f;
 	int hitType = 0;
+	DirectX::SimpleMath::Vector3 worldPos;
 	std::string text = "";
 
 	int directionPicker = 0;
@@ -206,6 +213,9 @@ void CPopupTextService::SpawnDamageNumber(void* someData)
 	damage = data.myDamage;
 	text = std::to_string(damage);
 	text = text.substr(0, text.find_first_of("."));
+	worldPos = data.myGameObject->myTransform->Position();
+	myActiveGameObject[text] = data.myGameObject;
+
 
 	myActiveDamageNumbers.emplace_back(myTextPool.front());
 	myTextPool.pop();
@@ -213,8 +223,10 @@ void CPopupTextService::SpawnDamageNumber(void* someData)
 	myDamageAnimationData.emplace_back(myAnimatedDataPool.front());
 	myAnimatedDataPool.pop();
 
+	DirectX::SimpleMath::Vector2 screen = CUtility::WorldToScreen(worldPos);
+
 	myActiveDamageNumbers.back()->SetPivot({ 0.5f, 0.5f });
-	myActiveDamageNumbers.back()->SetPosition({ 0.0f, 0.0f });
+	myActiveDamageNumbers.back()->SetPosition({ screen.x, screen.y });
 	myActiveDamageNumbers.back()->SetText(text);
 
 	hitType = data.myHitType;
@@ -352,12 +364,8 @@ void CPopupTextService::UpdateResources()
 			indicesOfTextsToRemove.push_back(i);
 		}
 
-		auto newPos = text->GetPosition();
-		newPos.x /= CEngine::GetInstance()->GetWindowHandler()->GetResolution().x;
-		newPos.y /= CEngine::GetInstance()->GetWindowHandler()->GetResolution().y;
-		newPos.x -= 0.5f;
-		newPos.y -= 0.5f;
-		newPos *= 2.0f;
+		DirectX::SimpleMath::Vector3 worldPos = myActiveGameObject[text->GetText()]->myTransform->Position();
+		DirectX::SimpleMath::Vector2 screen = CUtility::WorldToScreen(worldPos);
 
 		quotient = animationData->myTimer / animationData->myLifespan;
 		animationData->mySpeed = DirectX::SimpleMath::Vector2::Lerp(animationData->myStartSpeed, { 0.0f, 1.0f }, quotient);
@@ -365,8 +373,8 @@ void CPopupTextService::UpdateResources()
 		text->SetScale(DirectX::SimpleMath::Vector2::Lerp(animationData->myMinScale, animationData->myMaxScale, DamageSizeCurve(quotient)));
 		text->SetColor(DirectX::SimpleMath::Vector4::Lerp(animationData->myStartColor, animationData->myEndColor, quotient));
 
-		newPos += animationData->mySpeed * CTimer::Dt();
-		text->SetPosition(newPos);
+		screen += animationData->mySpeed * CTimer::Dt();
+		text->SetPosition(screen);
 	}
 
 	std::sort(indicesOfTextsToRemove.begin(), indicesOfTextsToRemove.end(), [](UINT a, UINT b) { return a > b; });
