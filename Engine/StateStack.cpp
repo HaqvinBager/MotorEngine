@@ -105,9 +105,6 @@ void CStateStack::Awake()
 
 bool CStateStack::Update()
 {
-	if (myStateStack.size() <= 0)
-		return false;
-
 	myStateStack.top()->Update();
-	return true;
+	return myStateStack.size() > 0;
 }

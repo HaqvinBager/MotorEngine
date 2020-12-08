@@ -37,7 +37,7 @@
 
 CEngine* CEngine::ourInstance = nullptr;
 
-CEngine::CEngine()
+CEngine::CEngine() : myRenderSceneActive(true)
 {
 	ourInstance = this;
 
@@ -167,7 +167,8 @@ float CEngine::BeginFrame()
 
 void CEngine::RenderFrame()
 {
-	myRenderManager->Render(*mySceneMap[myActiveState]);
+	if(myRenderSceneActive)
+		myRenderManager->Render(*mySceneMap[myActiveState]);
 }
 
 void CEngine::EndFrame()

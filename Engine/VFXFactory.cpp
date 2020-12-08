@@ -167,6 +167,14 @@ CVFXFactory::CVFXFactory() {
 CVFXFactory::~CVFXFactory() {
 	ourInstance = nullptr;
     myFramework = nullptr;
+
+    auto vfxIt = myVFXBaseMap.begin();
+    while (vfxIt != myVFXBaseMap.end())
+    {
+        delete vfxIt->second;
+        vfxIt->second = nullptr;
+        ++vfxIt;
+    }
 }
 
 ID3D11ShaderResourceView* CVFXFactory::GetShaderResourceView(ID3D11Device* aDevice, std::string aTexturePath) {
