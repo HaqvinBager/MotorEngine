@@ -246,8 +246,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SPlayerData& aData, const std
     abs.emplace_back(ab5);
     gameObject->AddComponent<CAbilityComponent>(*gameObject, abs);
 
-    AddAnimationsToGameObject(*gameObject, aModelPath);
-	gameObject->GetComponent<CAnimationComponent>()->SetStateIDs(EPlayerAnimationID::Idle, EPlayerAnimationID::Run, EPlayerAnimationID::Dead);
+    AddAnimationsToGameObject(*gameObject, aModelPath, EAnimatedObject::Player);
 
     return gameObject;
 }
@@ -268,8 +267,8 @@ CGameObject* CUnityFactory::CreateGameObject(const SEnemyData& aData, const std:
 	abs.emplace_back(ab1);
 	gameObject->AddComponent<CAbilityComponent>(*gameObject, abs);
 
-	AddAnimationsToGameObject(*gameObject, aModelPath);
-	gameObject->GetComponent<CAnimationComponent>()->SetStateIDs(EEnemyAnimationID::Idle, EEnemyAnimationID::Walk, EEnemyAnimationID::Dead);
+	AddAnimationsToGameObject(*gameObject, aModelPath, EAnimatedObject::Enemy);
+
 	gameObject->AddComponent<CHealthBarComponent>(*gameObject, aScene, "Json/UI_InGame_Enemy_HealthBar.json");
 
 	return gameObject;
@@ -296,10 +295,9 @@ CGameObject* CUnityFactory::CreateDestructibleGameObject(const SGameObjectData& 
 	gameObject->myTransform->Rotation(aData.myRotation);
 	gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
 	gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 0.8f, ECollisionLayer::ALL, static_cast<uint64_t>(ECollisionLayer::PLAYER));
-	gameObject->AddComponent<DestructibleComponent>(*gameObject);
+	gameObject->AddComponent<CDestructibleComponent>(*gameObject);
 
-	AddAnimationsToGameObject(*gameObject, aModelPath);
-	//gameObject->GetComponent<CAnimationComponent>()->SetStateIDs(ECrateAnimationID::Idle, ECrateAnimationID::Walk, ECrateAnimationID::Dead);
+	AddAnimationsToGameObject(*gameObject, aModelPath, EAnimatedObject::Destructible);
 
 	return gameObject;
 }

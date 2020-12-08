@@ -52,6 +52,7 @@ CInGameState::CInGameState(CStateStack& aStateStack, const CStateStack::EState a
 	: CState(aStateStack, aState) 
 	, myCanvas(nullptr)
 	, myTokenPool(nullptr)
+	, myColliderPusher(nullptr)
 {}
 
 CInGameState::~CInGameState()

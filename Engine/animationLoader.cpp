@@ -4,7 +4,11 @@
 #include "GameObject.h"
 #include "AnimationComponent.h"
 
-bool AddAnimationsToGameObject(CGameObject& aGameObject, const std::string& aGameObjectFilePath)
+#include <fstream>
+#include "rapidjson\document.h"
+#include "rapidjson\istreamwrapper.h"
+
+bool AddAnimationsToGameObject(CGameObject& aGameObject, const std::string& aGameObjectFilePath, const EAnimatedObject anAnimatedObject)
 {
 	using namespace AnimationLoaderInternal;
 
@@ -12,9 +16,86 @@ bool AddAnimationsToGameObject(CGameObject& aGameObject, const std::string& aGam
 	{
 		std::vector<std::string> animationPaths = Get_ANFiles(aGameObjectFilePath);
 		aGameObject.AddComponent<CAnimationComponent>(aGameObject, aGameObjectFilePath, animationPaths);
+		SetAnimations(aGameObject, anAnimatedObject);
 		return true;
 	}
 	return false;
+}
+
+void SetAnimations(CGameObject& aGameObject, const EAnimatedObject anAnimatedObject)
+{
+	using namespace rapidjson;
+
+	std::ifstream inputStream;
+	switch (anAnimatedObject)
+	{
+		case EAnimatedObject::Player:
+			inputStream.open("Json/Animations_Player.json");
+			ENGINE_BOOL_POPUP(inputStream.good(), "Looking for Json/Animations_Player.json. Could not be found.");
+		break;
+		
+		case EAnimatedObject::Enemy:
+			inputStream.open("Json/Animations_Enemy.json");
+			ENGINE_BOOL_POPUP(inputStream.good(), "Looking for Json/Animations_Enemy.json. Could not be found.");
+		break;
+
+		case EAnimatedObject::Boss:
+			inputStream.open("Json/Animations_Boss.json");
+			ENGINE_BOOL_POPUP(inputStream.good(), "Looking for Json/Animations_Boss.json. Could not be found.");
+		break;
+
+		case EAnimatedObject::Destructible:
+			inputStream.open("Json/Animations_Destructible.json");
+			ENGINE_BOOL_POPUP(inputStream.good(), "Looking forJson/Animations_Destructible.json. Could not be found.");
+		break;
+
+		default:
+		break;
+	}
+
+	// Yes... i know but... i am lazy and stressed :/ /Aki
+	IStreamWrapper inputWrapper(inputStream);
+	Document document;
+	document.ParseStream(inputWrapper);
+	CAnimationComponent* anim = aGameObject.GetComponent<CAnimationComponent>();
+	anim->SetIdleID(document["Idle 1"].GetInt());
+	anim->SetMovingID(document["Move"].GetInt());
+	anim->SetDyingID(document["Dying"].GetInt());
+	anim->SetAttack01ID(document["Attack 1"].GetInt());
+	anim->SetAttack02ID(document["Attack 2"].GetInt());
+	anim->SetAbility01ID(document["Ability 1"].GetInt());
+	anim->SetAbility02ID(document["Ability 2"].GetInt());
+	anim->SetAbility03ID(document["Ability 3"].GetInt());
+	anim->SetAbility04ID(document["Ability 4"].GetInt());
+	anim->SetAbility05ID(document["Ability 5"].GetInt());
+	anim->SetAbility06ID(document["Ability 6"].GetInt());
+	//switch (anAnimatedObject)
+	//{
+	//	case EAnimatedObject::Player:
+	//	break;
+	//	case EAnimatedObject::Enemy:
+	//	anim->SetIdleID(document["Idle 1"].GetInt());
+	//	anim->SetMovingID(document["Move"].GetInt());
+	//	anim->SetDyingID(document["Dying"].GetInt());
+	//	break;
+	//	case EAnimatedObject::Boss:
+	//	anim->SetIdleID(document["Idle 1"].GetInt());
+	//	anim->SetMovingID(document["Move"].GetInt());
+	//	anim->SetDyingID(document["Dying"].GetInt());
+	//	break;
+	//	anim->SetIdleID(document["Idle 1"].GetInt());
+	//	anim->SetMovingID(document["Move"].GetInt());
+	//	anim->SetDyingID(document["Dying"].GetInt());
+	//	case EAnimatedObject::Destructible:
+	//	anim->SetIdleID(document["Idle 1"].GetInt());
+	//	anim->SetMovingID(document["Move"].GetInt());
+	//	anim->SetDyingID(document["Dying"].GetInt());
+	//	break;
+	//	default:
+	//	break;
+	//}
+
+	inputStream.close();
 }
 
 namespace AnimationLoaderInternal

@@ -16,6 +16,14 @@ CAnimationComponent::CAnimationComponent(CGameObject& aParent, const std::string
 	, myCurrentAnimationID(0)
 	, myMovingAnimationID(0)
 	, myDyingAnimationID(0)
+	, myAttack01ID(0)
+	, myAttack02ID(0)
+	, myAbility01ID(0)
+	, myAbility02ID(0)
+	, myAbility03ID(0)
+	, myAbility04ID(0)
+	, myAbility05ID(0)
+	, myAbility06ID(0)
 {
 	myAnimation = new CAnimation();
 	myAnimation->Init(aModelFilePath.c_str(), someAnimationPaths);
@@ -126,9 +134,40 @@ void CAnimationComponent::ModelViewerPlayAnimation(const int anAnimationIndex, b
 }
 
 void CAnimationComponent::ForceToIdleState()
-{
-	myCurrentAnimationID = myIdleAnimationID;
+{ 
+	myCurrentAnimationID = myIdleAnimationID; 
 }
+// Temporary for project 6
+void CAnimationComponent::PlayAttack01ID(){ PlayAnimation(GetIndexFromList(myAttack01ID)); }
+void CAnimationComponent::PlayAttack02ID(){ PlayAnimation(GetIndexFromList(myAttack02ID)); }
+void CAnimationComponent::PlayAbility01ID(){ PlayAnimation(GetIndexFromList(myAbility01ID)); }
+void CAnimationComponent::PlayAbility02ID(){ PlayAnimation(GetIndexFromList(myAbility02ID)); }
+void CAnimationComponent::PlayAbility03ID(){ PlayAnimation(GetIndexFromList(myAbility03ID)); }
+void CAnimationComponent::PlayAbility04ID(){ PlayAnimation(GetIndexFromList(myAbility04ID)); }
+void CAnimationComponent::PlayAbility05ID(){ PlayAnimation(GetIndexFromList(myAbility05ID)); }
+void CAnimationComponent::PlayAbility06ID(){ PlayAnimation(GetIndexFromList(myAbility06ID)); }
+
+// Temporary for project 6
+void CAnimationComponent::SetIdleID(const int anIdleID)
+{
+	myIdleAnimationID = anIdleID;
+}
+void CAnimationComponent::SetMovingID(const int aMovingID)
+{
+	myMovingAnimationID = aMovingID;
+}
+void CAnimationComponent::SetDyingID(const int aDyingID)
+{
+	myDyingAnimationID = aDyingID;
+}
+void CAnimationComponent::SetAttack01ID(const int aID){ myAttack01ID = aID; }
+void CAnimationComponent::SetAttack02ID(const int aID) { myAttack02ID = aID;  }
+void CAnimationComponent::SetAbility01ID(const int aID){ myAbility01ID = aID; }
+void CAnimationComponent::SetAbility02ID(const int aID){ myAbility02ID = aID; }
+void CAnimationComponent::SetAbility03ID(const int aID){ myAbility03ID = aID; }
+void CAnimationComponent::SetAbility04ID(const int aID){ myAbility04ID = aID; }
+void CAnimationComponent::SetAbility05ID(const int aID){ myAbility05ID = aID; }
+void CAnimationComponent::SetAbility06ID(const int aID){ myAbility06ID = aID; }
 
 void CAnimationComponent::SetBlend(int anAnimationIndex, int anAnimationIndexTwo, float aBlend)
 {
