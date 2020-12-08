@@ -21,21 +21,21 @@ enum class EPlayerAnimationID
 
 enum class EEnemyAnimationID
 {
-	Attack		= 5005,
-	Dead		= 5005,
-	Idle		= 5005,
-	Walk		= 5005
+	Attack		= 5010,
+	Dead		= 5010,
+	Idle		= 5010,
+	Walk		= 5010
 };
 
 enum class EBossAnimationID
 {
-	AttackOne	= 5016,
-	AttackTwo	= 5016,
-	AttackThree	= 5016,
-	Dead		= 5017,
-	Idle		= 5018,
-	Walk		= 5019,
-	Spawn		= 5018
+	AttackOne	= 5014,
+	AttackTwo	= 5014,
+	AttackThree	= 5014,
+	Dead		= 5014,
+	Idle		= 5014,
+	Walk		= 5014,
+	Spawn		= 5014
 };
 
 enum class ECrateAnimationID
