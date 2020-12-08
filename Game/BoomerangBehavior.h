@@ -25,5 +25,7 @@ private:
 	float myHalfLife;
 	float myRotationalSpeed;
 	bool myIsReturning;
+
+	bool myInited;
 };
 

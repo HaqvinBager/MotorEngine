@@ -9,6 +9,8 @@
 #include "WindowHandler.h"
 #include "Debug.h"
 #include "Utility.h"
+#include "NavmeshLoader.h"
+#include "Scene.h"
 
 //namespace MouseTracker {
 
@@ -19,17 +21,27 @@ public:
 	static DirectX::SimpleMath::Vector3 ScreenPositionToWorldPosition(/*const float aX, const float aY, float aWidth, float aHeight*/)
 	{
 		DirectX::SimpleMath::Ray ray = MouseTracker::WorldSpacePick();
-		//The picking ray is checked against the floor of the world, **ASSUMING Y TO BE 0**
-		DirectX::SimpleMath::Plane worldPlane = DirectX::SimpleMath::Plane(DirectX::SimpleMath::Vector3::Zero, DirectX::SimpleMath::Vector3::Up);
-
-		float distToPlane = 0.0f;
-		DirectX::SimpleMath::Vector3 worldPos{ 0.0f, 0.0f, 0.0f };
-
-		if (ray.Intersects(worldPlane, distToPlane)) {
-			worldPos = ray.position + ray.direction * distToPlane;
+		STriangle* triangle = nullptr; 
+		for (unsigned int i = 0; i < CEngine::GetInstance()->GetActiveScene().GetNavMesh()->myTriangles.size(); ++i) {
+			triangle = CEngine::GetInstance()->GetActiveScene().GetNavMesh()->myTriangles[i];
+			float dist = 0; 
+			if (ray.Intersects(triangle->myVertexPositions[0], triangle->myVertexPositions[1], triangle->myVertexPositions[2], dist)) {
+				DirectX::SimpleMath::Vector3 finalPosition = ray.position + ray.direction * dist; 
+				return finalPosition;
+			}
 		}
 
-		return worldPos;
+		//The picking ray is checked against the floor of the world, **ASSUMING Y TO BE 0**
+		//DirectX::SimpleMath::Plane worldPlane = DirectX::SimpleMath::Plane(DirectX::SimpleMath::Vector3::Zero, DirectX::SimpleMath::Vector3::Up);
+		//
+		//float distToPlane = 0.f;
+		//DirectX::SimpleMath::Vector3 worldPos{ 0.0f, 0.0f, 0.0f };
+		//
+		//if (ray.Intersects(worldPlane, distToPlane)) {
+		//	worldPos = ray.position + ray.direction * distToPlane;
+		//}
+
+		return Vector3();
 
 	//	CCamera* testCamera = CScene::GetInstance()->GetMainCamera();
 

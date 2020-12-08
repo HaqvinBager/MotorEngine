@@ -26,6 +26,7 @@ CBoomerangBehavior::CBoomerangBehavior(float aSpeed, float aDuration, float aRes
 	myRotationalSpeed = aRotationalSpeed;
 	myHalfLife = myDuration / 2.0f;
 	myDamageMultiplier = aDamage;
+	myInited = false;
 }
 
 CBoomerangBehavior::~CBoomerangBehavior()
@@ -38,11 +39,16 @@ void CBoomerangBehavior::Update(CGameObject* aParent)
 	if (myCaster != nullptr) {
 		myTimer += CTimer::Dt();
 
+		if (myInited) {
+			aParent->GetComponent<CTransformComponent>()->Position({ aParent->GetComponent<CTransformComponent>()->Position().x, aParent->GetComponent<CTransformComponent>()->Position().y + 1.f, aParent->GetComponent<CTransformComponent>()->Position().z });
+			myInited = false;
+		}
+
 		if (myTimer < myHalfLife) {
 			aParent->GetComponent<CTransformComponent>()->Move(myDirection * mySpeed * CTimer::Dt());
 
 		} else if (myTimer < myDuration) {
-			CalculateDirection(myCaster->GetComponent<CTransformComponent>()->Position(), aParent->GetComponent<CTransformComponent>()->Position());
+			CalculateDirection({ myCaster->GetComponent<CTransformComponent>()->Position().x, myCaster->GetComponent<CTransformComponent>()->Position().y + 1.f, myCaster->GetComponent<CTransformComponent>()->Position().z }, aParent->GetComponent<CTransformComponent>()->Position());
 			aParent->GetComponent<CTransformComponent>()->Move(myDirection * mySpeed * CTimer::Dt());
 		}
 		else 
@@ -50,7 +56,7 @@ void CBoomerangBehavior::Update(CGameObject* aParent)
 			myTimer = 0.0f;
 			aParent->Active(false);
 		}
-		aParent->GetComponent<CTransformComponent>()->Position({aParent->GetComponent<CTransformComponent>()->Position().x, 1.25f, aParent->GetComponent<CTransformComponent>()->Position().z});
+		aParent->GetComponent<CTransformComponent>()->Position({aParent->GetComponent<CTransformComponent>()->Position().x, aParent->GetComponent<CTransformComponent>()->Position().y, aParent->GetComponent<CTransformComponent>()->Position().z});
 	} else {
 		aParent->Active(false);
 	}
@@ -71,8 +77,9 @@ void CBoomerangBehavior::Init(CGameObject* aCaster)
 		myCaster = aCaster;
 
 		myTargetPosition = MouseTracker::ScreenPositionToWorldPosition();
-		CalculateDirection(MouseTracker::ScreenPositionToWorldPosition(), myCaster->GetComponent<CTransformComponent>()->Position());
+		CalculateDirection(MouseTracker::ScreenPositionToWorldPosition(), { myCaster->GetComponent<CTransformComponent>()->Position().x, myCaster->GetComponent<CTransformComponent>()->Position().y, myCaster->GetComponent<CTransformComponent>()->Position().z });
 		myIsReturning = false;
+		myInited = true;
 
 		myCaster->GetComponent<CStatsComponent>()->GetStats().myResource -= myResourceCost;
 
