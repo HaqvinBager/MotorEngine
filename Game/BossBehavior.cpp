@@ -104,7 +104,7 @@ void CBossBehavior::StartPhase(CGameObject* aParent)
 		if (aParent->GetComponent<CStatsComponent>()->GetStats().myDamageCooldown >= aParent->GetComponent<CStatsComponent>()->GetBaseStats().myBaseDamageCooldown)
 		{
 			if (aParent->GetComponent<CAnimationComponent>())
-				aParent->GetComponent<CAnimationComponent>()->PlayAnimation(EEnemyAnimationID::Attack);
+				aParent->GetComponent<CAnimationComponent>()->PlayAnimation(EBossAnimationID::Idle);
 
 			aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility1, aParent->myTransform->Position());
 			aParent->GetComponent<CStatsComponent>()->GetStats().myDamageCooldown -= aParent->GetComponent<CStatsComponent>()->GetStats().myDamageCooldown;

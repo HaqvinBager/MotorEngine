@@ -70,6 +70,7 @@ void CInGameState::Awake()
 	myColliderPusher = new CColliderPushManager();
 }
 
+#include "animationLoader.h" //only for boss test
 void CInGameState::Start()
 {
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::PauseGame, this);
@@ -80,6 +81,34 @@ void CInGameState::Start()
 	myCanvas->Init("Json/UI_InGame_Description.json", CEngine::GetInstance()->GetActiveScene());
 
 	myTokenPool = new CTokenPool(4, 4.0f);// todo: fix reset
+
+	//NO TOUCHY UNLESS BOSS TEST
+	myTestBoss = new CGameObject();
+	CBossBehavior* bossBehavior = new CBossBehavior(&CEngine::GetInstance()->GetActiveScene().FindObjectOfType<CPlayerControllerComponent>()->GameObject());
+	myTestBoss->myTransform->Position({ -2.0f, 0.0f, 6.0f });
+	myTestBoss->AddComponent<CCircleColliderComponent>(*myTestBoss, 0.5f, ECollisionLayer::BOSS, static_cast<int>(ECollisionLayer::PLAYER));
+	myTestBoss->AddComponent<CModelComponent>(*myTestBoss, "Assets/Graphics/Animations/CH_E_Boss_SK/CH_E_Boss_SK.fbx");
+
+	AddAnimationsToGameObject(*myTestBoss, "Assets/Graphics/Animations/CH_E_Boss_SK/CH_E_Boss_SK.fbx", EAnimatedObject::Boss);
+
+	myTestBoss->AddComponent<CStatsComponent>(*myTestBoss, 10.0f, 10.0f, 3.0f, 3.0f, 20.0f, 15.0f);
+	myTestBoss->AddComponent<CAIBehaviorComponent>(*myTestBoss, bossBehavior);
+
+	myTestBoss->AddComponent<CNavMeshComponent>(*myTestBoss);
+
+	std::pair<EAbilityType, unsigned int> ab1 = { EAbilityType::BossAbility1, 1 };
+	std::pair<EAbilityType, unsigned int> ab2 = { EAbilityType::BossAbility2, 1 };
+	std::pair<EAbilityType, unsigned int> ab3 = { EAbilityType::BossAbility3, 1 };
+	std::vector<std::pair<EAbilityType, unsigned int>> abs;
+	abs.emplace_back(ab1);
+	abs.emplace_back(ab2);
+	abs.emplace_back(ab3);
+	/*CAbilityComponent* ac =*/ myTestBoss->AddComponent<CAbilityComponent>(*myTestBoss, abs);
+	//ac->Awake();
+
+	CEngine::GetInstance()->GetActiveScene().AddInstance(myTestBoss);
+	//myTestBoss->Awake();
+	//NO TOUCHY UNLESS BOSS TEST
 
 	std::vector<CGameObject*>& gameObjects = CEngine::GetInstance()->GetActiveScene().myGameObjects;
 	size_t currentSize = gameObjects.size();
@@ -110,30 +139,6 @@ void CInGameState::Start()
 	//myEnemy->AddComponent<CCircleColliderComponent>(*myEnemy, 0.5f, ECollisionLayer::ENEMY, static_cast<int>(ECollisionLayer::PLAYER));
 	//CEngine::GetInstance()->GetActiveScene().AddInstance(myEnemy);
 	//myEnemy->Awake();
-
-	//NO TOUCHY UNLESS BOSS TEST
-	//myTestBoss = new CGameObject();
-	//CBossBehavior* bossBehavior = new CBossBehavior(&CEngine::GetInstance()->GetActiveScene().FindObjectOfType<CPlayerControllerComponent>()->GameObject());
-	//myTestBoss->myTransform->Position({ -2.0f, 0.0f, 6.0f });
-	//myTestBoss->AddComponent<CCircleColliderComponent>(*myTestBoss, 0.5f, ECollisionLayer::BOSS, static_cast<int>(ECollisionLayer::PLAYER));
-	//myTestBoss->AddComponent<CModelComponent>(*myTestBoss, "Assets/Graphics/Skeletons/CH_E_Boss_SK.fbx");
-	//myTestBoss->AddComponent<CStatsComponent>(*myTestBoss, 10.0f, 10.0f, 3.0f, 3.0f, 20.0f, 15.0f);
-	//myTestBoss->AddComponent<CAIBehaviorComponent>(*myTestBoss, bossBehavior);
-
-	//myTestBoss->AddComponent<CNavMeshComponent>(*myTestBoss);
-
-	//std::pair<EAbilityType, unsigned int> ab1 = { EAbilityType::BossAbility1, 1 };
-	//std::pair<EAbilityType, unsigned int> ab2 = { EAbilityType::BossAbility2, 1 };
-	//std::pair<EAbilityType, unsigned int> ab3 = { EAbilityType::BossAbility3, 1 };
-	//std::vector<std::pair<EAbilityType, unsigned int>> abs;
-	//abs.emplace_back(ab1);
-	//abs.emplace_back(ab2);
-	//abs.emplace_back(ab3);
-	//CAbilityComponent* ac = myTestBoss->AddComponent<CAbilityComponent>(*myTestBoss, abs);
-	//ac->Awake();
-
-	//CEngine::GetInstance()->GetActiveScene().AddInstance(myTestBoss);
-	//myTestBoss->Awake();
 
 	for (auto& gameObject : CEngine::GetInstance()->GetActiveScene().myGameObjects)
 	{
