@@ -387,8 +387,7 @@ void CPopupTextService::UpdateResources()
 		newPos += animationData->mySpeed * CTimer::Dt();
 		
 		//offset for text to be over attached Gameobject
-		screen.x -= 0.05f;
-		screen.y -= 0.4f;
+		screen.y -= 0.35f;
 
 		text->SetPosition(newPos);
 		text->SetGameObjectPosition(screen);
