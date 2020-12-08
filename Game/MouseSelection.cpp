@@ -35,16 +35,18 @@ DirectX::SimpleMath::Vector3 CMouseSelection::GetPositionAtNavmesh()
 	return DirectX::SimpleMath::Vector3();
 }
 
-void CMouseSelection::FindSelectedEnemy()
+CGameObject* CMouseSelection::FindSelectedEnemy()
 {
 	Vector3 pos = GetPositionAtNavmesh();
-	for (const auto& enemy : CEngine::GetInstance()->GetActiveScene().GetEnemies()) {
+	for (auto& enemy : CEngine::GetInstance()->GetActiveScene().GetEnemies()) {
 		//float dist = DirectX::SimpleMath::Vector3::DistanceSquared(pos, enemy->GetComponent<CTransformComponent>()->Position());
 		if (enemy->GetComponent<CCircleColliderComponent>()->Collided(1.5f, pos)) {
 			enemy->GetComponent<CHealthBarComponent>()->OnEnable();
+			return enemy;
 		}
 		else {
 			enemy->GetComponent<CHealthBarComponent>()->OnDisable();
 		}
 	}
+	return nullptr;
 }
