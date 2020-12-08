@@ -31,13 +31,7 @@ CAudioManager::CAudioManager() : myWrapper() {
 	}
 
 
-	/*{ "Path": "castle1.mp3" },
-	{ "Path": "cave1.mp3" },
-	{ "Path": "cave2.mp3" },
-	{ "Path": "dungeon1.mp3" },
-	{ "Path": "gardenday1.mp3" },
-	{ "Path": "swampnight1.mp3" },
-	{ "Path": "swampnight2.mp3" }*/
+	
 
 	if (document.HasMember("Ambience"))
 	{
@@ -99,11 +93,6 @@ CAudioManager::CAudioManager() : myWrapper() {
 
 	}
 
-	//// Init Music
-	//for (unsigned int i = 0; i < static_cast<unsigned int>(EMusic::Count); ++i) {
-	//	myMusicAudio.emplace_back(myWrapper.RequestSound(GetPath(static_cast<EMusic>(i))));
-	//}	
-
 	// Set starting volume
 	for (auto& channel : myChannels) {
 		channel->SetVolume(0.1f);
@@ -115,7 +104,7 @@ CAudioManager::CAudioManager() : myWrapper() {
 
 	//CMainSingleton::PostMaster().Send({ EMessageType::EnemyHealthChanged, NULL });
 
-	//CMainSingleton::PostMaster().Send({ EMessageType::PlayAmbience, NULL });
+	CMainSingleton::PostMaster().Send({ EMessageType::PlayAmbienceCave1, NULL });
 
 
 }
@@ -160,16 +149,34 @@ CAudioManager::~CAudioManager()
 void CAudioManager::Receive(const SMessage& aMessage) {
 	switch (aMessage.myMessageType)
 	{
-	case EMessageType::Resume:
+	case EMessageType::MainMenu:
+	{
+	    //myWrapper.Play(myMusicAudio[CAST(EMusic::MainMenu)], myChannels[CAST(EChannels::Music)]);
+	}
+		break;
+	case EMessageType::PlayAmbienceCastle:
 	{
 		myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
 	}
-	break;
-	case EMessageType::MainMenu:
+		break;
+	case EMessageType::PlayAmbienceCave1:
 	{
-		//myWrapper.Play(myMusicAudio[CAST(EMusic::MainMenu)], myChannels[CAST(EChannels::Music)]);
+		myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Cave1)], myChannels[CAST(EChannels::Ambiance)]);
 	}
-	break;
+		break;
+
+	case EMessageType::PlayAmbienceDungeon:
+	{
+		myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
+	}
+		break;
+
+	case EMessageType::PlayAmbienceSwamp1:
+	{
+		myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
+	}
+		break;
+	
 	case EMessageType::EnemyHealthChanged:
 	{
 		myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyPain)], myChannels[CAST(EChannels::SFX)]);
@@ -183,31 +190,20 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 }
 
 
-
-//void CAudioManager::SubscribeToMusic()
-//{
-//	for (auto messageType : myMusics)
-//	{
-//		CMainSingleton::PostMaster().Subscribe(messageType, this);
-//	}
-//
-//
-//	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);
-//}
-
-
-
 void CAudioManager::Update()
 {
 
 }
 
-
 void CAudioManager::SubscribeToMessages()
 {
-	//CMainSingleton::PostMaster().Subscribe(EMessageType::PlayAmbience, this);
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayAmbienceCastle, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayAmbienceCave1, this);
+
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyHealthChanged, this);
+
 }
 
 void CAudioManager::UnsubscribeToMessages()
@@ -288,6 +284,9 @@ std::string CAudioManager::TranslateAmbiance(EAmbiance enumerator) const {
 	switch (enumerator) {
 	case EAmbiance::Castle:
 		return "Castle";
+		break;
+	case EAmbiance::Cave1:
+		return "Cave1";
 	default:
 		return "";
 	}

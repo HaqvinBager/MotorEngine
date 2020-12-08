@@ -28,5 +28,11 @@ enum class EMessageType
 	LoadDialogue,
 	IntroStarted,
 	IntroEnded,
+	PlayAmbienceCastle,
+	PlayAmbienceCave1,
+	PlayAmbienceCave2,
+	PlayAmbienceDungeon,
+	PlayAmbienceSwamp1,
+	PlayAmbienceSwamp2,
 	Count
 };
