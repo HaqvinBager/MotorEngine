@@ -32,7 +32,8 @@ public:
 		LoadLevel,
 		PauseGame,
 		QuitGame,
-		MiddleMouseMove
+		MiddleMouseMove,
+		StandStill
 	};
 
 public:

@@ -19,7 +19,7 @@
 
 namespace SM = DirectX::SimpleMath;
 
-CDialogueSystem::CDialogueSystem() 
+CDialogueSystem::CDialogueSystem()
 {
 	myCurrentSpeakerName = nullptr;
 	myDialogueLine = nullptr;
@@ -38,7 +38,7 @@ CDialogueSystem::~CDialogueSystem() {
 	delete myDialogueBox;
 	myDialogueBox = nullptr;
 	delete myCurrentSpeakerPortrait;
-	myCurrentSpeakerPortrait = nullptr; 
+	myCurrentSpeakerPortrait = nullptr;
 
 	// For some reason we always seem to destroy the postmaster before the dialogue system
 	//CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadDialogue, this);
@@ -53,23 +53,23 @@ bool CDialogueSystem::Init()
 
 	CSpriteFactory* factory = CSpriteFactory::GetInstance();
 	CTextFactory* textFactory = CTextFactory::GetInstance();
-	
+
 	myDialogueBox = new CSpriteInstance();
 	myDialogueBox->Init(factory->GetSprite(document["Dialogue Box Path"].GetString()));
-	myDialogueBox->SetPosition({ 0.0f, 0.4f });
+	myDialogueBox->SetPosition({0.0f, 0.4f});
 
 	auto iconArray = document["Speaker Icon Paths"].GetArray();
 	for (unsigned int i = 0; i < iconArray.Size(); ++i)
 	{
 		mySpeakerPortraits.emplace_back(new CSpriteInstance());
 		mySpeakerPortraits.back()->Init(factory->GetSprite(iconArray[i]["Path"].GetString()));
-		mySpeakerPortraits.back()->SetPosition({ document["Speaker Icon Position X"].GetFloat(), document["Speaker Icon Position Y"].GetFloat() });
+		mySpeakerPortraits.back()->SetPosition({document["Speaker Icon Position X"].GetFloat(), document["Speaker Icon Position Y"].GetFloat()});
 
 		mySpeakerNames.emplace_back(new CTextInstance());
 		mySpeakerNames.back()->Init(textFactory->GetText(document["Speaker Names Font and Size"].GetString()));
-		mySpeakerNames.back()->SetPivot({ 0.0f, 0.5f });
-		mySpeakerNames.back()->SetPosition({ document["Speaker Name Position X"].GetFloat(), document["Speaker Name Position Y"].GetFloat() });
-		mySpeakerNames.back()->SetColor({ document["Speaker Name Color R"].GetFloat(), document["Speaker Name Color G"].GetFloat(), document["Speaker Name Color B"].GetFloat(), 1.0f });
+		mySpeakerNames.back()->SetPivot({0.0f, 0.5f});
+		mySpeakerNames.back()->SetPosition({document["Speaker Name Position X"].GetFloat(), document["Speaker Name Position Y"].GetFloat()});
+		mySpeakerNames.back()->SetColor({document["Speaker Name Color R"].GetFloat(), document["Speaker Name Color G"].GetFloat(), document["Speaker Name Color B"].GetFloat(), 1.0f});
 	}
 
 	myDialogueLine = new CTextInstance();
@@ -77,9 +77,9 @@ bool CDialogueSystem::Init()
 
 	myAnimatedDialogue = new CTextInstance();
 	myAnimatedDialogue->Init(textFactory->GetText(document["Dialogue Text Font and Size"].GetString()));
-	myAnimatedDialogue->SetPivot({ 0.0f, 0.5f });
-	myAnimatedDialogue->SetPosition({ document["Dialogue Text Position X"].GetFloat(), document["Dialogue Text Position Y"].GetFloat() });
-	myAnimatedDialogue->SetColor({ document["Dialogue Text Color R"].GetFloat(), document["Dialogue Text Color G"].GetFloat(), document["Dialogue Text Color B"].GetFloat(), 1.0f });
+	myAnimatedDialogue->SetPivot({0.0f, 0.5f});
+	myAnimatedDialogue->SetPosition({document["Dialogue Text Position X"].GetFloat(), document["Dialogue Text Position Y"].GetFloat()});
+	myAnimatedDialogue->SetColor({document["Dialogue Text Color R"].GetFloat(), document["Dialogue Text Color G"].GetFloat(), document["Dialogue Text Color B"].GetFloat(), 1.0f});
 
 	myLineBreakDialogue = document["Dialogue Line Break After Characters"].GetInt();
 	myLineBreakNarration = document["Narration Line Break After Characters"].GetInt();
@@ -138,10 +138,12 @@ void CDialogueSystem::ExitDialogue() {
 	myHeldButtonTimer = 0.0f;
 	myDialogueTimer = 0.0f;
 	myLineBreakCounter = 0;
-	
+
 	myAnimatedDialogue;
 	myCurrentSpeakerName = nullptr;
 	myCurrentSpeakerPortrait = nullptr;
+
+	myEnabled = true;
 
 	if (myIsNarration) {
 		myIsNarration = false;
@@ -149,6 +151,10 @@ void CDialogueSystem::ExitDialogue() {
 }
 
 void CDialogueSystem::Update() {
+	if (!myEnabled) {
+		return;
+	}
+	
 	if (!myIsActive) {
 		return;
 	}
@@ -165,7 +171,7 @@ void CDialogueSystem::Update() {
 	HandleInput();
 
 	if (myCurrentDialogueIndex != myLastDialogueIndex)
-	{	
+	{
 		ProcessLineBreaks();
 	}
 
@@ -187,18 +193,22 @@ void CDialogueSystem::Update() {
 
 void CDialogueSystem::EmplaceSprites(std::vector<CSpriteInstance*>& someSprites) const
 {
-	if (!myIsActive) { return; }
+	if (!myIsActive) {
+		return;
+	}
 
 	if (myDialogueBox)
 		someSprites.emplace_back(myDialogueBox);
-	
+
 	if (myCurrentSpeakerPortrait)
 		someSprites.emplace_back(myCurrentSpeakerPortrait);
 }
 
 void CDialogueSystem::EmplaceTexts(std::vector<CTextInstance*>& someText) const
 {
-	if (!myIsActive) { return; }
+	if (!myIsActive) {
+		return;
+	}
 
 	if (myAnimatedDialogue)
 		someText.emplace_back(myAnimatedDialogue);
@@ -255,13 +265,12 @@ void CDialogueSystem::ProcessLineBreaks()
 	myLineBreakCounter = 0;
 	for (unsigned int i = 0; i < myDialogueBuffer[myCurrentDialogueIndex].myText.size(); ++i)
 	{
-		if (++myLineBreakCounter >= lineBreak) 
+		if (++myLineBreakCounter >= lineBreak)
 		{
 			char currentChar = myDialogueBuffer[myCurrentDialogueIndex].myText.at(i);
 			if (currentChar == ' ') {
 				myDialogueBuffer[myCurrentDialogueIndex].myText.insert((size_t)i + (size_t)1, "\n");
-			}
-			else {
+			} else {
 				int backwardsCounter = 0;
 				while (currentChar != ' ') {
 					currentChar = myDialogueBuffer[myCurrentDialogueIndex].myText.at((size_t)i - (size_t)++backwardsCounter);

@@ -66,6 +66,12 @@ CAbilityComponent::~CAbilityComponent()
 
 	delete[] myMaxCooldowns;
 	myMaxCooldowns = nullptr;
+
+	if (myEnabled) {
+		CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability1, this);
+		CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability2, this);
+		CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability3, this);
+	}
 }
 
 void CAbilityComponent::Awake()

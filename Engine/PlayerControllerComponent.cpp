@@ -31,17 +31,17 @@ CPlayerControllerComponent::~CPlayerControllerComponent()
 {
 	delete mySelection;
 	mySelection = nullptr;
-	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::MoveClick, this);
 	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::MoveDown, this);
 	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::AttackClick, this);
+	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::StandStill, this);
 }
 
 void CPlayerControllerComponent::Awake()
 {
 	myLastHP = GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth;
-	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::MoveClick, this);
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::MoveDown, this);
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::AttackClick, this);
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::StandStill, this);
 }
 
 void CPlayerControllerComponent::Start() {}
@@ -85,9 +85,7 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 {
 	switch (aEvent)
 	{
-	case IInputObserver::EInputEvent::MoveClick:
-		if(this->GameObject().GetComponent<CNavMeshComponent>() != nullptr)// Temp, ok to remove. Used for testing barebones scene
-			this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
+	case  IInputObserver::EInputEvent::StandStill:
 		break;
 	case IInputObserver::EInputEvent::MoveDown:
 		this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();

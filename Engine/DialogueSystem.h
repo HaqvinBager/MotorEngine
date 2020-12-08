@@ -34,15 +34,24 @@ public:
 public:
 	void EmplaceSprites(std::vector<CSpriteInstance*>& someSprites) const;
 	void EmplaceTexts(std::vector<CTextInstance*>& someText) const;
+	
+	bool Enabled() {
+		return myEnabled;
+	}
+	void Enabled(bool isEnabled) {
+		myEnabled = isEnabled;
+	}
 
+	void ExitDialogue();
 private:
 	void LoadDialogue(int aSceneIndex);
 	void LoadNarration(const char* aSceneName);
-	void ExitDialogue();
 
 	void HandleInput();
 	void SetDialogueSpeed(float aSpeed, int aLineLength);
 	void ProcessLineBreaks();
+
+	
 
 private:
 	CSpriteInstance* myDialogueBox;
@@ -60,6 +69,7 @@ private:
 
 	bool myIsActive = false;
 	bool myIsNarration = false;
+	bool myEnabled = true;
 	int myCurrentDialogueIndex = 0;
 	int myLastDialogueIndex = -1;
 	int myLastSpeakerIndex = -1;
