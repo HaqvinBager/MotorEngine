@@ -10,8 +10,8 @@ class CAudio;
 class CAudioChannel;
 
 enum class EMusic { MainMenu, Count };
-enum class EAmbiance { Count };
-enum class ESFX { Count };
+enum class EAmbiance { Castle, Count };
+enum class ESFX { EnemyPain, Count };
 enum class EUI { Count };
 enum class EVoiceLine { Count };
 
@@ -37,9 +37,10 @@ public:
 	// Listen to PostMaster
 	void Receive(const SMessage& aMessage);
 
-	
+
 
 private:
+	void SubscribeToMusic();
 	void SubscribeToMessages();
 	void UnsubscribeToMessages();
 
@@ -57,7 +58,7 @@ private:
 	std::string TranslateVoiceLine(EVoiceLine enumerator) const;
 
 private:
-	std::string myAmbiancePath = "Audio/Ambiance/";
+	std::string myAmbiancePath = "Audio/Ambience/";
 	std::string myMusicPath = "Audio/Music/";
 	std::string mySFXPath = "Audio/SFX/";
 	std::string myUIPath = "Audio/UI/";
@@ -77,6 +78,7 @@ private:
 	CAudio* mySound;
 	CAudioChannel* myChannel;
 
+	std::vector<EMusic> myMusics;
 
 };
 

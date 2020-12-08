@@ -22,12 +22,33 @@ CAudioManager::CAudioManager() : myWrapper() {
 	IStreamWrapper inputWrapper(inputStream);
 	Document document;
 	document.ParseStream(inputWrapper);
-	
+
 	if (document.HasParseError()) { return; }
 
 	// Init Channels
 	for (unsigned int i = 0; i < static_cast<unsigned int>(EChannels::Count); ++i) {
 		myChannels.emplace_back(myWrapper.RequestChannel(TranslateChannels(static_cast<EChannels>(i))));
+	}
+
+
+	/*{ "Path": "castle1.mp3" },
+	{ "Path": "cave1.mp3" },
+	{ "Path": "cave2.mp3" },
+	{ "Path": "dungeon1.mp3" },
+	{ "Path": "gardenday1.mp3" },
+	{ "Path": "swampnight1.mp3" },
+	{ "Path": "swampnight2.mp3" }*/
+
+	if (document.HasMember("Ambience"))
+	{
+		auto audioDataArray = document["Ambience"].GetArray();
+		for (unsigned int i = 0; i < audioDataArray.Size(); ++i)
+		{
+			auto audioData = audioDataArray[i].GetObjectW();
+			myAmbianceAudio.emplace_back(myWrapper.RequestSound(myAmbiancePath + audioData["Path"].GetString()));
+
+		}
+
 	}
 
 	if (document.HasMember("Music"))
@@ -37,18 +58,6 @@ CAudioManager::CAudioManager() : myWrapper() {
 		{
 			auto audioData = audioDataArray[i].GetObjectW();
 			myMusicAudio.emplace_back(myWrapper.RequestSound(myMusicPath + audioData["Path"].GetString()));
-
-		}
-
-	}
-
-	if (document.HasMember("Ambience"))
-	{
-		auto audioDataArray = document["Ambience"].GetArray();
-		for (unsigned int i = 0; i < audioDataArray.Size(); ++i)
-		{
-			auto audioData = audioDataArray[i].GetObjectW();
-			myAmbianceAudio.emplace_back(myWrapper.RequestSound(myAmbiancePath + audioData["Path"].GetString()));
 
 		}
 
@@ -68,7 +77,7 @@ CAudioManager::CAudioManager() : myWrapper() {
 
 	if (document.HasMember("UI"))
 	{
-		auto audioDataArray = document["Ambience"].GetArray();
+		auto audioDataArray = document["UI"].GetArray();
 		for (unsigned int i = 0; i < audioDataArray.Size(); ++i)
 		{
 			auto audioData = audioDataArray[i].GetObjectW();
@@ -80,7 +89,7 @@ CAudioManager::CAudioManager() : myWrapper() {
 
 	if (document.HasMember("VoiceLine"))
 	{
-		auto audioDataArray = document["Ambience"].GetArray();
+		auto audioDataArray = document["VoiceLine"].GetArray();
 		for (unsigned int i = 0; i < audioDataArray.Size(); ++i)
 		{
 			auto audioData = audioDataArray[i].GetObjectW();
@@ -101,10 +110,17 @@ CAudioManager::CAudioManager() : myWrapper() {
 	}
 
 	// SEND MESSAGE TO START PLAYING MUSIC
+
 	//CMainSingleton::PostMaster().Send({ EMessageType::MainMenu, NULL });
+
+	//CMainSingleton::PostMaster().Send({ EMessageType::EnemyHealthChanged, NULL });
+
+	//CMainSingleton::PostMaster().Send({ EMessageType::PlayAmbience, NULL });
+
+
 }
 
-CAudioManager::~CAudioManager() 
+CAudioManager::~CAudioManager()
 {
 	UnsubscribeToMessages();
 }
@@ -115,18 +131,46 @@ CAudioManager::~CAudioManager()
 void CAudioManager::Receive(const SMessage& aMessage) {
 	switch (aMessage.myMessageType)
 	{
+	case EMessageType::Resume:
+	{
+		myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
+	}
+	break;
 	case EMessageType::MainMenu:
 	{
 		myWrapper.Play(myMusicAudio[CAST(EMusic::MainMenu)], myChannels[CAST(EChannels::Music)]);
 	}
-		break;
+	break;
+	case EMessageType::EnemyHealthChanged:
+	{
+		myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyPain)], myChannels[CAST(EChannels::SFX)]);
+	}
+	break;
+
+
 	default:
 		break;
 	}
 }
 
+
+//void CAudioManager::SubscribeToMusic()
+//{
+//	for (auto messageType : myMusics)
+//	{
+//		CMainSingleton::PostMaster().Subscribe(messageType, this);
+//	}
+//
+//
+//	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);
+//}
+
+
+
 void CAudioManager::SubscribeToMessages()
 {
+	//CMainSingleton::PostMaster().Subscribe(EMessageType::PlayAmbience, this);
+
 	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);
 }
 
@@ -143,7 +187,7 @@ std::string CAudioManager::GetPath(EMusic type) const
 	return path;
 }
 
-std::string CAudioManager::GetPath(EAmbiance type) const 
+std::string CAudioManager::GetPath(EAmbiance type) const
 {
 	std::string path = myAmbiancePath;
 	path.append(TranslateAmbiance(type));
@@ -151,7 +195,7 @@ std::string CAudioManager::GetPath(EAmbiance type) const
 	return path;
 }
 
-std::string CAudioManager::GetPath(ESFX type) const 
+std::string CAudioManager::GetPath(ESFX type) const
 {
 	std::string path = mySFXPath;
 	path.append(TranslateSFX(type));
@@ -159,7 +203,7 @@ std::string CAudioManager::GetPath(ESFX type) const
 	return path;
 }
 
-std::string CAudioManager::GetPath(EUI type) const 
+std::string CAudioManager::GetPath(EUI type) const
 {
 	std::string path = myUIPath;
 	path.append(TranslateUI(type));
@@ -167,7 +211,7 @@ std::string CAudioManager::GetPath(EUI type) const
 	return path;
 }
 
-std::string CAudioManager::GetPath(EVoiceLine type) const 
+std::string CAudioManager::GetPath(EVoiceLine type) const
 {
 	std::string path = myVoxPath;
 	path.append(TranslateVoiceLine(type));
@@ -206,16 +250,16 @@ std::string CAudioManager::TranslateMusic(EMusic enumerator) const
 
 std::string CAudioManager::TranslateAmbiance(EAmbiance enumerator) const {
 	switch (enumerator) {
-	case EAmbiance::Count:
-		return "";
+	case EAmbiance::Castle:
+		return "Castle";
 	default:
 		return "";
 	}
 }
 std::string CAudioManager::TranslateSFX(ESFX enumerator) const {
 	switch (enumerator) {
-	case ESFX::Count:
-		return "";
+	case ESFX::EnemyPain:
+		return "EnemyPain";
 	default:
 		return "";
 	}
