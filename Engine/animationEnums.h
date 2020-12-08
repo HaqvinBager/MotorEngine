@@ -80,7 +80,9 @@ enum class EBossAnimationID
 
 enum class ECrateAnimationID
 {
-	Explode
+	Idle	= 0,// Idle = exists
+	Walk	= 0,// It can't walk, just for clarity
+	Dead	= 5019 // Explode
 };
 #endif
 

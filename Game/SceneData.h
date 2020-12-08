@@ -96,6 +96,8 @@ struct SInGameData
 	std::unordered_map<int, std::string> myEventStringMap;
 	std::unordered_map<int, std::string> myEnvironmentFXStringMap;
 
+	std::string myBinPath;
+
 	int SizeOf()
 	{
 		int size = 0;
@@ -117,4 +119,6 @@ struct SLoadScreenData
 	SCameraData myCamera;
 	SDirectionalLightData myDirectionalLight;
 	SGameObjectData myGameObject;
+
+	std::string myBinPath;
 };

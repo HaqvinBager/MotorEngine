@@ -99,12 +99,15 @@ void CAnimationComponent::MovingState()
 
 bool CAnimationComponent::DeadState()
 {
+	if (myCurrentAnimationID == myDyingAnimationID)
+		return false;
+
 	PlayAnimation(GetIndexFromList(myDyingAnimationID));
 	myCurrentAnimationID = myDyingAnimationID;
 	myAnimation->GetMyController().ResetAnimationTimeCurrent();
 	myAnimation->GetMyController().SetLoopingSceneIndex(0);
+
 	return myAnimation->GetMyController().CurrentAnimationDuration() > 0.0f;
-	//myAnimation->GetMyController().SetLoopingSceneIndex(myDyingAnimationID);
 }
 
 void CAnimationComponent::ModelViewerPlayAnimation(const int anAnimationIndex, bool anIsLooping, const float anAnimSpeed)
@@ -152,6 +155,9 @@ void CAnimationComponent::ResetIdleTimer()
 
 void CAnimationComponent::SwitchBackToIdle()
 {
+	if (myIdleAnimationID == 0)
+		return; 
+
 	if (myCurrentAnimationID != myDyingAnimationID)
 	{
 		PlayAnimation(GetIndexFromList(myIdleAnimationID), true);

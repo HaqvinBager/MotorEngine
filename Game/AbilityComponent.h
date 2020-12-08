@@ -15,8 +15,9 @@ enum class EAbilityType {
 	BossAbility1,
 	BossAbility2,
 	BossAbility3,
+
 	AbilityTest,
-	WHIRLWIND
+	Count = AbilityTest
 };
 
 class CAbilityComponent : public CBehaviour, public IInputObserver

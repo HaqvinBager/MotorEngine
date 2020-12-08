@@ -54,28 +54,28 @@ bool CDialogueSystem::Init()
 	CSpriteFactory* factory = CSpriteFactory::GetInstance();
 	CTextFactory* textFactory = CTextFactory::GetInstance();
 	
-	myDialogueBox = new CSpriteInstance(false);
+	myDialogueBox = new CSpriteInstance();
 	myDialogueBox->Init(factory->GetSprite(document["Dialogue Box Path"].GetString()));
 	myDialogueBox->SetPosition({ 0.0f, 0.4f });
 
 	auto iconArray = document["Speaker Icon Paths"].GetArray();
 	for (unsigned int i = 0; i < iconArray.Size(); ++i)
 	{
-		mySpeakerPortraits.emplace_back(new CSpriteInstance(false));
+		mySpeakerPortraits.emplace_back(new CSpriteInstance());
 		mySpeakerPortraits.back()->Init(factory->GetSprite(iconArray[i]["Path"].GetString()));
 		mySpeakerPortraits.back()->SetPosition({ document["Speaker Icon Position X"].GetFloat(), document["Speaker Icon Position Y"].GetFloat() });
 
-		mySpeakerNames.emplace_back(new CTextInstance(false));
+		mySpeakerNames.emplace_back(new CTextInstance());
 		mySpeakerNames.back()->Init(textFactory->GetText(document["Speaker Names Font and Size"].GetString()));
 		mySpeakerNames.back()->SetPivot({ 0.0f, 0.5f });
 		mySpeakerNames.back()->SetPosition({ document["Speaker Name Position X"].GetFloat(), document["Speaker Name Position Y"].GetFloat() });
 		mySpeakerNames.back()->SetColor({ document["Speaker Name Color R"].GetFloat(), document["Speaker Name Color G"].GetFloat(), document["Speaker Name Color B"].GetFloat(), 1.0f });
 	}
 
-	myDialogueLine = new CTextInstance(false);
+	myDialogueLine = new CTextInstance();
 	myDialogueLine->Init(textFactory->GetText(document["Dialogue Text Font and Size"].GetString()));
 
-	myAnimatedDialogue = new CTextInstance(false);
+	myAnimatedDialogue = new CTextInstance();
 	myAnimatedDialogue->Init(textFactory->GetText(document["Dialogue Text Font and Size"].GetString()));
 	myAnimatedDialogue->SetPivot({ 0.0f, 0.5f });
 	myAnimatedDialogue->SetPosition({ document["Dialogue Text Position X"].GetFloat(), document["Dialogue Text Position Y"].GetFloat() });

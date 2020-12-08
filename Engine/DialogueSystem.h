@@ -7,6 +7,7 @@
 
 class CSpriteInstance;
 class CTextInstance;
+class CScene;
 
 struct SSpeakerLine {
 	SSpeakerLine(std::string aString, int aSpeaker, std::string aSpeakerName, int aLine)

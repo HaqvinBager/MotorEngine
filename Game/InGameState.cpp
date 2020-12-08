@@ -1,41 +1,42 @@
 #include "stdafx.h"
 #include "InGameState.h"
-#include "StateStack.h"
+
 #include "Scene.h"
+#include "PauseState.h"
+
 #include "GameObject.h"
-#include "SpriteInstance.h"
-#include "SpriteFactory.h"
 #include "AnimationComponent.h"
-#include "ModelComponent.h"
-#include "Model.h"
-#include "Animation.h"
 #include "TransformComponent.h"
-#include "DialogueSystem.h"
-#include "Timer.h"
-#include "CameraComponent.h"
-#include "Engine.h"
-#include "WindowHandler.h"
-#include "AnimatedUIElement.h"
-#include "InputMapper.h"
-#include "PostMaster.h"
-#include "Canvas.h"
-#include "AbilityComponent.h"
 #include "CircleColliderComponent.h"
 #include "RectangleColliderComponent.h"
 #include "TriangleColliderComponent.h"
-#include "TokenPool.h"
-#include "StatsComponent.h"
-#include "EnemyBehavior.h"
 #include "PlayerControllerComponent.h"
+#include "ModelComponent.h"
+#include "CameraComponent.h"
 #include "AIBehaviorComponent.h"
 #include "TransformComponent.h"
-#include "PauseState.h"
-#include "PostMaster.h"
-#include "PopupTextService.h"
-#include "RandomNumberGenerator.h"
-#include "MainSingleton.h"
-#include <iostream>
+#include "AIBehaviorComponent.h"
+#include "AbilityComponent.h"
+#include "StatsComponent.h"
 
+#include "Timer.h"
+#include "Engine.h"
+#include "PostMaster.h"
+#include "WindowHandler.h"
+#include "PopupTextService.h"
+#include "MainSingleton.h"
+#include "DialogueSystem.h"
+#include "InputMapper.h"
+
+#include "Model.h"
+#include "Animation.h"
+#include "SpriteInstance.h"
+#include "SpriteFactory.h"
+#include "Canvas.h"
+#include "AnimatedUIElement.h"
+#include "TokenPool.h"
+#include "EnemyBehavior.h"
+#include "RandomNumberGenerator.h"
 //testing
 #include "AIBehaviorComponent.h"
 #include "BossBehavior.h"
@@ -45,41 +46,52 @@
 #include "MouseSelection.h"
 #include "ColliderPushManager.h"
 
-CInGameState::CInGameState(CStateStack& aStateStack) : CState(aStateStack) {
-	myCanvas = new CCanvas();
-	myCanvas->Init("Json/UI_InGame_Description.json");
-	myActiveScene = CEngine::GetInstance()->ScenesSize();
+#include <iostream>
 
-	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::PauseGame, this);
-	myTokenPool = new CTokenPool(4, 4.0f);
+CInGameState::CInGameState(CStateStack& aStateStack, const CStateStack::EState aState) 
+	: CState(aStateStack, aState) 
+	, myCanvas(nullptr)
+	, myTokenPool(nullptr)
+{}
 
+CInGameState::~CInGameState()
+{
+	delete mySelection;
+	mySelection = nullptr;
+
+	delete myColliderPusher;
+	myColliderPusher = nullptr;
+}
+
+void CInGameState::Awake()
+{
 	mySelection = new CMouseSelection();
 	myColliderPusher = new CColliderPushManager();
 }
 
-CInGameState::~CInGameState()
+void CInGameState::Start()
 {
-	CEngine::GetInstance()->PopBackScene();
-
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::PauseGame, this);
-}
-void CInGameState::Awake()
-{
+	
+	CEngine::GetInstance()->SetActiveScene(myState);
+
+	myCanvas = new CCanvas();
+	myCanvas->Init("Json/UI_InGame_Description.json", CEngine::GetInstance()->GetActiveScene());
+	
+	myTokenPool = new CTokenPool(4, 4.0f);// todo: fix reset
+
 	std::vector<CGameObject*>& gameObjects = CEngine::GetInstance()->GetActiveScene().myGameObjects;
 	size_t currentSize = gameObjects.size();
-
 	for (size_t i = 0; i < currentSize; ++i)
 	{
 		if (gameObjects[i])
 		{
 			gameObjects[i]->Awake();
 		}
-
 	}
 
+	////Late awake
 	size_t newSize = gameObjects.size();
-
-	//Late awake
 	for (size_t j = currentSize; j < newSize; ++j)
 	{
 		if (gameObjects[j])
@@ -87,7 +99,6 @@ void CInGameState::Awake()
 			gameObjects[j]->Awake();
 		}
 	}
-
 	//myEnemy = new CGameObject();
 	////myEnemy->AddComponent<CModelComponent>(*myEnemy, "Assets/3D/Character/CH_NPC_enemy_01_19G4_1_19/CH_NPC_enemy_01_19G4_1_19.fbx");
 	//myEnemy->AddComponent<CModelComponent>(*myEnemy, "Assets/Graphics/Skeletons/CH_E_Melee_SK.fbx");
@@ -123,21 +134,30 @@ void CInGameState::Awake()
 	//CEngine::GetInstance()->GetActiveScene().AddInstance(myTestBoss);
 	//myTestBoss->Awake();
 
-	//int sceneIndex = 0;
-	//CMainSingleton::PostMaster().Send({ EMessageType::LoadDialogue, &sceneIndex });
-}
-
-void CInGameState::Start()
-{
 	for (auto& gameObject : CEngine::GetInstance()->GetActiveScene().myGameObjects)
 	{
 		gameObject->Start();
 	}
+
+	int aSceneIndex = 0;
+	CMainSingleton::PostMaster().Send({ EMessageType::LoadDialogue, &aSceneIndex });
+}
+
+void CInGameState::Stop()
+{
+	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::PauseGame, this);
+	CMainSingleton::CollisionManager().ClearColliders();
+
+	delete myTokenPool;
+	myTokenPool = nullptr;
+
+	delete myCanvas;
+	myCanvas = nullptr;
 }
 
 void CInGameState::Update()
 {
-	CCollisionManager::GetInstance()->Update();
+	CMainSingleton::CollisionManager().Update();
 
 	myCanvas->Update();
 	myTokenPool->GetInstance()->Update();
@@ -145,44 +165,45 @@ void CInGameState::Update()
 	for (auto& gameObject : CEngine::GetInstance()->GetActiveScene().myGameObjects)
 	{
 		gameObject->Update();
-
 	}
 	
 	myColliderPusher->EnemiesPushOutEnemies();
 	myColliderPusher->PlayerPushOutEnemies();
 
 	mySelection->FindSelectedEnemy();
-	//static SDamagePopupData damage;
-	//damage.myDamage = 32.0f;
-	//damage.myHitType = Random(0, 4);
-	//if (Input::GetInstance()->IsKeyPressed('U')) {
-	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &damage);
-	//}
 
-	//static std::string tutorial = "Press Space to Continue";
-	//if (Input::GetInstance()->IsKeyPressed('I')) {
-	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Tutorial, tutorial);
-	//}
+	static SDamagePopupData damage;
+	damage.myDamage = 32.0f;
+	damage.myHitType = Random(0, 4);
+	if (Input::GetInstance()->IsKeyPressed('U')) {
+		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &damage);
+	}
 
-	//static std::string warning = "You require more Mana";
-	//if (Input::GetInstance()->IsKeyPressed('O')) {
-	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Warning, warning);
-	//}
+	static std::string tutorial = "Press Space to Continue";
+	if (Input::GetInstance()->IsKeyPressed('I')) {
+		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Tutorial, tutorial);
+	}
 
-	//static std::string text1 = "Skill 1";
-	//if (Input::GetInstance()->IsKeyPressed('J')) {
-	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text1);
-	//}
+	static std::string warning = "You require more Mana";
+	if (Input::GetInstance()->IsKeyPressed('O')) {
+		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Warning, warning);
+	}
 
-	//static std::string text2 = "Skill 2";
-	//if (Input::GetInstance()->IsKeyPressed('K')) {
-	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text2);
-	//}
+	static std::string text1 = "Skill 1";
+	if (Input::GetInstance()->IsKeyPressed('J')) {
+		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text1);
+	}
 
-	//static std::string text3 = "Skill 3";
-	//if (Input::GetInstance()->IsKeyPressed('L')) {
-	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text3);
-	//}
+	static std::string text2 = "Skill 2";
+	if (Input::GetInstance()->IsKeyPressed('K')) {
+		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text2);
+	}
+
+	static std::string text3 = "Skill 3";
+	if (Input::GetInstance()->IsKeyPressed('L')) {
+		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text3);
+	}
+
 }
 
 void CInGameState::ReceiveEvent(const EInputEvent aEvent)
@@ -190,9 +211,7 @@ void CInGameState::ReceiveEvent(const EInputEvent aEvent)
 	if (this == myStateStack.GetTop()) {
 		switch (aEvent) {
 		case IInputObserver::EInputEvent::PauseGame:
-			myStateStack.PushState(new CPauseState(myStateStack));
-			myStateStack.Awake();
-			myStateStack.Start();
+			myStateStack.PushState(CStateStack::EState::PauseMenu);
 			break;
 		default:
 			break;
@@ -200,7 +219,3 @@ void CInGameState::ReceiveEvent(const EInputEvent aEvent)
 	}
 }
 
-void CInGameState::MakeSceneActive()
-{
-	CEngine::GetInstance()->SetActiveScene(myActiveScene);
-}

@@ -14,10 +14,10 @@ namespace SM = DirectX::SimpleMath;
 
 namespace SpriteViewer
 {
-	CCanvas* Init()
+	CCanvas* Init(CScene* aScene)
 	{
 		CCanvas* canvas = new CCanvas();
-		canvas->Init("Json/UI_InGame_Description.json");
+		canvas->Init("Json/UI_InGame_Description.json", *aScene);
 
 		return canvas;
 		//CSpriteInstance* spriteInstance = new CSpriteInstance();

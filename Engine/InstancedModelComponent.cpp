@@ -5,7 +5,7 @@
 
 CInstancedModelComponent::CInstancedModelComponent(CGameObject& aParent, std::string aModelPath, int aCount, std::vector<DirectX::SimpleMath::Matrix> aInstancedTransforms)
 	: CBehaviour(aParent)
-	, myModel(CModelFactory::GetInstance()->CreateInstancedModels(aModelPath, aCount))
+	, myModel(CModelFactory::GetInstance()->GetInstancedModel(aModelPath, aCount))
 	, myIntancedTransforms(aInstancedTransforms)
 {
 }

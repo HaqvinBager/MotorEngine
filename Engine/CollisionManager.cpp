@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "CollisionManager.h"
+
 #include "IntersectionManager.h"
 #include "CapsuleColliderComponent.h"
 #include "TriangleColliderComponent.h"
@@ -19,20 +20,12 @@
 
 using namespace DirectX::SimpleMath;
 
-CCollisionManager* CCollisionManager::ourInstance = nullptr;
-CCollisionManager* CCollisionManager::GetInstance()
-{
-	return ourInstance;
-}
-
 CCollisionManager::CCollisionManager()
 {
-	ourInstance = this;
 }
 
 CCollisionManager::~CCollisionManager()
 {
-	ourInstance = nullptr;
 }
 
 void CCollisionManager::RegisterCollider(CCollider* aCollider)
@@ -62,6 +55,11 @@ bool CCollisionManager::CheckIfAbility(CCollider* anAbilityCollider, CGameObject
 
 	behavior->Collided(aCollidedWithGameObject);
 	return true;
+}
+
+void CCollisionManager::ClearColliders()
+{
+    myColliders.clear();
 }
 
 void CCollisionManager::Update()

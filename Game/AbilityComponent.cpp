@@ -31,11 +31,13 @@
 using namespace rapidjson;
 
 CAbilityComponent::CAbilityComponent(CGameObject& aParent, std::vector<std::pair<EAbilityType, unsigned int>> someAbilities)
-	: CBehaviour(aParent), myAbilityPoolDescriptions(someAbilities), myCurrentCooldowns(new float[3]), myMaxCooldowns(new float[3]), myMeleeAttackRange(0.0)
+	: CBehaviour(aParent), myAbilityPoolDescriptions(someAbilities), myCurrentCooldowns(new float[static_cast<int>(EAbilityType::Count)]), myMaxCooldowns(new float[static_cast<int>(EAbilityType::Count)]), myMeleeAttackRange(0.0)
 {
 	myCurrentCooldowns[0] = 0.0f;
 	myCurrentCooldowns[1] = 0.0f;
 	myCurrentCooldowns[2] = 0.0f;
+	myCurrentCooldowns[3] = 0.0f;
+	myCurrentCooldowns[4] = 0.0f;
 
 	std::ifstream inputStream("Json/AbilityPaths.json");
 	ENGINE_BOOL_POPUP(inputStream.good(), "Ability json paths could not be found! Looking for Json/AbilityPaths.json");
@@ -55,29 +57,19 @@ CAbilityComponent::CAbilityComponent(CGameObject& aParent, std::vector<std::pair
 	myFilePaths.emplace(EAbilityType::BossAbility3, document["Boss Ability 3"].GetString());
 
 	myFilePaths.emplace(EAbilityType::AbilityTest, document["Ability Test"].GetString());
-	myFilePaths.emplace(EAbilityType::WHIRLWIND, document["Ability Test"].GetString());
 }
 
 CAbilityComponent::~CAbilityComponent()
 {
-	delete myCurrentCooldowns;
+	delete[] myCurrentCooldowns;
 	myCurrentCooldowns = nullptr;
 
-	delete myMaxCooldowns;
+	delete[] myMaxCooldowns;
 	myMaxCooldowns = nullptr;
-	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability1, this);
-	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability2, this);
-	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability3, this);
-	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::AttackClick, this);
 }
 
 void CAbilityComponent::Awake()
 {
-	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability1, this);
-	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability2, this);
-	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability3, this);
-	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::AttackClick, this);
-
 	// Setting up pools
 	for (unsigned int i = 0; i < myAbilityPoolDescriptions.size(); ++i) {
 		std::vector<CGameObject*> gameObjectsToPool;
@@ -108,10 +100,16 @@ void CAbilityComponent::Update()
 
 void CAbilityComponent::OnEnable()
 {
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability1, this);
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability2, this);
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability3, this);
 }
 
 void CAbilityComponent::OnDisable()
 {
+	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability1, this);
+	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability2, this);
+	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability3, this);
 }
 
 bool CAbilityComponent::UseAbility(EAbilityType anAbilityType, DirectX::SimpleMath::Vector3 aSpawnPosition)
@@ -258,6 +256,7 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	document.ParseStream(inputWrapper);
 
 	CGameObject* abilityObject = new CGameObject();
+	std::cout << "LoadAbilityFromFile: " << *&abilityObject << std::endl;
 	CProjectileBehavior* projectileBehavior = nullptr;
 	CAuraBehavior* auraBehavior = nullptr;
 	CBoomerangBehavior* boomerangBehavior = nullptr;
@@ -268,7 +267,8 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	std::string colliderType;
 
 	//COOLDOWNS
-	myMaxCooldowns[static_cast<int>(anAbilityType)] = document.HasMember("Cooldown") ? document["Cooldown"].GetFloat() : 0.5f;
+	int cdIdx = static_cast<int>(anAbilityType);
+	myMaxCooldowns[cdIdx] = document.HasMember("Cooldown") ? document["Cooldown"].GetFloat() : 0.5f;
 	//!COOLDOWNS
 
 	//VFX
@@ -357,7 +357,7 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	//!COLLIDER
 
 	abilityObject->Active(false);
-	CEngine::GetInstance()->GetActiveScene().AddInstance(abilityObject);
+	//CEngine::GetInstance()->GetActiveScene().AddInstance(abilityObject);
 
 	return abilityObject;
 }

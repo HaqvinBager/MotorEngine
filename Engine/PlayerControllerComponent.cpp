@@ -86,8 +86,8 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 	switch (aEvent)
 	{
 	case IInputObserver::EInputEvent::MoveClick:
-		this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
-		myTargetEnemy = mySelection->FindSelectedEnemy();
+		if(this->GameObject().GetComponent<CNavMeshComponent>() != nullptr)// Temp, ok to remove. Used for testing barebones scene
+			this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
 		break;
 	case IInputObserver::EInputEvent::MoveDown:
 		this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();

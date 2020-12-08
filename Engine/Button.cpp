@@ -102,7 +102,7 @@ void CButton::CheckMouseCollision(DirectX::SimpleMath::Vector2 aScreenSpacePosit
 	}
 }
 
-CButton::CButton(SButtonData& someData)
+CButton::CButton(SButtonData& someData, CScene& aScene)
 	: myMessagesToSend(someData.myMessagesToSend)
 	, myState(EButtonState::Idle)
 	, myEnabled(true)
@@ -111,10 +111,10 @@ CButton::CButton(SButtonData& someData)
 	//Load Sprites
 	for (unsigned int i = 0; i < 3; ++i) 
 	{
-		mySprites.at(i) = new CSpriteInstance();
+		mySprites.at(i) = new CSpriteInstance(aScene);
 		mySprites.at(i)->Init(CSpriteFactory::GetInstance()->GetSprite(someData.mySpritePaths.at(i)));
 		mySprites.at(i)->SetRenderOrder(ERenderOrder::ForegroundLayer);
-		CEngine::GetInstance()->GetActiveScene().AddInstance(mySprites.at(i));
+		aScene.AddInstance(mySprites.at(i));
 	}
 
 	mySprites.at(static_cast<size_t>(EButtonState::Hover))->SetShouldRender(false);

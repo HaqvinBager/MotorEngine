@@ -1,14 +1,15 @@
 #include "stdafx.h"
 #include "CapsuleColliderComponent.h"
 #include "TransformComponent.h"
-#include "CollisionManager.h"
+//#include "CollisionManager.h"
+#include "MainSingleton.h"
 
 CCapsuleColliderComponent::CCapsuleColliderComponent(CGameObject& aParent, float aRadius, float aHeight, ECollisionLayer aCollisionLayer, uint64_t someCollisionFlags)
 	: CCollider(aParent, aCollisionLayer, someCollisionFlags)
 	, myRadius(aRadius)
 	, myHeight(aHeight) 
 {
-	CCollisionManager::GetInstance()->RegisterCollider(this);
+	CMainSingleton::CollisionManager().RegisterCollider(this);
 	SetCollisionLayer(aCollisionLayer);
 }
 

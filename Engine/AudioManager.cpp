@@ -107,9 +107,38 @@ CAudioManager::CAudioManager() : myWrapper() {
 CAudioManager::~CAudioManager() 
 {
 	UnsubscribeToMessages();
+	// 2020 12 06 - CAudio attempts to delete myFModSound, seems to be shared. 
+	//for (auto& channel : myChannels)
+	//{
+	//	delete channel;
+	//	channel = nullptr;
+	//}
+	//for (auto& music : myMusicAudio)
+	//{
+	//	delete music;
+	//	music = nullptr;
+	//}
+	//for (auto& ambience : myAmbianceAudio)
+	//{
+	//	delete ambience;
+	//	ambience = nullptr;
+	//}
+	//for (auto& sfx : mySFXAudio)
+	//{
+	//	delete sfx;
+	//	sfx = nullptr;
+	//}
+	//for (auto& ui : myUIAudio)
+	//{
+	//	delete ui;
+	//	ui = nullptr;
+	//}
+	//for (auto& voice : myVoicelineAudio)
+	//{
+	//	delete voice;
+	//	voice = nullptr;
+	//}
 }
-
-
 
 
 void CAudioManager::Receive(const SMessage& aMessage) {
@@ -117,7 +146,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	{
 	case EMessageType::MainMenu:
 	{
-		myWrapper.Play(myMusicAudio[CAST(EMusic::MainMenu)], myChannels[CAST(EChannels::Music)]);
+		//myWrapper.Play(myMusicAudio[CAST(EMusic::MainMenu)], myChannels[CAST(EChannels::Music)]);
 	}
 		break;
 	default:
