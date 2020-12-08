@@ -73,6 +73,13 @@ struct SEnvironmentFXData
 	DirectX::SimpleMath::Vector3 myScale;
 };
 
+struct SParticleFXData
+{
+	int myInstanceID;
+	DirectX::SimpleMath::Vector3 myPosition;
+	DirectX::SimpleMath::Vector3 myRotation;
+	//std::vector<std::string> myJsonList;
+};
 
 //class SData { 
 //public:
@@ -91,10 +98,12 @@ struct SInGameData
 	std::vector<SGameObjectData> myGameObjects;
 	//int mySceneIndex;
 	std::vector<SEnvironmentFXData> myEnvironmentFXs;
+	std::vector<SParticleFXData> myParticleFXs;
 	
 	
 	std::unordered_map<int, std::string> myEventStringMap;
 	std::unordered_map<int, std::string> myEnvironmentFXStringMap;
+	std::unordered_map<int, std::vector<std::string>> myParticleFXStringMap;
 
 	int SizeOf()
 	{

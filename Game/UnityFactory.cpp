@@ -20,10 +20,12 @@
 #include "RectangleColliderComponent.h"
 #include "CircleColliderComponent.h"
 #include "VFXComponent.h"
+#include "ParticleEmitterComponent.h"
 
 #include "CollisionManager.h"
 #include "LightFactory.h"
 #include "VFXFactory.h"
+#include "ParticleFactory.h"
 #include "PointLight.h"
 #include "StatsComponent.h"
 #include "EnemyBehavior.h"
@@ -151,6 +153,11 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 	for (auto& environmentFX : aData.myEnvironmentFXs)
 	{
 		aScene.AddInstance(CreateGameObject(environmentFX, aData.myEnvironmentFXStringMap.at(environmentFX.myInstanceID)));
+	}
+
+	for (auto& particleFX : aData.myParticleFXs)
+	{
+		aScene.AddInstance(CreateGameObject(particleFX, aData.myParticleFXStringMap.at(particleFX.myInstanceID)));
 	}
 
 	return true;
@@ -294,5 +301,25 @@ CGameObject* CUnityFactory::CreateGameObject(const SEnvironmentFXData& aData, st
 	jsonPath.append(".json");
 	gameObject->AddComponent<CVFXComponent>(*gameObject)->Init(CVFXFactory::GetInstance()->GetVFXBaseSet({ jsonPath }));
 
+	return gameObject;
+}
+
+CGameObject* CUnityFactory::CreateGameObject(const SParticleFXData& aData, const std::vector<std::string>& somParticleFXNames)
+{
+	CGameObject* gameObject = new CGameObject();
+	gameObject->myTransform->Position(aData.myPosition);
+	gameObject->myTransform->Rotation(aData.myRotation);
+
+	std::vector<std::string> myjsonPaths;
+	myjsonPaths.reserve(somParticleFXNames.size());
+	for (const std::string& str : somParticleFXNames)
+	{
+		std::string jsonPath = "json/";
+		jsonPath.append(str.c_str());
+		jsonPath.append(".json");
+		myjsonPaths.emplace_back(jsonPath);
+	}
+
+	gameObject->AddComponent<CParticleEmitterComponent>(*gameObject)->Init(CParticleFactory::GetInstance()->GetParticleSet(myjsonPaths));
 	return gameObject;
 }
