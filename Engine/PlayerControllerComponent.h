@@ -24,7 +24,8 @@ public:
 	bool PlayerIsAlive();
 	void TakeDamage(float aDamageMultiplier, CGameObject* aGameObject);
 	void RegenerateMana();
-
+	void UpdateExperience(const SMessage& aMessage);
+	bool AuraActive(){ return myAuraActive; }
 private:
 	float myLastHP;
 	float myRegenerationSpeed;
@@ -32,5 +33,6 @@ private:
 	CGameObject* myTargetEnemy;
 	bool myIsMoving;
 	bool myMiddleMousePressed;
+	bool myAuraActive;
 	DirectX::SimpleMath::Vector3 myLastPosition;
 };

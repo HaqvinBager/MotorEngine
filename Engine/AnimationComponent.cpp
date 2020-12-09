@@ -115,7 +115,7 @@ bool CAnimationComponent::DeadState()
 	myAnimation->GetMyController().ResetAnimationTimeCurrent();
 	myAnimation->GetMyController().SetLoopingSceneIndex(0);
 
-	return myAnimation->GetMyController().CurrentAnimationDuration() > 0.0f;
+	return myAnimation->GetMyController().CurrentAnimationDuration() >= -0.01f;
 }
 
 void CAnimationComponent::ModelViewerPlayAnimation(const int anAnimationIndex, bool anIsLooping, const float anAnimSpeed)

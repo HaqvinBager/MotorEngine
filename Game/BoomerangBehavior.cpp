@@ -40,7 +40,7 @@ void CBoomerangBehavior::Update(CGameObject* aParent)
 		myTimer += CTimer::Dt();
 
 		if (myInited) {
-			aParent->GetComponent<CTransformComponent>()->Position({ aParent->GetComponent<CTransformComponent>()->Position().x, aParent->GetComponent<CTransformComponent>()->Position().y + 1.f, aParent->GetComponent<CTransformComponent>()->Position().z });
+			aParent->GetComponent<CTransformComponent>()->Position({aParent->GetComponent<CTransformComponent>()->Position().x, aParent->GetComponent<CTransformComponent>()->Position().y + 1.f, aParent->GetComponent<CTransformComponent>()->Position().z});
 			myInited = false;
 		}
 
@@ -48,10 +48,9 @@ void CBoomerangBehavior::Update(CGameObject* aParent)
 			aParent->GetComponent<CTransformComponent>()->Move(myDirection * mySpeed * CTimer::Dt());
 
 		} else if (myTimer < myDuration) {
-			CalculateDirection({ myCaster->GetComponent<CTransformComponent>()->Position().x, myCaster->GetComponent<CTransformComponent>()->Position().y + 1.f, myCaster->GetComponent<CTransformComponent>()->Position().z }, aParent->GetComponent<CTransformComponent>()->Position());
+			CalculateDirection({myCaster->GetComponent<CTransformComponent>()->Position().x, myCaster->GetComponent<CTransformComponent>()->Position().y + 1.f, myCaster->GetComponent<CTransformComponent>()->Position().z}, aParent->GetComponent<CTransformComponent>()->Position());
 			aParent->GetComponent<CTransformComponent>()->Move(myDirection * mySpeed * CTimer::Dt());
-		}
-		else 
+		} else
 		{
 			myTimer = 0.0f;
 			aParent->Active(false);
@@ -73,11 +72,14 @@ void CBoomerangBehavior::CalculateDirection(DirectX::SimpleMath::Vector3 aFirstP
 
 void CBoomerangBehavior::Init(CGameObject* aCaster)
 {
-	if (aCaster->GetComponent<CStatsComponent>()->GetStats().myResource > myResourceCost) {
+	if (aCaster->GetComponent<CStatsComponent>()->GetStats().myResource > myResourceCost)
+	{
 		myCaster = aCaster;
 
 		myTargetPosition = MouseTracker::ScreenPositionToWorldPosition();
-		CalculateDirection(MouseTracker::ScreenPositionToWorldPosition(), { myCaster->GetComponent<CTransformComponent>()->Position().x, myCaster->GetComponent<CTransformComponent>()->Position().y, myCaster->GetComponent<CTransformComponent>()->Position().z });
+
+		CalculateDirection(myTargetPosition, {myCaster->GetComponent<CTransformComponent>()->Position().x, myCaster->GetComponent<CTransformComponent>()->Position().y, myCaster->GetComponent<CTransformComponent>()->Position().z});
+
 		myIsReturning = false;
 		myInited = true;
 
@@ -95,7 +97,5 @@ void CBoomerangBehavior::Init(CGameObject* aCaster)
 		message.myMessageType = EMessageType::PlayerResourceChanged;
 		message.data = &difference;
 		CMainSingleton::PostMaster().Send(message);
-	} else {
-		myCaster = nullptr;
 	}
 }
