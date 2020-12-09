@@ -85,6 +85,9 @@
     <FxCompile Include="InstancedVertexShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="SpriteVFXTexturePixelShader.hlsl">
+      <Filter>Shaders\Sprite</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EnemyFactory.cpp" />

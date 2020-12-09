@@ -838,6 +838,14 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='G3_Release|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='G4_Release|x64'">Pixel</ShaderType>
     </FxCompile>
+    <FxCompile Include="SpriteVFXTexturePixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='G4_Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='G3_Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='G3_Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='G4_Release|x64'">Pixel</ShaderType>
+    </FxCompile>
     <FxCompile Include="VertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='G3_Debug|x64'">Vertex</ShaderType>

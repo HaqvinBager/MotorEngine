@@ -22,6 +22,12 @@ bool AddAnimationsToGameObject(CGameObject& aGameObject, const std::string& aGam
 	return false;
 }
 
+std::string GetSuffixFromString(const std::string& aString)
+{
+	//ex: CH_NPC_Boss_Attack_AN.fbx =>  7 from last => _AN
+	return std::move(aString.substr(aString.length() - 7, 3));
+}
+
 void SetAnimations(CGameObject& aGameObject, const EAnimatedObject anAnimatedObject)
 {
 	using namespace rapidjson;
@@ -104,11 +110,6 @@ namespace AnimationLoaderInternal
 	{// from : https://stackoverflow.com/questions/41304891/how-to-count-the-number-of-files-in-a-directory-using-standard/41305019
 		using std::filesystem::directory_iterator;
 		return std::distance(directory_iterator(path), directory_iterator{});
-	}
-	std::string GetSuffixFromString(const std::string& aString)
-	{
-		//ex: CH_NPC_Boss_Attack_AN.fbx =>  7 from last
-		return std::move(aString.substr(aString.length() - 7, 3));
 	}
 	bool Has_SKSuffix(const std::string& aString)
 	{

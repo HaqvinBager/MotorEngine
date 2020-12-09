@@ -4,10 +4,10 @@
 PixelOutPut PixelShader_Albedo(VertexToPixel input)
 {
     PixelOutPut output;
-    float3 albedo = diffuseTexture.Sample(defaultSampler, input.myUV.xy).rgb;
-    albedo = GammaToLinear(albedo);
+    float4 albedo = diffuseTexture.Sample(defaultSampler, input.myUV.xy).rgba;
+    albedo.rgb = GammaToLinear(albedo.rgb);
     output.myColor.rgb = albedo;
-    output.myColor.a = 1.0f;
+    output.myColor.a = albedo.a;
     return output;
 }
 

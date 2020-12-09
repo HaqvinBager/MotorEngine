@@ -7,7 +7,7 @@
 CAuraBehavior::CAuraBehavior(CGameObject* anObjectToFollow, float aRotationalSpeed)
 	: myObjectToFollow(anObjectToFollow), myRotationalSpeed(aRotationalSpeed)
 {
-	myDuration = 600.0f;
+	myDuration = 1.0f;
 	myTimer = 0.0f;
 }
 
@@ -30,4 +30,5 @@ void CAuraBehavior::Update(CGameObject* aParent)
 
 void CAuraBehavior::Init(CGameObject* /*aCaster*/)
 {
+
 }

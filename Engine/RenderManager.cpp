@@ -100,6 +100,7 @@ void CRenderManager::Render(CScene& aScene)
 	//std::vector<CModelComponent*> modelsToRender = myScene.CullGameObjects(maincamera);
 	std::vector<CGameObject*> gameObjects = aScene.CullGameObjects(maincamera);
 	std::vector<CGameObject*> instancedGameObjects;
+	std::vector<CGameObject*> instancedGameObjectsWithAlpha;
 	std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> pointlights;
 	for (CGameObject* instance : gameObjects)
 	{
@@ -108,6 +109,11 @@ void CRenderManager::Render(CScene& aScene)
 		}
 		else if (instance->GetComponent<CInstancedModelComponent>()) {
 			pointlights.emplace_back(aScene.CullLights(instance));
+			if (instance->GetComponent<CInstancedModelComponent>()->RenderWithAlpha())
+			{
+				instancedGameObjectsWithAlpha.emplace_back(instance);
+				continue;
+			}
 			instancedGameObjects.emplace_back(instance);
 		}
 	}
@@ -138,6 +144,8 @@ void CRenderManager::Render(CScene& aScene)
 
 	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_ALPHABLEND);
 	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_ONLYREAD);
+
+	myForwardRenderer.InstancedRender(environmentlight, pointlights, maincamera, instancedGameObjectsWithAlpha);
 
 	myVFXRenderer.Render(maincamera, gameObjects);
 

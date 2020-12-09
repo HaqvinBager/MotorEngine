@@ -32,16 +32,16 @@ public:
 		}
 
 		//The picking ray is checked against the floor of the world, **ASSUMING Y TO BE 0**
-		//DirectX::SimpleMath::Plane worldPlane = DirectX::SimpleMath::Plane(DirectX::SimpleMath::Vector3::Zero, DirectX::SimpleMath::Vector3::Up);
-		//
-		//float distToPlane = 0.f;
-		//DirectX::SimpleMath::Vector3 worldPos{ 0.0f, 0.0f, 0.0f };
-		//
-		//if (ray.Intersects(worldPlane, distToPlane)) {
-		//	worldPos = ray.position + ray.direction * distToPlane;
-		//}
+		DirectX::SimpleMath::Plane worldPlane = DirectX::SimpleMath::Plane(DirectX::SimpleMath::Vector3::Zero, DirectX::SimpleMath::Vector3::Up);
+		
+		float distToPlane = 0.f;
+		DirectX::SimpleMath::Vector3 worldPos{ 0.0f, 0.0f, 0.0f };
+		
+		if (ray.Intersects(worldPlane, distToPlane)) {
+			worldPos = ray.position + ray.direction * distToPlane;
+		}
 
-		return Vector3();
+		return worldPos;
 
 	//	CCamera* testCamera = CScene::GetInstance()->GetMainCamera();
 
