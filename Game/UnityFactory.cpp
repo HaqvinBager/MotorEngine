@@ -295,7 +295,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SDestructibleData& aData, con
 	gameObject->myTransform->Position(aData.myPosition);
 	gameObject->myTransform->Rotation(aData.myRotation);
 	gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
-	gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 0.8f, ECollisionLayer::ALL, static_cast<uint64_t>(ECollisionLayer::PLAYER));
+	gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 0.15f, ECollisionLayer::ALL, static_cast<uint64_t>(ECollisionLayer::PLAYER));
 	gameObject->AddComponent<CDestructibleComponent>(*gameObject);
 
 	AddAnimationsToGameObject(*gameObject, aModelPath, EAnimatedObject::Destructible);
