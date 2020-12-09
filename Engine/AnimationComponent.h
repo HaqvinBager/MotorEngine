@@ -63,16 +63,17 @@ public:
 	void SetAbility06ID(const int aID);
 	// ! Temporary for project 6
 
-	template <class T>
-	void PlayAnimation(const T anEAnimationID);// Use with E- Player/Enemy/Boss/Other -AnimationID
-	template <class T>
-	void SetIdleID(const T anIdleID);
-	template <class T>
-	void SetMovingID(const T aMovingID);
-	template <class T>
-	void SetDyingID(const T aDyingID);
-	template<class T>
-	void SetStateIDs(const T anIdleID, const T aMovingID, const T aDyingID);
+	// Use with E- Player/Enemy/Boss/Other -AnimationID
+	//template <class T>
+	//void PlayAnimation(const T anEAnimationID);
+	//template <class T>
+	//void SetIdleID(const T anIdleID);
+	//template <class T>
+	//void SetMovingID(const T aMovingID);
+	//template <class T>
+	//void SetDyingID(const T aDyingID);
+	//template<class T>
+	//void SetStateIDs(const T anIdleID, const T aMovingID, const T aDyingID);
 
 	// Intended use: internal and Modelviewer. Use <T> version of this function if used elsewhere.
 	void ModelViewerPlayAnimation(const int anAnimationIndex, bool anIsLooping = false, const float anAnimSpeed = 1.0f);
@@ -95,7 +96,7 @@ private:
 	inline void ResetIdleTimer();
 	void SwitchBackToIdle();
 
-	void PlayAnimation(const int anAnimationIndex, bool anIsLooping = false, const float anAnimSpeed = 1.0f);
+	void PlayAnimation(const int anAnimationID, bool anIsLooping = false, const float anAnimSpeed = 1.0f);
 
 private:
 	CAnimation* myAnimation;
@@ -164,53 +165,53 @@ private: // Needed for template functions
 	}
 };
 
-template <class T>
-void CAnimationComponent::PlayAnimation(const T anEAnimationID)
-{
-	int id = static_cast<int>(anEAnimationID);
-	if (this->HasID(id))
-	{
-		this->PlayAnimation(this->GetIndexFromList(id), false);
-		myCurrentAnimationID = id;
-	}
-	else
-	{
-		this->PlayAnimation(0, false);
-		assert(false && "Does not contain animation ID");
-	}
-}
-
-template <class T>
-void CAnimationComponent::SetIdleID(const T anIdleID)
-{
-	int id = static_cast<int>(anIdleID);
-	if (this->HasID(id))
-		this->myIdleAnimationID = id;
-	else
-		this->myIdleAnimationID = 0;
-}
-template <class T>
-void CAnimationComponent::SetMovingID(const T aMovingID)
-{
-	int id = static_cast<int>(aMovingID);
-	if (this->HasID(id))
-		this->myMovingAnimationID = id;
-	else
-		this->myMovingAnimationID = 0;
-}
-template <class T>
-void CAnimationComponent::SetDyingID(const T aDyingID)
-{
-	int id = static_cast<int>(aDyingID);
-	if (this->HasID(id))
-		this->myDyingAnimationID = id;
-	else
-		this->myDyingAnimationID = 0;
-}
-template<class T>
-void CAnimationComponent::SetStateIDs(const T anIdleID, const T aMovingID, const T aDyingID)
-{
-	this->SetIdleID(anIdleID);
-	this->SetMovingID(aMovingID);
-	this->SetDyingID(aDyingID);
-}
+//template <class T>
+//void CAnimationComponent::PlayAnimation(const T anEAnimationID)
+//{
+//	int id = static_cast<int>(anEAnimationID);
+//	if (this->HasID(id))
+//	{
+//		this->PlayAnimation(id, false);
+//		myCurrentAnimationID = id;
+//	}
+//	else
+//	{
+//		this->PlayAnimation(0, false);
+//		assert(false && "Does not contain animation ID");
+//	}
+//}
+//
+//template <class T>
+//void CAnimationComponent::SetIdleID(const T anIdleID)
+//{
+//	int id = static_cast<int>(anIdleID);
+//	if (this->HasID(id))
+//		this->myIdleAnimationID = id;
+//	else
+//		this->myIdleAnimationID = 0;
+//}
+//template <class T>
+//void CAnimationComponent::SetMovingID(const T aMovingID)
+//{
+//	int id = static_cast<int>(aMovingID);
+//	if (this->HasID(id))
+//		this->myMovingAnimationID = id;
+//	else
+//		this->myMovingAnimationID = 0;
+//}
+//template <class T>
+//void CAnimationComponent::SetDyingID(const T aDyingID)
+//{
+//	int id = static_cast<int>(aDyingID);
+//	if (this->HasID(id))
+//		this->myDyingAnimationID = id;
+//	else
+//		this->myDyingAnimationID = 0;
+//}
+//template<class T>
+//void CAnimationComponent::SetStateIDs(const T anIdleID, const T aMovingID, const T aDyingID)
+//{
+//	this->SetIdleID(anIdleID);
+//	this->SetMovingID(aMovingID);
+//	this->SetDyingID(aDyingID);
+//}

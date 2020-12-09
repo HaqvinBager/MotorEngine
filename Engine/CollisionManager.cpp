@@ -68,6 +68,7 @@ void CCollisionManager::Update()
 	{
 		for (unsigned int inner = outer + 1; inner < myColliders.size(); ++inner)
 		{
+#ifdef _DEBUG
 			CGameObject& outerObj = myColliders[outer]->GameObject();
 			CGameObject& innerObj = myColliders[inner]->GameObject();
 			bool outerActive = outerObj.Active();
@@ -91,7 +92,8 @@ void CCollisionManager::Update()
 					}
 				}
 			}
-		/*	if (myColliders[outer]->GameObject().Active() && myColliders[inner]->GameObject().Active() && myColliders[outer]->Enabled() && myColliders[inner]->Enabled()) {
+#else
+			if (myColliders[outer]->GameObject().Active() && myColliders[inner]->GameObject().Active() && myColliders[outer]->Enabled() && myColliders[inner]->Enabled()) {
 				if (static_cast<uint64_t>(myColliders[outer]->GetCollisionLayer()) & static_cast<uint64_t>(myColliders[inner]->GetCollisionFlags())) {
 					if (myColliders[outer]->Collided(myColliders[inner]))
 					{
@@ -103,7 +105,8 @@ void CCollisionManager::Update()
 						}
 					}
 				}
-			}*/
+			}
+#endif
 		}
 	}
 }
