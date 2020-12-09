@@ -511,7 +511,7 @@ CModel* CModelFactory::GetOutlineModelSubset()
 
 	//Start Shader
 	std::ifstream vsFile;
-	vsFile.open("Shaders/OutlineVertexShader.cso", std::ios::binary);
+	vsFile.open("Shaders/AnimatedVertexShader.cso", std::ios::binary);
 	std::string vsData = { std::istreambuf_iterator<char>(vsFile), std::istreambuf_iterator<char>() };
 	ID3D11VertexShader* vertexShader;
 	ENGINE_HR_MESSAGE(myEngine->myFramework->GetDevice()->CreateVertexShader(vsData.data(), vsData.size(), nullptr, &vertexShader), "Vertex Shader could not be created.");
