@@ -28,6 +28,7 @@ void CGame::Init()
 		CStateStack::EState::BootUpState,
 		CStateStack::EState::TitleScreenState,
 		CStateStack::EState::MainMenu, 
+		CStateStack::EState::IntroState,
 		CStateStack::EState::LoadLevel,
 		CStateStack::EState::InGame,
 		CStateStack::EState::PauseMenu 
