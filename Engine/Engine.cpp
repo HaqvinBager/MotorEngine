@@ -162,7 +162,7 @@ float CEngine::BeginFrame()
 	myAudioManager->Update();
 	CMainSingleton::DialogueSystem().Update();
 
-	return myTimer->Mark();
+	return CTimer::Mark();
 }
 
 void CEngine::RenderFrame()
