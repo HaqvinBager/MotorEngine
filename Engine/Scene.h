@@ -47,7 +47,7 @@ public:
 	std::vector<CAnimatedUIElement*> CullAnimatedUI(std::vector<CSpriteInstance*>& someFramesToReturn);
 	std::vector<CTextInstance*> GetTexts();
 
-	CGameObject* GetModelToOutline() const { return myModelToOutline; }
+	std::vector<CGameObject*> GetModelsToOutline() const { return myModelsToOutline; }
 
 	bool AddInstances(std::vector<CGameObject*>& someGameObjects);
 	bool AddInstance(CCamera* aCamera);
@@ -81,7 +81,8 @@ public:
 	bool DestroyAnimatedUIElement();
 	bool DestroyTextInstances();
 
-	void SetModelToOutline(CGameObject* aGameObject);
+	void SetPlayerToOutline(CGameObject* aPlayer);
+	void SetEnemyToOutline(CGameObject* anEnemy);
 
 	const bool Ready() const { return myIsReadyToRender; }
 	void Ready(bool aReady) { myIsReadyToRender = aReady; }
@@ -131,7 +132,7 @@ private:
 
 	//static CScene* ourInstance;
 
-	CGameObject* myModelToOutline;
+	std::vector<CGameObject*> myModelsToOutline;
 
 #ifdef  _DEBUG
 private:

@@ -35,7 +35,6 @@
 CScene::CScene()
 	: myIsReadyToRender(false)
 	, myMainCamera(nullptr)
-	, myModelToOutline(nullptr)
 	, myEnvironmentLight(nullptr)
 	, myNavMesh(nullptr)
 	, myNavMeshGrid(nullptr)
@@ -46,6 +45,10 @@ CScene::CScene()
 #ifdef _DEBUG
 	myShouldRenderLineInstance = true;
 #endif
+	myModelsToOutline.resize(2);
+	for (unsigned int i = 0; i < myModelsToOutline.size(); ++i) {
+		myModelsToOutline[i] = nullptr;
+	}
 }
 
 CScene::~CScene()
@@ -492,9 +495,9 @@ bool CScene::DestroyTextInstances()
 	return false;
 }
 
-void CScene::SetModelToOutline(CGameObject* aGameObject)
+void CScene::SetPlayerToOutline(CGameObject* aPlayer)
 {
-	if (myModelToOutline) {
+	/*if (myModelToOutline) {
 		myGameObjects.emplace_back(std::move(myModelToOutline));
 	}
 	auto it = std::find(myGameObjects.begin(), myGameObjects.end(), aGameObject);
@@ -503,9 +506,14 @@ void CScene::SetModelToOutline(CGameObject* aGameObject)
 		myModelToOutline = myGameObjects.back();
 		myGameObjects.pop_back();
 	}
-	else {
-		myModelToOutline = aGameObject;
-	}
+	else {*/
+		myModelsToOutline[0] = aPlayer;
+	//}
+}
+
+void CScene::SetEnemyToOutline(CGameObject* anEnemy)
+{
+	myModelsToOutline[1] = anEnemy;
 }
 
 void CScene::SetShouldRenderLineInstance(const bool aShouldRender)
