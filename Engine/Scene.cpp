@@ -121,11 +121,12 @@ bool CScene::InitNavMesh(std::string aPath)
 		positions[i + 5] = myNavMesh->myTriangles[j]->myVertexPositions[2];
 	}
 
-	myNavMeshGrid = new CLineInstance();
-	myNavMeshGrid->Init(CLineFactory::GetInstance()->CreatePolygon(positions));
-	this->AddInstance(myNavMeshGrid);
+	//myNavMeshGrid = new CLineInstance();
+	//myNavMeshGrid->Init(CLineFactory::GetInstance()->CreatePolygon(positions));
+	//this->AddInstance(myNavMeshGrid);
 
 	delete loader;
+	loader = nullptr;
 	return true;
 }
 
