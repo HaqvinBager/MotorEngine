@@ -56,6 +56,13 @@ struct SEnemyData {
 	int myModelIndex;
 };
 
+struct SDestructibleData {
+	DirectX::SimpleMath::Vector3 myPosition;
+	DirectX::SimpleMath::Vector3 myRotation;
+	DirectX::SimpleMath::Vector3 myScale;
+	int myModelIndex;
+};
+
 struct SGameObjectData
 {
 	int myInstanceID;
@@ -95,6 +102,7 @@ struct SInGameData
 	SPlayerData myPlayerData;
 	std::vector<SEventData> myEventData;
 	std::vector<SEnemyData> myEnemyData;
+	std::vector<SDestructibleData> myDestructibleData;
 	std::vector<SGameObjectData> myGameObjects;
 	//int mySceneIndex;
 	std::vector<SEnvironmentFXData> myEnvironmentFXs;

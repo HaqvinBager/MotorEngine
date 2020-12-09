@@ -35,7 +35,7 @@ PixelOutPut main(VertexToPixel input)
     PixelOutPut output;
     
     float3 toEye = normalize(cameraPosition.xyz - input.myWorldPosition.xyz);
-    float3 albedo = PixelShader_Albedo(input).myColor.rgb;
+    float4 albedo = PixelShader_Albedo(input).myColor.rgba;
     float3 normal = PixelShader_Normal(input).myColor.xyz;
    
     // ambient = 1 - PixelShader_AO() seems to solve glossiness-issue. Not sure if correct might be SG baking normalmaps 
@@ -44,10 +44,10 @@ PixelOutPut main(VertexToPixel input)
     float perceptualroughness = PixelShader_PerceptualRoughness(input).myColor.g;
     float emissivedata = PixelShader_Emissive(input).myColor.r;
     
-    float3 specularcolor = lerp((float3) 0.04, albedo, metalness);
-    float3 diffusecolor = lerp((float3) 0.00, albedo, 1 - metalness);
+    float3 specularcolor = lerp((float3) 0.04, albedo.rgb, metalness);
+    float3 diffusecolor = lerp((float3) 0.00, albedo.rgb, 1 - metalness);
     
-    float3 ambience = EvaluateAmbience(environmentTexture, normal, input.myNormal.xyz, toEye, perceptualroughness, metalness, albedo, ambientocclusion, diffusecolor, specularcolor);
+    float3 ambience = EvaluateAmbience(environmentTexture, normal, input.myNormal.xyz, toEye, perceptualroughness, metalness, albedo.rgb, ambientocclusion, diffusecolor, specularcolor);
     float3 directionallight = EvaluateDirectionalLight(diffusecolor, specularcolor, normal, perceptualroughness, directionalLightColor.xyz, toDirectionalLight.xyz, toEye.xyz);
     directionallight *= directionalLightColor.w;
  
@@ -62,7 +62,7 @@ PixelOutPut main(VertexToPixel input)
     float3 radiance = ambience + directionallight + pointLights + emissive;
    
     output.myColor.rgb = LinearToGamma(radiance);
-    output.myColor.a = 1.0f;
+    output.myColor.a = albedo.w;
     
     return output;
 }

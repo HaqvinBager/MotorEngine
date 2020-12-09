@@ -93,31 +93,29 @@ void CInGameState::Start()
 	myTokenPool = new CTokenPool(4, 1.0f);// todo: fix reset
 
 	//NO TOUCHY UNLESS BOSS TEST
-	myTestBoss = new CGameObject();
-	CBossBehavior* bossBehavior = new CBossBehavior(&CEngine::GetInstance()->GetActiveScene().FindObjectOfType<CPlayerControllerComponent>()->GameObject());
-	myTestBoss->myTransform->Position({ -2.0f, 0.0f, 6.0f });
-	myTestBoss->AddComponent<CCircleColliderComponent>(*myTestBoss, 0.5f, ECollisionLayer::BOSS, static_cast<int>(ECollisionLayer::PLAYER));
+	//myTestBoss = new CGameObject();
+	//CBossBehavior* bossBehavior = new CBossBehavior(&CEngine::GetInstance()->GetActiveScene().FindObjectOfType<CPlayerControllerComponent>()->GameObject());
+	//myTestBoss->myTransform->Position({ -2.0f, 0.0f, 6.0f });
+	//myTestBoss->AddComponent<CCircleColliderComponent>(*myTestBoss, 0.5f, ECollisionLayer::BOSS, static_cast<int>(ECollisionLayer::PLAYER));
 	//myTestBoss->AddComponent<CModelComponent>(*myTestBoss, "Assets/Graphics/Animations/CH_E_Boss_SK/CH_E_Boss_SK.fbx");
-	//
+
 	//AddAnimationsToGameObject(*myTestBoss, "Assets/Graphics/Animations/CH_E_Boss_SK/CH_E_Boss_SK.fbx", EAnimatedObject::Boss);
 
-	myTestBoss->AddComponent<CStatsComponent>(*myTestBoss, 10.0f, 10.0f, 3.0f, 3.0f, 20.0f, 15.0f);
-	myTestBoss->AddComponent<CAIBehaviorComponent>(*myTestBoss, bossBehavior);
+	//myTestBoss->AddComponent<CStatsComponent>(*myTestBoss, 10.0f, 10.0f, 3.0f, 3.0f, 20.0f, 15.0f);
+	//myTestBoss->AddComponent<CAIBehaviorComponent>(*myTestBoss, bossBehavior);
 
-	myTestBoss->AddComponent<CNavMeshComponent>(*myTestBoss);
+	//myTestBoss->AddComponent<CNavMeshComponent>(*myTestBoss);
 
-	std::pair<EAbilityType, unsigned int> ab1 = { EAbilityType::BossAbility1, 1 };
-	std::pair<EAbilityType, unsigned int> ab2 = { EAbilityType::BossAbility2, 1 };
-	std::pair<EAbilityType, unsigned int> ab3 = { EAbilityType::BossAbility3, 1 };
-	std::vector<std::pair<EAbilityType, unsigned int>> abs;
-	abs.emplace_back(ab1);
-	abs.emplace_back(ab2);
-	abs.emplace_back(ab3);
-	/*CAbilityComponent* ac =*/ myTestBoss->AddComponent<CAbilityComponent>(*myTestBoss, abs);
-	//ac->Awake();
+	//std::pair<EAbilityType, unsigned int> ab1 = { EAbilityType::BossAbility1, 1 };
+	//std::pair<EAbilityType, unsigned int> ab2 = { EAbilityType::BossAbility2, 1 };
+	//std::pair<EAbilityType, unsigned int> ab3 = { EAbilityType::BossAbility3, 1 };
+	//std::vector<std::pair<EAbilityType, unsigned int>> abs;
+	//abs.emplace_back(ab1);
+	//abs.emplace_back(ab2);
+	//abs.emplace_back(ab3);
+	//myTestBoss->AddComponent<CAbilityComponent>(*myTestBoss, abs);
 
-	CEngine::GetInstance()->GetActiveScene().AddInstance(myTestBoss);
-	//myTestBoss->Awake();
+	//CEngine::GetInstance()->GetActiveScene().AddInstance(myTestBoss);
 	//NO TOUCHY UNLESS BOSS TEST
 
 	std::vector<CGameObject*>& gameObjects = CEngine::GetInstance()->GetActiveScene().myGameObjects;
@@ -154,10 +152,6 @@ void CInGameState::Start()
 	{
 		gameObject->Start();
 	}
-
-	//int aSceneIndex = 2;
-	//CMainSingleton::PostMaster().Send({EMessageType::LoadDialogue, &aSceneIndex});
-	//CMainSingleton::PostMaster().Send({EMessageType::IntroStarted, nullptr});
 }
 
 void CInGameState::Stop()
@@ -226,6 +220,29 @@ void CInGameState::Update()
 		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text3);
 	}
 
+	if (Input::GetInstance()->IsKeyPressed('7'))
+	{
+		int aSceneIndex = 0;
+		CMainSingleton::PostMaster().Send({ EMessageType::LoadDialogue, &aSceneIndex });
+	}
+
+	if (Input::GetInstance()->IsKeyPressed('8'))
+	{
+		int aSceneIndex = 1;
+		CMainSingleton::PostMaster().Send({ EMessageType::LoadDialogue, &aSceneIndex });
+	}
+
+	if (Input::GetInstance()->IsKeyPressed('9'))
+	{
+		int aSceneIndex = 2;
+		CMainSingleton::PostMaster().Send({ EMessageType::LoadDialogue, &aSceneIndex });
+	}
+
+	if (Input::GetInstance()->IsKeyPressed('0'))
+	{
+		CMainSingleton::PostMaster().Send({ EMessageType::IntroStarted, NULL });
+	}
+
 	if (myExitLevel)
 	{
 		myExitLevel = false;
@@ -235,6 +252,7 @@ void CInGameState::Update()
 
 		myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
 	}
+
 }
 
 void CInGameState::ReceiveEvent(const EInputEvent aEvent)
@@ -258,4 +276,3 @@ void CInGameState::Receive(const SStringMessage& /*aMessage*/)
 {
 	myExitLevel = true;
 }
-

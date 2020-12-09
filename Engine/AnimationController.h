@@ -73,6 +73,11 @@ struct MeshEntry
 	unsigned int myBaseIndex;
 	unsigned int myMaterialIndex;
 };
+/*
+	Ex: can every enemy share the same controller?
+	animation data like currentScene, playtime etc is held by CAnimation and passed to the controller. Which becomes some form of handler, made static.
+*/
+
 
 class AnimationController
 {
@@ -96,8 +101,8 @@ private:
 	int myPrevSceneIndex	= 0;
 	int myLoopingSceneIndex	= 0;// we also use this
 	float myAnimationTimeLooping = 0.0f;
-	std::vector<Assimp::Importer*>		myImporters;
-	std::vector<const aiScene*>			myScenes;
+	std::vector<Assimp::Importer*>		myImporters;// This is huge
+	std::vector<const aiScene*>			myScenes;// This is huge, entire scene for model. 
 	aiMatrix4x4							myGlobalInverseTransform;
 	std::map<std::string, uint>			myBoneMapping;
 	std::vector<MeshEntry>				myEntries;
@@ -117,10 +122,16 @@ public:
 	const size_t GetNrOfAnimations() const { return myScenes.size(); }
 	void ResetAnimationTimeCurrent() { myAnimationTimeCurrent = 0.0f; }
 	const float CurrentAnimationDuration() { return static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration); }
+	const float CurrentAnimationTicksPerSecond() { return static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mTicksPerSecond); }
 
 	~AnimationController()
 	{
 		Release();
+		//for (uint i = 0; i < myScenes.size(); ++i)
+		//{
+		//	delete myScenes[i];
+		//}
+		//myScenes.clear();
 	}
 
 	void Release()
@@ -481,6 +492,7 @@ public:
 		using namespace ModelExceptionTools;
 		if (IsDestructibleModel(anFBXFilePath))
 		{
+			//myImporters[myCurSceneIndex]->GetOrphanedScene()// Cool but can't be used atm
 			myScenes.push_back(myImporters[myCurSceneIndex]->ReadFile(myModelPath, aiProcessPreset_TargetRealtime_Quality_DontJoinIdentical | aiProcess_ConvertToLeftHanded));
 		}
 		else

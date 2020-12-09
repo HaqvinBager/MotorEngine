@@ -23,7 +23,8 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent):
 	mySelection(new CMouseSelection()),
 	myIsMoving(true),
 	myTargetEnemy(nullptr),
-	myMiddleMousePressed(false)
+	myMiddleMousePressed(false),
+	myAuraActive(false)
 {
 	myLastPosition = {0.0f,0.0f,0.0f};
 }
@@ -63,7 +64,7 @@ void CPlayerControllerComponent::Update()
 			if (DirectX::SimpleMath::Vector3::Distance(myTargetEnemy->myTransform->Position(), GameObject().myTransform->Position())
 				< (myTargetEnemy->GetComponent<CCircleColliderComponent>()->GetRadius() + abilityLength)) {
 				this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position());
-				this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::AttackLight);
+				this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack01ID();
 			}
 		}
 	}
@@ -117,7 +118,7 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 			}
 		} else {
 			this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position());
-			this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::AttackLight);
+			this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack01ID();
 		}
 		break;
 	case IInputObserver::EInputEvent::MiddleMouseMove:
@@ -132,45 +133,11 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 
 void CPlayerControllerComponent::Receive(const SMessage& aMessage)
 {
-	float difference;
-	float maxValue;
-	float currentExperience;
+	
 	switch (aMessage.myMessageType)
 	{
 	case EMessageType::EnemyDied:
-		if (this->GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myMaxLevel
-				> this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel)
-		{
-
-			this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience += *static_cast<float*>(aMessage.data);
-
-			maxValue = this->GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myExperienceToLevelUp;
-
-			if (maxValue <= this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience)
-			{
-
-				this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel += 1;
-
-				this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel);
-
-				std::cout << this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel << std::endl;
-				if (this->GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myMaxLevel
-					== this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel) {
-					MessagePostmaster(EMessageType::PlayerExperienceChanged, 1.0f);
-				} else {
-					currentExperience = this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience;
-					difference = this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience - maxValue;
-					this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience = difference;
-					currentExperience = this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience;
-					difference = difference / maxValue;
-					MessagePostmaster(EMessageType::PlayerExperienceChanged, difference);
-				}
-			} else
-			{
-				difference = this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience / maxValue;
-				MessagePostmaster(EMessageType::PlayerExperienceChanged, difference);
-			}
-		}
+		UpdateExperience(aMessage);
 	default:
 		break;
 	}
@@ -209,7 +176,7 @@ bool CPlayerControllerComponent::PlayerIsAlive()
 
 void CPlayerControllerComponent::TakeDamage(float aDamageMultiplier, CGameObject* aGameObject)
 {
-	SStats& stats = GameObject().GetComponent<CStatsComponent>()->GetStats();
+	//SStats& stats = GameObject().GetComponent<CStatsComponent>()->GetStats();
 
 	EHitType hitType = EHitType::Enemy;
 	float damage = CDamageUtility::CalculateDamage(hitType, aGameObject->GetComponent<CStatsComponent>()->GetBaseStats().myDamage, aDamageMultiplier);
@@ -217,8 +184,8 @@ void CPlayerControllerComponent::TakeDamage(float aDamageMultiplier, CGameObject
 	if (GameObject().GetComponent<CStatsComponent>()->AddDamage(damage)) {
 		SDamagePopupData data = {damage, static_cast<int>(hitType), &GameObject()};
 		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &data);
-		std::cout << __FUNCTION__ << " Player current health: " << stats.myHealth << std::endl;/*
-		CMainSingleton::PostMaster().Send({EMessageType::PlayerHealthChanged, &stats.myHealth});*/
+		//std::cout << __FUNCTION__ << " Player current health: " << stats.myHealth << std::endl;/*
+		//CMainSingleton::PostMaster().Send({EMessageType::PlayerHealthChanged, &stats.myHealth});*/
 	}
 	//stats.myCanTakeDamage = false;
 }
@@ -231,5 +198,57 @@ void CPlayerControllerComponent::RegenerateMana()
 		float difference = GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myBaseResource - GameObject().GetComponent<CStatsComponent>()->GetStats().myResource;
 		difference = (100.0f - difference) / 100.0f;
 		MessagePostmaster(EMessageType::PlayerResourceChanged, difference);
+	}
+}
+
+void CPlayerControllerComponent::UpdateExperience(const SMessage& aMessage)
+{
+	float difference;
+	float maxValue;
+	//float currentExperience;
+
+	if (this->GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myMaxLevel
+				> this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel)
+	{
+
+		this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience += *static_cast<float*>(aMessage.data);
+
+		maxValue = this->GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myExperienceToLevelUp;
+
+		if (maxValue <= this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience)
+		{
+
+			this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel += 1;
+			int level = this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel;
+			std::string abilityInfo = "Skill ";
+			abilityInfo += std::to_string(level);
+
+			CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, abilityInfo);
+
+			////This is for group 4
+			////Comment this in before last build
+			/*if (level == 2) {
+				this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position());
+				myAuraActive = true;
+			}*/
+
+			this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel);
+
+			std::cout << this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel << std::endl;
+			if (this->GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myMaxLevel
+				== this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel) {
+				MessagePostmaster(EMessageType::PlayerExperienceChanged, 1.0f);
+			} else {
+				difference = this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience - maxValue;
+				this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience = difference;
+
+				difference = difference / maxValue;
+				MessagePostmaster(EMessageType::PlayerExperienceChanged, difference);
+			}
+		} else
+		{
+			difference = this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience / maxValue;
+			MessagePostmaster(EMessageType::PlayerExperienceChanged, difference);
+		}
 	}
 }

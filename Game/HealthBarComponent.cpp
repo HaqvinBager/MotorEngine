@@ -21,6 +21,8 @@ CHealthBarComponent::CHealthBarComponent(CGameObject& aParant, CScene& aScene, s
 
 CHealthBarComponent::~CHealthBarComponent()
 {
+	delete myCanvas;
+	myCanvas = nullptr;
 }
 
 void CHealthBarComponent::Awake()

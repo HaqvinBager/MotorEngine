@@ -114,12 +114,12 @@ void CEnemyBehavior::FindATarget()
 				myPlayer->GetComponent<CStatsComponent>();
 				if (myCurrentParent->GetComponent<CAnimationComponent>())
 				{
-					myCurrentParent->GetComponent<CAnimationComponent>()->PlayAnimation(EEnemyAnimationID::Attack);
+					myCurrentParent->GetComponent<CAnimationComponent>()->PlayAttack01ID();
 				}
 				myCurrentParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::EnemyAbility, myCurrentParent->myTransform->Position());
-				CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
-				stats.myTokenSlot = nullptr;
-				myCurrentParent->GetComponent<CStatsComponent>()->NextTokenCooldown();
+				//CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
+				//stats.myTokenSlot = nullptr;
+				//myCurrentParent->GetComponent<CStatsComponent>()->NextTokenCooldown();
 			}
 		}
 		else {
@@ -127,7 +127,7 @@ void CEnemyBehavior::FindATarget()
 				CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
 				stats.myTokenSlot = nullptr;
 				myCurrentParent->GetComponent<CStatsComponent>()->NextTokenCooldown();
-				
+
 			}
 		}
 	}
@@ -160,12 +160,23 @@ void CEnemyBehavior::TakeDamage(float aDamageMultiplier, CGameObject* aGameObjec
 	if (myCurrentParent->GetComponent<CStatsComponent>()->AddDamage(damage)) {
 		SDamagePopupData data = {damage, static_cast<int>(hitType), myCurrentParent};
 		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &data);
-		std::cout << __FUNCTION__ << " Enemy current health: " << stats.myHealth << std::endl;
 		float baseHealth = myCurrentParent->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
 		float difference = baseHealth - myCurrentParent->GetComponent<CStatsComponent>()->GetStats().myHealth;
+
+		if (myPlayer->GetComponent<CPlayerControllerComponent>()->AuraActive()) {
+			if((myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth + (difference / 2.5f))
+				< myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth)
+				myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth += difference / 2.5f;
+			else
+				myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth = myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
+		}
+
 		difference = (baseHealth - difference) / baseHealth;
 		if (difference <= 0.0)
+		{
 			difference = 0.0f;
+		}
+
 
 		//myCurrentParent->GetComponent<CHealthBarComponent>()->GetCanvas()->GetAnimatedUI()[0]->Level(difference);
 		myCurrentParent->GetComponent<CHealthBarComponent>()->GetCanvas2()->GetAnimatedUI()[0]->Level(difference);

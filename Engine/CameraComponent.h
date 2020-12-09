@@ -3,6 +3,7 @@
 #include "PerlinNoise.h"
 
 class CGameObject;
+class CSpriteInstance;
 
 class CCameraComponent : public CComponent
 {
@@ -19,14 +20,20 @@ public:
 	void SetTrauma(float aValue);
 	void SetStartingRotation(DirectX::SimpleMath::Vector3 aRotation);
 
+	void Fade(bool aShouldFadeIn);
+	const bool IsFading() const;
+	void EmplaceSprites(std::vector<CSpriteInstance*>& someSprites) const;
+
 	const Matrix& GetViewMatrix();
 
 private:
 	void Shake();
 
 private:
+	CSpriteInstance* myFadingPlane;
 	DirectX::SimpleMath::Matrix myProjection;
 	DirectX::SimpleMath::Matrix myView;
+	
 	DirectX::SimpleMath::Vector3 myStartingRotation;
 	DirectX::SimpleMath::Vector3 myMaxShakeRotation;
 	PerlinNoise myNoise;
@@ -35,5 +42,10 @@ private:
 	float myShakeSpeed;
 	float myDecayInSeconds;
 	float myShakeTimer;
+
+	float myFadeTimer;
+	float myFadeSpeed;
+	bool myFadingIn;
+	bool myFadingPlaneActive;
 };
 
