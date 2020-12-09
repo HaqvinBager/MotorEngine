@@ -34,5 +34,6 @@ enum class EMessageType
 	PlayAmbienceDungeon,
 	PlayAmbienceSwamp1,
 	PlayAmbienceSwamp2,
+	UIButtonPress,
 	Count
 };
