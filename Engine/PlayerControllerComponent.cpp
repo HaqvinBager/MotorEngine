@@ -170,6 +170,7 @@ void CPlayerControllerComponent::ResetPlayer()
 	GameObject().GetComponent<CTransformComponent>()->Position(GameObject().GetComponent<CTransformComponent>()->StartPosition());
 	GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth = GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
 	GameObject().GetComponent<CStatsComponent>()->GetStats().myResource = GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myBaseResource;
+	GameObject().GetComponent<CTransformComponent>()->ClearPath();
 	MessagePostmaster(EMessageType::PlayerHealthChanged, 1.0f);
 	MessagePostmaster(EMessageType::PlayerResourceChanged, 1.0f);
 }
