@@ -11,6 +11,7 @@ public:
 		BootUpState,
 		TitleScreenState,
 		MainMenu,
+		IntroState,
 		LoadLevel,
 		InGame,
 		PauseMenu,

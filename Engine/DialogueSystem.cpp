@@ -22,8 +22,8 @@ namespace SM = DirectX::SimpleMath;
 CDialogueSystem::CDialogueSystem()
 {
 	myCurrentSpeakerName = nullptr;
-	//myDialogueLine = nullptr;
 	myAnimatedDialogue = nullptr;
+	myAnimatedNarration = nullptr;
 	myDialogueBox = nullptr;
 	myCurrentSpeakerPortrait = nullptr;
 }
@@ -31,8 +31,6 @@ CDialogueSystem::CDialogueSystem()
 CDialogueSystem::~CDialogueSystem() {
 	delete myCurrentSpeakerName;
 	myCurrentSpeakerName = nullptr;
-	//delete myDialogueLine;
-	//myDialogueLine = nullptr;
 	delete myAnimatedDialogue;
 	myAnimatedDialogue = nullptr;
 	delete myDialogueBox;
@@ -161,8 +159,6 @@ void CDialogueSystem::LoadNarration()
 }
 
 void CDialogueSystem::ExitDialogue() {
-	CMainSingleton::PostMaster().Send({ EMessageType::StopDialogue, NULL });
-	
 	myIsActive = false;
 	myCurrentDialogueIndex = 0;
 	myLastSpeakerIndex = -1;
@@ -277,6 +273,7 @@ void CDialogueSystem::HandleInput() {
 		myCurrentLine = "";
 
 		if (myCurrentDialogueIndex == 0) {
+			CMainSingleton::PostMaster().Send({ EMessageType::StopDialogue, NULL });
 			ExitDialogue();
 		}
 	}
@@ -295,6 +292,7 @@ void CDialogueSystem::HandleInput() {
 	}
 
 	if (Input::GetInstance()->IsKeyPressed(VK_ESCAPE)) {
+		CMainSingleton::PostMaster().Send({ EMessageType::StopDialogue, NULL });
 		ExitDialogue();
 	}
 }
