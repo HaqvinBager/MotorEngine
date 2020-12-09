@@ -194,6 +194,7 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 
 			if (UseAbility(EAbilityType::PlayerAbility1, GameObject().myTransform->Position()))
 			{
+				this->GameObject().GetComponent<CAnimationComponent>()->PlayAbility01ID();
 				myMessage.myMessageType = EMessageType::AbilityOneCooldown;
 				myCurrentCooldowns[0] = myMaxCooldowns[0];
 				myMessage.data = &messageValue;
@@ -203,7 +204,7 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 		break;
 		//this is for group 3
 		//TODO: Comment this out before last build
-	case EInputEvent::Ability2:
+	/*case EInputEvent::Ability2:
 		if (this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel > 1) {
 			if (myCurrentCooldowns[1] > 0)
 				break;
@@ -216,7 +217,7 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 				CMainSingleton::PostMaster().Send(myMessage);
 			}
 		}
-		break;
+		break;*/
 	case EInputEvent::Ability3:
 		if (this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel > 2) {
 			if (myCurrentCooldowns[2] > 0)
@@ -224,6 +225,7 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 
 			if (UseAbility(EAbilityType::PlayerAbility3, GameObject().myTransform->Position()))
 			{
+				this->GameObject().GetComponent<CAnimationComponent>()->PlayAbility02ID();
 				myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
 				myCurrentCooldowns[2] = myMaxCooldowns[2];
 				myMessage.data = &messageValue;
