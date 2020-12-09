@@ -63,7 +63,7 @@ void CPlayerControllerComponent::Update()
 			if (DirectX::SimpleMath::Vector3::Distance(myTargetEnemy->myTransform->Position(), GameObject().myTransform->Position())
 				< (myTargetEnemy->GetComponent<CCircleColliderComponent>()->GetRadius() + abilityLength)) {
 				this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position());
-				this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::AttackLight);
+				this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack01ID();
 			}
 		}
 	}
@@ -111,7 +111,7 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 			}
 		} else {
 			this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position());
-			this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::AttackLight);
+			this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack01ID();
 		}
 		break;
 	case IInputObserver::EInputEvent::MiddleMouseMove:

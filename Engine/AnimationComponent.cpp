@@ -99,8 +99,7 @@ void CAnimationComponent::MovingState()
 		return;
 	if (myCurrentAnimationID != myMovingAnimationID)
 	{
-		PlayAnimation(GetIndexFromList(myMovingAnimationID), true);
-		myCurrentAnimationID = myMovingAnimationID;
+		PlayAnimation(myMovingAnimationID, true);
 	}
 	ResetIdleTimer();
 }
@@ -110,12 +109,11 @@ bool CAnimationComponent::DeadState()
 	if (myCurrentAnimationID == myDyingAnimationID)
 		return false;
 
-	PlayAnimation(GetIndexFromList(myDyingAnimationID));
-	myCurrentAnimationID = myDyingAnimationID;
+	PlayAnimation(myDyingAnimationID);
 	myAnimation->GetMyController().ResetAnimationTimeCurrent();
 	myAnimation->GetMyController().SetLoopingSceneIndex(0);
 
-	return myAnimation->GetMyController().CurrentAnimationDuration() > 0.0f;
+	return false;//myAnimation->GetMyController().CurrentAnimationDuration() > 0.0f;
 }
 
 void CAnimationComponent::ModelViewerPlayAnimation(const int anAnimationIndex, bool anIsLooping, const float anAnimSpeed)
@@ -138,14 +136,14 @@ void CAnimationComponent::ForceToIdleState()
 	myCurrentAnimationID = myIdleAnimationID; 
 }
 // Temporary for project 6
-void CAnimationComponent::PlayAttack01ID(){ PlayAnimation(GetIndexFromList(myAttack01ID)); }
-void CAnimationComponent::PlayAttack02ID(){ PlayAnimation(GetIndexFromList(myAttack02ID)); }
-void CAnimationComponent::PlayAbility01ID(){ PlayAnimation(GetIndexFromList(myAbility01ID)); }
-void CAnimationComponent::PlayAbility02ID(){ PlayAnimation(GetIndexFromList(myAbility02ID)); }
-void CAnimationComponent::PlayAbility03ID(){ PlayAnimation(GetIndexFromList(myAbility03ID)); }
-void CAnimationComponent::PlayAbility04ID(){ PlayAnimation(GetIndexFromList(myAbility04ID)); }
-void CAnimationComponent::PlayAbility05ID(){ PlayAnimation(GetIndexFromList(myAbility05ID)); }
-void CAnimationComponent::PlayAbility06ID(){ PlayAnimation(GetIndexFromList(myAbility06ID)); }
+void CAnimationComponent::PlayAttack01ID(){ PlayAnimation(myAttack01ID); }
+void CAnimationComponent::PlayAttack02ID(){ PlayAnimation(myAttack02ID); }
+void CAnimationComponent::PlayAbility01ID(){ PlayAnimation(myAbility01ID); }
+void CAnimationComponent::PlayAbility02ID(){ PlayAnimation(myAbility02ID); }
+void CAnimationComponent::PlayAbility03ID(){ PlayAnimation(myAbility03ID); }
+void CAnimationComponent::PlayAbility04ID(){ PlayAnimation(myAbility04ID); }
+void CAnimationComponent::PlayAbility05ID(){ PlayAnimation(myAbility05ID); }
+void CAnimationComponent::PlayAbility06ID(){ PlayAnimation(myAbility06ID); }
 
 // Temporary for project 6
 void CAnimationComponent::SetIdleID(const int anIdleID)
@@ -199,12 +197,11 @@ void CAnimationComponent::SwitchBackToIdle()
 
 	if (myCurrentAnimationID != myDyingAnimationID)
 	{
-		PlayAnimation(GetIndexFromList(myIdleAnimationID), true);
-		myCurrentAnimationID = myIdleAnimationID;
+		PlayAnimation(myIdleAnimationID, true);
 	}
 }
 
-void CAnimationComponent::PlayAnimation(const int anAnimationIndex, bool anIsLooping, const float anAnimSpeed)
+void CAnimationComponent::PlayAnimation(const int anAnimationID, bool anIsLooping, const float anAnimSpeed)
 {
 	if (myCurrentAnimationID == myDyingAnimationID)
 		return;
@@ -213,15 +210,16 @@ void CAnimationComponent::PlayAnimation(const int anAnimationIndex, bool anIsLoo
 	myIsLooping = anIsLooping;
 	if (anIsLooping)
 	{
-		myAnimation->GetMyController().SetLoopingSceneIndex(anAnimationIndex);
+		myAnimation->GetMyController().SetLoopingSceneIndex(GetIndexFromList(anAnimationID));
 	}
 	else
 	{
-		if(GetIndexFromList(myCurrentAnimationID) != anAnimationIndex)
+		if (myCurrentAnimationID != anAnimationID)
 			myAnimation->GetMyController().ResetAnimationTimeCurrent();
 	}
-	myAnimation->SetCurAnimationScene(anAnimationIndex);
-	myReturnToIdleTimer = myAnimation->GetMyController().CurrentAnimationDuration() / 59.0f;
+	myAnimation->SetCurAnimationScene(GetIndexFromList(anAnimationID));
+	myReturnToIdleTimer = myAnimation->GetMyController().CurrentAnimationDuration() / myAnimation->GetMyController().CurrentAnimationTicksPerSecond();//23.0f;// AnimationController has it set to 24 ticks per seconds -> 24fps 
+	myCurrentAnimationID = anAnimationID;
 }
 
 bool CAnimationComponent::ReplaceAnimation(const char* aRig, std::vector<std::string>& somePathsToAnimations)

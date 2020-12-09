@@ -12,7 +12,7 @@ class CAudioChannel;
 enum class EMusic { MainMenu, Count };
 enum class EAmbiance { Castle, Cave1, Cave2,  Dungeon, Garden, Swamp1, Swamp2, Count };
 enum class ESFX { EnemyPain, Count };
-enum class EUI { Count };
+enum class EUI { ButtonClick, Count };
 enum class EVoiceLine { Count };
 
 enum class EChannels { Music, Ambiance, SFX, UI, VOX, Count };

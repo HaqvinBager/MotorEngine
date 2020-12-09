@@ -122,6 +122,7 @@ public:
 	const size_t GetNrOfAnimations() const { return myScenes.size(); }
 	void ResetAnimationTimeCurrent() { myAnimationTimeCurrent = 0.0f; }
 	const float CurrentAnimationDuration() { return static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration); }
+	const float CurrentAnimationTicksPerSecond() { return static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mTicksPerSecond); }
 
 	~AnimationController()
 	{
