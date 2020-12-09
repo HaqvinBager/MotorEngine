@@ -15,7 +15,10 @@ public:
 	void OnEnable() override;
 	void OnDisable() override;
 
-private:
+	void IsDead(bool isDead);
+	const bool& IsDead() const { return myIsDead; }
 
+private:
+	bool myIsDead;
 };
 

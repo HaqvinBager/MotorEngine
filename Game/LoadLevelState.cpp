@@ -13,7 +13,7 @@
 #include "CollisionEventComponent.h"
 
 using namespace rapidjson;
-CLoadLevelState::CLoadLevelState(CStateStack& aStateStack, const CStateStack::EState aState) 
+CLoadLevelState::CLoadLevelState(CStateStack& aStateStack, const CStateStack::EState aState)
 	: CState(aStateStack, aState)
 	, myLevelToLoad(ELevel::NavTest)
 {}
@@ -28,7 +28,7 @@ CLoadLevelState::~CLoadLevelState()
 
 void CLoadLevelState::Awake()
 {
-	SaveLevelNames();	
+	SaveLevelNames();
 	CMainSingleton::PostMaster().Subscribe("Dungeon", this);
 	CMainSingleton::PostMaster().Subscribe("Gardens", this);
 	CMainSingleton::PostMaster().Subscribe("Castle", this);
@@ -51,7 +51,7 @@ void CLoadLevelState::Start()
 	myLoadLevelFuture = std::async(std::launch::async, &CLoadLevelState::Load, this, static_cast<ELevel>(levelIndex)/*myLevelToLoad*/);
 	//myLoadLevelFuture = std::async(std::launch::async, &CLoadLevelState::Load, this, myLevelToLoad);
 
-	
+
 	for (auto& gameObject : CEngine::GetInstance()->GetActiveScene().GetActiveGameObjects())
 	{
 		gameObject->Awake();
@@ -65,7 +65,7 @@ void CLoadLevelState::Start()
 
 void CLoadLevelState::Stop()
 {
-	
+
 }
 
 void CLoadLevelState::Update()
@@ -111,25 +111,25 @@ void CLoadLevelState::Receive(const SStringMessage& aMessage)
 /// {
 ///		if(sceneMap contains EState)
 ///			delete sceneMap[EState]
-///			
+///
 ///		sceneMap[EState] = scene;
-/// 
+///
 ///	Engine::ClearScene(enum EState)
 /// {
 ///		if(sceneMap containts EState)
 ///			sceneMap[EState]->ClearScene();
-/// 
+///
 /// Engine::SetActiveScene(int aEState)
 /// {
 ///		EState state = static_cast<EState>(aEState)
 ///		if(sceneMap containts EState)
 ///			myActiveState = EState
-/// 
+///
 /// CScene* Engine::GetActiveScene()
 /// {
 ///		return sceneMap[myActiveState];
-/// 
-/// 
+///
+///
 /// Future: CScene => CState
 
 const CStateStack::EState CLoadLevelState::Load(const ELevel aLevel)
@@ -138,12 +138,12 @@ const CStateStack::EState CLoadLevelState::Load(const ELevel aLevel)
 	{
 		SaveModelPaths(aLevel);
 
-		if (aLevel == ELevel::LoadScreen) //LoadScreen uses a different Type (Which kind of Data it will Load from Unity) 
+		if (aLevel == ELevel::LoadScreen) //LoadScreen uses a different Type (Which kind of Data it will Load from Unity)
 		{
 			SLoadScreenData& data = mySceneReader.ReadLoadScreenData();
 			CScene* loadScreenScene = new CScene();// myLoadScreenScene
 			myUnityFactory.FillScene(data, BinModelPaths(aLevel), *loadScreenScene);
-		
+
 			std::cout << "Adding Loading Screen" << std::endl;
 			return CEngine::GetInstance()->AddScene(CStateStack::EState::LoadLevel, loadScreenScene);
 		}

@@ -6,6 +6,7 @@
 #include "HealthBarComponent.h"
 #include "StatsComponent.h"
 #include "ModelComponent.h"
+#include "DestructibleComponent.h"
 
 CMouseSelection::CMouseSelection()
 {
@@ -48,6 +49,17 @@ CGameObject* CMouseSelection::FindSelectedEnemy()
 		}
 		else {
 			enemy->GetComponent<CHealthBarComponent>()->OnDisable();
+		}
+	}
+	return nullptr;
+}
+
+CGameObject* CMouseSelection::FindSelectedDestructible()
+{
+	Vector3 pos = GetPositionAtNavmesh();
+	for (auto& destructible : CEngine::GetInstance()->GetActiveScene().GetDestructibles()) {
+		if (destructible->GetComponent<CCircleColliderComponent>()->Collided(1.5f, pos) && destructible->GetComponent<CDestructibleComponent>()->IsDead() == false) {
+			return destructible;
 		}
 	}
 	return nullptr;
