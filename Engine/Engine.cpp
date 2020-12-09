@@ -77,6 +77,14 @@ CEngine::~CEngine()
 	delete myTimer;
 	myTimer = nullptr;
 
+	//auto it = mySceneMap.begin();
+	//while (it != mySceneMap.end())
+	//{
+	//	delete it->second;
+	//	it->second = nullptr;
+	//	++it;
+	//}
+
 	delete myModelFactory;
 	myModelFactory = nullptr;
 	delete myCameraFactory;

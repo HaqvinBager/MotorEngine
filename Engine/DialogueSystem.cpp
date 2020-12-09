@@ -48,6 +48,9 @@ bool CDialogueSystem::Init()
 {
 	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadDialogue, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::IntroStarted, this);
+	CMainSingleton::PostMaster().Subscribe("DELevel1", this);
+	CMainSingleton::PostMaster().Subscribe("DELevel2", this);
+	CMainSingleton::PostMaster().Subscribe("DELevel3", this);
 
 	rapidjson::Document document = CJsonReader::LoadDocument("Json/DialogueSystemInit.json");
 	ENGINE_BOOL_POPUP(!document.HasParseError(), "Could not load 'Json/DialogueSystemInit.json'!");
@@ -103,6 +106,19 @@ void CDialogueSystem::Receive(const SMessage& aMessage)
 		break;
 	default:
 		break;
+	}
+}
+
+void CDialogueSystem::Receive(const SStringMessage& aMessage)
+{
+	std::array<std::string, 3> dialogueScenes = { "DELevel1", "DELevel2", "DELevel3" };
+	for (size_t i = 0; i < dialogueScenes.size(); ++i)
+	{
+		if (dialogueScenes[i] == std::string(aMessage.myMessageType))
+		{
+			LoadDialogue(static_cast<int>(i));
+			break;
+		}
 	}
 }
 

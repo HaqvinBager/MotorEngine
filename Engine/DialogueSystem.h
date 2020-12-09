@@ -22,13 +22,14 @@ struct SSpeakerLine {
 	int myVoiceLine;
 };
 
-class CDialogueSystem : public IObserver {
+class CDialogueSystem : public IObserver, public IStringObserver {
 public:
 	CDialogueSystem();
 	~CDialogueSystem();
 
 	bool Init();
 	void Receive(const SMessage& aMessage) override;
+	void Receive(const SStringMessage& aMessage) override;
 	void Update();
 
 public:

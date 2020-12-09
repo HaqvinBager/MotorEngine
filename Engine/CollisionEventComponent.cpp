@@ -37,6 +37,7 @@ void CCollisionEventComponent::Collided(CGameObject* aCollidedGameObject)
 {
 	SStringMessage stringMessage = { myTextMessage.c_str(), aCollidedGameObject };
 	CMainSingleton::PostMaster().Send(stringMessage);
+	GameObject().Active(false);
 }
 
 const std::string& CCollisionEventComponent::GetEventMessage() const
