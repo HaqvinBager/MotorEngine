@@ -31,7 +31,7 @@ CAudioManager::CAudioManager() : myWrapper() {
 	}
 
 
-	
+
 
 	if (document.HasMember("Ambience"))
 	{
@@ -107,78 +107,121 @@ CAudioManager::CAudioManager() : myWrapper() {
 	//CMainSingleton::PostMaster().Send({ EMessageType::PlayAmbienceCave1, NULL });
 
 
+	//CMainSingleton::PostMaster().Send({ EMessageType::UIButtonPress, NULL });
+
 }
 
-CAudioManager::~CAudioManager()
-{
-	UnsubscribeToMessages();
-	// 2020 12 06 - CAudio attempts to delete myFModSound, seems to be shared. 
-	//for (auto& channel : myChannels)
-	//{
-	//	delete channel;
-	//	channel = nullptr;
-	//}
-	//for (auto& music : myMusicAudio)
-	//{
-	//	delete music;
-	//	music = nullptr;
-	//}
-	//for (auto& ambience : myAmbianceAudio)
-	//{
-	//	delete ambience;
-	//	ambience = nullptr;
-	//}
-	//for (auto& sfx : mySFXAudio)
-	//{
-	//	delete sfx;
-	//	sfx = nullptr;
-	//}
-	//for (auto& ui : myUIAudio)
-	//{
-	//	delete ui;
-	//	ui = nullptr;
-	//}
-	//for (auto& voice : myVoicelineAudio)
-	//{
-	//	delete voice;
-	//	voice = nullptr;
-	//}
-}
+	CAudioManager::~CAudioManager()
+	{
+		UnsubscribeToMessages();
+		// 2020 12 06 - CAudio attempts to delete myFModSound, seems to be shared. 
+		//for (auto& channel : myChannels)
+		//{
+		//	delete channel;
+		//	channel = nullptr;
+		//}
+		//for (auto& music : myMusicAudio)
+		//{
+		//	delete music;
+		//	music = nullptr;
+		//}
+		//for (auto& ambience : myAmbianceAudio)
+		//{
+		//	delete ambience;
+		//	ambience = nullptr;
+		//}
+		//for (auto& sfx : mySFXAudio)
+		//{
+		//	delete sfx;
+		//	sfx = nullptr;
+		//}
+		//for (auto& ui : myUIAudio)
+		//{
+		//	delete ui;
+		//	ui = nullptr;
+		//}
+		//for (auto& voice : myVoicelineAudio)
+		//{
+		//	delete voice;
+		//	voice = nullptr;
+		//}
+	}
 
 
 void CAudioManager::Receive(const SMessage& aMessage) {
 	switch (aMessage.myMessageType)
 	{
+		// MUSIC
 	case EMessageType::MainMenu:
 	{
 	    //myWrapper.Play(myMusicAudio[CAST(EMusic::MainMenu)], myChannels[CAST(EChannels::Music)]);
 	}
 		break;
+
+
+
+
 	case EMessageType::PlayAmbienceCastle:
 	{
+
+		if (myAmbianceAudio.size() >= static_cast<unsigned int>(EAmbiance::Castle)) 
+		{
+			myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
+		}
+
 		//myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
+
 	}
 		break;
 	case EMessageType::PlayAmbienceCave1:
 	{
+
+		if (myAmbianceAudio.size() >= static_cast<unsigned int>(EAmbiance::Cave1))
+		{
+			myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Cave1)], myChannels[CAST(EChannels::Ambiance)]);
+		}
+
 		//myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Cave1)], myChannels[CAST(EChannels::Ambiance)]);
+
 	}
 		break;
 
 	case EMessageType::PlayAmbienceDungeon:
 	{
-		//myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
-	}
-		break;
 
+		if (myAmbianceAudio.size() >= static_cast<unsigned int>(EAmbiance::Dungeon))
+		{
+			myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Dungeon)], myChannels[CAST(EChannels::Ambiance)]);
+
+			//myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
+
+		}
+		break;
+	}
 	case EMessageType::PlayAmbienceSwamp1:
 	{
+
+		if (myAmbianceAudio.size() >= static_cast<unsigned int>(EAmbiance::Swamp1))
+		{
+			myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Swamp1)], myChannels[CAST(EChannels::Ambiance)]);
+		}
+
 		//myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
+
 	}
 		break;
 	
+		
+
+		// SFX
 	case EMessageType::EnemyHealthChanged:
 	{
+
+		if (myAmbianceAudio.size() >= static_cast<unsigned int>(ESFX::EnemyPain))
+		{
+			myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyPain)], myChannels[CAST(EChannels::SFX)]);
+		}
+
 		//myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyPain)], myChannels[CAST(EChannels::SFX)]);
 	}
 		break;
@@ -201,6 +244,17 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	}
 		break;
 
+	// UI
+
+	case EMessageType::UIButtonPress:
+	{
+		if (myAmbianceAudio.size() >= static_cast<unsigned int>(EUI::ButtonClick))
+		{
+			myWrapper.Play(mySFXAudio[CAST(EUI::ButtonClick)], myChannels[CAST(EChannels::UI)]);
+		}
+	}
+	break;
+
 	default:
 		break;
 	}
@@ -216,13 +270,18 @@ void CAudioManager::SubscribeToMessages()
 {
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);
+
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayAmbienceCastle, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayAmbienceCave1, this);
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyHealthChanged, this);
 
+
+	CMainSingleton::PostMaster().Subscribe(EMessageType::UIButtonPress, this);
+
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayVoiceLine, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::StopDialogue, this);
+
 
 }
 
@@ -323,8 +382,8 @@ std::string CAudioManager::TranslateSFX(ESFX enumerator) const {
 }
 std::string CAudioManager::TranslateUI(EUI enumerator) const {
 	switch (enumerator) {
-	case EUI::Count:
-		return "";
+	case EUI::ButtonClick:
+		return "ButtonClick";
 	default:
 		return "";
 	}

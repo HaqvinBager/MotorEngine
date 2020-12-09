@@ -252,6 +252,7 @@ void CInGameState::Update()
 
 		myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
 	}
+
 }
 
 void CInGameState::ReceiveEvent(const EInputEvent aEvent)

@@ -212,7 +212,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SGameObjectData& aData, const
 CGameObject* CUnityFactory::CreateGameObjectInstanced(const std::string& aModelPath, int InstancedID, std::vector<DirectX::SimpleMath::Matrix> aInstancedTransforms)
 {
 	CGameObject* gameObject = new CGameObject();
-	gameObject->AddComponent<CInstancedModelComponent>(*gameObject, aModelPath, InstancedID, aInstancedTransforms);
+	gameObject->AddComponent<CInstancedModelComponent>(*gameObject, aModelPath, InstancedID, aInstancedTransforms, (GetSuffixFromString(aModelPath) == "_AL"));
 	return std::move(gameObject);
 }
 

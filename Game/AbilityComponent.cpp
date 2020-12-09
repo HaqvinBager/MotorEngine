@@ -249,7 +249,7 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 
 		if (UseAbility(EAbilityType::PlayerHeavyMelee, GameObject().myTransform->Position()))
 		{
-			this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::AttackLight);
+			this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack02ID();
 		}
 		/*myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
 		myCurrentCooldowns[2] = myMaxCooldowns[2];

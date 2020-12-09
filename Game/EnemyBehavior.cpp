@@ -113,7 +113,7 @@ void CEnemyBehavior::FindATarget()
 			myPlayer->GetComponent<CStatsComponent>();
 			if (myCurrentParent->GetComponent<CAnimationComponent>())
 			{
-				myCurrentParent->GetComponent<CAnimationComponent>()->PlayAnimation(EEnemyAnimationID::Attack);
+				myCurrentParent->GetComponent<CAnimationComponent>()->PlayAttack01ID();
 			}
 			myCurrentParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::EnemyAbility, myCurrentParent->myTransform->Position());
 		}

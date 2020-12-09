@@ -7,7 +7,7 @@ class CModel;
 class CInstancedModelComponent : public CBehaviour
 {
 public:
-	CInstancedModelComponent(CGameObject& aParent, std::string aModelPath, int aCount, std::vector<DirectX::SimpleMath::Matrix> aInstancedTransforms);
+	CInstancedModelComponent(CGameObject& aParent, std::string aModelPath, int aCount, std::vector<DirectX::SimpleMath::Matrix> aInstancedTransforms, bool aRenderWithAlpha = false);
 	~CInstancedModelComponent();
 
 	void Awake() override;
@@ -20,8 +20,11 @@ public:
 	CModel* GetModel() const { return myModel; }
 	const std::vector<DirectX::SimpleMath::Matrix>& GetInstancedTransforms() const { return myIntancedTransforms; }
 
+	const bool RenderWithAlpha() const { return myRenderWithAlpha; }
+
 private:
 	std::vector<DirectX::SimpleMath::Matrix> myIntancedTransforms;
 	CModel* myModel;
+	bool myRenderWithAlpha;
 };
 
