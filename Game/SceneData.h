@@ -112,6 +112,7 @@ struct SInGameData
 	//int mySceneIndex;
 	std::vector<SEnvironmentFXData> myEnvironmentFXs;
 	std::vector<SParticleFXData> myParticleFXs;
+	int myBossIsInScene;
 	SBossData myBossData;
 	
 	std::unordered_map<int, std::string> myEventStringMap;

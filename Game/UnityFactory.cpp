@@ -91,18 +91,20 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 
 	for (const auto& eventdata : aData.myEventData)
 	{
-	    aScene.AddInstance(CreateGameObject(eventdata, aData.myEventStringMap.at(eventdata.myInstanceID)));
+		aScene.AddInstance(CreateGameObject(eventdata, aData.myEventStringMap.at(eventdata.myInstanceID)));
 	}
 
 	CEnemyBehavior* enemyBehavior = new CEnemyBehavior(player); // Deleted by scene
 	aScene.TakeOwnershipOfAIBehavior(enemyBehavior);
-	for (const auto& enemyData : aData.myEnemyData) {
+	for (const auto& enemyData : aData.myEnemyData)
+	{
 		CGameObject* enemy = CreateGameObject(enemyData, aBinModelPaths.at(enemyData.myModelIndex), enemyBehavior, aScene);
-			aScene.AddInstance(enemy);
-			aScene.AddEnemies(enemy);
+		aScene.AddInstance(enemy);
+		aScene.AddEnemies(enemy);
 	}
 
-	for (const auto& destructibleData : aData.myDestructibleData) {
+	for (const auto& destructibleData : aData.myDestructibleData)
+	{
 		CGameObject* destructible = CreateGameObject(destructibleData, aBinModelPaths.at(destructibleData.myModelIndex));
 		aScene.AddInstance(destructible);
 	}
@@ -110,15 +112,18 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 	std::unordered_map<int, int> modelIndexMap;
 	for (const auto& gameObjectData : aData.myGameObjects)
 	{
-		if (modelIndexMap.find(gameObjectData.myModelIndex) == modelIndexMap.end()) {
+		if (modelIndexMap.find(gameObjectData.myModelIndex) == modelIndexMap.end())
+		{
 			modelIndexMap[gameObjectData.myModelIndex] = 0;
 		}
 		modelIndexMap[gameObjectData.myModelIndex]++;
 	}
 
 	std::unordered_map<int, std::vector<Matrix>> transformIndexMap;
-	for (const auto& go : aData.myGameObjects) {
-		if (transformIndexMap.find(go.myModelIndex) == transformIndexMap.end()) {
+	for (const auto& go : aData.myGameObjects)
+	{
+		if (transformIndexMap.find(go.myModelIndex) == transformIndexMap.end())
+		{
 			transformIndexMap[go.myModelIndex].reserve(modelIndexMap[go.myModelIndex]);
 		}
 		Matrix transform = { };
@@ -151,8 +156,10 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 		transformIndexMap[go.myModelIndex].emplace_back(transform);
 	}
 
-	for (int key = 0; key < aBinModelPaths.size(); ++key) {
-		if (modelIndexMap.find(key) != modelIndexMap.end()) {
+	for (int key = 0; key < aBinModelPaths.size(); ++key)
+	{
+		if (modelIndexMap.find(key) != modelIndexMap.end())
+		{
 			aScene.AddInstance(CreateGameObjectInstanced(aBinModelPaths[key], modelIndexMap[key], transformIndexMap[key]));
 		}
 	}
@@ -167,21 +174,27 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 		aScene.AddInstance(CreateGameObject(particleFX, aData.myParticleFXStringMap.at(particleFX.myInstanceID)));
 	}
 
+	if (aData.myBossIsInScene > 0)
+	{
+		aScene.AddInstance(CreateGameObject(aData.myBossData, aBinModelPaths[aData.myBossData.myModelIndex]));
+	}
+
 	return true;
 }
 
 CGameObject* CUnityFactory::CreateGameObject(const SCameraData& aData, bool addCameraController)
 {
-    CGameObject* gameObject = new CGameObject();
-    auto camComponent = gameObject->AddComponent<CCameraComponent>(*gameObject, aData.myFieldOfView);
-    if (addCameraController) {
-        int cameraMode = static_cast<int>(aData.myStartInCameraMode);
-        gameObject->AddComponent<CCameraControllerComponent>(*gameObject, aData.myFreeCamMoveSpeed, static_cast<CCameraControllerComponent::ECameraMode>(cameraMode), static_cast<char>(aData.myToggleFreeCamKey), aData.myOffset);
-    }
-    gameObject->myTransform->Position(aData.myPosition);
-    gameObject->myTransform->Rotation(aData.myRotation);
+	CGameObject* gameObject = new CGameObject();
+	auto camComponent = gameObject->AddComponent<CCameraComponent>(*gameObject, aData.myFieldOfView);
+	if (addCameraController)
+	{
+		int cameraMode = static_cast<int>(aData.myStartInCameraMode);
+		gameObject->AddComponent<CCameraControllerComponent>(*gameObject, aData.myFreeCamMoveSpeed, static_cast<CCameraControllerComponent::ECameraMode>(cameraMode), static_cast<char>(aData.myToggleFreeCamKey), aData.myOffset);
+	}
+	gameObject->myTransform->Position(aData.myPosition);
+	gameObject->myTransform->Rotation(aData.myRotation);
 	camComponent->SetStartingRotation(aData.myRotation);
-    return std::move(gameObject);
+	return std::move(gameObject);
 }
 
 CGameObject* CUnityFactory::CreateGameObject(const SDirectionalLightData& aData)
@@ -219,45 +232,45 @@ CGameObject* CUnityFactory::CreateGameObjectInstanced(const std::string& aModelP
 
 CGameObject* CUnityFactory::CreateGameObject(const SPlayerData& aData, const std::string& aModelPath)
 {
-    CGameObject* gameObject = new CGameObject();
-    gameObject->myTransform->Scale(aData.myScale.x);
-    gameObject->myTransform->Position(aData.myPosition);
-    gameObject->myTransform->Rotation(aData.myRotation);
-    gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
-    gameObject->AddComponent<CPlayerControllerComponent>(*gameObject);
-    gameObject->AddComponent<CNavMeshComponent>(*gameObject);
+	CGameObject* gameObject = new CGameObject();
+	gameObject->myTransform->Scale(aData.myScale.x);
+	gameObject->myTransform->Position(aData.myPosition);
+	gameObject->myTransform->Rotation(aData.myRotation);
+	gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
+	gameObject->AddComponent<CPlayerControllerComponent>(*gameObject);
+	gameObject->AddComponent<CNavMeshComponent>(*gameObject);
 
-    gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 1.f, ECollisionLayer::PLAYER, static_cast<uint64_t>(ECollisionLayer::ALL));
-    gameObject->AddComponent<CStatsComponent>(*gameObject, 100.0f, 10.0f, 3.0f, 1.0f, 0.0f, 1.0f);
+	gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 1.f, ECollisionLayer::PLAYER, static_cast<uint64_t>(ECollisionLayer::ALL));
+	gameObject->AddComponent<CStatsComponent>(*gameObject, 100.0f, 10.0f, 3.0f, 1.0f, 0.0f, 1.0f);
 
-    std::pair<EAbilityType, unsigned int> ab1 = { EAbilityType::PlayerAbility1, 1 };
-    std::pair<EAbilityType, unsigned int> ab2 = { EAbilityType::PlayerAbility2, 1 };
-    std::pair<EAbilityType, unsigned int> ab3 = { EAbilityType::PlayerAbility3, 1 };
+	std::pair<EAbilityType, unsigned int> ab1 = { EAbilityType::PlayerAbility1, 1 };
+	std::pair<EAbilityType, unsigned int> ab2 = { EAbilityType::PlayerAbility2, 1 };
+	std::pair<EAbilityType, unsigned int> ab3 = { EAbilityType::PlayerAbility3, 1 };
 	std::pair<EAbilityType, unsigned int> ab4 = { EAbilityType::PlayerMelee, 1 };
 	std::pair<EAbilityType, unsigned int> ab5 = { EAbilityType::PlayerHeavyMelee, 1 };
-    std::vector<std::pair<EAbilityType, unsigned int>> abs;
-    abs.emplace_back(ab1);
-    abs.emplace_back(ab2);
-    abs.emplace_back(ab3);
-    abs.emplace_back(ab4);
-    abs.emplace_back(ab5);
-    gameObject->AddComponent<CAbilityComponent>(*gameObject, abs);
+	std::vector<std::pair<EAbilityType, unsigned int>> abs;
+	abs.emplace_back(ab1);
+	abs.emplace_back(ab2);
+	abs.emplace_back(ab3);
+	abs.emplace_back(ab4);
+	abs.emplace_back(ab5);
+	gameObject->AddComponent<CAbilityComponent>(*gameObject, abs);
 
-    AddAnimationsToGameObject(*gameObject, aModelPath, EAnimatedObject::Player);
+	AddAnimationsToGameObject(*gameObject, aModelPath, EAnimatedObject::Player);
 
-    return gameObject;
+	return gameObject;
 }
 
 CGameObject* CUnityFactory::CreateGameObject(const SEnemyData& aData, const std::string& aModelPath, IAIBehavior* aBehavior, CScene& aScene)
 {
-    CGameObject* gameObject = new CGameObject();
-    gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
-    gameObject->AddComponent<CStatsComponent>(*gameObject, aData.myHealth, aData.myDamage, aData.myMoveSpeed, aData.myDamageCooldown, aData.myVisionRange, aData.myAttackRange, 105.0f);
-    gameObject->AddComponent<CAIBehaviorComponent>(*gameObject, aBehavior);
-    gameObject->AddComponent<CNavMeshComponent>(*gameObject);
+	CGameObject* gameObject = new CGameObject();
+	gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
+	gameObject->AddComponent<CStatsComponent>(*gameObject, aData.myHealth, aData.myDamage, aData.myMoveSpeed, aData.myDamageCooldown, aData.myVisionRange, aData.myAttackRange, 105.0f);
+	gameObject->AddComponent<CAIBehaviorComponent>(*gameObject, aBehavior);
+	gameObject->AddComponent<CNavMeshComponent>(*gameObject);
 	gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 0.3f, ECollisionLayer::ENEMY, static_cast<uint64_t>(ECollisionLayer::PLAYERABILITY));
-    gameObject->myTransform->Position(aData.myPosition);
-    gameObject->myTransform->Rotation(aData.myRotation);
+	gameObject->myTransform->Position(aData.myPosition);
+	gameObject->myTransform->Rotation(aData.myRotation);
 
 	std::pair<EAbilityType, unsigned int> ab1 = { EAbilityType::EnemyAbility, 1 };
 	std::vector<std::pair<EAbilityType, unsigned int>> abs;
@@ -273,19 +286,19 @@ CGameObject* CUnityFactory::CreateGameObject(const SEnemyData& aData, const std:
 
 CGameObject* CUnityFactory::CreateGameObject(const SEventData& aData, const std::string anEventString)
 {
-    CGameObject* gameObject = new CGameObject();
-    gameObject->myTransform->Position(aData.myPosition);
-    gameObject->AddComponent<CCollisionEventComponent>(*gameObject,
+	CGameObject* gameObject = new CGameObject();
+	gameObject->myTransform->Position(aData.myPosition);
+	gameObject->AddComponent<CCollisionEventComponent>(*gameObject,
 		static_cast<EMessageType>(aData.myEvent),
 		anEventString);
 
-	gameObject->AddComponent<CRectangleColliderComponent>(*gameObject, 
+	gameObject->AddComponent<CRectangleColliderComponent>(*gameObject,
 		aData.myColliderData.x,
 		aData.myColliderData.y,
 		ECollisionLayer::EVENT,
 		static_cast<uint64_t>(ECollisionLayer::PLAYER));
 
-    return gameObject;
+	return gameObject;
 }
 
 CGameObject* CUnityFactory::CreateGameObject(const SDestructibleData& aData, const std::string& aModelPath)
@@ -302,7 +315,8 @@ CGameObject* CUnityFactory::CreateGameObject(const SDestructibleData& aData, con
 	return gameObject;
 }
 
-CGameObject* CUnityFactory::CreateGameObject(const SEnvironmentFXData& aData, std::string aEnvironmentFXName){
+CGameObject* CUnityFactory::CreateGameObject(const SEnvironmentFXData& aData, std::string aEnvironmentFXName)
+{
 	CGameObject* gameObject = new CGameObject();
 	gameObject->myTransform->Position(aData.myPosition);
 	gameObject->myTransform->Rotation(aData.myRotation);
@@ -335,4 +349,39 @@ CGameObject* CUnityFactory::CreateGameObject(const SParticleFXData& aData, const
 	gameObject->AddComponent<CParticleEmitterComponent>(*gameObject)->Init(CParticleFactory::GetInstance()->GetParticleSet(myjsonPaths));
 	return gameObject;
 	return nullptr;
+}
+
+#include "BossBehavior.h"
+CGameObject* CUnityFactory::CreateGameObject(const SBossData& aData, const std::string& aModelPath)
+{
+	CGameObject* gameObject = new CGameObject();
+	gameObject->myTransform->Position(aData.myPosition);
+	gameObject->myTransform->Rotation(aData.myRotation);
+	gameObject->myTransform->Scale(aData.myScale.x);
+
+	gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 0.5f, ECollisionLayer::BOSS, static_cast<int>(ECollisionLayer::PLAYERABILITY)); //todo more flags
+
+	CBossBehavior* bossBehavior = new CBossBehavior(&CEngine::GetInstance()->GetActiveScene().FindObjectOfType<CPlayerControllerComponent>()->GameObject());
+	gameObject->myTransform->Position({ -2.0f, 0.0f, 6.0f });
+	gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
+
+	gameObject->AddComponent<CAIBehaviorComponent>(*gameObject, bossBehavior);
+
+
+	gameObject->AddComponent<CStatsComponent>(*gameObject, 10.0f, 10.0f, 3.0f, 3.0f, 20.0f, 15.0f);
+
+	gameObject->AddComponent<CNavMeshComponent>(*gameObject);
+
+	std::pair<EAbilityType, unsigned int> ab1 = { EAbilityType::BossAbility1, 1 };
+	std::pair<EAbilityType, unsigned int> ab2 = { EAbilityType::BossAbility2, 1 };
+	std::pair<EAbilityType, unsigned int> ab3 = { EAbilityType::BossAbility3, 1 };
+	std::vector<std::pair<EAbilityType, unsigned int>> abs;
+	abs.emplace_back(ab1);
+	abs.emplace_back(ab2);
+	abs.emplace_back(ab3);
+	gameObject->AddComponent<CAbilityComponent>(*gameObject, abs);
+
+	AddAnimationsToGameObject(*gameObject, "Assets/Graphics/Animations/CH_E_Boss_SK/CH_E_Boss_SK.fbx", EAnimatedObject::Boss);
+
+	return gameObject;
 }
