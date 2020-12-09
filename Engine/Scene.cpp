@@ -357,6 +357,15 @@ bool CScene::AddEnemies(CGameObject* aEnemy)
 	return true;
 }
 
+bool CScene::AddDestructible(CGameObject* aDestructible)
+{
+	if (!aDestructible) {
+		return false;
+	}
+	myDestructibles.emplace_back(aDestructible);
+	return true;
+}
+
 bool CScene::AddPlayer(CGameObject* aPlayer)
 {
 	if (!aPlayer) {

@@ -62,9 +62,11 @@ public:
 	bool RemoveInstance(CAnimatedUIElement* anAnimatedUIElement);
 	bool AddInstance(CTextInstance* aText);
 	bool AddEnemies(CGameObject* aEnemy);
+	bool AddDestructible(CGameObject* aDestructible);
 	bool AddPlayer(CGameObject* aPlayer);
 
 	std::vector<CGameObject*> GetEnemies() { return myEnemies; }
+	std::vector<CGameObject*> GetDestructibles() { return myDestructibles; }
 	CGameObject* GetPlayer() { return myPlayer; }
 
 	bool RemoveInstance(CGameObject* aGameObject);
@@ -116,6 +118,7 @@ private:
 	std::vector<CTextInstance*> myTexts;
 	std::unordered_map<ERenderOrder, std::vector<CSpriteInstance*>> mySpriteInstances;
 	std::vector<CGameObject*> myEnemies;
+	std::vector<CGameObject*> myDestructibles;
 	CGameObject* myPlayer;
 	IAIBehavior* myEnemyBehavior;
 

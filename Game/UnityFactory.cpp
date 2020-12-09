@@ -107,6 +107,7 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 	{
 		CGameObject* destructible = CreateGameObject(destructibleData, aBinModelPaths.at(destructibleData.myModelIndex));
 		aScene.AddInstance(destructible);
+		aScene.AddDestructible(destructible);
 	}
 
 	std::unordered_map<int, int> modelIndexMap;

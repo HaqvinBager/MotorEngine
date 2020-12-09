@@ -31,6 +31,7 @@ private:
 	float myRegenerationSpeed;
 	CMouseSelection* mySelection;
 	CGameObject* myTargetEnemy;
+	CGameObject* myTargetDestructible;
 	bool myIsMoving;
 	bool myMiddleMousePressed;
 	bool myAuraActive;
