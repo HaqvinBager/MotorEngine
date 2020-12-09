@@ -219,6 +219,9 @@ SLoadScreenData& CSceneReader::ReadLoadScreenData()
 	unsigned int enemyDataCount = 0;
 	myStreamPtr += Read(enemyDataCount);
 
+	unsigned int destructible = 0;
+	myStreamPtr += Read(destructible);
+
 	unsigned int gameObjectCount = 0;
 	myStreamPtr += Read(gameObjectCount);
 	

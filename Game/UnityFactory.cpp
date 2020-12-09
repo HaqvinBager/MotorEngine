@@ -66,7 +66,7 @@ bool CUnityFactory::FillScene(const SLoadScreenData& aData, const std::vector<st
 	CGameObject* envLight = CreateGameObject(aData.myDirectionalLight);
 	aScene.AddInstance(envLight);
 	aScene.SetEnvironmentLight(envLight->GetComponent<CEnviromentLightComponent>()->GetEnviromentLight());
-	aScene.AddInstance(CreateGameObject(aData.myGameObject, someModelPaths[0/*aData.myGameObject.myModelIndex*/])); //pls no more crash //Nico 09 dec
+	aScene.AddInstance(CreateGameObject(aData.myGameObject, someModelPaths[aData.myGameObject.myModelIndex])); //pls no more crash //Nico 09 dec
 	return true;
 }
 
