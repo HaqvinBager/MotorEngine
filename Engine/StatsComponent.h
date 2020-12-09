@@ -14,7 +14,9 @@ struct SBaseStats {
 	const float myBaseDamageCooldown;
 	const float myBaseVisionRange;
 	const float myBaseAttackRange;
-	const float mBaseRandomWalkTime;
+	const float myBaseRandomWalkTime;
+	const float myExperienceToLevelUp;
+	const int myMaxLevel;
 };
 
 struct SStats {
@@ -26,12 +28,14 @@ struct SStats {
 	bool myCanAttack;
 	CToken* myTokenSlot;
 	float myRandomWalkTime;
+	float myExperience;
+	int myLevel;
 };
 
 class CStatsComponent : public CBehaviour
 {
 public:
-	CStatsComponent(CGameObject& aParent, float aHealth = 0.f, float aDamage = 0.f, float aMoveSpeed = 0.f, float aDamageCooldown = 0.f, float aVisionRange = 0.f, float aAttackRange = 0.f);
+	CStatsComponent(CGameObject& aParent, float aHealth = 0.f, float aDamage = 0.f, float aMoveSpeed = 0.f, float aDamageCooldown = 0.f, float aVisionRange = 0.f, float aAttackRange = 0.f, float anExperienceAmount = 0.f);
 	~CStatsComponent() override;
 
 	void Awake() override;

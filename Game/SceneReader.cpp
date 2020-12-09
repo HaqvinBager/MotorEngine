@@ -43,6 +43,7 @@ SInGameData& CSceneReader::ReadInGameData()
 			myStream.close();
 			myStreamPtr = nullptr;
 			myCurrentBinPath = "NA";
+			std::cout << "Reloading" << std::endl;
 			return *myInGameData[i];
 		}
 	}
@@ -103,6 +104,17 @@ SInGameData& CSceneReader::ReadInGameData()
 		SEnemyData enemyData = {};
 		myStreamPtr += Read(enemyData);
 		myInGameData.back()->myEnemyData.emplace_back(enemyData);
+	}
+
+	int destructibleDataCount = 0;
+	myStreamPtr += Read(destructibleDataCount);
+	assert(destructibleDataCount < 1000 && "Something went wrong when reading DestructibleData");
+	myInGameData.back()->myDestructibleData.reserve(destructibleDataCount);
+	for (int i = 0; i < destructibleDataCount; ++i)
+	{
+		SDestructibleData destructibleData = {};
+		myStreamPtr += Read(destructibleData);
+		myInGameData.back()->myDestructibleData.emplace_back(destructibleData);
 	}
 
 	int myGameObjectDataCount = 0;
@@ -169,6 +181,7 @@ SLoadScreenData& CSceneReader::ReadLoadScreenData()
 			myStream.close();
 			myStreamPtr = nullptr;
 			myCurrentBinPath = "NA";
+			std::cout << "Reloading" << std::endl;
 			return *myLoadScreenData[i];
 		}
 	}

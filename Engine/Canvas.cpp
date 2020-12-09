@@ -128,6 +128,9 @@ void CCanvas::Init(std::string aFilePath, CScene& aScene, bool addToScene)
 			float y = animatedDataArray[i]["Position Y"].GetFloat();
 			myAnimatedUIs.back()->SetPosition({ x, y });
 			aScene.AddInstance(myAnimatedUIs.back());
+			if (animatedDataArray[i].HasMember("Level")) {
+				myAnimatedUIs.back()->Level(animatedDataArray[i]["Level"].GetFloat());
+			}
 		}
 	}
 
@@ -212,6 +215,9 @@ void CCanvas::Receive(const SMessage& aMessage)
 		break;
 	case EMessageType::PlayerResourceChanged:
 		myAnimatedUIs[4]->Level(*static_cast<float*>(aMessage.data));
+		break;
+	case EMessageType::PlayerExperienceChanged:
+		myAnimatedUIs[5]->Level(*static_cast<float*>(aMessage.data));
 		break;
 	case EMessageType::EnemyHealthChanged:
 		myAnimatedUIs[0]->Level(*static_cast<float*>(aMessage.data));

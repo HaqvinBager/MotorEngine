@@ -19,6 +19,14 @@ CParticleFactory::~CParticleFactory()
 {
     ourInstance = nullptr;
     myDevice = nullptr;
+
+    auto it = myParticles.begin();
+    while (it != myParticles.end())
+    {
+        delete it->second;
+        it->second = nullptr;
+        ++it;
+    }
 }
 
 bool CParticleFactory::Init(CDirectXFramework* aFramework)

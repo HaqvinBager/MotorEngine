@@ -20,6 +20,23 @@ CSpriteFactory::~CSpriteFactory()
 {
 	ourInstance = nullptr;
 	myFramework = nullptr;
+
+	auto it = mySpriteMap.begin();
+	while (it != mySpriteMap.end())
+	{
+		delete it->second;
+		it->second = nullptr;
+		++it;
+	}
+
+	auto vfxIt = myVFXSpriteMap.begin();
+	while (vfxIt != myVFXSpriteMap.end())
+	{
+		delete vfxIt->second;
+		vfxIt->second = nullptr;
+		++vfxIt;
+	}
+
 }
 
 bool CSpriteFactory::Init(CDirectXFramework* aFramework)

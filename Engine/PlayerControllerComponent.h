@@ -2,10 +2,11 @@
 #include "Behaviour.h"
 #include "InputObserver.h"
 #include "PostMaster.h"
+#include "ObjectPool.h"
 
 class CMouseSelection;
 
-class CPlayerControllerComponent : public CBehaviour, public IInputObserver
+class CPlayerControllerComponent : public CBehaviour, public IInputObserver, public IObserver
 {
 public:
 	CPlayerControllerComponent(CGameObject& aParent);
@@ -17,6 +18,7 @@ public:
 	void OnEnable() override;
 	void OnDisable() override;
 	void ReceiveEvent(const EInputEvent aEvent) override;
+	void Receive(const SMessage& aMessage) override;
 	void ResetPlayer();
 	void MessagePostmaster(EMessageType aMessageType, float aValue);
 	bool PlayerIsAlive();
@@ -29,5 +31,6 @@ private:
 	CMouseSelection* mySelection;
 	CGameObject* myTargetEnemy;
 	bool myIsMoving;
+	bool myMiddleMousePressed;
 	DirectX::SimpleMath::Vector3 myLastPosition;
 };

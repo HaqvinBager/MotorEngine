@@ -1,7 +1,7 @@
 #pragma once
 // Toggle by commenting before compilation.
-//#define ANIMATIONS_GROUP_3
-#define ANIMATIONS_GROUP_4
+#define ANIMATIONS_GROUP_3
+//#define ANIMATIONS_GROUP_4
 
 // The values used for the Enums are from Json/StringIDs_Animation.json
 #ifdef ANIMATIONS_GROUP_3
@@ -21,21 +21,21 @@ enum class EPlayerAnimationID
 
 enum class EEnemyAnimationID
 {
-	Attack		= 5005,
-	Dead		= 5005,
-	Idle		= 5005,
-	Walk		= 5005
+	Attack		= 5010,
+	Dead		= 5010,
+	Idle		= 5010,
+	Walk		= 5010
 };
 
 enum class EBossAnimationID
 {
-	AttackOne	= 5005,
-	AttackTwo	= 5005,
-	AttackThree	= 5005,
-	Dead		= 5005,
-	Idle		= 5005,
-	Walk		= 5005,
-	Spawn		= 5005
+	AttackOne	= 5014,
+	AttackTwo	= 5014,
+	AttackThree	= 5014,
+	Dead		= 5014,
+	Idle		= 5014,
+	Walk		= 5014,
+	Spawn		= 5014
 };
 
 enum class ECrateAnimationID

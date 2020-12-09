@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "TransformComponent.h"
 #include <SimpleMath.h>
+#include "Engine.h"
+#include "Scene.h"
+#include "AStar.h"
 
 #include "AnimationComponent.h"
 
@@ -168,24 +171,6 @@ void CTransformComponent::MoveAlongPath()
 		DirectX::SimpleMath::Vector3 dir;
 
 		float epsilon = 0.05f;
-
-		//lookAt = DirectX::XMMatrixLookAtLH(Position(), myPath[pathSize - 1], DirectX::SimpleMath::Vector3::Up);
-
-		//DirectX::SimpleMath::Vector3 translation;
-		//DirectX::SimpleMath::Quaternion quat;
-		//DirectX::SimpleMath::Vector3 scale;
-
-		//DirectX::XMVECTOR* axis = nullptr;
-		//float* angle = nullptr;
-
-		//DirectX::XMQuaternionToAxisAngle(axis, angle, quat);
-
-		//axis;
-		//angle;
-
-		//lookAt.Decompose(scale, quat, translation);
-
-		//Rotation(quat);
 
 		dir = (myPath[pathSize - 1] - this->Position());
 		dir.Normalize();

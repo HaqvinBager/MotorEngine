@@ -10,7 +10,8 @@ public:
 		MouseMiddle,
 		KeyEscape,
 		KeyEnter,
-		KeyShift,
+		KeyShiftDown,
+		KeyShiftRelease,
 		Key1,
 		Key2,
 		Key3,
@@ -33,7 +34,8 @@ public:
 		PauseGame,
 		QuitGame,
 		MiddleMouseMove,
-		StandStill
+		StandStill,
+		Moving
 	};
 
 public:

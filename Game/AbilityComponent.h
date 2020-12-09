@@ -38,6 +38,7 @@ public:
 	void SendEvent();
 	void ReceiveEvent(const EInputEvent aEvent) override;
 	const float MeleeAttackRange() const;
+	void ResetCooldown(int anIndex);
 
 private:
 	CGameObject* LoadAbilityFromFile(EAbilityType anAbilityType);

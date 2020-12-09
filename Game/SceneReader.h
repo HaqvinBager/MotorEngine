@@ -28,6 +28,14 @@ private:
 		return sizeof(T);
 	}
 
+
+	template<typename T>
+	size_t Read(T& data, size_t count)
+	{
+		memcpy(data[0], myStreamPtr, sizeof(T) * count);
+		return sizeof(T) * count;
+	}
+
 	std::string ReadStringAuto()
 	{
 		int length = 0;

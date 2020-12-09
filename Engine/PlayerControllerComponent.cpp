@@ -21,8 +21,9 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent):
 	myLastHP(0.0f),
 	myRegenerationSpeed(5.0f), //TODO: read from unity
 	mySelection(new CMouseSelection()),
-	myIsMoving(false),
-	myTargetEnemy(nullptr)
+	myIsMoving(true),
+	myTargetEnemy(nullptr),
+	myMiddleMousePressed(false)
 {
 	myLastPosition = {0.0f,0.0f,0.0f};
 }
@@ -32,43 +33,47 @@ CPlayerControllerComponent::~CPlayerControllerComponent()
 	delete mySelection;
 	mySelection = nullptr;
 	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::MoveDown, this);
-	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::AttackClick, this);
 	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::StandStill, this);
+	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::MiddleMouseMove, this);
+	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Moving, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyDied, this);
 }
 
 void CPlayerControllerComponent::Awake()
 {
 	myLastHP = GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth;
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::MoveDown, this);
-	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::AttackClick, this);
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::StandStill, this);
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::MiddleMouseMove, this);
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Moving, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyDied, this);
 }
 
 void CPlayerControllerComponent::Start() {}
 
 void CPlayerControllerComponent::Update()
 {
-	this->GameObject().myTransform->MoveAlongPath();
+	if (myIsMoving) {
+		this->GameObject().myTransform->MoveAlongPath();
+	}
 
-	if(myTargetEnemy){
-		if(myTargetEnemy->GetComponent<CStatsComponent>()->GetStats().myHealth > 0){
-			if (myIsMoving) {
-				float abilityLength = GameObject().GetComponent<CAbilityComponent>()->MeleeAttackRange();
-				if (DirectX::SimpleMath::Vector3::Distance(myTargetEnemy->myTransform->Position(), GameObject().myTransform->Position())
-					< (myTargetEnemy->GetComponent<CCircleColliderComponent>()->GetRadius() + abilityLength)) {
-					this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::AttackLight);
-					GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position());
-				}
+	if (myTargetEnemy) {
+		if (myTargetEnemy->GetComponent<CStatsComponent>()->GetStats().myHealth > 0) {
+			float abilityLength = GameObject().GetComponent<CAbilityComponent>()->MeleeAttackRange();
+			if (DirectX::SimpleMath::Vector3::Distance(myTargetEnemy->myTransform->Position(), GameObject().myTransform->Position())
+				< (myTargetEnemy->GetComponent<CCircleColliderComponent>()->GetRadius() + abilityLength)) {
+				this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position());
+				this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::AttackLight);
 			}
 		}
 	}
 
-	if (myLastPosition != GameObject().myTransform->Position()) {
+	/*if (myLastPosition != GameObject().myTransform->Position()) {
 		myIsMoving = true;
 		myLastPosition = GameObject().myTransform->Position();
 	} else {
 		myIsMoving = false;
-	}
+	}*/
 
 	if (!PlayerIsAlive()) {
 		ResetPlayer();
@@ -86,15 +91,80 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 	switch (aEvent)
 	{
 	case  IInputObserver::EInputEvent::StandStill:
+		myMiddleMousePressed = false;
+
+		myIsMoving = false;
+		this->GameObject().GetComponent<CTransformComponent>()->ClearPath();
+		break;
+	case  IInputObserver::EInputEvent::Moving:
+		myMiddleMousePressed = false;
+		myIsMoving = true;
 		break;
 	case IInputObserver::EInputEvent::MoveDown:
-		this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
-		myTargetEnemy = mySelection->FindSelectedEnemy();
-		break;
-	case IInputObserver::EInputEvent::AttackClick:
-		this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::AttackLight);
-		break;
+		myMiddleMousePressed = false;
 
+		if (myIsMoving) {
+			this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
+			if (mySelection)
+			{
+				myTargetEnemy = mySelection->FindSelectedEnemy();
+			}
+		} else {
+			this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position());
+			this->GameObject().GetComponent<CAnimationComponent>()->PlayAnimation(EPlayerAnimationID::AttackLight);
+		}
+		break;
+	case IInputObserver::EInputEvent::MiddleMouseMove:
+		if (myIsMoving) {
+			this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
+		}
+		break;
+	default:
+		break;
+	}
+}
+
+void CPlayerControllerComponent::Receive(const SMessage& aMessage)
+{
+	float difference;
+	float maxValue;
+	float currentExperience;
+	switch (aMessage.myMessageType)
+	{
+	case EMessageType::EnemyDied:
+		if (this->GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myMaxLevel
+				> this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel)
+		{
+
+			this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience += *static_cast<float*>(aMessage.data);
+
+			maxValue = this->GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myExperienceToLevelUp;
+
+			if (maxValue <= this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience)
+			{
+
+				this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel += 1;
+
+				this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel);
+
+				std::cout << this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel << std::endl;
+				if (this->GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myMaxLevel
+					== this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel) {
+					MessagePostmaster(EMessageType::PlayerExperienceChanged, 1.0f);
+				} else {
+					currentExperience = this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience;
+					difference = this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience - maxValue;
+					this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience = difference;
+					currentExperience = this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience;
+					difference = difference / maxValue;
+					MessagePostmaster(EMessageType::PlayerExperienceChanged, difference);
+				}
+			} else
+			{
+				difference = this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience / maxValue;
+				MessagePostmaster(EMessageType::PlayerExperienceChanged, difference);
+			}
+		}
 	default:
 		break;
 	}
@@ -135,8 +205,8 @@ void CPlayerControllerComponent::TakeDamage(float aDamageMultiplier, CGameObject
 {
 	SStats& stats = GameObject().GetComponent<CStatsComponent>()->GetStats();
 
-	EHitType hitType = EHitType::Normal;
-	float damage = CDamageUtility::CalculateDamage(hitType, aGameObject->GetComponent<CStatsComponent>()->GetBaseStats().myDamage, aDamageMultiplier, 0.0f, 0.0f);
+	EHitType hitType = EHitType::Enemy;
+	float damage = CDamageUtility::CalculateDamage(hitType, aGameObject->GetComponent<CStatsComponent>()->GetBaseStats().myDamage, aDamageMultiplier);
 
 	if (GameObject().GetComponent<CStatsComponent>()->AddDamage(damage)) {
 		SDamagePopupData data = {damage, static_cast<int>(hitType), &GameObject()};

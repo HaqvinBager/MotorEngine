@@ -69,7 +69,11 @@ void CMenuState::Start()
 
 void CMenuState::Stop()
 {
-
+	for (auto buttons : myCanvas->GetButtons())
+	{
+		for (auto messageType : buttons->GetMessagesToSend())
+			CMainSingleton::PostMaster().Unsubscribe(messageType, this);
+	}
 }
 
 void CMenuState::Update() {

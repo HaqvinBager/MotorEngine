@@ -60,6 +60,10 @@ public:
 	
 	//unsigned int ScenesSize();
 
+	void SetRenderScene(const bool aRenderSceneActive) { myRenderSceneActive = aRenderSceneActive; }
+
+	void ClearModelFactory();
+
 private:
 	static CEngine* ourInstance;
 	
@@ -75,7 +79,6 @@ private:
 	CStateStack::EState myActiveState;
 	//std::vector<CScene*> myScenes;
 	std::unordered_map<CStateStack::EState, CScene*> mySceneMap;
-	CScene* myInGameScene;
 
 	CModelFactory* myModelFactory;
 	CCameraFactory* myCameraFactory;
@@ -90,4 +93,6 @@ private:
 	CMainSingleton* myMainSingleton;
 	CAudioManager* myAudioManager;
 	//CDialogueSystem* myDialogueSystem;
+
+	bool myRenderSceneActive = false;
 };

@@ -65,7 +65,7 @@ bool CUnityFactory::FillScene(const SLoadScreenData& aData, const std::vector<st
 	CGameObject* envLight = CreateGameObject(aData.myDirectionalLight);
 	aScene.AddInstance(envLight);
 	aScene.SetEnvironmentLight(envLight->GetComponent<CEnviromentLightComponent>()->GetEnviromentLight());
-	aScene.AddInstance(CreateGameObject(aData.myGameObject, someModelPaths[aData.myGameObject.myModelIndex]));
+	aScene.AddInstance(CreateGameObject(aData.myGameObject, someModelPaths[0/*aData.myGameObject.myModelIndex*/])); //pls no more crash //Nico 09 dec
 	return true;
 }
 
@@ -84,15 +84,7 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 		CGameObject* pointLight = CreateGameObject(pointLightData);
 		aScene.AddInstance(pointLight);
 		aScene.AddInstance(pointLight->GetComponent<CPointLightComponent>()->GetPointLight());
-
-#ifdef _DEBUG
-		//Vector3 otherPosition;
-		//otherPosition = pointLightData.myPosition;
-		//otherPosition.x += pointLightData.myRange;
-		//CDebug::GetInstance()->DrawLine(pointLightData.myPosition, otherPosition, 50.0f);
-#endif
 	}
-	// "Assets\\3D\\Character\\CH_PL_Daughter_01_19G4_1_19\\CH_PL_Daughter_01_19G4_1_19_SK.fbx" // Animated player
 	CGameObject* player = CreateGameObject(aData.myPlayerData, aBinModelPaths[aData.myPlayerData.myModelIndex]);
 	aScene.AddInstance(player);
 	aScene.AddPlayer(player);
@@ -108,6 +100,11 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 		CGameObject* enemy = CreateGameObject(enemyData, aBinModelPaths.at(enemyData.myModelIndex), enemyBehavior, aScene);
 			aScene.AddInstance(enemy);
 			aScene.AddEnemies(enemy);
+	}
+
+	for (const auto& destructibleData : aData.myDestructibleData) {
+		CGameObject* destructible = CreateGameObject(destructibleData, aBinModelPaths.at(destructibleData.myModelIndex));
+		aScene.AddInstance(destructible);
 	}
 
 	std::unordered_map<int, int> modelIndexMap;
@@ -255,7 +252,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SEnemyData& aData, const std:
 {
     CGameObject* gameObject = new CGameObject();
     gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
-    gameObject->AddComponent<CStatsComponent>(*gameObject, aData.myHealth, aData.myDamage, aData.myMoveSpeed, aData.myDamageCooldown, aData.myVisionRange, aData.myAttackRange);
+    gameObject->AddComponent<CStatsComponent>(*gameObject, aData.myHealth, aData.myDamage, aData.myMoveSpeed, aData.myDamageCooldown, aData.myVisionRange, aData.myAttackRange, 100.0f);
     gameObject->AddComponent<CAIBehaviorComponent>(*gameObject, aBehavior);
     gameObject->AddComponent<CNavMeshComponent>(*gameObject);
 	gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 0.3f, ECollisionLayer::ENEMY, static_cast<uint64_t>(ECollisionLayer::PLAYERABILITY));
@@ -280,15 +277,18 @@ CGameObject* CUnityFactory::CreateGameObject(const SEventData& aData, const std:
     gameObject->myTransform->Position(aData.myPosition);
     gameObject->AddComponent<CCollisionEventComponent>(*gameObject,
 		static_cast<EMessageType>(aData.myEvent),
-		anEventString,
+		anEventString);
+
+	gameObject->AddComponent<CRectangleColliderComponent>(*gameObject, 
 		aData.myColliderData.x,
 		aData.myColliderData.y,
 		ECollisionLayer::EVENT,
 		static_cast<uint64_t>(ECollisionLayer::PLAYER));
+
     return gameObject;
 }
 
-CGameObject* CUnityFactory::CreateDestructibleGameObject(const SGameObjectData& aData, const std::string& aModelPath)
+CGameObject* CUnityFactory::CreateGameObject(const SDestructibleData& aData, const std::string& aModelPath)
 {
 	CGameObject* gameObject = new CGameObject();
 	gameObject->myTransform->Position(aData.myPosition);

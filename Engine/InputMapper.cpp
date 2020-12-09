@@ -25,7 +25,8 @@ bool CInputMapper::Init()
 	MapEvent(IInputObserver::EInputAction::MouseLeftDown, IInputObserver::EInputEvent::MoveDown);
 	MapEvent(IInputObserver::EInputAction::MouseRight, IInputObserver::EInputEvent::AttackClick);
 	MapEvent(IInputObserver::EInputAction::MouseMiddle, IInputObserver::EInputEvent::MiddleMouseMove);
-	MapEvent(IInputObserver::EInputAction::KeyShift, IInputObserver::EInputEvent::StandStill);
+	MapEvent(IInputObserver::EInputAction::KeyShiftDown, IInputObserver::EInputEvent::StandStill);
+	MapEvent(IInputObserver::EInputAction::KeyShiftRelease, IInputObserver::EInputEvent::Moving);
 	MapEvent(IInputObserver::EInputAction::Key1, IInputObserver::EInputEvent::Ability1);
 	MapEvent(IInputObserver::EInputAction::Key2, IInputObserver::EInputEvent::Ability2);
 	MapEvent(IInputObserver::EInputAction::Key3, IInputObserver::EInputEvent::Ability3);
@@ -66,7 +67,12 @@ void CInputMapper::UpdateKeyboardInput()
 	
 	if (myInput->IsKeyDown(VK_SHIFT))
 	{
-		TranslateActionToEvent(IInputObserver::EInputAction::KeyShift);
+		TranslateActionToEvent(IInputObserver::EInputAction::KeyShiftDown);
+	}
+	
+	if (myInput->IsKeyReleased(VK_SHIFT))
+	{
+		TranslateActionToEvent(IInputObserver::EInputAction::KeyShiftRelease);
 	}
 
 	if (myInput->IsKeyPressed('1'))
@@ -99,7 +105,7 @@ void CInputMapper::UpdateKeyboardInput()
 void CInputMapper::UpdateMouseInput()
 {
 
-	if (myInput->IsMousePressed(Input::MouseButton::Middle))
+	if (myInput->IsMouseDown(Input::MouseButton::Middle))
 	{
 		TranslateActionToEvent(IInputObserver::EInputAction::MouseMiddle);
 	}

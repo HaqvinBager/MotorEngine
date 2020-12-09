@@ -16,6 +16,9 @@
 #include "Engine.h"
 #include "Utility.h"
 
+#include "Scene.h"
+#include "CameraComponent.h"
+
 using namespace rapidjson;
 
 bool CPopupTextService::Init()
@@ -226,7 +229,9 @@ void CPopupTextService::SpawnDamageNumber(void* someData)
 	DirectX::SimpleMath::Vector2 screen = CUtility::WorldToScreen(worldPos);
 
 	myActiveDamageNumbers.back()->SetPivot({ 0.5f, 0.5f });
-	myActiveDamageNumbers.back()->SetPosition({ screen.x, screen.y });
+	myActiveDamageNumbers.back()->SetGameObjectPosition({ screen.x, screen.y });
+	//Needs to be -1.f, -1.f!
+	myActiveDamageNumbers.back()->SetPosition({ -1.f,-1.f });
 	myActiveDamageNumbers.back()->SetText(text);
 
 	hitType = data.myHitType;
@@ -239,10 +244,12 @@ void CPopupTextService::SpawnDamageNumber(void* someData)
 	case 1: // Crit
 		myDamageAnimationData.back()->myMinScale = { 1.5f, 1.5f };
 		myDamageAnimationData.back()->myMaxScale = { 2.0f, 2.0f };
+		CEngine::GetInstance()->GetActiveScene().GetMainCamera()->SetTrauma(0.45f);
 		break;
 	case 2: // Ultracrit
 		myDamageAnimationData.back()->myMinScale = { 1.0f, 1.0f };
 		myDamageAnimationData.back()->myMaxScale = { 2.5f, 2.5f };
+		CEngine::GetInstance()->GetActiveScene().GetMainCamera()->SetTrauma(0.65f);
 		break;
 	case 3: // Enemy
 		myDamageAnimationData.back()->myMinScale = { 0.5f, 0.5f };
@@ -364,6 +371,15 @@ void CPopupTextService::UpdateResources()
 			indicesOfTextsToRemove.push_back(i);
 		}
 
+		//Text space position
+		DirectX::SimpleMath::Vector2 newPos = text->GetPosition();
+		newPos.x /= CEngine::GetInstance()->GetWindowHandler()->GetResolution().x;
+		newPos.y /= CEngine::GetInstance()->GetWindowHandler()->GetResolution().y;
+		newPos.x -= 0.5f;
+		newPos.y -= 0.5f;
+		newPos *= 2.0f;
+
+		//Attached Gameobject space position
 		DirectX::SimpleMath::Vector3 worldPos = myActiveGameObject[text->GetText()]->myTransform->Position();
 		DirectX::SimpleMath::Vector2 screen = CUtility::WorldToScreen(worldPos);
 
@@ -373,8 +389,13 @@ void CPopupTextService::UpdateResources()
 		text->SetScale(DirectX::SimpleMath::Vector2::Lerp(animationData->myMinScale, animationData->myMaxScale, DamageSizeCurve(quotient)));
 		text->SetColor(DirectX::SimpleMath::Vector4::Lerp(animationData->myStartColor, animationData->myEndColor, quotient));
 
-		screen += animationData->mySpeed * CTimer::Dt();
-		text->SetPosition(screen);
+		newPos += animationData->mySpeed * CTimer::Dt();
+		
+		//offset for text to be over attached Gameobject
+		screen.y -= 0.35f;
+
+		text->SetPosition(newPos);
+		text->SetGameObjectPosition(screen);
 	}
 
 	std::sort(indicesOfTextsToRemove.begin(), indicesOfTextsToRemove.end(), [](UINT a, UINT b) { return a > b; });

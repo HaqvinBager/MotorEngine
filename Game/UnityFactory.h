@@ -31,7 +31,7 @@ private:
 	CGameObject* CreateGameObject(const SEnemyData& aData, const std::string& aModelPath, IAIBehavior* aBehavior, CScene& aScene);
 	CGameObject* CreateGameObject(const SEventData& aData, const std::string anEventString);
 
-	CGameObject* CreateDestructibleGameObject(const SGameObjectData& aData, const std::string& aModelPath);
+	CGameObject* CreateGameObject(const SDestructibleData& aData, const std::string& aModelPath);
 	CGameObject* CreateGameObject(const SEnvironmentFXData& aData, std::string aEnvironmentFXName);
 	CGameObject* CreateGameObject(const SParticleFXData& aData, const std::vector<std::string>& somParticleFXNames);
 };

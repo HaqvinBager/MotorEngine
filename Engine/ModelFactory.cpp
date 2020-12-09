@@ -47,6 +47,7 @@ CModelFactory::~CModelFactory()
 	{
 		delete it->second;
 		it->second = nullptr;
+		++it;
 	}
 	
 	auto itPBR = myModelMapPBR.begin();
@@ -54,6 +55,7 @@ CModelFactory::~CModelFactory()
 	{
 		delete itPBR->second;
 		itPBR->second = nullptr;
+		++itPBR;
 	}
 	
 	auto itInstaned = myInstancedModelMapPBR.begin();
@@ -61,6 +63,7 @@ CModelFactory::~CModelFactory()
 	{
 		delete itInstaned->second;
 		itInstaned->second = nullptr;
+		++itInstaned;
 	}
 }
 
@@ -547,15 +550,41 @@ CModel* CModelFactory::GetOutlineModelSubset()
 CModel* CModelFactory::GetInstancedModel(std::string aFilePath, int aNumberOfInstanced)
 {
 	SInstancedModel instancedModel = {aFilePath, aNumberOfInstanced};
-	std::cout << aFilePath << " " << aNumberOfInstanced << " Hash: "<< instancedModel.myModelTypeHashCode << std::endl;
 	if (myInstancedModelMapPBR.find(instancedModel) == myInstancedModelMapPBR.end())
 	{
-		std::cout << "Creating new \n___\n" << std::endl;
 		return CreateInstancedModels(aFilePath, aNumberOfInstanced);
 	}
-	std::cout << "Fetching : "<< aFilePath << " " << aNumberOfInstanced << " Hash: "<< instancedModel.myModelTypeHashCode << std::endl;
-	std::cout << "___\n" << std::endl;
 	return myInstancedModelMapPBR[instancedModel];
+}
+
+void CModelFactory::ClearFactory()
+{
+	auto it = myModelMap.begin();
+	while (it != myModelMap.end())
+	{
+		delete it->second;
+		it->second = nullptr;
+		++it;
+	}
+	myModelMap.clear();
+
+	auto itPBR = myModelMapPBR.begin();
+	while (itPBR != myModelMapPBR.end())
+	{
+		delete itPBR->second;
+		itPBR->second = nullptr;
+		++itPBR;
+	}
+	myModelMapPBR.clear();
+
+	auto itInstaned = myInstancedModelMapPBR.begin();
+	while (itInstaned != myInstancedModelMapPBR.end())
+	{
+		delete itInstaned->second;
+		itInstaned->second = nullptr;
+		++itInstaned;
+	}
+	myInstancedModelMapPBR.clear();
 }
 
 CModel* CModelFactory::CreateInstancedModels(std::string aFilePath, int aNumberOfInstanced)

@@ -35,5 +35,8 @@ enum class EMessageType
 	PlayAmbienceSwamp1,
 	PlayAmbienceSwamp2,
 	UIButtonPress,
+	PlayerExperienceChanged,
+	PlayVoiceLine,
+	StopDialogue,
 	Count
 };
