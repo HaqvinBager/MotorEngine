@@ -92,7 +92,7 @@ void CInGameState::Start()
 	myCanvas = new CCanvas();
 	myCanvas->Init("Json/UI_InGame_Description.json", CEngine::GetInstance()->GetActiveScene());
 
-	myTokenPool = new CTokenPool(4, 4.0f);// todo: fix reset
+	myTokenPool = new CTokenPool(4, 1.0f);// todo: fix reset
 
 	//NO TOUCHY UNLESS BOSS TEST
 	//myTestBoss = new CGameObject();
@@ -188,7 +188,7 @@ void CInGameState::Update()
 	}
 
 	myColliderPusher->EnemiesPushOutEnemies();
-	myColliderPusher->PlayerPushOutEnemies();
+	//myColliderPusher->PlayerPushOutEnemies();
 
 	mySelectedEnemy = mySelection->FindSelectedEnemy();
 

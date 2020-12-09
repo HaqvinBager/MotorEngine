@@ -6,8 +6,8 @@
 
 CStatsComponent::CStatsComponent(CGameObject& aParent, float aHealth, float aDamage, float aMoveSpeed, float aDamageCooldown, float aVisionRange, float aAttackRange, float anExperienceAmount)
 	: CBehaviour(aParent)
-	, myBaseStats({aHealth, 100.0f, aDamage, aMoveSpeed, aDamageCooldown, aVisionRange, aAttackRange, 1.5f, 100.f, 3})
-	, myStats({aHealth, 100.0f, aDamageCooldown, 0.0f, true, false, nullptr, myBaseStats.myBaseRandomWalkTime, anExperienceAmount, 0})
+	, myBaseStats({aHealth, 100.0f, aDamage, aMoveSpeed, aDamageCooldown, aVisionRange, aAttackRange, 1.5f, 100.f, 3, 1.f})
+	, myStats({aHealth, 100.0f, aDamageCooldown, 0.0f, true, false, nullptr, myBaseStats.myBaseRandomWalkTime, anExperienceAmount, 0, false, myBaseStats.myNextTokenBaseCooldown})
 {
 
 }
@@ -33,6 +33,15 @@ void CStatsComponent::Update()
 			myStats.myDamageCooldown -= CTimer::Dt();
 		}
 	}
+
+	if (myStats.hadToken) {
+		myStats.myNextTokenCooldown -= CTimer::Dt();
+		if (myStats.myNextTokenCooldown <= 0.f) {
+			myStats.hadToken = false;
+			myStats.myNextTokenCooldown = myBaseStats.myNextTokenBaseCooldown;
+		}
+	}
+
 }
 
 void CStatsComponent::OnEnable()
@@ -62,4 +71,11 @@ const SBaseStats& CStatsComponent::GetBaseStats() const
 SStats& CStatsComponent::GetStats()
 {
 	return myStats;
+}
+
+void CStatsComponent::NextTokenCooldown()
+{
+	if (myStats.hadToken == false) {
+		myStats.hadToken = true;
+	} 
 }

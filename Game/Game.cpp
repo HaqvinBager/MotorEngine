@@ -25,12 +25,13 @@ void CGame::Init()
 {
 	myStateStack.Awake(
 		{ 
+		CStateStack::EState::BootUpState,
 		CStateStack::EState::MainMenu, 
 		CStateStack::EState::LoadLevel,
 		CStateStack::EState::InGame,
 		CStateStack::EState::PauseMenu 
 		}, 
-		CStateStack::EState::MainMenu);
+		CStateStack::EState::BootUpState);
 }
 
 bool CGame::Update()

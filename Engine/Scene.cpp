@@ -23,7 +23,7 @@
 #include "Model.h"
 #include "InstancedModelComponent.h"
 #include "TextInstance.h"
-#include "../Game/EnemyBehavior.h"
+#include "..\Game\AIBehavior.h"
 
 //CScene* CScene::ourInstance = nullptr;
 
@@ -121,9 +121,9 @@ bool CScene::InitNavMesh(std::string aPath)
 		positions[i + 5] = myNavMesh->myTriangles[j]->myVertexPositions[2];
 	}
 
-	//myNavMeshGrid = new CLineInstance();
-	//myNavMeshGrid->Init(CLineFactory::GetInstance()->CreatePolygon(positions));
-	//this->AddInstance(myNavMeshGrid);
+	myNavMeshGrid = new CLineInstance();
+	myNavMeshGrid->Init(CLineFactory::GetInstance()->CreatePolygon(positions));
+	this->AddInstance(myNavMeshGrid);
 
 	delete loader;
 	return true;
@@ -360,6 +360,15 @@ bool CScene::AddEnemies(CGameObject* aEnemy)
 	return true;
 }
 
+bool CScene::AddDestructible(CGameObject* aDestructible)
+{
+	if (!aDestructible) {
+		return false;
+	}
+	myDestructibles.emplace_back(aDestructible);
+	return true;
+}
+
 bool CScene::AddPlayer(CGameObject* aPlayer)
 {
 	if (!aPlayer) {
@@ -516,7 +525,7 @@ void CScene::SetShouldRenderLineInstance(const bool aShouldRender)
 #endif //  _DEBUG
 }
 
-void CScene::TakeOwnershipOfAIBehavior(CEnemyBehavior* aBehavior)
+void CScene::TakeOwnershipOfAIBehavior(IAIBehavior* aBehavior)
 {
 	myEnemyBehavior = aBehavior;
 }

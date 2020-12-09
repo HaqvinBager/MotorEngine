@@ -39,6 +39,9 @@ CEnemyBehavior::~CEnemyBehavior()
 
 void CEnemyBehavior::Update(CGameObject* aParent)
 {
+	if (Input::GetInstance()->IsKeyPressed('P')) {
+		TakeDamage(0.1f, CEngine::GetInstance()->GetActiveScene().GetEnemies()[0]);
+	}
 	myCurrentParent = aParent;
 
 	//enemy logic
@@ -107,20 +110,27 @@ void CEnemyBehavior::FindATarget()
 		myCurrentParent->GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
 		if (dist <= baseStats.myBaseAttackRange) {
 			myCurrentParent->GetComponent<CTransformComponent>()->ClearPath();
-			if (stats.myTokenSlot == nullptr) {
+			if (stats.myTokenSlot == nullptr && stats.hadToken == false) {
 				stats.myTokenSlot = CTokenPool::GetInstance()->Request();
 			}
-			myPlayer->GetComponent<CStatsComponent>();
-			if (myCurrentParent->GetComponent<CAnimationComponent>())
-			{
-				myCurrentParent->GetComponent<CAnimationComponent>()->PlayAttack01ID();
+			else if(stats.myTokenSlot != nullptr){
+				myPlayer->GetComponent<CStatsComponent>();
+				if (myCurrentParent->GetComponent<CAnimationComponent>())
+				{
+					myCurrentParent->GetComponent<CAnimationComponent>()->PlayAttack01ID();
+				}
+				myCurrentParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::EnemyAbility, myCurrentParent->myTransform->Position());
+				//CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
+				//stats.myTokenSlot = nullptr;
+				//myCurrentParent->GetComponent<CStatsComponent>()->NextTokenCooldown();
 			}
-			myCurrentParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::EnemyAbility, myCurrentParent->myTransform->Position());
 		}
 		else {
 			if (stats.myTokenSlot != nullptr) {
 				CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
 				stats.myTokenSlot = nullptr;
+				myCurrentParent->GetComponent<CStatsComponent>()->NextTokenCooldown();
+
 			}
 		}
 	}
@@ -155,7 +165,7 @@ void CEnemyBehavior::TakeDamage(float aDamageMultiplier, CGameObject* aGameObjec
 		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &data);
 		float baseHealth = myCurrentParent->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
 		float difference = baseHealth - myCurrentParent->GetComponent<CStatsComponent>()->GetStats().myHealth;
-		
+
 		if (myPlayer->GetComponent<CPlayerControllerComponent>()->AuraActive()) {
 			if((myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth + (difference / 2.5f))
 				< myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth)
@@ -163,7 +173,7 @@ void CEnemyBehavior::TakeDamage(float aDamageMultiplier, CGameObject* aGameObjec
 			else
 				myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth = myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
 		}
-		
+
 		difference = (baseHealth - difference) / baseHealth;
 		if (difference <= 0.0)
 		{
@@ -172,6 +182,7 @@ void CEnemyBehavior::TakeDamage(float aDamageMultiplier, CGameObject* aGameObjec
 
 
 		myCurrentParent->GetComponent<CHealthBarComponent>()->GetCanvas()->GetAnimatedUI()[0]->Level(difference);
+		myCurrentParent->GetComponent<CHealthBarComponent>()->GetCanvas2()->GetAnimatedUI()[0]->Level(difference);
 	}
 
 	if (stats.myHealth <= 0)
@@ -188,10 +199,16 @@ void CEnemyBehavior::Die()
 	myCurrentParent->GetComponent<CAbilityComponent>()->Enabled(false);
 	myCurrentParent->GetComponent<CNavMeshComponent>()->Enabled(false);
 	myCurrentParent->GetComponent<CAnimationComponent>()->DeadState();
-	myCurrentParent->GetComponent<CHealthBarComponent>()->Enabled(false);
+	//myCurrentParent->GetComponent<CHealthBarComponent>()->Enabled(false);
 	myCurrentParent->GetComponent<CStatsComponent>()->Enabled(false);
 	SMessage message;
 	message.myMessageType = EMessageType::EnemyDied;
 	message.data = &myCurrentParent->GetComponent<CStatsComponent>()->GetStats().myExperience;
 	CMainSingleton::PostMaster().Send(message);
+
+	SStats stats = myCurrentParent->GetComponent<CStatsComponent>()->GetStats();
+	if (stats.myTokenSlot != nullptr) {
+		CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
+		stats.myTokenSlot = nullptr;
+	}
 }

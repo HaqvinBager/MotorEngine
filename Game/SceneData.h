@@ -85,14 +85,19 @@ struct SParticleFXData
 	int myInstanceID;
 	DirectX::SimpleMath::Vector3 myPosition;
 	DirectX::SimpleMath::Vector3 myRotation;
-	//std::vector<std::string> myJsonList;
 };
 
-//class SData { 
-//public:
-//	SData() { }
-//	virtual ~SData() { }
-//};
+struct SBossData
+{
+	int myInstanceID;
+	int myModelIndex;
+	DirectX::SimpleMath::Vector3 myPosition;
+	DirectX::SimpleMath::Vector3 myRotation;
+	DirectX::SimpleMath::Vector3 myScale;
+	DirectX::SimpleMath::Vector2 myStageOne;
+	DirectX::SimpleMath::Vector2 myStageTwo;
+	DirectX::SimpleMath::Vector2 myStageThree;
+};
 
 struct SInGameData 
 {
@@ -107,7 +112,8 @@ struct SInGameData
 	//int mySceneIndex;
 	std::vector<SEnvironmentFXData> myEnvironmentFXs;
 	std::vector<SParticleFXData> myParticleFXs;
-	
+	int myBossIsInScene;
+	SBossData myBossData;
 	
 	std::unordered_map<int, std::string> myEventStringMap;
 	std::unordered_map<int, std::string> myEnvironmentFXStringMap;

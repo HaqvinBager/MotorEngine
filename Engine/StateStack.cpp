@@ -5,6 +5,7 @@
 #include "LoadLevelState.h"
 #include "InGameState.h"
 #include "PauseState.h"
+#include "BootUpState.h"
 
 CStateStack::~CStateStack()
 {
@@ -21,6 +22,10 @@ bool CStateStack::Awake(std::initializer_list<CStateStack::EState> someStates, c
 	{
 		switch (state)
 		{
+		case CStateStack::EState::BootUpState:
+			myStateMap[state] = new CBootUpState(*this);
+			myStateMap[state]->Awake();
+			break;
 		case CStateStack::EState::MainMenu:
 			myStateMap[state] = new CMenuState(*this);
 			myStateMap[state]->Awake();
@@ -61,8 +66,6 @@ bool CStateStack::PopState()
 	ENGINE_ERROR_BOOL_MESSAGE(!myStateStack.empty(), "Trying to pop an empty stack");
 	myStateStack.top()->Stop();
 	myStateStack.pop();
-	if (myStateStack.size() == 0)// == 0 < myStateStack.size()
-		return false;
 
 	return true;
 }

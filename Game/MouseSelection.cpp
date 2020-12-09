@@ -4,6 +4,9 @@
 #include "MouseTracker.h"
 #include "CircleColliderComponent.h"
 #include "HealthBarComponent.h"
+#include "StatsComponent.h"
+#include "ModelComponent.h"
+#include "DestructibleComponent.h"
 
 CMouseSelection::CMouseSelection()
 {
@@ -40,12 +43,23 @@ CGameObject* CMouseSelection::FindSelectedEnemy()
 	Vector3 pos = GetPositionAtNavmesh();
 	for (auto& enemy : CEngine::GetInstance()->GetActiveScene().GetEnemies()) {
 		//float dist = DirectX::SimpleMath::Vector3::DistanceSquared(pos, enemy->GetComponent<CTransformComponent>()->Position());
-		if (enemy->GetComponent<CCircleColliderComponent>()->Collided(1.5f, pos)) {
+		if (enemy->GetComponent<CCircleColliderComponent>()->Collided(1.5f, pos) && enemy->GetComponent<CStatsComponent>()->GetStats().myHealth > 0.f) {
 			enemy->GetComponent<CHealthBarComponent>()->OnEnable();
 			return enemy;
 		}
 		else {
 			enemy->GetComponent<CHealthBarComponent>()->OnDisable();
+		}
+	}
+	return nullptr;
+}
+
+CGameObject* CMouseSelection::FindSelectedDestructible()
+{
+	Vector3 pos = GetPositionAtNavmesh();
+	for (auto& destructible : CEngine::GetInstance()->GetActiveScene().GetDestructibles()) {
+		if (destructible->GetComponent<CCircleColliderComponent>()->Collided(1.5f, pos) && destructible->GetComponent<CDestructibleComponent>()->IsDead() == false) {
+			return destructible;
 		}
 	}
 	return nullptr;

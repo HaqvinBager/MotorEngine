@@ -19,7 +19,7 @@ class CCameraComponent;
 struct SLineTime;
 struct SNavMesh;
 class CModel;
-class CEnemyBehavior;
+class IAIBehavior;
 
 class CScene {
 	friend class CEngine;
@@ -62,9 +62,11 @@ public:
 	bool RemoveInstance(CAnimatedUIElement* anAnimatedUIElement);
 	bool AddInstance(CTextInstance* aText);
 	bool AddEnemies(CGameObject* aEnemy);
+	bool AddDestructible(CGameObject* aDestructible);
 	bool AddPlayer(CGameObject* aPlayer);
 
 	std::vector<CGameObject*> GetEnemies() { return myEnemies; }
+	std::vector<CGameObject*> GetDestructibles() { return myDestructibles; }
 	CGameObject* GetPlayer() { return myPlayer; }
 
 	bool RemoveInstance(CGameObject* aGameObject);
@@ -87,7 +89,7 @@ public:
 
 	void SetShouldRenderLineInstance(const bool aShouldRender);
 
-	void TakeOwnershipOfAIBehavior(CEnemyBehavior* aBehavior);
+	void TakeOwnershipOfAIBehavior(IAIBehavior* aBehavior);
 
 	const std::vector<CGameObject*>& GetActiveGameObjects() const { return myGameObjects; }
 
@@ -117,8 +119,9 @@ private:
 	std::vector<CTextInstance*> myTexts;
 	std::unordered_map<ERenderOrder, std::vector<CSpriteInstance*>> mySpriteInstances;
 	std::vector<CGameObject*> myEnemies;
+	std::vector<CGameObject*> myDestructibles;
 	CGameObject* myPlayer;
-	CEnemyBehavior* myEnemyBehavior;
+	IAIBehavior* myEnemyBehavior;
 
 	//CCollisionManager* myCollisionManager;
 

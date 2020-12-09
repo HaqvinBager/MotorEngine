@@ -216,8 +216,10 @@ void CPopupTextService::SpawnDamageNumber(void* someData)
 	damage = data.myDamage;
 	text = std::to_string(damage);
 	text = text.substr(0, text.find_first_of("."));
-	worldPos = data.myGameObject->myTransform->Position();
-	myActiveGameObject[text] = data.myGameObject;
+	if (data.myGameObject != nullptr) {
+		worldPos = data.myGameObject->myTransform->Position();
+		myActiveGameObject[text] = data.myGameObject;
+	}
 
 
 	myActiveDamageNumbers.emplace_back(myTextPool.front());
@@ -226,10 +228,12 @@ void CPopupTextService::SpawnDamageNumber(void* someData)
 	myDamageAnimationData.emplace_back(myAnimatedDataPool.front());
 	myAnimatedDataPool.pop();
 
-	DirectX::SimpleMath::Vector2 screen = CUtility::WorldToScreen(worldPos);
+	if (data.myGameObject != nullptr) {
+		DirectX::SimpleMath::Vector2 screen = CUtility::WorldToScreen(worldPos);
+		myActiveDamageNumbers.back()->SetGameObjectPosition({ screen.x, screen.y });
+	}
 
 	myActiveDamageNumbers.back()->SetPivot({ 0.5f, 0.5f });
-	myActiveDamageNumbers.back()->SetGameObjectPosition({ screen.x, screen.y });
 	//Needs to be -1.f, -1.f!
 	myActiveDamageNumbers.back()->SetPosition({ -1.f,-1.f });
 	myActiveDamageNumbers.back()->SetText(text);
@@ -311,7 +315,7 @@ void CPopupTextService::SpawnInfoBox(std::string someInfoIdentifier)
 
 	myActiveSkillSprite = mySkillIcons[skillPicker];
 	myInfoBoxText->SetPivot({ 0.0f, 0.5f });
-	myInfoBoxText->SetPosition({ -0.205f, -0.5f });
+	myInfoBoxText->SetPosition({ -0.22f, -0.5f });
 	myInfoBoxText->SetScale({ 1.0f, 1.0f });
 	myInfoBoxText->SetText(myStoredSkillInfoStrings[skillPicker]);
 
@@ -380,8 +384,12 @@ void CPopupTextService::UpdateResources()
 		newPos *= 2.0f;
 
 		//Attached Gameobject space position
-		DirectX::SimpleMath::Vector3 worldPos = myActiveGameObject[text->GetText()]->myTransform->Position();
-		DirectX::SimpleMath::Vector2 screen = CUtility::WorldToScreen(worldPos);
+		if (myActiveGameObject[text->GetText()] != nullptr) {
+			DirectX::SimpleMath::Vector3 worldPos = myActiveGameObject[text->GetText()]->myTransform->Position();
+			DirectX::SimpleMath::Vector2 screen = CUtility::WorldToScreen(worldPos);
+			screen.y -= 0.35f;
+			text->SetGameObjectPosition(screen);
+		}
 
 		quotient = animationData->myTimer / animationData->myLifespan;
 		animationData->mySpeed = DirectX::SimpleMath::Vector2::Lerp(animationData->myStartSpeed, { 0.0f, 1.0f }, quotient);
@@ -392,10 +400,8 @@ void CPopupTextService::UpdateResources()
 		newPos += animationData->mySpeed * CTimer::Dt();
 		
 		//offset for text to be over attached Gameobject
-		screen.y -= 0.35f;
 
 		text->SetPosition(newPos);
-		text->SetGameObjectPosition(screen);
 	}
 
 	std::sort(indicesOfTextsToRemove.begin(), indicesOfTextsToRemove.end(), [](UINT a, UINT b) { return a > b; });

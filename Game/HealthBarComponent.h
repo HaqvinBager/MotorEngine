@@ -19,7 +19,9 @@ public:
 	void OnDisable() override;
 
 	CCanvas* GetCanvas() { return myCanvas; }
+	CCanvas* GetCanvas2() { return myCanvas2; }
 private:
 	CCanvas* myCanvas;
+	CCanvas* myCanvas2;
 };
 

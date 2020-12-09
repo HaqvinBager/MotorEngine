@@ -20,6 +20,7 @@ public:
 
 	bool Init(CSprite* aSprite);
 	void SetPosition(DirectX::SimpleMath::Vector2 aPosition);
+	void SetNormalPosition(DirectX::SimpleMath::Vector2 aPosition);
 	void SetColor(DirectX::SimpleMath::Vector4 aColor);
 	void SetUVRect(DirectX::SimpleMath::Vector4 aUVRect);
 	void SetSize(DirectX::SimpleMath::Vector2 aSize);
