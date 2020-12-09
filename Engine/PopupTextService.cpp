@@ -315,7 +315,7 @@ void CPopupTextService::SpawnInfoBox(std::string someInfoIdentifier)
 
 	myActiveSkillSprite = mySkillIcons[skillPicker];
 	myInfoBoxText->SetPivot({ 0.0f, 0.5f });
-	myInfoBoxText->SetPosition({ -0.205f, -0.5f });
+	myInfoBoxText->SetPosition({ -0.22f, -0.5f });
 	myInfoBoxText->SetScale({ 1.0f, 1.0f });
 	myInfoBoxText->SetText(myStoredSkillInfoStrings[skillPicker]);
 

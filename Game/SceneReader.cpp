@@ -164,9 +164,8 @@ SInGameData& CSceneReader::ReadInGameData()
 		}
 	}
 
-	int isBossInScene = 0;
-	myStreamPtr += Read(isBossInScene);
-	if (isBossInScene > 0)
+	myStreamPtr += Read(myInGameData.back()->myBossIsInScene);
+	if (myInGameData.back()->myBossIsInScene > 0)
 	{
 		SBossData data = {};
 		myStreamPtr += Read(data);

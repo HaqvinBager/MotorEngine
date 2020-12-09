@@ -19,7 +19,7 @@ class CCameraComponent;
 struct SLineTime;
 struct SNavMesh;
 class CModel;
-class CEnemyBehavior;
+class IAIBehavior;
 
 class CScene {
 	friend class CEngine;
@@ -88,7 +88,7 @@ public:
 
 	void SetShouldRenderLineInstance(const bool aShouldRender);
 
-	void TakeOwnershipOfAIBehavior(CEnemyBehavior* aBehavior);
+	void TakeOwnershipOfAIBehavior(IAIBehavior* aBehavior);
 
 	const std::vector<CGameObject*>& GetActiveGameObjects() const { return myGameObjects; }
 
@@ -120,7 +120,7 @@ private:
 	std::vector<CGameObject*> myEnemies;
 	std::vector<CGameObject*> myDestructibles;
 	CGameObject* myPlayer;
-	CEnemyBehavior* myEnemyBehavior;
+	IAIBehavior* myEnemyBehavior;
 
 	//CCollisionManager* myCollisionManager;
 

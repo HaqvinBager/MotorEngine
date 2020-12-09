@@ -34,4 +34,5 @@ private:
 	CGameObject* CreateGameObject(const SDestructibleData& aData, const std::string& aModelPath);
 	CGameObject* CreateGameObject(const SEnvironmentFXData& aData, std::string aEnvironmentFXName);
 	CGameObject* CreateGameObject(const SParticleFXData& aData, const std::vector<std::string>& somParticleFXNames);
+	CGameObject* CreateGameObject(const SBossData& aData, const std::string& aModelPath);
 };

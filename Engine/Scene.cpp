@@ -23,7 +23,7 @@
 #include "Model.h"
 #include "InstancedModelComponent.h"
 #include "TextInstance.h"
-#include "../Game/EnemyBehavior.h"
+#include "..\Game\AIBehavior.h"
 
 //CScene* CScene::ourInstance = nullptr;
 
@@ -517,7 +517,7 @@ void CScene::SetShouldRenderLineInstance(const bool aShouldRender)
 #endif //  _DEBUG
 }
 
-void CScene::TakeOwnershipOfAIBehavior(CEnemyBehavior* aBehavior)
+void CScene::TakeOwnershipOfAIBehavior(IAIBehavior* aBehavior)
 {
 	myEnemyBehavior = aBehavior;
 }
