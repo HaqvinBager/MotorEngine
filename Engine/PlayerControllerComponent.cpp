@@ -249,10 +249,10 @@ void CPlayerControllerComponent::UpdateExperience(const SMessage& aMessage)
 
 			////This is for group 4
 			////Comment this in before last build
-			/*if (level == 2) {
+			if (level == 2) {
 				this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position());
 				myAuraActive = true;
-			}*/
+			}
 
 			this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel);
 

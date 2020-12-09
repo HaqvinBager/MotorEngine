@@ -6,6 +6,7 @@
 #include "InGameState.h"
 #include "PauseState.h"
 #include "BootUpState.h"
+#include "TitleScreenState.h"
 
 CStateStack::~CStateStack()
 {
@@ -24,6 +25,10 @@ bool CStateStack::Awake(std::initializer_list<CStateStack::EState> someStates, c
 		{
 		case CStateStack::EState::BootUpState:
 			myStateMap[state] = new CBootUpState(*this);
+			myStateMap[state]->Awake();
+			break;
+		case CStateStack::EState::TitleScreenState:
+			myStateMap[state] = new CTitleScreenState(*this);
 			myStateMap[state]->Awake();
 			break;
 		case CStateStack::EState::MainMenu:
