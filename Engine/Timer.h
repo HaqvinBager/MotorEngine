@@ -9,9 +9,12 @@ public:
 	CTimer();
 	~CTimer();
 
-	float Mark();
-	//float Peek() const;
+	static float Mark();
+
+private:
+	float NewFrame();
 	float TotalTime() const;
+
 private:
 	static CTimer* ourInstance;
 	std::chrono::steady_clock::time_point myFirst;

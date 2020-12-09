@@ -27,6 +27,11 @@ float CTimer::Dt()
 
 float CTimer::Mark()
 {
+	return ourInstance->NewFrame();
+}
+
+float CTimer::NewFrame()
+{
 	const auto old = myLast;
 	myLast = std::chrono::steady_clock::now();
 	const std::chrono::duration<float> dt = myLast - old;

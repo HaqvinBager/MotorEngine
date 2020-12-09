@@ -8,6 +8,7 @@ class CStateStack {
 public:
 
 	enum class EState {
+		BootUpState,
 		MainMenu,
 		LoadLevel,
 		InGame,
