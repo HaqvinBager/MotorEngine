@@ -91,7 +91,7 @@ void CBootUpState::Update()
 
 		if (myLogoToRender >= myLogos.size())
 		{
-			myStateStack.PopTopAndPush(CStateStack::EState::MainMenu);
+			myStateStack.PopTopAndPush(CStateStack::EState::TitleScreenState);
 			return;
 		}
 
