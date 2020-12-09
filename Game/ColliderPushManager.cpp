@@ -60,3 +60,26 @@ void CColliderPushManager::PlayerPushOutEnemies()
 		}
 	}
 }
+
+void CColliderPushManager::PlayerPushOutDestructibles()
+{
+	std::vector<CGameObject*> destructibles = CEngine::GetInstance()->GetActiveScene().GetDestructibles();
+	CGameObject* player = CEngine::GetInstance()->GetActiveScene().GetPlayer();
+	for (int i = 0; i < destructibles.size(); ++i) {
+		if (destructibles[i]->GetComponent<CCircleColliderComponent>()->Collided(player->GetComponent<CCircleColliderComponent>()) && destructibles[i]->GetComponent<CCircleColliderComponent>()->Enabled()) {
+			Vector3 penLength = destructibles[i]->myTransform->Position() - player->myTransform->Position();
+			float len = penLength.Length();
+
+			float penDepth = destructibles[i]->GetComponent<CCircleColliderComponent>()->GetRadius() + player->GetComponent<CCircleColliderComponent>()->GetRadius() - len;
+
+			DirectX::SimpleMath::Vector3 enemyPos = { destructibles[i]->myTransform->Position().x, destructibles[i]->myTransform->Position().y, destructibles[i]->myTransform->Position().z};
+			if (CEngine::GetInstance()->GetActiveScene().GetNavMesh()->GetTriangleAtPoint(enemyPos)) {
+				destructibles[i]->myTransform->Position(enemyPos);
+			}
+			DirectX::SimpleMath::Vector3 playerPos = { player->myTransform->Position().x - penDepth, player->myTransform->Position().y, player->myTransform->Position().z - penDepth };
+			if (CEngine::GetInstance()->GetActiveScene().GetNavMesh()->GetTriangleAtPoint(playerPos)) {
+				player->myTransform->Position(playerPos);
+			}
+		}
+	}
+}

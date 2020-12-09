@@ -15,6 +15,7 @@
 #include "CircleColliderComponent.h"
 #include "TriangleColliderComponent.h"
 #include "TransformComponent.h"
+#include "DestructibleComponent.h"
 
 CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent):
 	CBehaviour(aParent),
@@ -23,6 +24,7 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent):
 	mySelection(new CMouseSelection()),
 	myIsMoving(true),
 	myTargetEnemy(nullptr),
+	myTargetDestructible(nullptr),
 	myMiddleMousePressed(false),
 	myAuraActive(false)
 {
@@ -51,7 +53,6 @@ void CPlayerControllerComponent::Awake()
 }
 
 void CPlayerControllerComponent::Start() {}
-
 void CPlayerControllerComponent::Update()
 {
 	if (myIsMoving) {
@@ -60,11 +61,21 @@ void CPlayerControllerComponent::Update()
 
 	if (myTargetEnemy) {
 		if (myTargetEnemy->GetComponent<CStatsComponent>()->GetStats().myHealth > 0) {
-			this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath(myTargetEnemy->myTransform->Position());
 			float abilityLength = GameObject().GetComponent<CAbilityComponent>()->MeleeAttackRange();
+			this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath(myTargetEnemy->myTransform->Position());
 			if (DirectX::SimpleMath::Vector3::Distance(myTargetEnemy->myTransform->Position(), GameObject().myTransform->Position())
 				< (myTargetEnemy->GetComponent<CCircleColliderComponent>()->GetRadius() + abilityLength)) {
+				this->GameObject().GetComponent<CTransformComponent>()->ClearPath();
 				this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position());
+				this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack01ID();
+			}
+		}
+	}
+
+	if (myTargetDestructible) {
+		if (myTargetDestructible->GetComponent<CDestructibleComponent>()->IsDead() == false) {
+			if (DirectX::SimpleMath::Vector3::Distance(myTargetDestructible->myTransform->Position(), GameObject().myTransform->Position()) < myTargetDestructible->GetComponent<CCircleColliderComponent>()->GetRadius()) {
+				myTargetDestructible->GetComponent<CDestructibleComponent>()->IsDead(true);
 				this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack01ID();
 				this->GameObject().GetComponent<CTransformComponent>()->ClearPath();
 			}
@@ -113,6 +124,15 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 				if(myTargetEnemy && myTargetEnemy->GetComponent<CStatsComponent>()->GetStats().myHealth > 0.f){
 
 					this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath(myTargetEnemy->myTransform->Position());
+				}
+				else {
+					this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
+				}
+
+				myTargetDestructible = mySelection->FindSelectedDestructible();
+				if(myTargetDestructible && myTargetDestructible->GetComponent<CDestructibleComponent>()->IsDead() == false){
+
+					this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath(myTargetDestructible->myTransform->Position());
 				}
 				else {
 					this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();

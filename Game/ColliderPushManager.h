@@ -8,6 +8,8 @@ public:
 	void EnemiesPushOutEnemies();
 
 	void PlayerPushOutEnemies();
+
+	void PlayerPushOutDestructibles();
 private:
 };
 
