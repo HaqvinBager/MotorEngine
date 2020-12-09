@@ -8,6 +8,7 @@
 #include "Scene.h"
 #include "PostMaster.h"
 #include "MainSingleton.h"
+#include "JsonReader.h"
 
 CCameraComponent::CCameraComponent(CGameObject& aParent, const float aFoV/*, float aNearPlane, float aFarPlane, DirectX::SimpleMath::Vector2 aResolution*/)
 	: CComponent(aParent)
@@ -38,8 +39,10 @@ CCameraComponent::~CCameraComponent()
 
 void CCameraComponent::Awake()
 {
-	myFadingPlane = new CSpriteInstance(/*CEngine::GetInstance()->GetActiveScene()*/);
-	myFadingPlane->Init(CSpriteFactory::GetInstance()->GetSprite("Assets/3D/UI/Ingame/CameraFadeScreen.dds"));
+	rapidjson::Document document = CJsonReader::LoadDocument("Json/CameraInit.json");
+
+	myFadingPlane = new CSpriteInstance();
+	myFadingPlane->Init(CSpriteFactory::GetInstance()->GetSprite(document["Fade Screen Path"].GetString()));
 	myFadingPlane->SetSize({ 15.1f, 8.5f });
 	myFadingPlane->SetRenderOrder(ERenderOrder::PauseLayer);
 	myFadingPlane->SetShouldRender(false);
