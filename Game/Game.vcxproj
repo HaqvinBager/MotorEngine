@@ -307,6 +307,7 @@
     <ClInclude Include="SceneReader.h" />
     <ClInclude Include="SpeedExplodeBehavior.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TitleScreenState.h" />
     <ClInclude Include="UnityFactory.h" />
   </ItemGroup>
   <ItemGroup>
@@ -341,6 +342,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='G3_Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='G4_Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TitleScreenState.cpp" />
     <ClCompile Include="UnityFactory.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

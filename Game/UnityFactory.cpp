@@ -26,6 +26,7 @@
 #include "EnemyBehavior.h"
 #include "HealthBarComponent.h"
 #include "ParticleEmitterComponent.h"
+#include "BossBehavior.h"
 
 #include "CollisionManager.h"
 #include "LightFactory.h"
@@ -177,7 +178,10 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 
 	if (aData.myBossIsInScene > 0)
 	{
-		aScene.AddInstance(CreateGameObject(aData.myBossData, aBinModelPaths[aData.myBossData.myModelIndex]));
+		CBossBehavior* bossBehavior = new CBossBehavior(player);
+		CGameObject* aBossGameObject = CreateGameObject(aData.myBossData, aBinModelPaths[aData.myBossData.myModelIndex]);
+		aBossGameObject->AddComponent<CAIBehaviorComponent>(*aBossGameObject, bossBehavior);
+		aScene.AddInstance(aBossGameObject);
 	}
 
 	return true;
@@ -308,7 +312,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SDestructibleData& aData, con
 	gameObject->myTransform->Position(aData.myPosition);
 	gameObject->myTransform->Rotation(aData.myRotation);
 	gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
-	gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 0.15f, ECollisionLayer::ALL, static_cast<uint64_t>(ECollisionLayer::PLAYER));
+	gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 0.2f, ECollisionLayer::ALL, static_cast<uint64_t>(ECollisionLayer::PLAYER));
 	gameObject->AddComponent<CDestructibleComponent>(*gameObject);
 
 	AddAnimationsToGameObject(*gameObject, aModelPath, EAnimatedObject::Destructible);
@@ -352,25 +356,17 @@ CGameObject* CUnityFactory::CreateGameObject(const SParticleFXData& aData, const
 	return nullptr;
 }
 
-#include "BossBehavior.h"
 CGameObject* CUnityFactory::CreateGameObject(const SBossData& aData, const std::string& aModelPath)
 {
 	CGameObject* gameObject = new CGameObject();
 	gameObject->myTransform->Position(aData.myPosition);
 	gameObject->myTransform->Rotation(aData.myRotation);
 	gameObject->myTransform->Scale(aData.myScale.x);
-
-	gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 0.5f, ECollisionLayer::BOSS, static_cast<int>(ECollisionLayer::PLAYERABILITY)); //todo more flags
-
-	CBossBehavior* bossBehavior = new CBossBehavior(&CEngine::GetInstance()->GetActiveScene().FindObjectOfType<CPlayerControllerComponent>()->GameObject());
-	gameObject->myTransform->Position({ -2.0f, 0.0f, 6.0f });
 	gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
-
-	gameObject->AddComponent<CAIBehaviorComponent>(*gameObject, bossBehavior);
-
-
+	AddAnimationsToGameObject(*gameObject, aModelPath, EAnimatedObject::Boss);
+	
+	gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 0.5f, ECollisionLayer::BOSS, static_cast<int>(ECollisionLayer::PLAYERABILITY)); //todo more flags
 	gameObject->AddComponent<CStatsComponent>(*gameObject, 10.0f, 10.0f, 3.0f, 3.0f, 20.0f, 15.0f);
-
 	gameObject->AddComponent<CNavMeshComponent>(*gameObject);
 
 	std::pair<EAbilityType, unsigned int> ab1 = { EAbilityType::BossAbility1, 1 };
@@ -381,8 +377,5 @@ CGameObject* CUnityFactory::CreateGameObject(const SBossData& aData, const std::
 	abs.emplace_back(ab2);
 	abs.emplace_back(ab3);
 	gameObject->AddComponent<CAbilityComponent>(*gameObject, abs);
-
-	AddAnimationsToGameObject(*gameObject, "Assets/Graphics/Animations/CH_E_Boss_SK/CH_E_Boss_SK.fbx", EAnimatedObject::Boss);
-
 	return gameObject;
 }
