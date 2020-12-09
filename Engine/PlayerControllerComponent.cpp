@@ -60,11 +60,13 @@ void CPlayerControllerComponent::Update()
 
 	if (myTargetEnemy) {
 		if (myTargetEnemy->GetComponent<CStatsComponent>()->GetStats().myHealth > 0) {
+			this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath(myTargetEnemy->myTransform->Position());
 			float abilityLength = GameObject().GetComponent<CAbilityComponent>()->MeleeAttackRange();
 			if (DirectX::SimpleMath::Vector3::Distance(myTargetEnemy->myTransform->Position(), GameObject().myTransform->Position())
 				< (myTargetEnemy->GetComponent<CCircleColliderComponent>()->GetRadius() + abilityLength)) {
 				this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position());
 				this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack01ID();
+				this->GameObject().GetComponent<CTransformComponent>()->ClearPath();
 			}
 		}
 	}

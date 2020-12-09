@@ -39,6 +39,9 @@ CEnemyBehavior::~CEnemyBehavior()
 
 void CEnemyBehavior::Update(CGameObject* aParent)
 {
+	if (Input::GetInstance()->IsKeyPressed('P')) {
+		TakeDamage(0.1f, CEngine::GetInstance()->GetActiveScene().GetEnemies()[0]);
+	}
 	myCurrentParent = aParent;
 
 	//enemy logic
@@ -178,7 +181,7 @@ void CEnemyBehavior::TakeDamage(float aDamageMultiplier, CGameObject* aGameObjec
 		}
 
 
-		//myCurrentParent->GetComponent<CHealthBarComponent>()->GetCanvas()->GetAnimatedUI()[0]->Level(difference);
+		myCurrentParent->GetComponent<CHealthBarComponent>()->GetCanvas()->GetAnimatedUI()[0]->Level(difference);
 		myCurrentParent->GetComponent<CHealthBarComponent>()->GetCanvas2()->GetAnimatedUI()[0]->Level(difference);
 	}
 
