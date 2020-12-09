@@ -37,5 +37,7 @@ enum class EMessageType
 	PlayerExperienceChanged,
 	PlayVoiceLine,
 	StopDialogue,
+	FadeInComplete,
+	FadeOutComplete,
 	Count
 };

@@ -11,6 +11,8 @@
 #include "InstancedModelComponent.h"
 #include "MainSingleton.h"
 #include "PopupTextService.h"
+#include "Engine.h"
+#include "Scene.h"
 
 CRenderManager::CRenderManager() /*: myScene(*CScene::GetInstance())*/
 {
@@ -210,6 +212,7 @@ void CRenderManager::Render(CScene& aScene)
 
 	std::vector<CSpriteInstance*> animatedUIFrames;
 	std::vector<CAnimatedUIElement*> animatedUIElements = aScene.CullAnimatedUI(animatedUIFrames);
+	CEngine::GetInstance()->GetActiveScene().GetMainCamera()->EmplaceSprites(animatedUIFrames);
 	mySpriteRenderer.Render(animatedUIElements);
 	mySpriteRenderer.Render(animatedUIFrames);
 
