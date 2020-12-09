@@ -15,7 +15,7 @@
 using namespace rapidjson;
 CLoadLevelState::CLoadLevelState(CStateStack& aStateStack, const CStateStack::EState aState) 
 	: CState(aStateStack, aState)
-	, myLevelToLoad(ELevel::Dungeon)
+	, myLevelToLoad(ELevel::NavTest)
 {}
 
 CLoadLevelState::~CLoadLevelState()
@@ -48,8 +48,8 @@ void CLoadLevelState::Start()
 	levelIndex;
 
 	//Start Loading the ELevel::<Level> on a seperate thread.
-	//myLoadLevelFuture = std::async(std::launch::async, &CLoadLevelState::Load, this, static_cast<ELevel>(levelIndex));
-	myLoadLevelFuture = std::async(std::launch::async, &CLoadLevelState::Load, this, myLevelToLoad);
+	myLoadLevelFuture = std::async(std::launch::async, &CLoadLevelState::Load, this, static_cast<ELevel>(levelIndex)/*myLevelToLoad*/);
+	//myLoadLevelFuture = std::async(std::launch::async, &CLoadLevelState::Load, this, myLevelToLoad);
 
 	
 	for (auto& gameObject : CEngine::GetInstance()->GetActiveScene().GetActiveGameObjects())
