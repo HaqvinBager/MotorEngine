@@ -66,7 +66,7 @@ bool CUnityFactory::FillScene(const SLoadScreenData& aData, const std::vector<st
 	CGameObject* envLight = CreateGameObject(aData.myDirectionalLight);
 	aScene.AddInstance(envLight);
 	aScene.SetEnvironmentLight(envLight->GetComponent<CEnviromentLightComponent>()->GetEnviromentLight());
-	aScene.AddInstance(CreateGameObject(aData.myGameObject, someModelPaths[0/*aData.myGameObject.myModelIndex*/])); //pls no more crash //Nico 09 dec
+	aScene.AddInstance(CreateGameObject(aData.myGameObject, someModelPaths[aData.myGameObject.myModelIndex])); //pls no more crash //Nico 09 dec
 	return true;
 }
 
@@ -270,7 +270,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SEnemyData& aData, const std:
 {
 	CGameObject* gameObject = new CGameObject();
 	gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
-	gameObject->AddComponent<CStatsComponent>(*gameObject, aData.myHealth, aData.myDamage, aData.myMoveSpeed, aData.myDamageCooldown, aData.myVisionRange, aData.myAttackRange, 105.0f);
+	gameObject->AddComponent<CStatsComponent>(*gameObject, aData.myHealth, aData.myDamage, aData.myMoveSpeed, aData.myDamageCooldown, aData.myVisionRange, aData.myAttackRange, 5.0f);
 	gameObject->AddComponent<CAIBehaviorComponent>(*gameObject, aBehavior);
 	gameObject->AddComponent<CNavMeshComponent>(*gameObject);
 	gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 0.3f, ECollisionLayer::ENEMY, static_cast<uint64_t>(ECollisionLayer::PLAYERABILITY));
@@ -312,7 +312,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SDestructibleData& aData, con
 	gameObject->myTransform->Position(aData.myPosition);
 	gameObject->myTransform->Rotation(aData.myRotation);
 	gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
-	gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 0.2f, ECollisionLayer::ALL, static_cast<uint64_t>(ECollisionLayer::PLAYER));
+	gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 0.5f, ECollisionLayer::ALL, static_cast<uint64_t>(ECollisionLayer::PLAYER));
 	gameObject->AddComponent<CDestructibleComponent>(*gameObject);
 
 	AddAnimationsToGameObject(*gameObject, aModelPath, EAnimatedObject::Destructible);

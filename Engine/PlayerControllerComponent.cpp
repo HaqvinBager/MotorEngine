@@ -170,6 +170,7 @@ void CPlayerControllerComponent::ResetPlayer()
 	GameObject().GetComponent<CTransformComponent>()->Position(GameObject().GetComponent<CTransformComponent>()->StartPosition());
 	GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth = GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
 	GameObject().GetComponent<CStatsComponent>()->GetStats().myResource = GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myBaseResource;
+	GameObject().GetComponent<CTransformComponent>()->ClearPath();
 	MessagePostmaster(EMessageType::PlayerHealthChanged, 1.0f);
 	MessagePostmaster(EMessageType::PlayerResourceChanged, 1.0f);
 }
@@ -249,10 +250,10 @@ void CPlayerControllerComponent::UpdateExperience(const SMessage& aMessage)
 
 			////This is for group 4
 			////Comment this in before last build
-			/*if (level == 2) {
+			if (level == 2) {
 				this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position());
 				myAuraActive = true;
-			}*/
+			}
 
 			this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel);
 
