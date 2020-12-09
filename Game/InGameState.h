@@ -26,9 +26,9 @@ public:
 private:
 	CCanvas* myCanvas;
 	CTokenPool* myTokenPool;
-	CGameObject* myEnemy;
-	CGameObject* myTestBoss;
 	CMouseSelection* mySelection;
 	CColliderPushManager* myColliderPusher;
+	CGameObject* mySelectedEnemy;
+	CGameObject* myLastSelectedEnemy;
 	bool myExitLevel;
 };
