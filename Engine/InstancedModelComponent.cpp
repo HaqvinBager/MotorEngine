@@ -3,10 +3,11 @@
 #include "Model.h"
 #include "ModelFactory.h"
 
-CInstancedModelComponent::CInstancedModelComponent(CGameObject& aParent, std::string aModelPath, int aCount, std::vector<DirectX::SimpleMath::Matrix> aInstancedTransforms)
+CInstancedModelComponent::CInstancedModelComponent(CGameObject& aParent, std::string aModelPath, int aCount, std::vector<DirectX::SimpleMath::Matrix> aInstancedTransforms, bool aRenderWithAlpha)
 	: CBehaviour(aParent)
 	, myModel(CModelFactory::GetInstance()->GetInstancedModel(aModelPath, aCount))
 	, myIntancedTransforms(aInstancedTransforms)
+	, myRenderWithAlpha(aRenderWithAlpha)
 {
 }
 
