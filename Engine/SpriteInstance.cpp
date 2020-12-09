@@ -67,6 +67,15 @@ void CSpriteInstance::SetPosition(DirectX::SimpleMath::Vector2 aPosition)
 	myPosition.y -= aPosition.y;
 }
 
+void CSpriteInstance::SetNormalPosition(DirectX::SimpleMath::Vector2 aPosition)
+{
+	//aPosition /= 2.0f;
+	//aPosition.x += 0.5f;
+	//aPosition.y += 0.5f;
+	myPosition.x = aPosition.x /** CEngine::GetInstance()->GetWindowHandler()->GetResolution().x*/;
+	myPosition.y = aPosition.y /** CEngine::GetInstance()->GetWindowHandler()->GetResolution().y*/;
+}
+
 void CSpriteInstance::SetColor(DirectX::SimpleMath::Vector4 aColor)
 {
 	myColor = aColor;

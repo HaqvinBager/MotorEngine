@@ -90,16 +90,16 @@ void CInGameState::Start()
 	myCanvas = new CCanvas();
 	myCanvas->Init("Json/UI_InGame_Description.json", CEngine::GetInstance()->GetActiveScene());
 
-	myTokenPool = new CTokenPool(4, 4.0f);// todo: fix reset
+	myTokenPool = new CTokenPool(4, 1.0f);// todo: fix reset
 
 	//NO TOUCHY UNLESS BOSS TEST
 	myTestBoss = new CGameObject();
 	CBossBehavior* bossBehavior = new CBossBehavior(&CEngine::GetInstance()->GetActiveScene().FindObjectOfType<CPlayerControllerComponent>()->GameObject());
 	myTestBoss->myTransform->Position({ -2.0f, 0.0f, 6.0f });
 	myTestBoss->AddComponent<CCircleColliderComponent>(*myTestBoss, 0.5f, ECollisionLayer::BOSS, static_cast<int>(ECollisionLayer::PLAYER));
-	myTestBoss->AddComponent<CModelComponent>(*myTestBoss, "Assets/Graphics/Animations/CH_E_Boss_SK/CH_E_Boss_SK.fbx");
-
-	AddAnimationsToGameObject(*myTestBoss, "Assets/Graphics/Animations/CH_E_Boss_SK/CH_E_Boss_SK.fbx", EAnimatedObject::Boss);
+	//myTestBoss->AddComponent<CModelComponent>(*myTestBoss, "Assets/Graphics/Animations/CH_E_Boss_SK/CH_E_Boss_SK.fbx");
+	//
+	//AddAnimationsToGameObject(*myTestBoss, "Assets/Graphics/Animations/CH_E_Boss_SK/CH_E_Boss_SK.fbx", EAnimatedObject::Boss);
 
 	myTestBoss->AddComponent<CStatsComponent>(*myTestBoss, 10.0f, 10.0f, 3.0f, 3.0f, 20.0f, 15.0f);
 	myTestBoss->AddComponent<CAIBehaviorComponent>(*myTestBoss, bossBehavior);
@@ -190,7 +190,7 @@ void CInGameState::Update()
 	}
 
 	myColliderPusher->EnemiesPushOutEnemies();
-	myColliderPusher->PlayerPushOutEnemies();
+	//myColliderPusher->PlayerPushOutEnemies();
 
 	mySelection->FindSelectedEnemy();
 

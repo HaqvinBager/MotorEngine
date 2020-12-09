@@ -17,6 +17,7 @@ struct SBaseStats {
 	const float myBaseRandomWalkTime;
 	const float myExperienceToLevelUp;
 	const int myMaxLevel;
+	float myNextTokenBaseCooldown;
 };
 
 struct SStats {
@@ -30,6 +31,8 @@ struct SStats {
 	float myRandomWalkTime;
 	float myExperience;
 	int myLevel;
+	bool hadToken;
+	float myNextTokenCooldown;
 };
 
 class CStatsComponent : public CBehaviour
@@ -47,6 +50,7 @@ public:
 	bool AddDamage(float someHealth);
 	const SBaseStats& GetBaseStats() const;
 	SStats& GetStats();
+	void NextTokenCooldown();
 
 private:
 	SBaseStats myBaseStats;

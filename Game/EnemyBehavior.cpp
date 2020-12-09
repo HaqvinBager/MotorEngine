@@ -107,20 +107,27 @@ void CEnemyBehavior::FindATarget()
 		myCurrentParent->GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
 		if (dist <= baseStats.myBaseAttackRange) {
 			myCurrentParent->GetComponent<CTransformComponent>()->ClearPath();
-			if (stats.myTokenSlot == nullptr) {
+			if (stats.myTokenSlot == nullptr && stats.hadToken == false) {
 				stats.myTokenSlot = CTokenPool::GetInstance()->Request();
 			}
-			myPlayer->GetComponent<CStatsComponent>();
-			if (myCurrentParent->GetComponent<CAnimationComponent>())
-			{
-				myCurrentParent->GetComponent<CAnimationComponent>()->PlayAnimation(EEnemyAnimationID::Attack);
+			else if(stats.myTokenSlot != nullptr){
+				myPlayer->GetComponent<CStatsComponent>();
+				if (myCurrentParent->GetComponent<CAnimationComponent>())
+				{
+					myCurrentParent->GetComponent<CAnimationComponent>()->PlayAnimation(EEnemyAnimationID::Attack);
+				}
+				myCurrentParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::EnemyAbility, myCurrentParent->myTransform->Position());
+				CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
+				stats.myTokenSlot = nullptr;
+				myCurrentParent->GetComponent<CStatsComponent>()->NextTokenCooldown();
 			}
-			myCurrentParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::EnemyAbility, myCurrentParent->myTransform->Position());
 		}
 		else {
 			if (stats.myTokenSlot != nullptr) {
 				CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
 				stats.myTokenSlot = nullptr;
+				myCurrentParent->GetComponent<CStatsComponent>()->NextTokenCooldown();
+				
 			}
 		}
 	}
@@ -160,7 +167,8 @@ void CEnemyBehavior::TakeDamage(float aDamageMultiplier, CGameObject* aGameObjec
 		if (difference <= 0.0)
 			difference = 0.0f;
 
-		myCurrentParent->GetComponent<CHealthBarComponent>()->GetCanvas()->GetAnimatedUI()[0]->Level(difference);
+		//myCurrentParent->GetComponent<CHealthBarComponent>()->GetCanvas()->GetAnimatedUI()[0]->Level(difference);
+		myCurrentParent->GetComponent<CHealthBarComponent>()->GetCanvas2()->GetAnimatedUI()[0]->Level(difference);
 	}
 
 	if (stats.myHealth <= 0)
@@ -177,10 +185,16 @@ void CEnemyBehavior::Die()
 	myCurrentParent->GetComponent<CAbilityComponent>()->Enabled(false);
 	myCurrentParent->GetComponent<CNavMeshComponent>()->Enabled(false);
 	myCurrentParent->GetComponent<CAnimationComponent>()->DeadState();
-	myCurrentParent->GetComponent<CHealthBarComponent>()->Enabled(false);
+	//myCurrentParent->GetComponent<CHealthBarComponent>()->Enabled(false);
 	myCurrentParent->GetComponent<CStatsComponent>()->Enabled(false);
 	SMessage message;
 	message.myMessageType = EMessageType::EnemyDied;
 	message.data = &myCurrentParent->GetComponent<CStatsComponent>()->GetStats().myExperience;
 	CMainSingleton::PostMaster().Send(message);
+
+	SStats stats = myCurrentParent->GetComponent<CStatsComponent>()->GetStats();
+	if (stats.myTokenSlot != nullptr) {
+		CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
+		stats.myTokenSlot = nullptr;
+	}
 }

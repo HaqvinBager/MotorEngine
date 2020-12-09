@@ -104,10 +104,16 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 		myMiddleMousePressed = false;
 
 		if (myIsMoving) {
-			this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
 			if (mySelection)
 			{
 				myTargetEnemy = mySelection->FindSelectedEnemy();
+				if(myTargetEnemy && myTargetEnemy->GetComponent<CStatsComponent>()->GetStats().myHealth > 0.f){
+
+					this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath(myTargetEnemy->myTransform->Position());
+				}
+				else {
+					this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
+				}
 			}
 		} else {
 			this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position());
