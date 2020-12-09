@@ -26,6 +26,7 @@ void CGame::Init()
 	myStateStack.Awake(
 		{ 
 		CStateStack::EState::BootUpState,
+		CStateStack::EState::TitleScreenState,
 		CStateStack::EState::MainMenu, 
 		CStateStack::EState::LoadLevel,
 		CStateStack::EState::InGame,

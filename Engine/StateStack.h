@@ -9,6 +9,7 @@ public:
 
 	enum class EState {
 		BootUpState,
+		TitleScreenState,
 		MainMenu,
 		LoadLevel,
 		InGame,

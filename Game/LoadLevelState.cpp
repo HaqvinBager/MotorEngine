@@ -15,7 +15,7 @@
 using namespace rapidjson;
 CLoadLevelState::CLoadLevelState(CStateStack& aStateStack, const CStateStack::EState aState)
 	: CState(aStateStack, aState)
-	, myLevelToLoad(ELevel::NavTest)
+	, myLevelToLoad(ELevel::Dungeon)
 {}
 
 CLoadLevelState::~CLoadLevelState()
@@ -43,13 +43,13 @@ void CLoadLevelState::Start()
 	CEngine::GetInstance()->SetRenderScene(true);
 
 	// Only use this for testing. Use myLevelToLoad for correct level to level loading. Its data is updated on Level Load Events
-	Document latestExportedLevelDoc = CJsonReader::LoadDocument("Levels/DebugLevel.json");
-	int levelIndex = latestExportedLevelDoc["LevelIndex"].GetInt();
-	levelIndex;
+	//Document latestExportedLevelDoc = CJsonReader::LoadDocument("Levels/DebugLevel.json");
+	//int levelIndex = latestExportedLevelDoc["LevelIndex"].GetInt();
+	//levelIndex;
 
 	//Start Loading the ELevel::<Level> on a seperate thread.
-	myLoadLevelFuture = std::async(std::launch::async, &CLoadLevelState::Load, this, static_cast<ELevel>(levelIndex)/*myLevelToLoad*/);
-	//myLoadLevelFuture = std::async(std::launch::async, &CLoadLevelState::Load, this, myLevelToLoad);
+	//myLoadLevelFuture = std::async(std::launch::async, &CLoadLevelState::Load, this, static_cast<ELevel>(levelIndex)/*myLevelToLoad*/);
+	myLoadLevelFuture = std::async(std::launch::async, &CLoadLevelState::Load, this, myLevelToLoad);
 
 
 	for (auto& gameObject : CEngine::GetInstance()->GetActiveScene().GetActiveGameObjects())
