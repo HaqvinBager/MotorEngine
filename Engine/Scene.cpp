@@ -184,44 +184,22 @@ std::pair<unsigned int, std::array<CPointLight*, 8>> CScene::CullLights(CGameObj
 	std::pair<unsigned int, std::array<CPointLight*, 8>> pointLightPair;
 	UINT counter = 0;
 
-	std::vector<CPointLight*> closestPointLights;
-	for (UINT outer = 0; outer < myPointLights.size() && outer < 8; ++outer)
+	for (UINT i = 0; i < myPointLights.size(); ++i)
 	{
-		int minRangeIndex = outer;
-		float minRange = FLT_MAX;
-		for (UINT i = outer; i < myPointLights.size(); ++i)
+		float distanceSquared = DirectX::SimpleMath::Vector3::DistanceSquared(myPointLights[i]->GetPosition(), aGameObject->GetComponent<CTransformComponent>()->Transform().Translation());
+		float range = myPointLights[i]->GetRange();
+		if (distanceSquared < (range * range))
 		{
-			float distanceSquared = DirectX::SimpleMath::Vector3::DistanceSquared(myPointLights[i]->GetPosition(), aGameObject->GetComponent<CTransformComponent>()->Transform().Translation());
-			float range = myPointLights[i]->GetRange();
-			if (distanceSquared < range * range)
+			pointLightPair.second[counter] = myPointLights[i];
+			++counter;
+
+			if (counter == 8)
 			{
-				if (distanceSquared < minRange)
-				{
-					minRange = distanceSquared;
-					minRangeIndex = i;
-					//std::cout << minRange << std::endl;
-				}
+				break;
 			}
 		}
-
-		closestPointLights.emplace_back(myPointLights[minRangeIndex]);
 	}
 
-
-	
-	
-
-	for (UINT i = 0; i < closestPointLights.size() && counter < 8; ++i)
-	{
-		pointLightPair.second[counter] = myPointLights[i];
-		++counter;
-	}
-	closestPointLights.clear();
-
-	//if (distanceSquared < (range * range)) {
-	//	pointLightPair.second[counter] = myPointLights[i];
-	//	++counter;
-	//}
 	pointLightPair.first = counter;
 	return pointLightPair;
 }
