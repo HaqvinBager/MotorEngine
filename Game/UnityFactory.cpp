@@ -189,7 +189,7 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 
 CGameObject* CUnityFactory::CreateGameObject(const SCameraData& aData, bool addCameraController)
 {
-	CGameObject* gameObject = new CGameObject();
+	CGameObject* gameObject = new CGameObject(0);
 	auto camComponent = gameObject->AddComponent<CCameraComponent>(*gameObject, aData.myFieldOfView);
 	if (addCameraController)
 	{
@@ -204,14 +204,14 @@ CGameObject* CUnityFactory::CreateGameObject(const SCameraData& aData, bool addC
 
 CGameObject* CUnityFactory::CreateGameObject(const SDirectionalLightData& aData)
 {
-	CGameObject* gameObject = new CGameObject();
+	CGameObject* gameObject = new CGameObject(1);
 	gameObject->AddComponent<CEnviromentLightComponent>(*gameObject, aData.myColor, aData.myIntensity, aData.myDirection);
 	return std::move(gameObject);
 }
 
 CGameObject* CUnityFactory::CreateGameObject(const SPointLightData& aData)
 {
-	CGameObject* gameObject = new CGameObject();
+	CGameObject* gameObject = new CGameObject(aData.myInstanceID);
 	gameObject->myTransform->Position(aData.myPosition);
 	gameObject->AddComponent<CPointLightComponent>(*gameObject, aData.myRange, aData.myColor, aData.myIntensity);
 	return std::move(gameObject);
@@ -219,7 +219,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SPointLightData& aData)
 
 CGameObject* CUnityFactory::CreateGameObject(const SGameObjectData& aData, const std::string& aModelPath)
 {
-	CGameObject* gameObject = new CGameObject();
+	CGameObject* gameObject = new CGameObject(aData.myInstanceID);
 	gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
 	gameObject->myTransform->Scale(aData.myScale.x);
 	gameObject->myTransform->Position(aData.myPosition);
@@ -229,7 +229,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SGameObjectData& aData, const
 
 CGameObject* CUnityFactory::CreateGameObjectInstanced(const std::string& aModelPath, int InstancedID, std::vector<DirectX::SimpleMath::Matrix> aInstancedTransforms)
 {
-	CGameObject* gameObject = new CGameObject();
+	CGameObject* gameObject = new CGameObject(InstancedID);
 	gameObject->AddComponent<CInstancedModelComponent>(*gameObject, aModelPath, InstancedID, aInstancedTransforms, (GetSuffixFromString(aModelPath) == "_AL"));
 	return std::move(gameObject);
 }
@@ -237,7 +237,7 @@ CGameObject* CUnityFactory::CreateGameObjectInstanced(const std::string& aModelP
 
 CGameObject* CUnityFactory::CreateGameObject(const SPlayerData& aData, const std::string& aModelPath)
 {
-	CGameObject* gameObject = new CGameObject();
+	CGameObject* gameObject = new CGameObject(aData.myInstanceID);
 	gameObject->myTransform->Scale(aData.myScale.x);
 	gameObject->myTransform->Position(aData.myPosition);
 	gameObject->myTransform->Rotation(aData.myRotation);
@@ -268,7 +268,8 @@ CGameObject* CUnityFactory::CreateGameObject(const SPlayerData& aData, const std
 
 CGameObject* CUnityFactory::CreateGameObject(const SEnemyData& aData, const std::string& aModelPath, IAIBehavior* aBehavior, CScene& aScene)
 {
-	CGameObject* gameObject = new CGameObject();
+	static int id = 100;
+	CGameObject* gameObject = new CGameObject(id++);
 	gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
 	gameObject->AddComponent<CStatsComponent>(*gameObject, aData.myHealth, aData.myDamage, aData.myMoveSpeed, aData.myDamageCooldown, aData.myVisionRange, aData.myAttackRange, 5.0f);
 	gameObject->AddComponent<CAIBehaviorComponent>(*gameObject, aBehavior);
@@ -291,7 +292,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SEnemyData& aData, const std:
 
 CGameObject* CUnityFactory::CreateGameObject(const SEventData& aData, const std::string anEventString)
 {
-	CGameObject* gameObject = new CGameObject();
+	CGameObject* gameObject = new CGameObject(aData.myInstanceID);
 	gameObject->myTransform->Position(aData.myPosition);
 	gameObject->AddComponent<CCollisionEventComponent>(*gameObject,
 		static_cast<EMessageType>(aData.myEvent),
@@ -308,7 +309,8 @@ CGameObject* CUnityFactory::CreateGameObject(const SEventData& aData, const std:
 
 CGameObject* CUnityFactory::CreateGameObject(const SDestructibleData& aData, const std::string& aModelPath)
 {
-	CGameObject* gameObject = new CGameObject();
+	static int id = 1000;
+	CGameObject* gameObject = new CGameObject(id++);
 	gameObject->myTransform->Position(aData.myPosition);
 	gameObject->myTransform->Rotation(aData.myRotation);
 	gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
@@ -322,7 +324,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SDestructibleData& aData, con
 
 CGameObject* CUnityFactory::CreateGameObject(const SEnvironmentFXData& aData, std::string aEnvironmentFXName)
 {
-	CGameObject* gameObject = new CGameObject();
+	CGameObject* gameObject = new CGameObject(aData.myInstanceID);
 	gameObject->myTransform->Position(aData.myPosition);
 	gameObject->myTransform->Rotation(aData.myRotation);
 	gameObject->myTransform->Scale(aData.myScale.x);
@@ -337,7 +339,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SEnvironmentFXData& aData, st
 
 CGameObject* CUnityFactory::CreateGameObject(const SParticleFXData& aData, const std::vector<std::string>& somParticleFXNames)
 {
-	CGameObject* gameObject = new CGameObject();
+	CGameObject* gameObject = new CGameObject(aData.myInstanceID);
 	gameObject->myTransform->Position(aData.myPosition);
 	gameObject->myTransform->Rotation(aData.myRotation);
 
@@ -358,7 +360,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SParticleFXData& aData, const
 
 CGameObject* CUnityFactory::CreateGameObject(const SBossData& aData, const std::string& aModelPath)
 {
-	CGameObject* gameObject = new CGameObject();
+	CGameObject* gameObject = new CGameObject(aData.myInstanceID);
 	gameObject->myTransform->Position(aData.myPosition);
 	gameObject->myTransform->Rotation(aData.myRotation);
 	gameObject->myTransform->Scale(aData.myScale.x);

@@ -44,7 +44,7 @@ class CBehaviour;
 class CGameObject
 {
 public:
-	CGameObject();
+	CGameObject(const int aInstanceID);
 	~CGameObject();
 
 	// Inits components. Remember to add CComponents.
@@ -71,10 +71,12 @@ public:
 
 	CTransformComponent* myTransform;
 
+	const int InstanceID() const { return  myInstanceID; }
 
 private:
 	std::vector<CComponent*> myComponents;
 	bool myIsActive;
+	const int myInstanceID;
 };
 
 template<class T, typename... Args >

@@ -32,7 +32,7 @@ void CTitleScreenState::Start()
 {
 	rapidjson::Document document = CJsonReader::LoadDocument("Json/TitleScreenSettings.json");
 
-	CGameObject* camera = new CGameObject();
+	CGameObject* camera = new CGameObject(0);
 	camera->AddComponent<CCameraComponent>(*camera, 70.0f);
 	camera->AddComponent<CCameraControllerComponent>(*camera, 25.0f);
 	camera->myTransform->Position({ 0.0f, 0.0f, 0.0f });
@@ -40,7 +40,7 @@ void CTitleScreenState::Start()
 	myScene->AddInstance(camera);
 	myScene->SetMainCamera(camera->GetComponent<CCameraComponent>());
 
-	CGameObject* envLight = new CGameObject();
+	CGameObject* envLight = new CGameObject(1);
 	envLight->AddComponent<CEnviromentLightComponent>(*envLight);
 	myScene->AddInstance(envLight);
 	myScene->SetEnvironmentLight(envLight->GetComponent<CEnviromentLightComponent>()->GetEnviromentLight());

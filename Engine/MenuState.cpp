@@ -37,7 +37,7 @@ void CMenuState::Awake()
 {
 	myScene = new CScene();
 
-	CGameObject* camera = new CGameObject();
+	CGameObject* camera = new CGameObject(1);
 	camera->AddComponent<CCameraComponent>(*camera, 70.0f);
 	camera->AddComponent<CCameraControllerComponent>(*camera, 25.0f);
 	camera->myTransform->Position({ 0.0f, 0.0f, 0.0f });
@@ -45,7 +45,7 @@ void CMenuState::Awake()
 	myScene->AddInstance(camera);
 	myScene->SetMainCamera(camera->GetComponent<CCameraComponent>());
 
-	CGameObject* envLight = new CGameObject();
+	CGameObject* envLight = new CGameObject(2);
 	envLight->AddComponent<CEnviromentLightComponent>(*envLight);
 	myScene->AddInstance(envLight);
 	myScene->SetEnvironmentLight(envLight->GetComponent<CEnviromentLightComponent>()->GetEnviromentLight());

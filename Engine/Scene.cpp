@@ -46,7 +46,8 @@ CScene::CScene()
 	myShouldRenderLineInstance = true;
 #endif
 	myModelsToOutline.resize(2);
-	for (unsigned int i = 0; i < myModelsToOutline.size(); ++i) {
+	for (unsigned int i = 0; i < myModelsToOutline.size(); ++i)
+	{
 		myModelsToOutline[i] = nullptr;
 	}
 }
@@ -55,10 +56,10 @@ CScene::~CScene()
 {
 	//ourInstance = nullptr;
 	myMainCamera = nullptr;
-	
+
 	//delete myCollisionManager;
 	//myCollisionManager = nullptr;
-	
+
 
 	delete myEnvironmentLight;
 	myEnvironmentLight = nullptr;
@@ -71,9 +72,9 @@ CScene::~CScene()
 	//this->DestroyLineInstances();// Taken care of in Canvas
 	//this->DestroyAnimatedUIElement();// Taken care of in Canvas
 	//this->DestroyTextInstances();// Taken care of in Canvas
-	
+
 	// This must be deleted after gameobjects have let go of their pointer to it
-	
+
 	if (myEnemyBehavior)
 	{
 		delete myEnemyBehavior;
@@ -103,8 +104,9 @@ bool CScene::InitNavMesh(std::string aPath)
 {
 	CNavmeshLoader* loader = new CNavmeshLoader();
 	myNavMesh = loader->LoadNavmesh(aPath);
-	
-	if (!myNavMesh) {
+
+	if (!myNavMesh)
+	{
 		return false;
 	}
 
@@ -158,10 +160,12 @@ std::vector<CGameObject*> CScene::CullGameObjects(CCameraComponent* aMainCamera)
 	std::vector<CGameObject*> culledGameObjects;
 	for (auto& gameObject : myGameObjects)
 	{
-		if (!gameObject->Active()) {
+		if (!gameObject->Active())
+		{
 			continue;
 		}
-		if (gameObject->GetComponent<CInstancedModelComponent>()) {
+		if (gameObject->GetComponent<CInstancedModelComponent>())
+		{
 			culledGameObjects.emplace_back(gameObject);
 			continue;
 		}
@@ -175,19 +179,49 @@ std::vector<CGameObject*> CScene::CullGameObjects(CCameraComponent* aMainCamera)
 	return culledGameObjects;
 }
 
-std::pair<unsigned int, std::array<CPointLight*, 8>> CScene::CullLights(CGameObject* aGameObject) {
+std::pair<unsigned int, std::array<CPointLight*, 8>> CScene::CullLights(CGameObject* aGameObject)
+{
 	std::pair<unsigned int, std::array<CPointLight*, 8>> pointLightPair;
 	UINT counter = 0;
 
-	for (UINT i = 0; i < myPointLights.size() && counter < 8; ++i) {
-		float distanceSquared = DirectX::SimpleMath::Vector3::DistanceSquared(myPointLights[i]->GetPosition(), aGameObject->GetComponent<CTransformComponent>()->Transform().Translation());
-		float range = myPointLights[i]->GetRange();
-		if (distanceSquared < (range * range)) {
-			pointLightPair.second[counter] = myPointLights[i];
-			++counter;
+	std::vector<CPointLight*> closestPointLights;
+	for (UINT outer = 0; outer < myPointLights.size() && outer < 8; ++outer)
+	{
+		int minRangeIndex = outer;
+		float minRange = FLT_MAX;
+		for (UINT i = outer; i < myPointLights.size(); ++i)
+		{
+			float distanceSquared = DirectX::SimpleMath::Vector3::DistanceSquared(myPointLights[i]->GetPosition(), aGameObject->GetComponent<CTransformComponent>()->Transform().Translation());
+			float range = myPointLights[i]->GetRange();
+			if (distanceSquared < range * range)
+			{
+				if (distanceSquared < minRange)
+				{
+					minRange = distanceSquared;
+					minRangeIndex = i;
+					//std::cout << minRange << std::endl;
+				}
+			}
 		}
+
+		closestPointLights.emplace_back(myPointLights[minRangeIndex]);
 	}
 
+
+	
+	
+
+	for (UINT i = 0; i < closestPointLights.size() && counter < 8; ++i)
+	{
+		pointLightPair.second[counter] = myPointLights[i];
+		++counter;
+	}
+	closestPointLights.clear();
+
+	//if (distanceSquared < (range * range)) {
+	//	pointLightPair.second[counter] = myPointLights[i];
+	//	++counter;
+	//}
 	pointLightPair.first = counter;
 	return pointLightPair;
 }
@@ -201,11 +235,13 @@ std::vector<CParticleInstance*> CScene::CullParticles(CCameraComponent* aMainCam
 	return myParticles;
 }
 
-std::vector<CVFXInstance*> CScene::CullVFX(CCameraComponent* /*aMainCamera*/) {
-	
-	for (unsigned int i = 0; i < myVFXInstances.size(); ++i) {
-		
-		myVFXInstances[i]->Scroll({0.15f * CTimer::Dt(), 0.15f * CTimer::Dt() }, { 0.15f * CTimer::Dt() , 0.15f * CTimer::Dt() });
+std::vector<CVFXInstance*> CScene::CullVFX(CCameraComponent* /*aMainCamera*/)
+{
+
+	for (unsigned int i = 0; i < myVFXInstances.size(); ++i)
+	{
+
+		myVFXInstances[i]->Scroll({ 0.15f * CTimer::Dt(), 0.15f * CTimer::Dt() }, { 0.15f * CTimer::Dt() , 0.15f * CTimer::Dt() });
 	}
 	return myVFXInstances;
 }
@@ -252,8 +288,10 @@ std::vector<CSpriteInstance*> CScene::CullSprites()
 std::vector<CAnimatedUIElement*> CScene::CullAnimatedUI(std::vector<CSpriteInstance*>& someFramesToReturn)
 {
 	std::vector<CAnimatedUIElement*> elementsToRender;
-	for (auto& element : myAnimatedUIElements) {
-		if (element->GetInstance()->GetShouldRender()) {
+	for (auto& element : myAnimatedUIElements)
+	{
+		if (element->GetInstance()->GetShouldRender())
+		{
 			elementsToRender.emplace_back(element);
 			someFramesToReturn.emplace_back(element->GetInstance());
 		}
@@ -287,7 +325,8 @@ bool CScene::SetEnvironmentLight(CEnvironmentLight* anEnvironmentLight)
 	return true;
 }
 
-bool CScene::AddInstance(CPointLight* aPointLight) {
+bool CScene::AddInstance(CPointLight* aPointLight)
+{
 	myPointLights.emplace_back(aPointLight);
 	return true;
 }
@@ -304,18 +343,22 @@ bool CScene::AddInstance(CParticleInstance* aParticleInstance)
 	return true;
 }
 
-bool CScene::AddInstance(CVFXInstance* aVFXInstance) {
+bool CScene::AddInstance(CVFXInstance* aVFXInstance)
+{
 	myVFXInstances.emplace_back(aVFXInstance);
 	return true;
 }
 
-bool CScene::AddInstance(CLineInstance* aLineInstance) {
+bool CScene::AddInstance(CLineInstance* aLineInstance)
+{
 	myLineInstances.emplace_back(aLineInstance);
 	return true;
 }
 
-bool CScene::AddInstance(CSpriteInstance* aSprite) {
-	if (!aSprite) {
+bool CScene::AddInstance(CSpriteInstance* aSprite)
+{
+	if (!aSprite)
+	{
 		return false;
 	}
 
@@ -326,7 +369,8 @@ bool CScene::AddInstance(CSpriteInstance* aSprite) {
 
 bool CScene::AddInstance(CAnimatedUIElement* anAnimatedUIElement)
 {
-	if (!anAnimatedUIElement) {
+	if (!anAnimatedUIElement)
+	{
 		return false;
 	}
 	myAnimatedUIElements.emplace_back(anAnimatedUIElement);
@@ -335,8 +379,10 @@ bool CScene::AddInstance(CAnimatedUIElement* anAnimatedUIElement)
 
 bool CScene::RemoveInstance(CAnimatedUIElement* anAnimatedUIElement)
 {
-	for (int i = 0; i < myAnimatedUIElements.size(); ++i) {
-		if (myAnimatedUIElements[i] == anAnimatedUIElement) {
+	for (int i = 0; i < myAnimatedUIElements.size(); ++i)
+	{
+		if (myAnimatedUIElements[i] == anAnimatedUIElement)
+		{
 			myAnimatedUIElements.erase(myAnimatedUIElements.begin() + i);
 		}
 	}
@@ -345,7 +391,8 @@ bool CScene::RemoveInstance(CAnimatedUIElement* anAnimatedUIElement)
 
 bool CScene::AddInstance(CTextInstance* aText)
 {
-	if (!aText) {
+	if (!aText)
+	{
 		return false;
 	}
 	myTexts.emplace_back(aText);
@@ -354,7 +401,8 @@ bool CScene::AddInstance(CTextInstance* aText)
 
 bool CScene::AddEnemies(CGameObject* aEnemy)
 {
-	if (!aEnemy) {
+	if (!aEnemy)
+	{
 		return false;
 	}
 	myEnemies.emplace_back(aEnemy);
@@ -363,7 +411,8 @@ bool CScene::AddEnemies(CGameObject* aEnemy)
 
 bool CScene::AddDestructible(CGameObject* aDestructible)
 {
-	if (!aDestructible) {
+	if (!aDestructible)
+	{
 		return false;
 	}
 	myDestructibles.emplace_back(aDestructible);
@@ -372,16 +421,20 @@ bool CScene::AddDestructible(CGameObject* aDestructible)
 
 bool CScene::AddPlayer(CGameObject* aPlayer)
 {
-	if (!aPlayer) {
+	if (!aPlayer)
+	{
 		return false;
 	}
 	myPlayer = aPlayer;
 	return true;
 }
 
-bool CScene::RemoveInstance(CGameObject* aGameObject) {
-	for (int i = 0; i < myGameObjects.size(); ++i) {
-		if (aGameObject == myGameObjects[i]) {
+bool CScene::RemoveInstance(CGameObject* aGameObject)
+{
+	for (int i = 0; i < myGameObjects.size(); ++i)
+	{
+		if (aGameObject == myGameObjects[i])
+		{
 			//std::swap(myGameObjects[i], myGameObjects[myGameObjects.size() - 1]);
 			//myGameObjects.pop_back();
 			myGameObjects.erase(myGameObjects.begin() + i);
@@ -392,8 +445,10 @@ bool CScene::RemoveInstance(CGameObject* aGameObject) {
 
 bool CScene::RemoveInstance(CPointLight* aPointLight)
 {
-	for (int i = 0; i < myPointLights.size(); ++i) {
-		if (aPointLight == myPointLights[i]) {
+	for (int i = 0; i < myPointLights.size(); ++i)
+	{
+		if (aPointLight == myPointLights[i])
+		{
 			//std::swap(myGameObjects[i], myGameObjects[myGameObjects.size() - 1]);
 			//myGameObjects.pop_back();
 			myPointLights.erase(myPointLights.begin() + i);
@@ -402,9 +457,11 @@ bool CScene::RemoveInstance(CPointLight* aPointLight)
 	return true;
 }
 
-bool CScene::DestroyGameObjects() {
+bool CScene::DestroyGameObjects()
+{
 
-	for (auto& gameObject : myGameObjects) {
+	for (auto& gameObject : myGameObjects)
+	{
 		delete gameObject;
 		gameObject = nullptr;
 	}
@@ -412,7 +469,8 @@ bool CScene::DestroyGameObjects() {
 	return true;
 }
 
-bool CScene::DestroySprites() {
+bool CScene::DestroySprites()
+{
 
 	for (UINT i = 0; i < mySpriteInstances.size() - 1; ++i)
 	{
@@ -508,7 +566,7 @@ void CScene::SetPlayerToOutline(CGameObject* aPlayer)
 		myGameObjects.pop_back();
 	}
 	else {*/
-		myModelsToOutline[0] = aPlayer;
+	myModelsToOutline[0] = aPlayer;
 	//}
 }
 
