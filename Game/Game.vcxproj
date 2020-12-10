@@ -298,6 +298,7 @@
     <ClInclude Include="AbilityBehavior.h" />
     <ClInclude Include="HealthBarComponent.h" />
     <ClInclude Include="InGameState.h" />
+    <ClInclude Include="IntroState.h" />
     <ClInclude Include="LoadLevelState.h" />
     <ClInclude Include="MeleeAttackBehavior.h" />
     <ClInclude Include="MouseSelection.h" />
@@ -327,6 +328,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="HealthBarComponent.cpp" />
     <ClCompile Include="InGameState.cpp" />
+    <ClCompile Include="IntroState.cpp" />
     <ClCompile Include="LoadLevelState.cpp" />
     <ClCompile Include="MeleeAttackBehavior.cpp" />
     <ClCompile Include="MouseSelection.cpp" />
