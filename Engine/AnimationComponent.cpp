@@ -104,6 +104,21 @@ void CAnimationComponent::MovingState()
 	ResetIdleTimer();
 }
 
+bool CAnimationComponent::IsUsingAbility()
+{
+	return 
+		(  
+		   myCurrentAnimationID == myAttack01ID
+		|| myCurrentAnimationID == myAttack02ID
+		|| myCurrentAnimationID == myAbility01ID
+		|| myCurrentAnimationID == myAbility02ID
+		|| myCurrentAnimationID == myAbility03ID
+		|| myCurrentAnimationID == myAbility04ID
+		|| myCurrentAnimationID == myAbility05ID
+		|| myCurrentAnimationID == myAbility06ID
+		);
+}
+
 bool CAnimationComponent::DeadState()
 {
 	if (myCurrentAnimationID == myDyingAnimationID)
