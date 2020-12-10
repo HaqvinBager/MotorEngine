@@ -247,6 +247,16 @@ void CInGameState::Update()
 		CMainSingleton::PostMaster().Send({ EMessageType::IntroStarted, NULL });
 	}
 
+	if (Input::GetInstance()->IsKeyPressed('T'))
+	{
+		CEngine::GetInstance()->GetActiveScene().GetMainCamera()->SetTrauma(0.65f);
+	}
+
+	if (Input::GetInstance()->IsKeyPressed('Y'))
+	{
+		CEngine::GetInstance()->GetActiveScene().GetMainCamera()->SetTrauma(0.85f);
+	}
+
 	if (myExitLevel)
 	{
 		myExitLevel = false;
