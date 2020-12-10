@@ -29,14 +29,14 @@ CObjectPool::~CObjectPool()
 	ourInstance = nullptr;
 }
 
-CGameObject* CObjectPool::Create(DirectX::SimpleMath::Vector3 aPosition, float aHealth, float aDamage, float aMoveSpeed, float aCooldown)
+CGameObject* CObjectPool::Create(const int aInstanceID, DirectX::SimpleMath::Vector3 aPosition, float aHealth, float aDamage, float aMoveSpeed, float aCooldown)
 {
 	assert(firstAvailable != NULL);
 
 	CEnemy* newEnemy = firstAvailable;
 	firstAvailable = newEnemy->GetNext();
 
-	newEnemy->init(aPosition, aHealth, aDamage, aMoveSpeed, aCooldown);
+	newEnemy->init(aInstanceID, aPosition, aHealth, aDamage, aMoveSpeed, aCooldown);
 	return newEnemy->GetEnemy();
 }
 

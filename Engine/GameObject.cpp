@@ -5,7 +5,14 @@
 #include "Behaviour.h"
 #include <iostream>
 
-CGameObject::CGameObject()
+//CGameObject::CGameObject()
+//{
+//	myTransform = new CTransformComponent(*this);
+//	myComponents.emplace_back(myTransform);
+//	myIsActive = true;
+//}
+
+CGameObject::CGameObject(const int aInstanceID) : myInstanceID(aInstanceID)
 {
 	myTransform = new CTransformComponent(*this);
 	myComponents.emplace_back(myTransform);

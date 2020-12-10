@@ -28,9 +28,9 @@ CEnemyFactory::~CEnemyFactory()
 	ourInstance = nullptr;
 }
 
-CGameObject& CEnemyFactory::CreateEnemy(DirectX::SimpleMath::Vector3 aPosition, float aHealth, float aDamage, float aMoveSpeed, float aCooldown) const
+CGameObject& CEnemyFactory::CreateEnemy(const int aInstanceID, DirectX::SimpleMath::Vector3 aPosition, float aHealth, float aDamage, float aMoveSpeed, float aCooldown) const
 {
-	CGameObject* enemy = new CGameObject();
+	CGameObject* enemy = new CGameObject(aInstanceID);
 
 	enemy->myTransform->Scale(1.0f);
 	enemy->myTransform->Position(aPosition);

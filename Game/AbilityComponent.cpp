@@ -299,7 +299,8 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	Document document;
 	document.ParseStream(inputWrapper);
 
-	CGameObject* abilityObject = new CGameObject();
+	static int id = 500;
+	CGameObject* abilityObject = new CGameObject(id++);
 	std::cout << "LoadAbilityFromFile: " << *&abilityObject << std::endl;
 	CProjectileBehavior* projectileBehavior = nullptr;
 	CAuraBehavior* auraBehavior = nullptr;

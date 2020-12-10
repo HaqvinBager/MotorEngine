@@ -10,7 +10,7 @@ class CEnemyFactory
 public:
 	static CEnemyFactory* GetInstance();
 
-	CGameObject& CreateEnemy(DirectX::SimpleMath::Vector3 aPosition, float aHealth, float aDamage, float aMoveSpeed, float aCooldown) const;
+	CGameObject& CreateEnemy(const int aInstanceID, DirectX::SimpleMath::Vector3 aPosition, float aHealth, float aDamage, float aMoveSpeed, float aCooldown) const;
 private:
 	CEnemyFactory();
 	~CEnemyFactory();
