@@ -27,7 +27,7 @@ bool CPopupTextService::Init()
 	ENGINE_BOOL_POPUP(!document.HasParseError(), "Could not load 'Json/PopupTextServiceInit.json'!");
 
 	const unsigned int damageNumbersPoolSize = document["Damage Numbers Pool Size"].GetInt();
-	
+
 	for (unsigned int i = 0; i < damageNumbersPoolSize; ++i)
 	{
 		myTextPool.push(new CTextInstance());
@@ -55,14 +55,18 @@ bool CPopupTextService::Init()
 		mySkillIcons.emplace_back(new CSpriteInstance());
 		mySkillIcons.back()->Init(CSpriteFactory::GetInstance()->GetSprite(skillIconPaths[i]["Path"].GetString()));
 		mySkillIcons.back()->SetPosition({ document["Skill Icon Position X"].GetFloat(), document["Skill Icon Position Y"].GetFloat() });
+		mySkillIcons.back()->SetColor({ 1.0f, 1.0f, 1.0f, 0.5f });
 	}
-	
+
 	myInfoBoxBackground = new CSpriteInstance();
 	myInfoBoxBackground->Init(CSpriteFactory::GetInstance()->GetSprite(document["Skill Info Box Background Path"].GetString()));
 	myInfoBoxBackground->SetPosition({ document["Info Box Position X"].GetFloat(), document["Info Box Position Y"].GetFloat() });
+	myInfoBoxBackground->SetColor({ 1.0f, 1.0f, 1.0f, 0.5f });
 
 	myInfoBoxText = new CTextInstance();
 	myInfoBoxText->Init(CTextFactory::GetInstance()->GetText(document["Skill Info Font and Size"].GetString()));
+	myInfoBoxText->SetPosition({ -0.22f, document["Info Box Position Y"].GetFloat() });
+	myInfoBoxText->SetColor({ 1.0f, 1.0f, 1.0f, 0.5f });
 	myInfoAnimationData = new STextAnimationData();
 
 	auto skillTexts = document["Skill Info Texts"].GetArray();
@@ -248,12 +252,12 @@ void CPopupTextService::SpawnDamageNumber(void* someData)
 	case 1: // Crit
 		myDamageAnimationData.back()->myMinScale = { 1.5f, 1.5f };
 		myDamageAnimationData.back()->myMaxScale = { 2.0f, 2.0f };
-		CEngine::GetInstance()->GetActiveScene().GetMainCamera()->SetTrauma(0.45f);
+		CEngine::GetInstance()->GetActiveScene().GetMainCamera()->SetTrauma(0.65f);
 		break;
 	case 2: // Ultracrit
 		myDamageAnimationData.back()->myMinScale = { 1.0f, 1.0f };
 		myDamageAnimationData.back()->myMaxScale = { 2.5f, 2.5f };
-		CEngine::GetInstance()->GetActiveScene().GetMainCamera()->SetTrauma(0.65f);
+		CEngine::GetInstance()->GetActiveScene().GetMainCamera()->SetTrauma(0.85f);
 		break;
 	case 3: // Enemy
 		myDamageAnimationData.back()->myMinScale = { 0.5f, 0.5f };
@@ -315,11 +319,10 @@ void CPopupTextService::SpawnInfoBox(std::string someInfoIdentifier)
 
 	myActiveSkillSprite = mySkillIcons[skillPicker];
 	myInfoBoxText->SetPivot({ 0.0f, 0.5f });
-	myInfoBoxText->SetPosition({ -0.22f, -0.5f });
 	myInfoBoxText->SetScale({ 1.0f, 1.0f });
 	myInfoBoxText->SetText(myStoredSkillInfoStrings[skillPicker]);
 
-	myInfoAnimationData->myStartColor = { 1.0f, 1.0f, 1.0f, 1.0f };
+	myInfoAnimationData->myStartColor = { 1.0f, 1.0f, 1.0f, 0.5f };
 	myInfoAnimationData->myEndColor = { 0.0f, 0.0f, 0.0f, 0.0f };
 	myInfoAnimationData->myLifespan = 6.0f;
 	myInfoAnimationData->myFadeOutThreshold = 4.5f;

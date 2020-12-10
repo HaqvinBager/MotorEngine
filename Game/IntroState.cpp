@@ -21,6 +21,8 @@ CIntroState::CIntroState(CStateStack& aStateStack, const CStateStack::EState aSt
 	, myHasShownTutorial(false)
 	, myWillShowTutorial(true)
 	, myIntroStateActive(false)
+	, myNarrationIsFinished(false)
+	, myIntroDialogueStarted(false)
 {
 }
 
@@ -86,6 +88,13 @@ void CIntroState::Update()
 		return;
 	}
 
+	if (myNarrationIsFinished && !myIntroDialogueStarted)
+	{
+		myIntroDialogueStarted = true;
+		int sceneIndex = 0;
+		CMainSingleton::PostMaster().Send({ EMessageType::LoadDialogue, &sceneIndex });
+	}
+
 	myFeedbackTimer += CTimer::Dt();
 	
 	if ((myFeedbackTimer > myFeedbackThreshold) && myWillShowTutorial)
@@ -109,7 +118,13 @@ void CIntroState::Receive(const SMessage& aMessage)
 	switch (aMessage.myMessageType)
 	{
 	case EMessageType::StopDialogue:
-		myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
+		if (!myNarrationIsFinished)
+		{
+			myNarrationIsFinished = true;
+		}
+		else {
+			myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
+		}
 		break;
 	default:
 		break;

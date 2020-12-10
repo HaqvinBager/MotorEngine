@@ -160,6 +160,12 @@ void CTransformComponent::MoveAlongPath()
 	// Astar returns backwards path. Because we cannot swap path nodes,
 	// we go from the back to the front in the path.
 
+	if (GameObject().GetComponent<CAnimationComponent>()->IsUsingAbility())
+	{
+		myPath.clear();
+		return;
+	}
+
 	DirectX::SimpleMath::Matrix lookAt;
 
 	size_t pathSize = myPath.size();
