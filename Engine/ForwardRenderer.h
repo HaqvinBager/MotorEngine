@@ -26,7 +26,7 @@ public:
 	void Render(CEnvironmentLight* anEnvironmentLight, std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> aModelPointLightList, CCameraComponent* aCamera, std::vector<CGameObject*>& aGameObjectList);
 	void InstancedRender(CEnvironmentLight* anEnvironmentLight, std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> aModelPointLightList, CCameraComponent* aCamera, std::vector<CGameObject*>& aGameObjectList);
 	void RenderLines(CCameraComponent* aCamera, const std::vector<SLineTime>& aLineList);
-	void RenderOutline(CCameraComponent* aCamera, CGameObject* aModelInstance, CModel* someOutlineModelData);
+	void RenderOutline(CCameraComponent* aCamera, CGameObject* aModelInstance, CModel* someOutlineModelData, DirectX::SimpleMath::Vector4 aColor);
 	void RenderLineInstances(CCameraComponent* aCamera, const std::vector<CLineInstance*>& aLineList);
 
 private:
@@ -76,12 +76,20 @@ private:
 
 	static_assert((sizeof(SBoneBufferData) % 16) == 0, "CB size not padded correctly");
 
+	struct SOutlineBufferData {
+		DirectX::SimpleMath::Vector4 myOutlineColor;
+	} myOutlineBufferData;
+
+	static_assert((sizeof(SOutlineBufferData) % 16) == 0, "CB size not padded correctly");
+	
+
 private:
 
 	ID3D11DeviceContext* myContext;
 	ID3D11Buffer* myFrameBuffer;
 	ID3D11Buffer* myObjectBuffer;
 	ID3D11Buffer* myBoneBuffer;
+	ID3D11Buffer* myOutlineBuffer;
 
 
 };
