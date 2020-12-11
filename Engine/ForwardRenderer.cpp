@@ -55,6 +55,9 @@ bool CForwardRenderer::Init(CDirectXFramework* aFramework) {
 	bufferDescription.ByteWidth = static_cast<UINT>(sizeof(SBoneBufferData) + (16 - (sizeof(SBoneBufferData) % 16)));
 	ENGINE_HR_BOOL_MESSAGE(device->CreateBuffer(&bufferDescription, nullptr, &myBoneBuffer), "Bone Buffer could not be created.");
 
+	bufferDescription.ByteWidth = static_cast<UINT>(sizeof(SOutlineBufferData) + (16 - (sizeof(SOutlineBufferData) % 16)));
+	ENGINE_HR_BOOL_MESSAGE(device->CreateBuffer(&bufferDescription, nullptr, &myOutlineBuffer), "Outline Buffer could not be created.");
+
 	return true;
 }
 
@@ -71,8 +74,6 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector
 
 	myContext->VSSetConstantBuffers(0, 1, &myFrameBuffer);
 	myContext->PSSetConstantBuffers(0, 1, &myFrameBuffer);
-	//ID3D11ShaderResourceView* nullView = NULL;
-	//myContext->PSSetShaderResources(0, 1, &nullView);
 	myContext->PSSetShaderResources(0, 1, anEnvironmentLight->GetCubeMap());
 
 	// MODELCOMPONENT
@@ -264,7 +265,7 @@ void CForwardRenderer::RenderLines(CCameraComponent* aCamera, const std::vector<
 	}
 }
 
-void CForwardRenderer::RenderOutline(CCameraComponent* aCamera, CGameObject* aModelInstance, CModel* someOutlineModelData)
+void CForwardRenderer::RenderOutline(CCameraComponent* aCamera, CGameObject* aModelInstance, CModel* someOutlineModelData, DirectX::SimpleMath::Vector4 aColor)
 {
 	if (!someOutlineModelData) {
 		return;
@@ -296,7 +297,11 @@ void CForwardRenderer::RenderOutline(CCameraComponent* aCamera, CGameObject* aMo
 	myContext->VSSetConstantBuffers(1, 1, &myObjectBuffer);
 	myContext->VSSetShader(outlineModelData.myVertexShader, nullptr, 0);
 
+	myOutlineBufferData.myOutlineColor = aColor;
+	BindBuffer(myOutlineBuffer, myOutlineBufferData, "Outline Buffer");
+
 	myContext->PSSetConstantBuffers(1, 1, &myObjectBuffer);
+	myContext->PSSetConstantBuffers(3, 1, &myOutlineBuffer);
 	myContext->PSSetShaderResources(1, 3, &modelData.myTexture[0]);
 	myContext->PSSetShader(outlineModelData.myPixelShader, nullptr, 0);
 

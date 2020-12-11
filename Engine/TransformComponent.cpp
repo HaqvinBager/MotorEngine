@@ -101,7 +101,7 @@ void CTransformComponent::SetOutlineScale()
 	Quaternion rotation;
 	myTransform.Decompose(scale, rotation, translation);
 	myTransform = Matrix::CreateFromQuaternion(rotation);
-	myTransform *= Matrix::CreateScale((myScale * ENGINE_SCALE) * 0.5f);
+	myTransform *= Matrix::CreateScale((myScale * ENGINE_SCALE) * 1.02f);
 	myTransform.Translation(translation);
 }
 
@@ -159,6 +159,12 @@ void CTransformComponent::MoveAlongPath()
 {
 	// Astar returns backwards path. Because we cannot swap path nodes,
 	// we go from the back to the front in the path.
+
+	if (GameObject().GetComponent<CAnimationComponent>()->IsUsingAbility())
+	{
+		myPath.clear();
+		return;
+	}
 
 	DirectX::SimpleMath::Matrix lookAt;
 

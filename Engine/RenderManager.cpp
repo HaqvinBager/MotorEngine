@@ -14,6 +14,8 @@
 #include "Engine.h"
 #include "Scene.h"
 
+#include <algorithm>
+
 CRenderManager::CRenderManager() /*: myScene(*CScene::GetInstance())*/
 {
 }
@@ -101,10 +103,18 @@ void CRenderManager::Render(CScene& aScene)
 	std::vector<CGameObject*> gameObjects = aScene.CullGameObjects(maincamera);
 	std::vector<CGameObject*> instancedGameObjects;
 	std::vector<CGameObject*> instancedGameObjectsWithAlpha;
-	//std::vector<CGameObject*> gameObjectsToOutline;
 	std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> pointlights;
-	for (CGameObject* instance : gameObjects)
+	
+	std::vector<int> indicesOfOutlineModels;
+	for (unsigned int i = 0; i < gameObjects.size(); ++i)
 	{
+		auto instance = gameObjects[i];
+		for (auto gameObjectToOutline : aScene.GetModelsToOutline()) {
+			if (instance == gameObjectToOutline) {
+				indicesOfOutlineModels.emplace_back(i);
+			}
+		}
+
 		if (instance->GetComponent<CModelComponent>()) {
 			pointlights.emplace_back(aScene.CullLights(instance));
 		} else if (instance->GetComponent<CInstancedModelComponent>()) {
@@ -115,39 +125,44 @@ void CRenderManager::Render(CScene& aScene)
 				continue;
 			}
 			instancedGameObjects.emplace_back(instance);
-		}/*
-		for (auto gameObjectToOutline : aScene.GetModelsToOutline()) {
-			if (instance == gameObjectToOutline) {
-				gameObjectsToOutline.emplace_back(instance);
-			}
-		}*/
+		}
+	}
+
+	std::sort(indicesOfOutlineModels.begin(), indicesOfOutlineModels.end(), [](UINT a, UINT b) { return a > b; });
+
+	for (auto index : indicesOfOutlineModels)
+	{
+		std::swap(gameObjects[index], gameObjects.back());
+		gameObjects.pop_back();
 	}
 
 	myForwardRenderer.Render(environmentlight, pointlights, maincamera, gameObjects);
 	myForwardRenderer.InstancedRender(environmentlight, pointlights, maincamera, instancedGameObjects);
-
+		
 	for (auto modelToOutline : aScene.GetModelsToOutline()) {
+		std::vector<CGameObject*> interimVector;
 		if (modelToOutline) {
 			pointlights.emplace_back(aScene.CullLights(modelToOutline));
-			std::vector<CGameObject*> interimVector;
 			interimVector.emplace_back(modelToOutline);
 			myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_STENCILWRITE, 0xFF);
 
+			myForwardRenderer.Render(environmentlight, pointlights, maincamera, interimVector);
+			
 			if (modelToOutline != aScene.GetPlayer()) {
 				modelToOutline->GetComponent<CTransformComponent>()->SetOutlineScale();
 			}
-			myForwardRenderer.Render(environmentlight, pointlights, maincamera, interimVector);
-			
+
 			myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_STENCILMASK, 0xFF);
-			myForwardRenderer.RenderOutline(maincamera, modelToOutline, CModelFactory::GetInstance()->GetOutlineModelSubset());
 
 			if (modelToOutline != aScene.GetPlayer()) {
+				myForwardRenderer.RenderOutline(maincamera, modelToOutline, CModelFactory::GetInstance()->GetOutlineModelSubset(), { 1.0f, 0.0f, 0.0f, 1.0f });
 				modelToOutline->GetComponent<CTransformComponent>()->ResetScale();
+			}
+			else {
+				myForwardRenderer.RenderOutline(maincamera, modelToOutline, CModelFactory::GetInstance()->GetOutlineModelSubset(), { 25.0f / 255.0f, 200.0f / 255.0f, 208.0f / 255.0f, 1.0f });
 			}
 		}
 	}
-
-	//myForwardRenderer.Render(environmentlight, pointlights, maincamera, gameObjectsToOutline);
 
 	const std::vector<CLineInstance*>& lineInstances = aScene.CullLineInstances();
 	const std::vector<SLineTime>& lines = aScene.CullLines();

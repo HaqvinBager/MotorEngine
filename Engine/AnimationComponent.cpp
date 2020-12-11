@@ -104,6 +104,21 @@ void CAnimationComponent::MovingState()
 	ResetIdleTimer();
 }
 
+bool CAnimationComponent::IsUsingAbility()
+{
+	return 
+		(  
+		   myCurrentAnimationID == myAttack01ID
+		|| myCurrentAnimationID == myAttack02ID
+		|| myCurrentAnimationID == myAbility01ID
+		|| myCurrentAnimationID == myAbility02ID
+		|| myCurrentAnimationID == myAbility03ID
+		|| myCurrentAnimationID == myAbility04ID
+		|| myCurrentAnimationID == myAbility05ID
+		|| myCurrentAnimationID == myAbility06ID
+		);
+}
+
 bool CAnimationComponent::DeadState()
 {
 	if (myCurrentAnimationID == myDyingAnimationID)
@@ -136,8 +151,8 @@ void CAnimationComponent::ForceToIdleState()
 	myCurrentAnimationID = myIdleAnimationID; 
 }
 // Temporary for project 6
-void CAnimationComponent::PlayAttack01ID(){ PlayAnimation(myAttack01ID); }
-void CAnimationComponent::PlayAttack02ID(){ PlayAnimation(myAttack02ID); }
+void CAnimationComponent::PlayAttack01ID() { PlayAnimation(myAttack01ID); }
+void CAnimationComponent::PlayAttack02ID() { PlayAnimation(myAttack02ID); }
 void CAnimationComponent::PlayAbility01ID(){ PlayAnimation(myAbility01ID); }
 void CAnimationComponent::PlayAbility02ID(){ PlayAnimation(myAbility02ID); }
 void CAnimationComponent::PlayAbility03ID(){ PlayAnimation(myAbility03ID); }
@@ -218,7 +233,7 @@ void CAnimationComponent::PlayAnimation(const int anAnimationID, bool anIsLoopin
 			myAnimation->GetMyController().ResetAnimationTimeCurrent();
 	}
 	myAnimation->SetCurAnimationScene(GetIndexFromList(anAnimationID));
-	myReturnToIdleTimer = myAnimation->GetMyController().CurrentAnimationDuration() / myAnimation->GetMyController().CurrentAnimationTicksPerSecond();//23.0f;// AnimationController has it set to 24 ticks per seconds -> 24fps 
+	myReturnToIdleTimer = 1.0f;/*myAnimation->GetMyController().CurrentAnimationDuration() / myAnimation->GetMyController().CurrentAnimationTicksPerSecond();*///23.0f;// AnimationController has it set to 24 ticks per seconds -> 24fps 
 	myCurrentAnimationID = anAnimationID;
 }
 

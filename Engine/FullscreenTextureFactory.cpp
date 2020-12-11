@@ -95,8 +95,14 @@ CFullscreenTexture CFullscreenTextureFactory::CreateDepth(SM::Vector2 aSize, DXG
 		//return;
 	}
 
+	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
+	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	depthStencilViewDesc.Texture2D.MipSlice = 0;
+	depthStencilViewDesc.Flags = 0;
+
 	ID3D11DepthStencilView* depth;
-	result = myFramework->GetDevice()->CreateDepthStencilView(texture, nullptr, &depth);
+	result = myFramework->GetDevice()->CreateDepthStencilView(texture, /*nullptr*/&depthStencilViewDesc, &depth);
 	if (FAILED(result)) {
 		//return;
 	}

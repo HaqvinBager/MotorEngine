@@ -21,6 +21,8 @@ CIntroState::CIntroState(CStateStack& aStateStack, const CStateStack::EState aSt
 	, myHasShownTutorial(false)
 	, myWillShowTutorial(true)
 	, myIntroStateActive(false)
+	, myNarrationIsFinished(false)
+	, myIntroDialogueStarted(false)
 {
 }
 
@@ -37,7 +39,7 @@ void CIntroState::Start()
 {
 	rapidjson::Document document = CJsonReader::LoadDocument("Json/IntroStateSettings.json");
 
-	CGameObject* camera = new CGameObject();
+	CGameObject* camera = new CGameObject(0);
 	camera->AddComponent<CCameraComponent>(*camera, 70.0f);
 	camera->AddComponent<CCameraControllerComponent>(*camera, 25.0f);
 	camera->myTransform->Position({ 0.0f, 0.0f, 0.0f });
@@ -45,7 +47,7 @@ void CIntroState::Start()
 	myScene->AddInstance(camera);
 	myScene->SetMainCamera(camera->GetComponent<CCameraComponent>());
 
-	CGameObject* envLight = new CGameObject();
+	CGameObject* envLight = new CGameObject(1);
 	envLight->AddComponent<CEnviromentLightComponent>(*envLight);
 	myScene->AddInstance(envLight);
 	myScene->SetEnvironmentLight(envLight->GetComponent<CEnviromentLightComponent>()->GetEnviromentLight());
@@ -86,6 +88,13 @@ void CIntroState::Update()
 		return;
 	}
 
+	if (myNarrationIsFinished && !myIntroDialogueStarted)
+	{
+		myIntroDialogueStarted = true;
+		int sceneIndex = 0;
+		CMainSingleton::PostMaster().Send({ EMessageType::LoadDialogue, &sceneIndex });
+	}
+
 	myFeedbackTimer += CTimer::Dt();
 	
 	if ((myFeedbackTimer > myFeedbackThreshold) && myWillShowTutorial)
@@ -109,7 +118,13 @@ void CIntroState::Receive(const SMessage& aMessage)
 	switch (aMessage.myMessageType)
 	{
 	case EMessageType::StopDialogue:
-		myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
+		if (!myNarrationIsFinished)
+		{
+			myNarrationIsFinished = true;
+		}
+		else {
+			myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
+		}
 		break;
 	default:
 		break;

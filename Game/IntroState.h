@@ -27,4 +27,6 @@ private:
 	bool myHasShownTutorial;
 	bool myWillShowTutorial;
 	bool myIntroStateActive;
+	bool myNarrationIsFinished;
+	bool myIntroDialogueStarted;
 };
