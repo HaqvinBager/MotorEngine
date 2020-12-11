@@ -115,10 +115,10 @@ void CAbilityComponent::OnEnable()
 
 void CAbilityComponent::OnDisable()
 {
-	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability1, this);
-	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability2, this);
-	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability3, this);
-	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::AttackClick, this);
+	//CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability1, this);
+	//CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability2, this);
+	//CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability3, this);
+	//CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::AttackClick, this);
 }
 
 bool CAbilityComponent::UseAbility(EAbilityType anAbilityType, DirectX::SimpleMath::Vector3 aSpawnPosition)

@@ -36,11 +36,11 @@ public:
 	void EmplaceSprites(std::vector<CSpriteInstance*>& someSprites) const;
 	void EmplaceTexts(std::vector<CTextInstance*>& someText) const;
 	
-	bool Enabled() {
-		return myEnabled;
+	bool Active() {
+		return myIsActive;
 	}
-	void Enabled(bool isEnabled) {
-		myEnabled = isEnabled;
+	void Active(bool isActive) {
+		myIsActive = isActive;
 	}
 
 	void ExitDialogue();
