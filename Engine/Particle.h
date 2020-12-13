@@ -49,6 +49,8 @@ public:
 		float myLifetimeUpperBound = 0.0f;
 		float mySpeedLowerBound = 0.0f;
 		float mySpeedUpperBound = 0.0f;
+		DirectX::SimpleMath::Vector3 myOffsetLowerBound = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f);
+		DirectX::SimpleMath::Vector3 myOffsetUpperBound = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f);
 		DirectX::SimpleMath::Vector3 myDirectionLowerBound = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f);
 		DirectX::SimpleMath::Vector3 myDirectionUpperBound = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f);
 	};
