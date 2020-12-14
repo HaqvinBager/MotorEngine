@@ -9,6 +9,8 @@
 #include "TitleScreenState.h"
 #include "IntroState.h"
 #include "CreditsState.h"
+#include "OptionsState.h"
+#include "LevelSelectState.h"
 
 CStateStack::~CStateStack()
 {
@@ -39,6 +41,14 @@ bool CStateStack::Awake(std::initializer_list<CStateStack::EState> someStates, c
 			break;
 		case CStateStack::EState::Credits:
 			myStateMap[state] = new CCreditsState(*this);
+			myStateMap[state]->Awake();
+			break;
+		case CStateStack::EState::Options:
+			myStateMap[state] = new COptionsState(*this);
+			myStateMap[state]->Awake();
+			break;
+		case CStateStack::EState::LevelSelect:
+			myStateMap[state] = new CLevelSelectState(*this);
 			myStateMap[state]->Awake();
 			break;
 		case CStateStack::EState::Intro:
