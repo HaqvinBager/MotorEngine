@@ -113,7 +113,7 @@ CAudioManager::CAudioManager() : myWrapper() {
 	//CMainSingleton::PostMaster().Send({ EMessageType::BossDied, NULL });
 
 
-		CMainSingleton::PostMaster().Send({ EMessageType::UIButtonPress, NULL });
+		//CMainSingleton::PostMaster().Send({ EMessageType::UIButtonPress, NULL });
 
 }
 
