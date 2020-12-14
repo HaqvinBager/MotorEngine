@@ -40,5 +40,14 @@ enum class EMessageType
 	StopDialogue,
 	FadeInComplete,
 	FadeOutComplete,
+	AttackHits,
+	DemonIdle1, 
+	DemonIdle2, 
+	LightAttack, 
+	HeavyAttack, 
+	HitDestructible,
+	BossMeleeAttack, 
+	HealingAura, 
+	ShieldSpell,
 	Count
 };

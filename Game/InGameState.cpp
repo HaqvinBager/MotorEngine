@@ -78,7 +78,7 @@ void CInGameState::Awake()
 void CInGameState::Start()
 {
 	myExitLevel = false;
-	CMainSingleton::DialogueSystem().Enabled(true);
+	CMainSingleton::DialogueSystem().Active(true);
 	CMainSingleton::PostMaster().Subscribe("Dungeon", this);
 	CMainSingleton::PostMaster().Subscribe("Gardens", this);
 	CMainSingleton::PostMaster().Subscribe("Castle", this);
@@ -260,7 +260,7 @@ void CInGameState::Update()
 		myExitLevel = false;
 		CEngine::GetInstance()->SetRenderScene(false);
 		CMainSingleton::CollisionManager().ClearColliders();
-		CMainSingleton::DialogueSystem().Enabled(false);
+		CMainSingleton::DialogueSystem().Active(false);
 
 		myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
 	}
@@ -271,8 +271,8 @@ void CInGameState::ReceiveEvent(const EInputEvent aEvent)
 	if (this == myStateStack.GetTop()) {
 		switch (aEvent) {
 		case IInputObserver::EInputEvent::PauseGame:
-			if (CMainSingleton::DialogueSystem().Enabled()) {
-				CMainSingleton::DialogueSystem().Enabled(false);
+			if (CMainSingleton::DialogueSystem().Active()) {
+				CMainSingleton::DialogueSystem().Active(false);
 			} else {
 				myStateStack.PushState(CStateStack::EState::PauseMenu);
 			}

@@ -31,6 +31,7 @@ CAudioManager::CAudioManager() : myWrapper() {
 	}
 
 
+#pragma region AudioLoading
 
 
 	if (document.HasMember("Ambience"))
@@ -93,6 +94,8 @@ CAudioManager::CAudioManager() : myWrapper() {
 
 	}
 
+#pragma endregion
+
 	// Set starting volume
 	for (auto& channel : myChannels) {
 		channel->SetVolume(0.1f);
@@ -104,10 +107,13 @@ CAudioManager::CAudioManager() : myWrapper() {
 
 	//CMainSingleton::PostMaster().Send({ EMessageType::EnemyHealthChanged, NULL });
 
-	//CMainSingleton::PostMaster().Send({ EMessageType::PlayAmbienceCave1, NULL });
+	//CMainSingleton::PostMaster().Send({ EMessageType::PlayAmbienceCastle, NULL });
 
 
-	//CMainSingleton::PostMaster().Send({ EMessageType::UIButtonPress, NULL });
+	//CMainSingleton::PostMaster().Send({ EMessageType::BossDied, NULL });
+
+
+		CMainSingleton::PostMaster().Send({ EMessageType::UIButtonPress, NULL });
 
 }
 
@@ -169,7 +175,6 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 			myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
 		}
 
-		//myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
 
 	}
 		break;
@@ -193,7 +198,6 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		{
 			myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Dungeon)], myChannels[CAST(EChannels::Ambiance)]);
 
-			//myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
 
 		}
 		break;
@@ -206,7 +210,6 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 			myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Swamp1)], myChannels[CAST(EChannels::Ambiance)]);
 		}
 
-		//myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
 
 	}
 		break;
@@ -214,18 +217,106 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		
 
 		// SFX
-	case EMessageType::EnemyHealthChanged:
+	case EMessageType::AttackHits:
 	{
 
-		if (myAmbianceAudio.size() >= static_cast<unsigned int>(ESFX::EnemyPain))
+		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::PlayerHitSound))
 		{
-			myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyPain)], myChannels[CAST(EChannels::SFX)]);
+			myWrapper.Play(mySFXAudio[CAST(ESFX::PlayerHitSound)], myChannels[CAST(EChannels::SFX)]);
 		}
-
-		//myWrapper.Play(mySFXAudio[CAST(ESFX::EnemyPain)], myChannels[CAST(EChannels::SFX)]);
 	}
 		break;
+	case EMessageType::BossDied:
+	{
 
+		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::KingBossDeathSound))
+		{
+			myWrapper.Play(mySFXAudio[CAST(ESFX::KingBossDeathSound)], myChannels[CAST(EChannels::SFX)]);
+		}
+	}
+	break;
+	case EMessageType::DemonIdle1:
+	{
+
+		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::DemonIdle1))
+		{
+			myWrapper.Play(mySFXAudio[CAST(ESFX::DemonIdle1)], myChannels[CAST(EChannels::SFX)]);
+		}
+	}
+	break;
+	case EMessageType::DemonIdle2:
+	{
+
+		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::DemonIdle2))
+		{
+			myWrapper.Play(mySFXAudio[CAST(ESFX::DemonIdle2)], myChannels[CAST(EChannels::SFX)]);
+		}
+	}
+	break;
+	case EMessageType::HitDestructible:
+	{
+
+		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::HitDestructible))
+		{
+			myWrapper.Play(mySFXAudio[CAST(ESFX::HitDestructible)], myChannels[CAST(EChannels::SFX)]);
+		}
+	}
+	break;
+
+	case EMessageType::HealingAura:
+	{
+
+		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::HealingAura))
+		{
+			myWrapper.Play(mySFXAudio[CAST(ESFX::HealingAura)], myChannels[CAST(EChannels::SFX)]);
+		}
+	}
+	break;
+
+	case EMessageType::LightAttack:
+	{
+
+		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::PlayerLightAtk))
+		{
+			myWrapper.Play(mySFXAudio[CAST(ESFX::PlayerLightAtk)], myChannels[CAST(EChannels::SFX)]);
+		}
+	}
+	break;
+	case EMessageType::HeavyAttack:
+	{
+
+		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::PlayerHeavyAtk))
+		{
+			myWrapper.Play(mySFXAudio[CAST(ESFX::PlayerHeavyAtk)], myChannels[CAST(EChannels::SFX)]);
+		}
+	}
+	break;
+	case EMessageType::ShieldSpell:
+	{
+
+		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::ShieldSpell))
+		{
+			myWrapper.Play(mySFXAudio[CAST(ESFX::ShieldSpell)], myChannels[CAST(EChannels::SFX)]);
+		}
+	}
+	break;
+
+	// UI
+
+	case EMessageType::UIButtonPress:
+	{
+
+		if (myUIAudio.size() >= static_cast<unsigned int>(EUI::ButtonClick))
+		{
+			myWrapper.Play(myUIAudio[CAST(EUI::ButtonClick)], myChannels[CAST(EChannels::UI)]);
+		}
+	}
+	break;
+
+
+
+
+		// VOICELINES
 	case EMessageType::PlayVoiceLine:
 	{
 		if (!myVoicelineAudio.empty()) {
@@ -244,17 +335,6 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	}
 		break;
 
-	// UI
-
-	case EMessageType::UIButtonPress:
-	{
-		if (myAmbianceAudio.size() >= static_cast<unsigned int>(EUI::ButtonClick))
-		{
-			myWrapper.Play(mySFXAudio[CAST(EUI::ButtonClick)], myChannels[CAST(EChannels::UI)]);
-		}
-	}
-	break;
-
 	default:
 		break;
 	}
@@ -271,13 +351,25 @@ void CAudioManager::SubscribeToMessages()
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);
 
+
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayAmbienceCastle, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayAmbienceCave1, this);
 
-	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyHealthChanged, this);
+	
+	CMainSingleton::PostMaster().Subscribe(EMessageType::AttackHits, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::BossDied, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::BossMeleeAttack, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::DemonIdle1, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::DemonIdle2, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::HitDestructible, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::HealingAura, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::LightAttack, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::HeavyAttack, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::ShieldSpell, this);
 
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::UIButtonPress, this);
+
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayVoiceLine, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::StopDialogue, this);
@@ -288,6 +380,22 @@ void CAudioManager::SubscribeToMessages()
 void CAudioManager::UnsubscribeToMessages()
 {
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::MainMenu, this);
+
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayAmbienceCastle, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayAmbienceCave1, this);
+
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::AttackHits, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::BossDied, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::BossMeleeAttack, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::DemonIdle1, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::DemonIdle2, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::HitDestructible, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::HealingAura, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LightAttack, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::HeavyAttack, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::ShieldSpell, this);
+
+
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayVoiceLine, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::StopDialogue, this);
 }
@@ -374,8 +482,38 @@ std::string CAudioManager::TranslateAmbiance(EAmbiance enumerator) const {
 }
 std::string CAudioManager::TranslateSFX(ESFX enumerator) const {
 	switch (enumerator) {
-	case ESFX::EnemyPain:
-		return "EnemyPain";
+	
+	case ESFX::PlayerHitSound:
+		return "PlayerHitSound";
+		break;
+	case ESFX::KingBossDeathSound:
+		return "KingBossDeathSound";
+		break;
+	case ESFX::BossMeleeAtk:
+		return "BossMeleeAtk";
+		break;
+	case ESFX::DemonIdle1:
+		return "DemonIdle1";
+		break;
+	case ESFX::DemonIdle2:
+		return "DemonIdle2";
+		break;
+	case ESFX::HitDestructible:
+		return "HitDestructible";
+		break;
+	case ESFX::HealingAura:
+		return "HealingAura";
+		break;
+	case ESFX::PlayerLightAtk:
+		return "PlayerLightAtk";
+		break;
+	case ESFX::PlayerHeavyAtk:
+		return "PlayerHeavyAtk";
+		break;
+	case ESFX::ShieldSpell:
+		return "ShieldSpell";
+		break;
+
 	default:
 		return "";
 	}

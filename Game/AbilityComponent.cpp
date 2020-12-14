@@ -57,6 +57,11 @@ CAbilityComponent::CAbilityComponent(CGameObject& aParent, std::vector<std::pair
 	myFilePaths.emplace(EAbilityType::BossAbility3, document["Boss Ability 3"].GetString());
 
 	myFilePaths.emplace(EAbilityType::AbilityTest, document["Ability Test"].GetString());
+
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability1, this);
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability2, this);
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability3, this);
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::AttackClick, this);
 }
 
 CAbilityComponent::~CAbilityComponent()
@@ -67,12 +72,12 @@ CAbilityComponent::~CAbilityComponent()
 	delete[] myMaxCooldowns;
 	myMaxCooldowns = nullptr;
 
-	if (myEnabled) {
+	//if (myEnabled) {
 		CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability1, this);
 		CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability2, this);
 		CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability3, this);
 		CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::AttackClick, this);
-	}
+	//}
 }
 
 void CAbilityComponent::Awake()
@@ -107,18 +112,18 @@ void CAbilityComponent::Update()
 
 void CAbilityComponent::OnEnable()
 {
-	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability1, this);
-	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability2, this);
-	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability3, this);
-	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::AttackClick, this);
+	//CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability1, this);
+	//CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability2, this);
+	//CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Ability3, this);
+	//CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::AttackClick, this);
 }
 
 void CAbilityComponent::OnDisable()
 {
-	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability1, this);
-	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability2, this);
-	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability3, this);
-	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::AttackClick, this);
+	//CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability1, this);
+	//CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability2, this);
+	//CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability3, this);
+	//CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::AttackClick, this);
 }
 
 bool CAbilityComponent::UseAbility(EAbilityType anAbilityType, DirectX::SimpleMath::Vector3 aSpawnPosition)

@@ -23,18 +23,8 @@ CGame::~CGame()
 
 void CGame::Init()
 {
-	myStateStack.Awake(
-		{ 
-		CStateStack::EState::BootUp,
-		CStateStack::EState::TitleScreen,
-		CStateStack::EState::MainMenu, 
-		CStateStack::EState::Credits, 
-		CStateStack::EState::Intro,
-		CStateStack::EState::LoadLevel,
-		CStateStack::EState::InGame,
-		CStateStack::EState::PauseMenu 
-		}, 
-		CStateStack::EState::BootUp);
+	InitDev();
+	//InitRealGame();
 }
 
 bool CGame::Update()
@@ -42,3 +32,29 @@ bool CGame::Update()
 	return myStateStack.Update();
 }
 
+void CGame::InitDev()
+{
+	myStateStack.Awake(
+		{
+			CStateStack::EState::LoadLevel,
+			CStateStack::EState::InGame,
+			CStateStack::EState::PauseMenu
+		},
+		CStateStack::EState::LoadLevel);
+}
+
+void CGame::InitRealGame()
+{
+	myStateStack.Awake(
+		{
+		CStateStack::EState::BootUp,
+		CStateStack::EState::TitleScreen,
+		CStateStack::EState::MainMenu,
+		CStateStack::EState::Credits,
+		CStateStack::EState::Intro,
+		CStateStack::EState::LoadLevel,
+		CStateStack::EState::InGame,
+		CStateStack::EState::PauseMenu
+		},
+		CStateStack::EState::BootUp);
+}
