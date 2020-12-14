@@ -1,0 +1,28 @@
+#pragma once
+#include "State.h"
+#include "StateStack.h"
+#include "Observer.h"
+
+class CScene;
+class CSpriteInstance;
+class CCanvas;
+
+class CCreditsState : public CState, public IObserver
+{
+public:
+	CCreditsState(CStateStack& aStateStack, const CStateStack::EState aState = CStateStack::EState::Credits);
+	~CCreditsState() override;
+
+	void Awake() override;
+	void Start() override;
+	void Stop() override;
+	void Update() override;
+
+	void Receive(const SMessage& aMessage) override;
+
+private:
+	CScene* myScene;
+	CSpriteInstance* myBackground;
+	CCanvas* myCanvas;
+};
+

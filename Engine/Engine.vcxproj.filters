@@ -356,6 +356,9 @@
     <ClCompile Include="TextRenderer.cpp">
       <Filter>Renderers</Filter>
     </ClCompile>
+    <ClCompile Include="CreditsState.cpp">
+      <Filter>State Stack</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EnemyFactory.h" />
@@ -670,6 +673,9 @@
     <ClInclude Include="DialogueSystem.h" />
     <ClInclude Include="TextRenderer.h">
       <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="CreditsState.h">
+      <Filter>State Stack</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

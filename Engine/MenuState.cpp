@@ -85,7 +85,11 @@ void CMenuState::Receive(const SMessage &aMessage) {
 		switch (aMessage.myMessageType) {
 		case EMessageType::StartGame:
 		{
-			myStateStack.PushState(CStateStack::EState::IntroState);
+			myStateStack.PushState(CStateStack::EState::Intro);
+		} break;
+		case EMessageType::Credits:
+		{
+			myStateStack.PushState(CStateStack::EState::Credits);
 		} break;
 		case EMessageType::Quit:
 		{

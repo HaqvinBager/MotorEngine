@@ -11,7 +11,7 @@ class CAudioChannel;
 
 enum class EMusic { MainMenu, Count };
 enum class EAmbiance { Castle, Cave1, Cave2,  Dungeon, Garden, Swamp1, Swamp2, Count };
-enum class ESFX { EnemyPain, Count };
+enum class ESFX { PlayerHitSound, KingBossDeathSound, BossMeleeAtk, DemonIdle1, DemonIdle2, HitDestructible, HealingAura,  PlayerLightAtk, PlayerHeavyAtk, ShieldSpell, Count };
 enum class EUI { ButtonClick, Count };
 enum class EVoiceLine { Count };
 

@@ -47,14 +47,14 @@ void CGame::InitRealGame()
 {
 	myStateStack.Awake(
 		{
-			CStateStack::EState::BootUpState,
-			CStateStack::EState::TitleScreenState,
-			CStateStack::EState::MainMenu, 
-			CStateStack::EState::IntroState,
-			CStateStack::EState::LoadLevel,
-			CStateStack::EState::InGame,
-			CStateStack::EState::PauseMenu
+		CStateStack::EState::BootUp,
+		CStateStack::EState::TitleScreen,
+		CStateStack::EState::MainMenu,
+		CStateStack::EState::Credits,
+		CStateStack::EState::Intro,
+		CStateStack::EState::LoadLevel,
+		CStateStack::EState::InGame,
+		CStateStack::EState::PauseMenu
 		},
-		CStateStack::EState::BootUpState);
+		CStateStack::EState::BootUp);
 }
-
