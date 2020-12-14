@@ -77,8 +77,6 @@ void CBossBehavior::Update(CGameObject* aParent)
 
 void CBossBehavior::Collided(CGameObject* /*aParent*/, CGameObject* /*aCollidedWithGameObject*/)
 {
-	int a = 0;
-	a;
 }
 
 bool CBossBehavior::FindATarget(CGameObject& aParent)
@@ -160,7 +158,7 @@ void CBossBehavior::StartPhase(CGameObject* aParent)
 			if (aParent->GetComponent<CAnimationComponent>())
 				aParent->GetComponent<CAnimationComponent>()->PlayAttack01ID();
 
-			aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility1, aParent->myTransform->Position());
+			aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility2, aParent->myTransform->Position());
 		}	
 	}
 }
