@@ -80,6 +80,7 @@ void CMenuState::Update() {
 	myCanvas->Update();
 }
 
+#include <iostream>
 void CMenuState::Receive(const SMessage &aMessage) {
 	if (this == myStateStack.GetTop()) {
 		switch (aMessage.myMessageType) {

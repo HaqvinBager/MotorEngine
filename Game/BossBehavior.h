@@ -7,7 +7,7 @@ class CAbilityComponent;
 class CBossBehavior : public IAIBehavior
 {
 public:
-	CBossBehavior(CGameObject* aPlayerObject);
+	CBossBehavior(CGameObject* aPlayerObject);//Add Phases Here maybe..? :DD
 	~CBossBehavior() override;
 
 	void Update(CGameObject* aParent) override;
@@ -22,6 +22,7 @@ private:
 	void StartPhase(CGameObject* aParent);
 	void MidPhase(CGameObject* aParent);
 	void FinalPhase(CGameObject* aParent);
+	void Die();
 
 	enum class Phase
 	{
@@ -35,5 +36,9 @@ private:
 	CGameObject* myPlayer;
 	CAbilityComponent* myAblilityComponent;
 	Phase myPhase;
+
+
+	std::vector<Vector2> myPhasePercents;
+
 };
 

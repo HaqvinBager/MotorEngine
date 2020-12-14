@@ -51,6 +51,8 @@ void CGame::InitRealGame()
 		CStateStack::EState::TitleScreen,
 		CStateStack::EState::MainMenu,
 		CStateStack::EState::Credits,
+		CStateStack::EState::Options,
+		CStateStack::EState::LevelSelect,
 		CStateStack::EState::Intro,
 		CStateStack::EState::LoadLevel,
 		CStateStack::EState::InGame,

@@ -26,12 +26,10 @@ void CStatsComponent::Start()
 
 void CStatsComponent::Update()
 {
-	if (!myStats.myCanTakeDamage) {
-		if (myStats.myDamageCooldown <= 0.0f) {
-			myStats.myCanTakeDamage = true;
-		} else {
+	if (!myStats.myCanTakeDamage) {	
+		//std::cout << "DT = " << CTimer::Dt() << std::endl;
 			myStats.myDamageCooldown -= CTimer::Dt();
-		}
+			myStats.myCanTakeDamage = myStats.myDamageCooldown < 0 ? true : false;		
 	}
 
 	if (myStats.hadToken) {
@@ -42,6 +40,7 @@ void CStatsComponent::Update()
 		}
 	}
 
+	//std::cout << "Can Take Damage " << myStats.myCanTakeDamage << std::endl;
 }
 
 void CStatsComponent::OnEnable()
@@ -55,8 +54,8 @@ void CStatsComponent::OnDisable()
 bool CStatsComponent::AddDamage(float someDamage)
 {
 	if (myStats.myCanTakeDamage) {
-		myStats.myHealth -= someDamage;
 		myStats.myCanTakeDamage = false;
+		myStats.myHealth -= someDamage;
 		myStats.myDamageCooldown = myBaseStats.myBaseDamageCooldown;
 		return true;
 	}

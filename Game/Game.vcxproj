@@ -299,9 +299,11 @@
     <ClInclude Include="HealthBarComponent.h" />
     <ClInclude Include="InGameState.h" />
     <ClInclude Include="IntroState.h" />
+    <ClInclude Include="LevelSelectState.h" />
     <ClInclude Include="LoadLevelState.h" />
     <ClInclude Include="MeleeAttackBehavior.h" />
     <ClInclude Include="MouseSelection.h" />
+    <ClInclude Include="OptionsState.h" />
     <ClInclude Include="PauseState.h" />
     <ClInclude Include="ProjectileBehavior.h" />
     <ClInclude Include="SceneData.h" />
@@ -329,9 +331,11 @@
     <ClCompile Include="HealthBarComponent.cpp" />
     <ClCompile Include="InGameState.cpp" />
     <ClCompile Include="IntroState.cpp" />
+    <ClCompile Include="LevelSelectState.cpp" />
     <ClCompile Include="LoadLevelState.cpp" />
     <ClCompile Include="MeleeAttackBehavior.cpp" />
     <ClCompile Include="MouseSelection.cpp" />
+    <ClCompile Include="OptionsState.cpp" />
     <ClCompile Include="PauseState.cpp" />
     <ClCompile Include="ProjectileBehavior.cpp" />
     <ClCompile Include="SceneReader.cpp" />

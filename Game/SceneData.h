@@ -97,6 +97,12 @@ struct SBossData
 	DirectX::SimpleMath::Vector2 myStageOne;
 	DirectX::SimpleMath::Vector2 myStageTwo;
 	DirectX::SimpleMath::Vector2 myStageThree;
+	float myHealth;
+	float myDamage;
+	float myMoveSpeed;
+	float myDamageCooldown;
+	float myVisionRange;
+	float myAttackRange;
 };
 
 struct SInGameData 
