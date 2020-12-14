@@ -305,6 +305,7 @@
     <ClInclude Include="MouseSelection.h" />
     <ClInclude Include="OptionsState.h" />
     <ClInclude Include="PauseState.h" />
+    <ClInclude Include="PlayerGlobalState.h" />
     <ClInclude Include="ProjectileBehavior.h" />
     <ClInclude Include="SceneData.h" />
     <ClInclude Include="SceneReader.h" />
@@ -337,6 +338,7 @@
     <ClCompile Include="MouseSelection.cpp" />
     <ClCompile Include="OptionsState.cpp" />
     <ClCompile Include="PauseState.cpp" />
+    <ClCompile Include="PlayerGlobalState.cpp" />
     <ClCompile Include="ProjectileBehavior.cpp" />
     <ClCompile Include="SceneReader.cpp" />
     <ClCompile Include="SpeedExplodeBehavior.cpp" />
