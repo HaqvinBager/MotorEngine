@@ -16,6 +16,8 @@ public:
 		LoadLevel,
 		InGame,
 		PauseMenu,
+		Options,
+		LevelSelect,
 		NoState
 	};
 

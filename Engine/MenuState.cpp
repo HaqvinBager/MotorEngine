@@ -91,6 +91,14 @@ void CMenuState::Receive(const SMessage &aMessage) {
 		{
 			myStateStack.PushState(CStateStack::EState::Credits);
 		} break;
+		case EMessageType::LevelSelect:
+		{
+			myStateStack.PushState(CStateStack::EState::LevelSelect);
+		} break;
+		case EMessageType::Options:
+		{
+			myStateStack.PushState(CStateStack::EState::Options);
+		} break;
 		case EMessageType::Quit:
 		{
 			myStateStack.PopState();
