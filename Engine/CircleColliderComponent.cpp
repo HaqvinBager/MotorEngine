@@ -73,11 +73,6 @@ void CCircleColliderComponent::Update() {
 	myVisualizer->SetPosition(GameObject().GetComponent<CTransformComponent>()->Position());
 	myVisualizer->SetRotation(GameObject().GetComponent<CTransformComponent>()->Rotation());
 #endif // _DEBUG
-
-	if (GetAsyncKeyState('C')) {
-		CDebug::GetInstance()->DrawLine({ GetPosition().x - (myRadius), GetPosition().y, GetPosition().z }, { GetPosition().x + (myRadius), GetPosition().y, GetPosition().z });
-		CDebug::GetInstance()->DrawLine({ GetPosition().x, GetPosition().y, GetPosition().z - (myRadius) }, { GetPosition().x, GetPosition().y, GetPosition().z + (myRadius) });
-	}
 }
 
 bool CCircleColliderComponent::Collided(CCircleColliderComponent* aCollidedGameObject)

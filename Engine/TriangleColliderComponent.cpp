@@ -81,12 +81,6 @@ void CTriangleColliderComponent::Update() {
 	myVisualizer->SetPosition(GameObject().GetComponent<CTransformComponent>()->Position()); //TODO: make rotate right
 	myVisualizer->SetRotation(GameObject().GetComponent<CTransformComponent>()->Rotation());
 #endif // _DEBUG
-
-	if (GetAsyncKeyState('C')) {
-		CDebug::GetInstance()->DrawLine(GetPosition(), myLeftVertex);
-		CDebug::GetInstance()->DrawLine(GetPosition(), myRightVertex);
-		CDebug::GetInstance()->DrawLine(myLeftVertex, myRightVertex);
-	}
 }
 
 bool CTriangleColliderComponent::Collided(CCircleColliderComponent* aCollidedGameObject)

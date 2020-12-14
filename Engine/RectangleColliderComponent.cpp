@@ -108,13 +108,6 @@ void CRectangleColliderComponent::Update()
 	myVisualizer->SetPosition(GameObject().GetComponent<CTransformComponent>()->Position());
 	myVisualizer->SetRotation(GameObject().GetComponent<CTransformComponent>()->Rotation());
 #endif // _DEBUG
-
-	if (GetAsyncKeyState('C')) {
-		CDebug::GetInstance()->DrawLine(myMin, { myMax.x, 0.0f, myMin.z }, 0.00000000001f);
-		CDebug::GetInstance()->DrawLine(myMin, { myMin.x, 0.0f, myMax.z }, 0.00000000001f);
-		CDebug::GetInstance()->DrawLine({ myMax.x, 0.0f, myMin.z }, myMax, 0.00000000001f);
-		CDebug::GetInstance()->DrawLine({ myMin.x, 0.0f, myMax.z }, myMax, 0.00000000001f);
-	}
 }
 
 bool CRectangleColliderComponent::Collided(CCircleColliderComponent* aCollidedGameObject)
