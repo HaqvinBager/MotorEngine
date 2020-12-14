@@ -9,7 +9,7 @@ class CSpriteInstance;
 class CIntroState : public CState, public IObserver
 {
 public:
-	CIntroState(CStateStack& aStateStack, const CStateStack::EState aState = CStateStack::EState::IntroState);
+	CIntroState(CStateStack& aStateStack, const CStateStack::EState aState = CStateStack::EState::Intro);
 	~CIntroState() override;
 
 	void Awake() override;

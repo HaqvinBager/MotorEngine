@@ -10,7 +10,7 @@ class CSpriteInstance;
 class CTitleScreenState : public CState, public IInputObserver, public IStringObserver
 {
 public:
-	CTitleScreenState(CStateStack& aStateStack, const CStateStack::EState aState = CStateStack::EState::TitleScreenState);
+	CTitleScreenState(CStateStack& aStateStack, const CStateStack::EState aState = CStateStack::EState::TitleScreen);
 	~CTitleScreenState() override;
 
 	void Awake() override;

@@ -229,11 +229,13 @@ void CAnimationComponent::PlayAnimation(const int anAnimationID, bool anIsLoopin
 	}
 	else
 	{
+		myAnimation->GetMyController().SetLoopingSceneIndex(GetIndexFromList(myIdleAnimationID));
+
 		if (myCurrentAnimationID != anAnimationID)
 			myAnimation->GetMyController().ResetAnimationTimeCurrent();
 	}
 	myAnimation->SetCurAnimationScene(GetIndexFromList(anAnimationID));
-	myReturnToIdleTimer = 1.0f;/*myAnimation->GetMyController().CurrentAnimationDuration() / myAnimation->GetMyController().CurrentAnimationTicksPerSecond();*///23.0f;// AnimationController has it set to 24 ticks per seconds -> 24fps 
+	myReturnToIdleTimer = myAnimation->GetMyController().CurrentAnimationDuration() / myAnimation->GetMyController().CurrentAnimationTicksPerSecond();//23.0f;// AnimationController has it set to 24 ticks per seconds -> 24fps 
 	myCurrentAnimationID = anAnimationID;
 }
 
