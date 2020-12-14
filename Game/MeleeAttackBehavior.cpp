@@ -16,7 +16,6 @@ CMeleeAttackBehavior::CMeleeAttackBehavior(float aDuration, float aDamage, CGame
 	myDuration = aDuration;
 	myTimer = 0.0f;
 	myParent = aParent;
-	myCaster = nullptr;
 	myDamageMultiplier = aDamage;
 }
 

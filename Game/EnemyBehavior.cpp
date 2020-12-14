@@ -49,7 +49,7 @@ void CEnemyBehavior::Update(CGameObject* aParent)
 	SStats stats = myCurrentParent->GetComponent<CStatsComponent>()->GetStats();
 
 	if (stats.myHealth <= 0) {
-		CMainSingleton::PostMaster().Send({ EMessageType::EnemyDied, this });
+		CMainSingleton::PostMaster().Send({EMessageType::EnemyDied, this});
 		if (stats.myTokenSlot != nullptr) {
 			CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
 			stats.myTokenSlot = nullptr;
@@ -63,37 +63,37 @@ void CEnemyBehavior::Update(CGameObject* aParent)
 // Sending in the parent feels safer than relying on myCurrentParent
 void CEnemyBehavior::Collided(CGameObject* /*aParent*/, CGameObject* /*aCollidedWithGameObject*/)
 {
-//	CCollider* collider = reinterpret_cast<CCollider*>(aCollidedWithGameObject->GetComponent<CTriangleColliderComponent>());
-//	if (!collider)
-//	{
-//			collider = reinterpret_cast<CCollider*>(aCollidedWithGameObject->GetComponent<CCircleColliderComponent>());
-//		if (!collider)
-//		{
-//			collider = reinterpret_cast<CCollider*>(aCollidedWithGameObject->GetComponent<CRectangleColliderComponent>());
-//		}
-//	}
-//
-//	if (!collider) { return; }
-//
-//	if (collider->GetCollisionLayer() == ECollisionLayer::PLAYERABILITY)
-//	{
-//		std::cout << __FUNCTION__ << " Enemy collided with player ability " << std::endl;
-//		//CStatsComponent* playerStats = myPlayer->GetComponent<CStatsComponent>();
-//		myCurrentParent = aParent;
-//		//std::cout << aCollidedWithGameObject->GetComponent<CAbilityComponent>().myDamage << std::endl;
-//#ifdef _G4_DEBUG
-//		TakeDamage(aCollidedWithGameObject->GetComponent<CBoomerangBehavior>()->myDamage);
-//
-//#endif // _G4_DEBUG
-//
-//		return;
-//	}
-//
-//	CAIBehaviorComponent* enemyBehavior = aCollidedWithGameObject->GetComponent<CAIBehaviorComponent>();
-//	if (enemyBehavior)
-//	{
-//		std::cout << __FUNCTION__ << " Enemy collided with Enemy " << std::endl;
-//	}
+	//	CCollider* collider = reinterpret_cast<CCollider*>(aCollidedWithGameObject->GetComponent<CTriangleColliderComponent>());
+	//	if (!collider)
+	//	{
+	//			collider = reinterpret_cast<CCollider*>(aCollidedWithGameObject->GetComponent<CCircleColliderComponent>());
+	//		if (!collider)
+	//		{
+	//			collider = reinterpret_cast<CCollider*>(aCollidedWithGameObject->GetComponent<CRectangleColliderComponent>());
+	//		}
+	//	}
+	//
+	//	if (!collider) { return; }
+	//
+	//	if (collider->GetCollisionLayer() == ECollisionLayer::PLAYERABILITY)
+	//	{
+	//		std::cout << __FUNCTION__ << " Enemy collided with player ability " << std::endl;
+	//		//CStatsComponent* playerStats = myPlayer->GetComponent<CStatsComponent>();
+	//		myCurrentParent = aParent;
+	//		//std::cout << aCollidedWithGameObject->GetComponent<CAbilityComponent>().myDamage << std::endl;
+	//#ifdef _G4_DEBUG
+	//		TakeDamage(aCollidedWithGameObject->GetComponent<CBoomerangBehavior>()->myDamage);
+	//
+	//#endif // _G4_DEBUG
+	//
+	//		return;
+	//	}
+	//
+	//	CAIBehaviorComponent* enemyBehavior = aCollidedWithGameObject->GetComponent<CAIBehaviorComponent>();
+	//	if (enemyBehavior)
+	//	{
+	//		std::cout << __FUNCTION__ << " Enemy collided with Enemy " << std::endl;
+	//	}
 }
 
 void CEnemyBehavior::FindATarget()
@@ -112,8 +112,7 @@ void CEnemyBehavior::FindATarget()
 			myCurrentParent->GetComponent<CTransformComponent>()->ClearPath();
 			if (stats.myTokenSlot == nullptr && stats.hadToken == false) {
 				stats.myTokenSlot = CTokenPool::GetInstance()->Request();
-			}
-			else if(stats.myTokenSlot != nullptr){
+			} else if (stats.myTokenSlot != nullptr) {
 				myPlayer->GetComponent<CStatsComponent>();
 				if (myCurrentParent->GetComponent<CAnimationComponent>())
 				{
@@ -124,8 +123,7 @@ void CEnemyBehavior::FindATarget()
 				//stats.myTokenSlot = nullptr;
 				//myCurrentParent->GetComponent<CStatsComponent>()->NextTokenCooldown();
 			}
-		}
-		else {
+		} else {
 			if (stats.myTokenSlot != nullptr) {
 				CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
 				stats.myTokenSlot = nullptr;
@@ -133,8 +131,7 @@ void CEnemyBehavior::FindATarget()
 
 			}
 		}
-	}
-	else {
+	} else {
 		//myCurrentParent->GetComponent<CTransformComponent>()->ClearPath();
 		stats.myRandomWalkTime -= CTimer::Dt();
 		if (stats.myRandomWalkTime <= 0) {
@@ -144,7 +141,7 @@ void CEnemyBehavior::FindATarget()
 
 			float X = randomR * cosf(randomA);
 			float Y = randomR * sinf(randomA);
-			DirectX::SimpleMath::Vector3 randomPos = { myCurrentParent->myTransform->Position().x + X, myCurrentParent->myTransform->Position().y, myCurrentParent->myTransform->Position().z + Y};
+			DirectX::SimpleMath::Vector3 randomPos = {myCurrentParent->myTransform->Position().x + X, myCurrentParent->myTransform->Position().y, myCurrentParent->myTransform->Position().z + Y};
 			if (CEngine::GetInstance()->GetActiveScene().GetNavMesh()->GetTriangleAtPoint(randomPos)) {
 				myCurrentParent->GetComponent<CNavMeshComponent>()->CalculatePath(randomPos);
 				stats.myRandomWalkTime = Random(baseStats.myBaseRandomWalkTime - 1.f, baseStats.myBaseRandomWalkTime);
@@ -167,7 +164,7 @@ void CEnemyBehavior::TakeDamage(float aDamageMultiplier, CGameObject* aGameObjec
 		float difference = baseHealth - myCurrentParent->GetComponent<CStatsComponent>()->GetStats().myHealth;
 
 		if (myPlayer->GetComponent<CPlayerControllerComponent>()->AuraActive()) {
-			if((myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth + (difference / 2.5f))
+			if ((myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth + (difference / 2.5f))
 				< myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth)
 				myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth += difference / 2.5f;
 			else
@@ -179,7 +176,6 @@ void CEnemyBehavior::TakeDamage(float aDamageMultiplier, CGameObject* aGameObjec
 		{
 			difference = 0.0f;
 		}
-
 
 		myCurrentParent->GetComponent<CHealthBarComponent>()->GetCanvas()->GetAnimatedUI()[0]->Level(difference);
 		myCurrentParent->GetComponent<CHealthBarComponent>()->GetCanvas2()->GetAnimatedUI()[0]->Level(difference);

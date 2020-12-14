@@ -19,7 +19,6 @@ CBoomerangBehavior::CBoomerangBehavior(float aSpeed, float aDuration, float aRes
 {
 	mySpeed = aSpeed;
 	myTimer = 0.0f;
-	myCaster = nullptr;
 	myIsReturning = false;
 	myDuration = aDuration;
 	myResourceCost = aResourceCost;

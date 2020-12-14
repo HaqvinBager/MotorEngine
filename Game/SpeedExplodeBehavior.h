@@ -27,7 +27,6 @@ private:
 	float myMovementSpeedMutiplier;
 	float myOriginalMovementSpeed;
 	float myMultipliedSpeed;
-	CGameObject* myCaster;
 	CGameObject* myParent;
 	CTransformComponent* myCasterTransform;
 };

@@ -24,7 +24,6 @@ CSpeedExplodeBehavior::CSpeedExplodeBehavior(float aDuration, float aResourceCos
 	myOriginalMovementSpeed = 0.0f;
 	myParent = aParent;
 	myCasterTransform = nullptr;
-	myCaster = nullptr;
 	myDamageMultiplier = aDamage;
 }
 

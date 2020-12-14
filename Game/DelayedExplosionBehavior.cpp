@@ -13,8 +13,7 @@
 
 CDelayedExplosionBehavior::CDelayedExplosionBehavior(float aDuration, float aDelay, float aResourceCost, float aDamage, CGameObject* aParent):
 	myDelay(aDelay),
-	myParent(aParent),
-	myCaster(nullptr)
+	myParent(aParent)
 {
 	myDuration = aDuration;
 	myTimer = 0.0f;

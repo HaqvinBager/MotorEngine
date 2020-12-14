@@ -19,7 +19,6 @@ public:
 
 private:
 	DirectX::SimpleMath::Vector3 myTargetPosition;
-	CGameObject* myCaster;
 
 	float mySpeed;
 	float myHalfLife;

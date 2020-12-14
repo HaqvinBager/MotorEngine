@@ -21,6 +21,5 @@ public:
 
 private:
 	DirectX::SimpleMath::Vector3 myDirection;
-	CGameObject* myCaster;
 	CGameObject* myParent;
 };
