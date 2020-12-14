@@ -32,6 +32,11 @@ cbuffer BoneBuffer : register(b2)
     matrix myBones[64];
 };
 
+cbuffer OutlineBuffer : register(b3)
+{
+    float4 myOutlineColor;
+};
+
 struct VertexInput
 {
 	float4 myPosition : POSITION;       //16

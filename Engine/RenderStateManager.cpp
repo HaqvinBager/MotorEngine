@@ -132,19 +132,26 @@ bool CRenderStateManager::CreateDepthStencilStates(ID3D11Device* aDevice)
     onlyreadDepthDesc.StencilEnable = false;
 
     D3D11_DEPTH_STENCIL_DESC stencilWriteDesc = CD3D11_DEPTH_STENCIL_DESC{ CD3D11_DEFAULT{} };
+    stencilWriteDesc.DepthEnable = true;
+    stencilWriteDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+    stencilWriteDesc.DepthFunc = D3D11_COMPARISON_LESS;
     stencilWriteDesc.StencilEnable = TRUE;
     stencilWriteDesc.StencilReadMask = 0xFF;
-    stencilWriteDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+    stencilWriteDesc.StencilWriteMask = 0xFF;
+    stencilWriteDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+    stencilWriteDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
     stencilWriteDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
+    stencilWriteDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
     D3D11_DEPTH_STENCIL_DESC stencilMaskDesc = CD3D11_DEPTH_STENCIL_DESC{ CD3D11_DEFAULT{} };
     stencilMaskDesc.DepthEnable = FALSE;
-    stencilMaskDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+    //stencilMaskDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
     stencilMaskDesc.StencilEnable = TRUE;
     stencilMaskDesc.StencilReadMask = 0xFF;
-    stencilMaskDesc.FrontFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;
+    stencilMaskDesc.StencilWriteMask = 0xFF;
     stencilMaskDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
     stencilMaskDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+    stencilMaskDesc.FrontFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;
 
     ID3D11DepthStencilState* onlyreadDepthStencilState;
     ENGINE_HR_MESSAGE(aDevice->CreateDepthStencilState(&onlyreadDepthDesc, &onlyreadDepthStencilState), "OnlyRead Depth Stencil State could not be created.");

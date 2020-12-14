@@ -203,6 +203,13 @@ void CParticleFactory::ReadJsonValues(std::string aFilePath, CParticle::SParticl
     someParticleData.myLifetimeUpperBound =         document["Lifetime Upper Bound"].GetFloat();
     someParticleData.mySpeedLowerBound =            document["Speed Lower Bound"].GetFloat();
     someParticleData.mySpeedUpperBound =            document["Speed Upper Bound"].GetFloat();
+
+    if (document.HasMember("Offset Lower Bound X")) 
+    {
+        someParticleData.myOffsetLowerBound =         { document["Offset Lower Bound X"].GetFloat(), document["Offset Lower Bound Y"].GetFloat(), document["Offset Lower Bound Z"].GetFloat() };
+        someParticleData.myOffsetUpperBound =         { document["Offset Upper Bound X"].GetFloat(), document["Offset Upper Bound Y"].GetFloat(), document["Offset Upper Bound Z"].GetFloat() };
+    }
+
     someParticleData.myDirectionLowerBound =      { document["Direction Lower Bound X"].GetFloat(), document["Direction Lower Bound Y"].GetFloat(), document["Direction Lower Bound Z"].GetFloat() };
     someParticleData.myDirectionUpperBound =      { document["Direction Upper Bound X"].GetFloat(), document["Direction Upper Bound Y"].GetFloat(), document["Direction Upper Bound Z"].GetFloat() };
     someParticleData.myTexturePath =                document["Texture Path"].GetString();

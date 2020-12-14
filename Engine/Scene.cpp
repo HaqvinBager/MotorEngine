@@ -534,6 +534,12 @@ bool CScene::DestroyTextInstances()
 
 void CScene::SetPlayerToOutline(CGameObject* aPlayer)
 {
+	//auto it = std::find(myGameObjects.begin(), myGameObjects.end(), aPlayer);
+	//if (it != myGameObjects.end())
+	//{
+	//	std::swap(*it, myGameObjects.back());
+	//	myGameObjects.pop_back();
+	//}
 	/*if (myModelToOutline) {
 		myGameObjects.emplace_back(std::move(myModelToOutline));
 	}

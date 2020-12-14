@@ -57,8 +57,6 @@ CInGameState::CInGameState(CStateStack& aStateStack, const CStateStack::EState a
 	, myTokenPool(nullptr)
 	, myColliderPusher(nullptr)
 	, myExitLevel(false)
-	, mySelectedEnemy(nullptr)
-	, myLastSelectedEnemy(nullptr)
 {}
 
 CInGameState::~CInGameState()
@@ -155,7 +153,7 @@ void CInGameState::Start()
 		gameObject->Start();
 	}
 
-	//CEngine::GetInstance()->GetActiveScene().SetPlayerToOutline(CEngine::GetInstance()->GetActiveScene().GetPlayer());
+	CEngine::GetInstance()->GetActiveScene().SetPlayerToOutline(CEngine::GetInstance()->GetActiveScene().GetPlayer());
 }
 
 void CInGameState::Stop()
@@ -190,7 +188,7 @@ void CInGameState::Update()
 	myColliderPusher->EnemiesPushOutEnemies();
 	//myColliderPusher->PlayerPushOutEnemies();
 
-	mySelectedEnemy = mySelection->FindSelectedEnemy();
+	CEngine::GetInstance()->GetActiveScene().SetEnemyToOutline(mySelection->FindSelectedEnemy());
 
 	static SDamagePopupData damage;
 	damage.myDamage = 32.0f;
@@ -266,11 +264,6 @@ void CInGameState::Update()
 
 		myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
 	}
-
-	/*if (myLastSelectedEnemy != mySelectedEnemy) {
-		CEngine::GetInstance()->GetActiveScene().SetEnemyToOutline(mySelectedEnemy);
-		myLastSelectedEnemy = mySelectedEnemy;
-	}*/
 }
 
 void CInGameState::ReceiveEvent(const EInputEvent aEvent)

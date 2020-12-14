@@ -101,7 +101,7 @@ void CTransformComponent::SetOutlineScale()
 	Quaternion rotation;
 	myTransform.Decompose(scale, rotation, translation);
 	myTransform = Matrix::CreateFromQuaternion(rotation);
-	myTransform *= Matrix::CreateScale((myScale * ENGINE_SCALE) * 0.5f);
+	myTransform *= Matrix::CreateScale((myScale * ENGINE_SCALE) * 1.02f);
 	myTransform.Translation(translation);
 }
 

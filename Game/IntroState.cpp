@@ -18,6 +18,7 @@ CIntroState::CIntroState(CStateStack& aStateStack, const CStateStack::EState aSt
 	, myBackground(nullptr)
 	, myFeedbackTimer(0.0f)
 	, myFeedbackThreshold(10.0f)
+	, myHasShownIntro(false)
 	, myHasShownTutorial(false)
 	, myWillShowTutorial(true)
 	, myIntroStateActive(false)
@@ -37,6 +38,14 @@ void CIntroState::Awake()
 
 void CIntroState::Start()
 {
+	if (myHasShownIntro) 
+	{
+		myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
+		return;
+	}
+
+	myHasShownIntro = true;
+
 	rapidjson::Document document = CJsonReader::LoadDocument("Json/IntroStateSettings.json");
 
 	CGameObject* camera = new CGameObject(0);
@@ -74,10 +83,12 @@ void CIntroState::Start()
 
 void CIntroState::Stop()
 {
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::StopDialogue, this);
-	myScene->DestroySprites();
-	delete myScene;
-	myScene = nullptr;
+	if (myScene) {
+		CMainSingleton::PostMaster().Unsubscribe(EMessageType::StopDialogue, this);
+		myScene->DestroySprites();
+		delete myScene;
+		myScene = nullptr;
+	}
 }
 
 void CIntroState::Update()

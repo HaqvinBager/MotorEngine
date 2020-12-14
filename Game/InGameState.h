@@ -28,7 +28,5 @@ private:
 	CTokenPool* myTokenPool;
 	CMouseSelection* mySelection;
 	CColliderPushManager* myColliderPusher;
-	CGameObject* mySelectedEnemy;
-	CGameObject* myLastSelectedEnemy;
 	bool myExitLevel;
 };
