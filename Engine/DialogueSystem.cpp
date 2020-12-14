@@ -307,10 +307,11 @@ void CDialogueSystem::HandleInput() {
 		SetDialogueSpeed(myDialogueSlowSpeed, length);
 	}
 
-	if (Input::GetInstance()->IsKeyPressed(VK_ESCAPE)) {
-		CMainSingleton::PostMaster().Send({ EMessageType::StopDialogue, NULL });
-		ExitDialogue();
-	}
+	// Needs to be controller by other states
+	//if (Input::GetInstance()->IsKeyPressed(VK_ESCAPE)) {
+	//	CMainSingleton::PostMaster().Send({ EMessageType::StopDialogue, NULL });
+	//	ExitDialogue();
+	//}
 }
 
 void CDialogueSystem::SetDialogueSpeed(float aSpeed, int aLineLength)

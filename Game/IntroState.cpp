@@ -122,6 +122,11 @@ void CIntroState::Update()
 			myWillShowTutorial = false;
 		}
 	}
+
+	if (Input::GetInstance()->IsKeyPressed(VK_ESCAPE)) {
+		CMainSingleton::PostMaster().Send({ EMessageType::StopDialogue, NULL });
+		CMainSingleton::DialogueSystem().ExitDialogue();
+	}
 }
 
 void CIntroState::Receive(const SMessage& aMessage)

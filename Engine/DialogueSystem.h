@@ -39,12 +39,14 @@ public:
 	bool Active() {
 		return myIsActive;
 	}
+
+	void ExitDialogue();
+
+private:
 	void Active(bool isActive) {
 		myIsActive = isActive;
 	}
 
-	void ExitDialogue();
-private:
 	void LoadDialogue(int aSceneIndex);
 	void LoadNarration();
 
