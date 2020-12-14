@@ -34,12 +34,15 @@ void CParticleEmitterComponent::Update()
 {
 	if (!Enabled()) return;
 
+	//DirectX::SimpleMath::Vector3 gameObjectPos = GameObject().myTransform->Position();
+	//GameObject().myTransform->Position({ 0.0f, 0.0f, 0.0f });
 	SetPosition(GameObject().myTransform->Position());
 	DirectX::SimpleMath::Vector3 scale;
 	DirectX::SimpleMath::Quaternion quat;
 	DirectX::SimpleMath::Vector3 translation;
 	GameObject().myTransform->GetMatrix().Decompose(scale, quat, translation);
 	SetRotation(quat);
+	//GameObject().myTransform->Position(gameObjectPos);
 	Update(CEngine::GetInstance()->GetActiveScene().GetMainCamera()->GameObject().myTransform->Position());
 }
 
@@ -142,12 +145,12 @@ void CParticleEmitterComponent::Update(DirectX::SimpleMath::Vector3 aCameraPosit
 
 		UpdateParticles(i, aCameraPosition, particleData);
 
-		std::sort(myParticleVertices[i].begin(), myParticleVertices[i].end(),
-			[](const CParticle::SParticleVertex& aFirstParticle, const CParticle::SParticleVertex& aSecondParticle)
-			{
-				return aFirstParticle.mySquaredDistanceToCamera > aSecondParticle.mySquaredDistanceToCamera;
-			}
-		);
+		//std::sort(myParticleVertices[i].begin(), myParticleVertices[i].end(),
+		//	[](const CParticle::SParticleVertex& aFirstParticle, const CParticle::SParticleVertex& aSecondParticle)
+		//	{
+		//		return aFirstParticle.mySquaredDistanceToCamera > aSecondParticle.mySquaredDistanceToCamera;
+		//	}
+		//);
 
 	}
 }
@@ -180,7 +183,12 @@ void CParticleEmitterComponent::SpawnParticles(unsigned int anIndex, DirectX::Si
 		myParticleVertices[anIndex].emplace_back(myParticlePools[anIndex].front());
 		myParticlePools[anIndex].pop();
 		myParticleVertices[anIndex].back().myLifeTime = someParticleData.myParticleLifetime + Random(someParticleData.myLifetimeLowerBound, someParticleData.myLifetimeUpperBound);
-		myParticleVertices[anIndex].back().myPosition = { myTransform._41 + (someParticleData.myOffsetPosition.x * (1.0f /ENGINE_SCALE)), myTransform._42 + (someParticleData.myOffsetPosition.y * (1.0f / ENGINE_SCALE)), myTransform._43 + (someParticleData.myOffsetPosition.z * (1.0f / ENGINE_SCALE)), 1.0f };
+		myParticleVertices[anIndex].back().myPosition = 
+			{ myTransform._41 + ((someParticleData.myOffsetPosition.x + Random(someParticleData.myOffsetLowerBound.x, someParticleData.myOffsetUpperBound.x)) * (1.0f /ENGINE_SCALE))
+			, myTransform._42 + ((someParticleData.myOffsetPosition.y + Random(someParticleData.myOffsetLowerBound.y, someParticleData.myOffsetUpperBound.y)) * (1.0f / ENGINE_SCALE))
+			, myTransform._43 + ((someParticleData.myOffsetPosition.z + Random(someParticleData.myOffsetLowerBound.z, someParticleData.myOffsetUpperBound.z)) * (1.0f / ENGINE_SCALE))
+			, 1.0f 
+			};
 		myParticleVertices[anIndex].back().myMovement = someParticleData.myParticleStartDirection;
 		myParticleVertices[anIndex].back().myStartMovement = someParticleData.myParticleStartDirection + Random(someParticleData.myDirectionLowerBound, someParticleData.myDirectionUpperBound, 0.0f);
 		myParticleVertices[anIndex].back().myEndMovement = someParticleData.myParticleEndDirection + Random(someParticleData.myDirectionLowerBound, someParticleData.myDirectionUpperBound, 0.0f);

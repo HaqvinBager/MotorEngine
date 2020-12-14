@@ -11,6 +11,10 @@ public:
 	bool Update();
 
 private:
+
+	void InitDev();
+	void InitRealGame();
+
 	CStateStack myStateStack;
 };
 

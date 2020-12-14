@@ -24,6 +24,7 @@ private:
 	CSpriteInstance* myBackground;
 	float myFeedbackTimer;
 	float myFeedbackThreshold;
+	bool myHasShownIntro;
 	bool myHasShownTutorial;
 	bool myWillShowTutorial;
 	bool myIntroStateActive;
