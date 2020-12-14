@@ -31,7 +31,7 @@ void CPauseState::Awake()
 
 	CGameObject* camera = new CGameObject(0);
 	camera->AddComponent<CCameraComponent>(*camera, 70.0f);
-	camera->AddComponent<CCameraControllerComponent>(*camera, 25.0f);
+	camera->AddComponent<CCameraControllerComponent>(*camera, 25.0f, CCameraControllerComponent::ECameraMode::MenuCam);
 	camera->myTransform->Position({ 0.0f, 0.0f, 0.0f });
 	camera->myTransform->Rotation({ 0.0f, 0.0f, 0.0f });
 	myScene->AddInstance(camera);
@@ -57,6 +57,7 @@ void CPauseState::Start()
 
 void CPauseState::Stop()
 {
+	CEngine::GetInstance()->SetActiveScene(CStateStack::EState::InGame);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::MainMenu,this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::Resume,this);
 }
@@ -75,7 +76,7 @@ void CPauseState::Receive(const SMessage& aMessage) {
 			break;
 		case EMessageType::Resume:
 			std::cout << "Should not pop yet" << std::endl;
-			myStateStack.PopState();
+			myStateStack.PopState()/*Until(CStateStack::EState::InGame)*/;
 			break;
 		default:
 			break;

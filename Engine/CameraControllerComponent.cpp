@@ -7,7 +7,7 @@
 //#include "GameObject.h"
 #include "PlayerControllerComponent.h"
 
-CCameraControllerComponent::CCameraControllerComponent(CGameObject& aGameObject, float aCameraMoveSpeed , ECameraMode aCameraMode, char aToggleFreeCam, Vector3 aOffset) 
+CCameraControllerComponent::CCameraControllerComponent(CGameObject& aGameObject, float aCameraMoveSpeed, ECameraMode aCameraMode, char aToggleFreeCam, Vector3 aOffset)
 	: CComponent(aGameObject),
 	myCameraMoveSpeed(aCameraMoveSpeed),
 	myCamera(nullptr),
@@ -16,7 +16,7 @@ CCameraControllerComponent::CCameraControllerComponent(CGameObject& aGameObject,
 	myPlayer(nullptr),
 	myOffset(aOffset)
 {
-	
+
 }
 
 CCameraControllerComponent::~CCameraControllerComponent()
@@ -44,8 +44,7 @@ void CCameraControllerComponent::Update()
 
 	} else if (myCameraMode == ECameraMode::FreeCam) {
 		UpdateFreeCam();
-	}
-	else {
+	} else {
 		GameObject().myTransform->Position(myPlayer->GameObject().myTransform->Position() + myOffset);
 	}
 }
@@ -70,5 +69,5 @@ void CCameraControllerComponent::UpdateFreeCam()
 	camera_rotation_input = Input::GetInstance()->IsKeyDown('E') ? rotationSpeed : camera_rotation_input;
 
 	GameObject().myTransform->MoveLocal(camera_movement_input * myCameraMoveSpeed * dt);
-	GameObject().myTransform->Rotate({ 0, camera_rotation_input * rotationSpeed * dt, 0 });
+	GameObject().myTransform->Rotate({0, camera_rotation_input * rotationSpeed * dt, 0});
 }
