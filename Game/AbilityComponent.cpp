@@ -70,12 +70,11 @@ CAbilityComponent::~CAbilityComponent()
 {
 	myMaxCooldowns.clear();
 	myCurrentCooldowns.clear();
-	////if (myEnabled) {
-	//CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability1, this);
-	//CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability2, this);
-	//CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability3, this);
-	//CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::AttackClick, this);
-	////}
+
+	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability1, this);
+	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability2, this);
+	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Ability3, this);
+	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::AttackClick, this);
 }
 
 void CAbilityComponent::Awake()

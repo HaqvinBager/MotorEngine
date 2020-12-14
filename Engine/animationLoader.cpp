@@ -12,14 +12,10 @@ bool AddAnimationsToGameObject(CGameObject& aGameObject, const std::string& aGam
 {
 	using namespace AnimationLoaderInternal;
 
-	if (Has_SKSuffix(aGameObjectFilePath))
-	{
-		std::vector<std::string> animationPaths = Get_ANFiles(aGameObjectFilePath);
-		aGameObject.AddComponent<CAnimationComponent>(aGameObject, aGameObjectFilePath, animationPaths);
-		SetAnimations(aGameObject, anAnimatedObject);
-		return true;
-	}
-	return false;
+	std::vector<std::string> animationPaths = Get_ANFiles(aGameObjectFilePath);
+	aGameObject.AddComponent<CAnimationComponent>(aGameObject, aGameObjectFilePath, animationPaths);
+	SetAnimations(aGameObject, anAnimatedObject);
+	return true;
 }
 
 std::string GetSuffixFromString(const std::string& aString)
@@ -75,31 +71,6 @@ void SetAnimations(CGameObject& aGameObject, const EAnimatedObject anAnimatedObj
 	anim->SetAbility04ID(document["Ability 4"].GetInt());
 	anim->SetAbility05ID(document["Ability 5"].GetInt());
 	anim->SetAbility06ID(document["Ability 6"].GetInt());
-	//switch (anAnimatedObject)
-	//{
-	//	case EAnimatedObject::Player:
-	//	break;
-	//	case EAnimatedObject::Enemy:
-	//	anim->SetIdleID(document["Idle 1"].GetInt());
-	//	anim->SetMovingID(document["Move"].GetInt());
-	//	anim->SetDyingID(document["Dying"].GetInt());
-	//	break;
-	//	case EAnimatedObject::Boss:
-	//	anim->SetIdleID(document["Idle 1"].GetInt());
-	//	anim->SetMovingID(document["Move"].GetInt());
-	//	anim->SetDyingID(document["Dying"].GetInt());
-	//	break;
-	//	anim->SetIdleID(document["Idle 1"].GetInt());
-	//	anim->SetMovingID(document["Move"].GetInt());
-	//	anim->SetDyingID(document["Dying"].GetInt());
-	//	case EAnimatedObject::Destructible:
-	//	anim->SetIdleID(document["Idle 1"].GetInt());
-	//	anim->SetMovingID(document["Move"].GetInt());
-	//	anim->SetDyingID(document["Dying"].GetInt());
-	//	break;
-	//	default:
-	//	break;
-	//}
 
 	inputStream.close();
 }

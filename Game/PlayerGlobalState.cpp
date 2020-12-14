@@ -9,10 +9,10 @@ CPlayerGlobalState::CPlayerGlobalState()
 CPlayerGlobalState::~CPlayerGlobalState()
 {}
 
-void CPlayerGlobalState::SetStatsToSave(const SStats & someStats)
+void CPlayerGlobalState::SetStatsToSave(const SStats& someStats)
 {
 	myStatsToSave.myPlayerExperience = someStats.myExperience;
-	myStatsToSave.myPlayerLevel = someStats.myLevel;
+	myStatsToSave.myPlayerLevel		 = someStats.myLevel;
 }
 
 const float CPlayerGlobalState::GetSavedExperience()

@@ -14,6 +14,9 @@ public:
 	void MapEvent(const IInputObserver::EInputAction aInputEvent, const IInputObserver::EInputEvent aOutputEvent);
 	bool AddObserver(const IInputObserver::EInputEvent aEventToListenFor, IInputObserver* aObserver);
 	bool RemoveObserver(const IInputObserver::EInputEvent aEventToListenFor, IInputObserver* aObserver);
+	bool HasObserver(const IInputObserver::EInputEvent aEventToListenFor, IInputObserver* aObserver);
+
+	void ClearObserverList(const IInputObserver::EInputEvent aEventToListenFor);
 
 private:
 	static CInputMapper* ourInstance;

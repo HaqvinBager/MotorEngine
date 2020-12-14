@@ -23,8 +23,8 @@ CGame::~CGame()
 
 void CGame::Init()
 {
-	//InitDev();
-	InitRealGame();
+	InitDev();
+	//InitRealGame();
 }
 
 bool CGame::Update()
