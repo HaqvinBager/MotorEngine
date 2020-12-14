@@ -10,7 +10,7 @@ class CSpriteInstance;
 class CBootUpState : public CState, public IInputObserver, public IStringObserver
 {
 public:
-	CBootUpState(CStateStack& aStateStack, const CStateStack::EState aState = CStateStack::EState::BootUpState);
+	CBootUpState(CStateStack& aStateStack, const CStateStack::EState aState = CStateStack::EState::BootUp);
 	~CBootUpState() override;
 
 	void Awake() override;

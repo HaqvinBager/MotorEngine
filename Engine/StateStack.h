@@ -8,13 +8,16 @@ class CStateStack {
 public:
 
 	enum class EState {
-		BootUpState,
-		TitleScreenState,
+		BootUp,
+		TitleScreen,
 		MainMenu,
-		IntroState,
+		Credits,
+		Intro,
 		LoadLevel,
 		InGame,
 		PauseMenu,
+		Options,
+		LevelSelect,
 		NoState
 	};
 

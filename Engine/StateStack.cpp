@@ -8,6 +8,7 @@
 #include "BootUpState.h"
 #include "TitleScreenState.h"
 #include "IntroState.h"
+#include "CreditsState.h"
 
 CStateStack::~CStateStack()
 {
@@ -24,11 +25,11 @@ bool CStateStack::Awake(std::initializer_list<CStateStack::EState> someStates, c
 	{
 		switch (state)
 		{
-		case CStateStack::EState::BootUpState:
+		case CStateStack::EState::BootUp:
 			myStateMap[state] = new CBootUpState(*this);
 			myStateMap[state]->Awake();
 			break;
-		case CStateStack::EState::TitleScreenState:
+		case CStateStack::EState::TitleScreen:
 			myStateMap[state] = new CTitleScreenState(*this);
 			myStateMap[state]->Awake();
 			break;
@@ -36,7 +37,11 @@ bool CStateStack::Awake(std::initializer_list<CStateStack::EState> someStates, c
 			myStateMap[state] = new CMenuState(*this);
 			myStateMap[state]->Awake();
 			break;
-		case CStateStack::EState::IntroState:
+		case CStateStack::EState::Credits:
+			myStateMap[state] = new CCreditsState(*this);
+			myStateMap[state]->Awake();
+			break;
+		case CStateStack::EState::Intro:
 			myStateMap[state] = new CIntroState(*this);
 			myStateMap[state]->Awake();
 			break;
@@ -76,7 +81,6 @@ bool CStateStack::PopState()
 	ENGINE_ERROR_BOOL_MESSAGE(!myStateStack.empty(), "Trying to pop an empty stack");
 	myStateStack.top()->Stop();
 	myStateStack.pop();
-
 	return true;
 }
 

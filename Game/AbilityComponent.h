@@ -48,7 +48,7 @@ private:
 	std::map<EAbilityType, std::vector<CGameObject*>> myAbilityPools;
 	std::map<EAbilityType, std::string> myFilePaths;
 	std::vector<CGameObject*> myActiveAbilities;
-	float* myCurrentCooldowns;
-	float* myMaxCooldowns;
+	std::vector<float> myCurrentCooldowns;
+	std::vector<float> myMaxCooldowns;
 	float myMeleeAttackRange;
 };

@@ -333,6 +333,7 @@
     <ClInclude Include="CapsuleColliderComponent.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="CollisionEventComponent.h" />
+    <ClInclude Include="CreditsState.h" />
     <ClInclude Include="DestructibleComponent.h" />
     <ClInclude Include="DialogueSystem.h" />
     <ClInclude Include="FMod.h" />
@@ -444,6 +445,7 @@
     <ClCompile Include="CapsuleColliderComponent.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="CollisionEventComponent.cpp" />
+    <ClCompile Include="CreditsState.cpp" />
     <ClCompile Include="DestructibleComponent.cpp" />
     <ClCompile Include="DialogueSystem.cpp" />
     <ClCompile Include="FMod.cpp" />
