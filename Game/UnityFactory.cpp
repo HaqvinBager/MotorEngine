@@ -181,9 +181,10 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 		CBossBehavior* bossBehavior = new CBossBehavior(player);
 		CGameObject* aBossGameObject = CreateGameObject(aData.myBossData, aBinModelPaths[aData.myBossData.myModelIndex]);
 		aBossGameObject->AddComponent<CAIBehaviorComponent>(*aBossGameObject, bossBehavior);
+		aBossGameObject->AddComponent<CHealthBarComponent>(*aBossGameObject, aScene, "Json/UI_InGame_Enemy_HealthBar.json");
 		aScene.AddInstance(aBossGameObject);
+		aScene.AddEnemies(aBossGameObject);
 	}
-
 	return true;
 }
 
@@ -366,9 +367,9 @@ CGameObject* CUnityFactory::CreateGameObject(const SBossData& aData, const std::
 	gameObject->myTransform->Scale(aData.myScale.x);
 	gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
 	AddAnimationsToGameObject(*gameObject, aModelPath, EAnimatedObject::Boss);
-	
-	gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 0.5f, ECollisionLayer::BOSS, static_cast<int>(ECollisionLayer::PLAYERABILITY)); //todo more flags
-	gameObject->AddComponent<CStatsComponent>(*gameObject, 10.0f, 10.0f, 3.0f, 3.0f, 20.0f, 15.0f);
+
+	gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 0.5f, ECollisionLayer::ENEMY, static_cast<int>(ECollisionLayer::PLAYERABILITY)); //todo more flags
+	gameObject->AddComponent<CStatsComponent>(*gameObject, aData.myHealth, aData.myDamage, aData.myMoveSpeed, aData.myDamageCooldown, aData.myVisionRange, aData.myAttackRange);
 	gameObject->AddComponent<CNavMeshComponent>(*gameObject);
 
 	std::pair<EAbilityType, unsigned int> ab1 = { EAbilityType::BossAbility1, 1 };
@@ -379,5 +380,6 @@ CGameObject* CUnityFactory::CreateGameObject(const SBossData& aData, const std::
 	abs.emplace_back(ab2);
 	abs.emplace_back(ab3);
 	gameObject->AddComponent<CAbilityComponent>(*gameObject, abs);
+
 	return gameObject;
 }
