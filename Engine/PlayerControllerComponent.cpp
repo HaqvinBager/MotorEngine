@@ -32,14 +32,15 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent):
 	myAuraActive(false)
 {
 	myLastPosition = {0.0f,0.0f,0.0f};
+
 	myPathMarker = new CGameObject(-1337);
-	CEngine::GetInstance()->GetActiveScene().AddInstance(myPathMarker);
 	myPathMarker->AddComponent<CVFXComponent>(*myPathMarker);
 	std::vector<std::string> vfxPaths;
 	vfxPaths.emplace_back("Json/VFXData_PathMarker.json");
 	myPathMarker->GetComponent<CVFXComponent>()->Init(CVFXFactory::GetInstance()->GetVFXBaseSet(vfxPaths));
-	myPathMarker->Active(false);
+	myPathMarker->Active(true);
 	myMarkerDuration = myPathMarker->GetComponent<CVFXComponent>()->GetVFXBases().back()->GetVFXBaseData().myDuration;
+	myPathMarker->myTransform->Position({ GameObject().myTransform->Position().x, GameObject().myTransform->Position().y , GameObject().myTransform->Position().z });
 }
 
 CPlayerControllerComponent::~CPlayerControllerComponent()
@@ -63,6 +64,8 @@ void CPlayerControllerComponent::Awake()
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::MiddleMouseMove, this);
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::Moving, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyDied, this);
+
+	CEngine::GetInstance()->GetActiveScene().AddInstance(myPathMarker);
 }
 
 void CPlayerControllerComponent::Start() 
