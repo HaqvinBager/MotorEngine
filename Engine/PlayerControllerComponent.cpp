@@ -17,11 +17,13 @@
 #include "TransformComponent.h"
 #include "DestructibleComponent.h"
 #include <PlayerGlobalState.h>
+#include "VFXComponent.h"
+#include "VFXFactory.h"
 
 CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent):
 	CBehaviour(aParent),
 	myLastHP(0.0f),
-	myRegenerationSpeed(5.0f), //TODO: read from unity
+	myRegenerationSpeed(2.5f), //TODO: read from unity
 	mySelection(new CMouseSelection()),
 	myIsMoving(true),
 	myTargetEnemy(nullptr),
@@ -30,6 +32,11 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent):
 	myAuraActive(false)
 {
 	myLastPosition = {0.0f,0.0f,0.0f};
+	//myPathMarker = new CGameObject(-1337);
+	//myPathMarker->AddComponent<CVFXComponent>(myPathMarker);
+	//std::vector<std::string> vfxPaths;
+	//vfxPaths.emplace_back("Json/VFXData_PathMarker.json");
+	//myPathMarker->GetComponent<CVFXComponent>()->Init(CVFXFactory::GetInstance()->GetVFXBaseSet(vfxPaths));
 }
 
 CPlayerControllerComponent::~CPlayerControllerComponent()
@@ -110,13 +117,6 @@ void CPlayerControllerComponent::Update()
 		}
 	}
 
-	/*if (myLastPosition != GameObject().myTransform->Position()) {
-		myIsMoving = true;
-		myLastPosition = GameObject().myTransform->Position();
-	} else {
-		myIsMoving = false;
-	}*/
-
 	if (!PlayerIsAlive()) {
 		ResetPlayer();
 	} else {
@@ -132,6 +132,9 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 {
 	switch (aEvent)
 	{
+	case IInputObserver::EInputEvent::MoveClick:
+
+		break;
 	case  IInputObserver::EInputEvent::StandStill:
 		myMiddleMousePressed = false;
 
@@ -227,18 +230,13 @@ bool CPlayerControllerComponent::PlayerIsAlive()
 
 void CPlayerControllerComponent::TakeDamage(float aDamageMultiplier, CGameObject* aGameObject)
 {
-	//SStats& stats = GameObject().GetComponent<CStatsComponent>()->GetStats();
-
 	EHitType hitType = EHitType::Enemy;
 	float damage = CDamageUtility::CalculateDamage(hitType, aGameObject->GetComponent<CStatsComponent>()->GetBaseStats().myDamage, aDamageMultiplier);
 
 	if (GameObject().GetComponent<CStatsComponent>()->AddDamage(damage)) {
 		SDamagePopupData data = {damage, static_cast<int>(hitType), &GameObject()};
 		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &data);
-		//std::cout << __FUNCTION__ << " Player current health: " << stats.myHealth << std::endl;/*
-		//CMainSingleton::PostMaster().Send({EMessageType::PlayerHealthChanged, &stats.myHealth});*/
 	}
-	//stats.myCanTakeDamage = false;
 }
 
 
@@ -256,7 +254,6 @@ void CPlayerControllerComponent::UpdateExperience(const SMessage& aMessage)
 {
 	float difference;
 	float maxValue;
-	//float currentExperience;
 
 	if (this->GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myMaxLevel
 		> this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel)
