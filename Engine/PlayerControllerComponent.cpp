@@ -32,17 +32,21 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent):
 	myAuraActive(false)
 {
 	myLastPosition = {0.0f,0.0f,0.0f};
-	//myPathMarker = new CGameObject(-1337);
-	//myPathMarker->AddComponent<CVFXComponent>(myPathMarker);
-	//std::vector<std::string> vfxPaths;
-	//vfxPaths.emplace_back("Json/VFXData_PathMarker.json");
-	//myPathMarker->GetComponent<CVFXComponent>()->Init(CVFXFactory::GetInstance()->GetVFXBaseSet(vfxPaths));
+	myPathMarker = new CGameObject(-1337);
+	CEngine::GetInstance()->GetActiveScene().AddInstance(myPathMarker);
+	myPathMarker->AddComponent<CVFXComponent>(*myPathMarker);
+	std::vector<std::string> vfxPaths;
+	vfxPaths.emplace_back("Json/VFXData_PathMarker.json");
+	myPathMarker->GetComponent<CVFXComponent>()->Init(CVFXFactory::GetInstance()->GetVFXBaseSet(vfxPaths));
+	myPathMarker->Active(false);
+	myMarkerDuration = myPathMarker->GetComponent<CVFXComponent>()->GetVFXBases().back()->GetVFXBaseData().myDuration;
 }
 
 CPlayerControllerComponent::~CPlayerControllerComponent()
 {
 	delete mySelection;
 	mySelection = nullptr;
+	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::MoveClick, this);
 	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::MoveDown, this);
 	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::StandStill, this);
 	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::MiddleMouseMove, this);
@@ -53,6 +57,7 @@ CPlayerControllerComponent::~CPlayerControllerComponent()
 void CPlayerControllerComponent::Awake()
 {
 	myLastHP = GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth;
+	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::MoveClick, this);
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::MoveDown, this);
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::StandStill, this);
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::MiddleMouseMove, this);
@@ -122,6 +127,14 @@ void CPlayerControllerComponent::Update()
 	} else {
 		RegenerateMana();
 	}
+	if (myPathMarker->Active()) {
+		if (myMarkerDuration >= 0.0f) {
+			myMarkerDuration -= CTimer::Dt();
+		}
+		if (myMarkerDuration <= 0.0f) {
+			myPathMarker->Active(false);
+		}
+	}
 }
 
 void CPlayerControllerComponent::OnEnable() {}
@@ -133,7 +146,9 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 	switch (aEvent)
 	{
 	case IInputObserver::EInputEvent::MoveClick:
-
+		myPathMarker->Active(true);
+		myMarkerDuration = myPathMarker->GetComponent<CVFXComponent>()->GetVFXBases().back()->GetVFXBaseData().myDuration;
+		myPathMarker->myTransform->Position(mySelection->GetPositionAtNavmesh());
 		break;
 	case  IInputObserver::EInputEvent::StandStill:
 		myMiddleMousePressed = false;
