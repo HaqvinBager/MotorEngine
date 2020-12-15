@@ -100,8 +100,9 @@ void CCollisionManager::Update()
 						myColliders[outer]->GameObject().Collided(myColliders[inner]->GameObject());
 						myColliders[inner]->GameObject().Collided(myColliders[outer]->GameObject());
 
-						if (!CheckIfAbility(myColliders[inner], &myColliders[inner]->GameObject(), &myColliders[outer]->GameObject())) {
-							CheckIfAbility(myColliders[outer], &myColliders[outer]->GameObject(), &myColliders[inner]->GameObject());
+						if (!CheckIfAbility(myColliders[inner], &myColliders[outer]->GameObject())) 
+						{
+							CheckIfAbility(myColliders[outer], &myColliders[inner]->GameObject());
 						}
 					}
 				}
