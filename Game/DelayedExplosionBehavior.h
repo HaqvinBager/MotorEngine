@@ -11,7 +11,6 @@ public:
     void Init(CGameObject* aCaster) override;
 
 private:
-    CGameObject* myCaster;
     CGameObject* myParent;
     float myDelay;
 };

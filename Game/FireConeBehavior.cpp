@@ -19,7 +19,6 @@ CFireConeBehavior::CFireConeBehavior(float aDuration, float aResourceCost, float
 	myResourceCost = aResourceCost;
 	myTimer = 0.0f;
 	myParent = aParent;
-	myCaster = nullptr;
 	myDamageMultiplier = aDamage;
 }
 

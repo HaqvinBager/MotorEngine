@@ -74,9 +74,14 @@ void CInGameState::Awake()
 	myColliderPusher = new CColliderPushManager();
 }
 
-#include "animationLoader.h" //only for boss test
+//#include "animationLoader.h" //only for boss test
 void CInGameState::Start()
 {
+	CInputMapper::GetInstance()->ClearObserverList(IInputObserver::EInputEvent::Ability1);
+	CInputMapper::GetInstance()->ClearObserverList(IInputObserver::EInputEvent::Ability2);
+	CInputMapper::GetInstance()->ClearObserverList(IInputObserver::EInputEvent::Ability3);
+	CInputMapper::GetInstance()->ClearObserverList(IInputObserver::EInputEvent::AttackClick);
+
 	myExitLevel = false;
 	CMainSingleton::PostMaster().Subscribe("Dungeon", this);
 	CMainSingleton::PostMaster().Subscribe("Gardens", this);

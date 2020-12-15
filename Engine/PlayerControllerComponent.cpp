@@ -16,6 +16,7 @@
 #include "TriangleColliderComponent.h"
 #include "TransformComponent.h"
 #include "DestructibleComponent.h"
+#include <PlayerGlobalState.h>
 
 CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent):
 	CBehaviour(aParent),
@@ -52,7 +53,34 @@ void CPlayerControllerComponent::Awake()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::EnemyDied, this);
 }
 
-void CPlayerControllerComponent::Start() {}
+void CPlayerControllerComponent::Start() 
+{
+	GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience	= CMainSingleton::PlayerGlobalState().GetSavedExperience();
+
+	const int level = CMainSingleton::PlayerGlobalState().GetSavedPlayerLevel();
+	GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel		= level;
+	switch (level)
+	{
+		case 3: // Activate ability 3
+			this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(3);
+		case 2: // Activate ability 2
+			this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position());
+			myAuraActive = true;
+			this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(2);
+		case 1: // Activate ability 1
+			this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(1);
+		case 0:
+		break;
+	}
+
+	if (this->GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myMaxLevel 
+		== this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel) 
+	{
+		MessagePostmaster(EMessageType::PlayerExperienceChanged, 1.0f);
+	} else {
+		MessagePostmaster(EMessageType::PlayerExperienceChanged, this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience);
+	}
+}
 void CPlayerControllerComponent::Update()
 {
 	if (myIsMoving) {
@@ -231,7 +259,7 @@ void CPlayerControllerComponent::UpdateExperience(const SMessage& aMessage)
 	//float currentExperience;
 
 	if (this->GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myMaxLevel
-				> this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel)
+		> this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel)
 	{
 
 		this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience += *static_cast<float*>(aMessage.data);
@@ -274,4 +302,6 @@ void CPlayerControllerComponent::UpdateExperience(const SMessage& aMessage)
 			MessagePostmaster(EMessageType::PlayerExperienceChanged, difference);
 		}
 	}
+
+	CMainSingleton::PlayerGlobalState().SetStatsToSave(GameObject().GetComponent<CStatsComponent>()->GetStats());
 }

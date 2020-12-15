@@ -146,7 +146,9 @@ void CInputMapper::MapEvent(const IInputObserver::EInputAction aInputEvent, cons
 bool CInputMapper::AddObserver(const IInputObserver::EInputEvent aEventToListenFor, IInputObserver* aObserver)
 {
 	ENGINE_ERROR_BOOL_MESSAGE(aObserver, "InputObsever is nullptr!");
-	myObservers[aEventToListenFor].emplace_back(aObserver);
+	auto it = std::find(myObservers[aEventToListenFor].begin(), myObservers[aEventToListenFor].end(), aObserver);
+	if(it == myObservers[aEventToListenFor].end())
+		myObservers[aEventToListenFor].emplace_back(aObserver);
 	return true;
 }
 
@@ -154,6 +156,18 @@ bool CInputMapper::RemoveObserver(const IInputObserver::EInputEvent aEventToList
 {
 	ENGINE_ERROR_BOOL_MESSAGE(aObserver, "InputObsever is nullptr!");
 	auto it = std::find(myObservers[aEventToListenFor].begin(), myObservers[aEventToListenFor].end(), aObserver);
-	myObservers[aEventToListenFor].erase(it);
+	if(it != myObservers[aEventToListenFor].end())
+		myObservers[aEventToListenFor].erase(it);
 	return true;
+}
+
+bool CInputMapper::HasObserver(const IInputObserver::EInputEvent aEventToListenFor, IInputObserver* aObserver)
+{
+	auto it = std::find(myObservers[aEventToListenFor].begin(), myObservers[aEventToListenFor].end(), aObserver);
+	return it == myObservers[aEventToListenFor].end();
+}
+
+void CInputMapper::ClearObserverList(const IInputObserver::EInputEvent aEventToListenFor)
+{
+	myObservers[aEventToListenFor].clear();
 }

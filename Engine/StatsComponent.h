@@ -45,7 +45,7 @@ public:
 		float aDamageCooldown = 0.f, 
 		float aVisionRange = 0.f, 
 		float aAttackRange = 0.f, 
-		float anExperienceAmount = 0.f);
+		float anExperienceAmount = 1.0f);
 	~CStatsComponent() override;
 
 	void Awake() override;

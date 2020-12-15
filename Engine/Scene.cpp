@@ -192,7 +192,7 @@ std::pair<unsigned int, std::array<CPointLight*, 8>> CScene::CullLights(CGameObj
 		{
 			pointLightPair.second[counter] = myPointLights[i];
 			++counter;
-
+	
 			if (counter == 8)
 			{
 				break;

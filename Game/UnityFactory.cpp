@@ -272,7 +272,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SEnemyData& aData, const std:
 	static int id = 100;
 	CGameObject* gameObject = new CGameObject(id++);
 	gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
-	gameObject->AddComponent<CStatsComponent>(*gameObject, aData.myHealth, aData.myDamage, aData.myMoveSpeed, aData.myDamageCooldown, aData.myVisionRange, aData.myAttackRange, 5.0f);
+	gameObject->AddComponent<CStatsComponent>(*gameObject, aData.myHealth, aData.myDamage, aData.myMoveSpeed, aData.myDamageCooldown, aData.myVisionRange, aData.myAttackRange, 6.0f);
 	gameObject->AddComponent<CAIBehaviorComponent>(*gameObject, aBehavior);
 	gameObject->AddComponent<CNavMeshComponent>(*gameObject);
 	gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 0.3f, ECollisionLayer::ENEMY, static_cast<uint64_t>(ECollisionLayer::PLAYERABILITY));
