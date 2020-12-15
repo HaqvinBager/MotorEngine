@@ -32,6 +32,7 @@ private:
 	CMouseSelection* mySelection;
 	CGameObject* myTargetEnemy;
 	CGameObject* myTargetDestructible;
+	CGameObject* myPathMarker;
 	bool myIsMoving;
 	bool myMiddleMousePressed;
 	bool myAuraActive;

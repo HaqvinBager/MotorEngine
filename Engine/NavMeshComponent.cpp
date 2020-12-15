@@ -118,7 +118,7 @@ STriangle* CNavMeshComponent::ReturnClosestTriangle(const DirectX::SimpleMath::V
 void CNavMeshComponent::ResolveStuck(STriangle* aStartTriangle, const DirectX::SimpleMath::Vector3& aStartPosition, const DirectX::SimpleMath::Vector3& aFinalPosition)
 {
 	// Try to find triangle in front, behind, to the left and right of player
-	float tolerance = 0.5f;
+	float tolerance = 0.1f;
 	if (!aStartTriangle)
 	{
 		DirectX::SimpleMath::Vector3 dir = aFinalPosition;
