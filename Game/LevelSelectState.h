@@ -21,6 +21,7 @@ public:
 	void Receive(const SMessage& aMessage) override;
 
 private:
+	UINT myGrupp;
 	CScene* myScene;
 	CSpriteInstance* myBackground;
 	CCanvas* myCanvas;
