@@ -769,7 +769,7 @@ ID3D11ShaderResourceView* CModelFactory::GetShaderResourceView(ID3D11Device* aDe
 	widePath[aTexturePath.length()] = 0;
 
 	////==ENABLE FOR TEXTURE CHECKING==
-	//ENGINE_HR_MESSAGE(DirectX::CreateDDSTextureFromFile(aDevice, widePath, nullptr, &shaderResourceView), aTexturePath.append(" could not be found.").c_str());
+	ENGINE_HR_MESSAGE(DirectX::CreateDDSTextureFromFile(aDevice, widePath, nullptr, &shaderResourceView), aTexturePath.append(" could not be found.").c_str());
 	////===============================
 
 	//==DISABLE FOR TEXTURE CHECKING==
