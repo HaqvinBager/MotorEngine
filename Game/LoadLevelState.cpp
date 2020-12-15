@@ -15,7 +15,7 @@
 using namespace rapidjson;
 CLoadLevelState::CLoadLevelState(CStateStack& aStateStack, const CStateStack::EState aState)
 	: CState(aStateStack, aState)
-	, myLevelToLoad(ELevel::Level1)
+	, myLevelToLoad(ELevel::Castle)
 {}
 
 CLoadLevelState::~CLoadLevelState()
@@ -107,7 +107,7 @@ void CLoadLevelState::Receive(const SStringMessage& aMessage)
 {
 	std::string level = "Levels/";
 	level.append(aMessage.myMessageType);
-	ELevel eLevel = ELevel::Level4;
+	ELevel eLevel = ELevel::BossRoom;
 	for (int i = 0; i < myLevelNames.size(); ++i)
 	{
 		if (myLevelNames[i] == level)
