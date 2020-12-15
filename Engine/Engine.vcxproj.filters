@@ -88,6 +88,21 @@
     <FxCompile Include="SpriteVFXTexturePixelShader.hlsl">
       <Filter>Shaders\Sprite</Filter>
     </FxCompile>
+    <FxCompile Include="RenderPassColorPixelShader.hlsl">
+      <Filter>Shaders\Render Passes</Filter>
+    </FxCompile>
+    <FxCompile Include="RenderPassNormalPixelShader.hlsl">
+      <Filter>Shaders\Render Passes</Filter>
+    </FxCompile>
+    <FxCompile Include="RenderPassRoughnessPixelShader.hlsl">
+      <Filter>Shaders\Render Passes</Filter>
+    </FxCompile>
+    <FxCompile Include="RenderPassMetalnessPixelShader.hlsl">
+      <Filter>Shaders\Render Passes</Filter>
+    </FxCompile>
+    <FxCompile Include="RenderPassAmbientOcclusionPixelShader.hlsl">
+      <Filter>Shaders\Render Passes</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EnemyFactory.cpp" />
@@ -818,6 +833,9 @@
     </Filter>
     <Filter Include="StringID">
       <UniqueIdentifier>{d132a45d-b010-4821-b878-4b7a220fa409}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Render Passes">
+      <UniqueIdentifier>{06207d94-afdb-4cb0-94fc-33cbb94a4798}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

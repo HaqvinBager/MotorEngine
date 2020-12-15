@@ -17,6 +17,7 @@
 #include <algorithm>
 
 CRenderManager::CRenderManager() /*: myScene(*CScene::GetInstance())*/
+	: myUseBloom(true)
 {
 }
 
@@ -89,6 +90,11 @@ void CRenderManager::Render(CScene& aScene)
 {
 	//if (CScene::GetInstance()->Ready() == false)
 	//	return;
+
+	if (Input::GetInstance()->IsKeyPressed(VK_F6))
+	{
+		myUseBloom = myForwardRenderer.ToggleRenderPass();
+	}
 
 	myRenderStateManager.SetAllDefault();
 	myBackbuffer.ClearTexture({0.1f,0.1f,0.1f,1.0f});
@@ -189,7 +195,34 @@ void CRenderManager::Render(CScene& aScene)
 	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_DISABLE);
 	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_DEFAULT);
 
+	// Hope this works!
+	myUseBloom ? RenderBloom() : RenderWithoutBloom();
 
+	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_ALPHABLEND);
+	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_ONLYREAD);
+
+	std::vector<CSpriteInstance*> sprites = aScene.CullSprites();
+	CMainSingleton::PopupTextService().EmplaceSprites(sprites);
+	CMainSingleton::DialogueSystem().EmplaceSprites(sprites);
+	mySpriteRenderer.Render(sprites);
+
+	std::vector<CSpriteInstance*> animatedUIFrames;
+	std::vector<CAnimatedUIElement*> animatedUIElements = aScene.CullAnimatedUI(animatedUIFrames);
+	CEngine::GetInstance()->GetActiveScene().GetMainCamera()->EmplaceSprites(animatedUIFrames);
+	mySpriteRenderer.Render(animatedUIElements);
+	mySpriteRenderer.Render(animatedUIFrames);
+
+	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_DISABLE);
+	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_DEFAULT);
+
+	std::vector<CTextInstance*> textsToRender = aScene.GetTexts();
+	CMainSingleton::PopupTextService().EmplaceTexts(textsToRender);
+	CMainSingleton::DialogueSystem().EmplaceTexts(textsToRender);
+	myTextRenderer.Render(textsToRender);
+}
+
+void CRenderManager::RenderBloom()
+{
 	myLuminanceTexture.SetAsActiveTarget();
 	myIntermediateTexture.SetAsResourceOnSlot(0);
 	myFullscreenRenderer.Render(CFullscreenRenderer::FullscreenShader::FULLSCREENSHADER_LUMINANCE);
@@ -238,26 +271,11 @@ void CRenderManager::Render(CScene& aScene)
 	myVignetteTexture.SetAsResourceOnSlot(0);
 	myHalfSizeTexture.SetAsResourceOnSlot(1);
 	myFullscreenRenderer.Render(CFullscreenRenderer::FullscreenShader::FULLSCREENSHADER_BLOOM);
+}
 
-	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_ALPHABLEND);
-	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_ONLYREAD);
-
-	std::vector<CSpriteInstance*> sprites = aScene.CullSprites();
-	CMainSingleton::PopupTextService().EmplaceSprites(sprites);
-	CMainSingleton::DialogueSystem().EmplaceSprites(sprites);
-	mySpriteRenderer.Render(sprites);
-
-	std::vector<CSpriteInstance*> animatedUIFrames;
-	std::vector<CAnimatedUIElement*> animatedUIElements = aScene.CullAnimatedUI(animatedUIFrames);
-	CEngine::GetInstance()->GetActiveScene().GetMainCamera()->EmplaceSprites(animatedUIFrames);
-	mySpriteRenderer.Render(animatedUIElements);
-	mySpriteRenderer.Render(animatedUIFrames);
-
-	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_DISABLE);
-	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_DEFAULT);
-
-	std::vector<CTextInstance*> textsToRender = aScene.GetTexts();
-	CMainSingleton::PopupTextService().EmplaceTexts(textsToRender);
-	CMainSingleton::DialogueSystem().EmplaceTexts(textsToRender);
-	myTextRenderer.Render(textsToRender);
+void CRenderManager::RenderWithoutBloom()
+{
+	myBackbuffer.SetAsActiveTarget();
+	myIntermediateTexture.SetAsResourceOnSlot(0);
+	myFullscreenRenderer.Render(CFullscreenRenderer::FullscreenShader::FULLSCREENSHADER_VIGNETTE);
 }

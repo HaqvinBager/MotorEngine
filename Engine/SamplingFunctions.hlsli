@@ -27,6 +27,16 @@ PixelOutPut PixelShader_Normal(VertexToPixel input)
     return output;
 }
 
+PixelOutPut PixelShader_TextureNormal(VertexToPixel input)
+{
+    float3 normal = normalTexture.Sample(defaultSampler, input.myUV.xy).rgb;
+    
+    PixelOutPut output;
+    output.myColor.xyz = normal.xyz;
+    output.myColor.a = 1.0f;
+    return output;
+}
+
 PixelOutPut PixelShader_AmbientOcclusion(VertexToPixel input)
 {
     PixelOutPut output;
