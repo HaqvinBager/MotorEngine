@@ -15,11 +15,17 @@
 using namespace rapidjson;
 CLoadLevelState::CLoadLevelState(CStateStack& aStateStack, const CStateStack::EState aState)
 	: CState(aStateStack, aState)
-	, myLevelToLoad(ELevel::Dungeon)
+	, myLevelToLoad(ELevel::Level1)
 {}
 
 CLoadLevelState::~CLoadLevelState()
 {
+	//Grupp3
+	CMainSingleton::PostMaster().Unsubscribe("Level_1_1", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_2_1", this);
+	CMainSingleton::PostMaster().Unsubscribe("DiabloLevel_Andres_Dungeon_2", this);
+
+	//Grupp4
 	CMainSingleton::PostMaster().Unsubscribe("Dungeon", this);
 	CMainSingleton::PostMaster().Unsubscribe("Gardens", this);
 	CMainSingleton::PostMaster().Unsubscribe("Castle", this);
@@ -29,6 +35,13 @@ CLoadLevelState::~CLoadLevelState()
 void CLoadLevelState::Awake()
 {
 	SaveLevelNames();
+
+	//Grupp3
+	CMainSingleton::PostMaster().Subscribe("Level_1_1", this);
+	CMainSingleton::PostMaster().Subscribe("Level_2_1", this);
+	CMainSingleton::PostMaster().Subscribe("DiabloLevel_Andres_Dungeon_2", this);
+
+	//Grupp4
 	CMainSingleton::PostMaster().Subscribe("Dungeon", this);
 	CMainSingleton::PostMaster().Subscribe("Gardens", this);
 	CMainSingleton::PostMaster().Subscribe("Castle", this);
@@ -94,7 +107,7 @@ void CLoadLevelState::Receive(const SStringMessage& aMessage)
 {
 	std::string level = "Levels/";
 	level.append(aMessage.myMessageType);
-	ELevel eLevel = ELevel::NavTest;
+	ELevel eLevel = ELevel::Level4;
 	for (int i = 0; i < myLevelNames.size(); ++i)
 	{
 		if (myLevelNames[i] == level)

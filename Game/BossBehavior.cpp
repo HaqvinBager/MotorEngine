@@ -21,35 +21,56 @@
 #include "DamageUtility.h"
 #include <PlayerControllerComponent.h>
 #include "HealthBarComponent.h"
+#include "RandomNumberGenerator.h"
+#include "Canvas.h"
 
-CBossBehavior::CBossBehavior(CGameObject* aPlayerObject)
+CBossBehavior::CBossBehavior(CGameObject* aPlayerObject, CScene& aScene, Vector2 aPhaseOne, Vector2 aPhaseTwo, Vector2 aPhaseThree)
 	: myPlayer(aPlayerObject)
+	, myCanvas(new CCanvas())
 {
+	myPhasePercents.emplace_back(aPhaseOne);
+	myPhasePercents.emplace_back(aPhaseTwo);
+	myPhasePercents.emplace_back(aPhaseThree);
 	myPhase = Phase::Idle;
 	myTempAttackTimer = 0.0f;
+
+	myCanvas->Init("Json/UI_InGame_Boss_HealthBar.json", aScene);
+	auto sprites = myCanvas->GetSprites();
+	for (auto& sprite : sprites)
+	{
+		sprite->SetShouldRender(false);
+	}
 }
 
 CBossBehavior::~CBossBehavior()
 {
+	delete myCanvas;
+	myCanvas = nullptr;
+
+	myPhasePercents.clear();
+	myPlayer = nullptr;
 }
 
 void CBossBehavior::Update(CGameObject* aParent)
 {
-	//SBaseStats baseStats = aParent->GetComponent<CStatsComponent>()->GetBaseStats();
 	SStats stats = aParent->GetComponent<CStatsComponent>()->GetStats();
 
-	//if (stats.myCanTakeDamage == false)
-	//{
-	//	stats.myDamageCooldown -= CTimer::Dt();
-	//	if (stats.myDamageCooldown <= 0)
-	//	{
-	//		stats.myCanTakeDamage = true;
-	//		stats.myDamageCooldown = baseStats.myBaseDamageCooldown;
-	//	}
-	//}
+	float precentHealth = stats.myHealth / aParent->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
+	precentHealth *= 100.f;
 
-	//myPhase = UpdatePhase();
-	//StartPhase(aParent);
+	if (precentHealth >= myPhasePercents[0].x && precentHealth <= myPhasePercents[0].y)
+	{
+		myPhase = CBossBehavior::Phase::Start;
+	}
+	else if (precentHealth >= myPhasePercents[1].x && precentHealth <= myPhasePercents[1].y)
+	{
+		myPhase = CBossBehavior::Phase::Mid;
+	}
+	else if (precentHealth >= myPhasePercents[2].x && precentHealth <= myPhasePercents[2].y)
+	{
+		myPhase = CBossBehavior::Phase::Final;
+	}
+
 	switch (myPhase)
 	{
 	case CBossBehavior::Phase::Idle:
@@ -58,16 +79,13 @@ void CBossBehavior::Update(CGameObject* aParent)
 	case CBossBehavior::Phase::Start:
 		StartPhase(aParent);
 		break;
+	case CBossBehavior::Phase::Mid:
+		MidPhase(aParent);
+		break;
+	case CBossBehavior::Phase::Final:
+		FinalPhase(aParent);
+		break;
 	}
-	//case CBossBehavior::Phase::Mid:
-	//	MidPhase(aParent);
-	//	break;
-	//case CBossBehavior::Phase::Final:
-	//	FinalPhase(aParent);
-	//	break;
-	//default:
-	//	break;
-	//}
 
 	if (stats.myHealth <= 0)
 	{
@@ -85,7 +103,10 @@ bool CBossBehavior::FindATarget(CGameObject& aParent)
 
 	float dist = DirectX::SimpleMath::Vector3::DistanceSquared(aParent.GetComponent<CTransformComponent>()->Position(), targetPos);
 	if (!(dist <= aParent.GetComponent<CStatsComponent>()->GetBaseStats().myBaseVisionRange))
+	{
+		aParent.GetComponent<CTransformComponent>()->ClearPath();
 		return false;
+	}
 
 	aParent.GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
 	return true;
@@ -93,8 +114,6 @@ bool CBossBehavior::FindATarget(CGameObject& aParent)
 
 void CBossBehavior::TakeDamage(float aDamage, CGameObject* aGameObject)
 {
-	//TODO: decrease stats.myHealth
-	
 	SStats& stats = aGameObject->GetComponent<CStatsComponent>()->GetStats();
 	EHitType hitType = EHitType::Normal;
 	float damage = CDamageUtility::CalculateDamage(hitType, myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myDamage, aDamage, 0.25f, 1.5f);
@@ -117,14 +136,8 @@ void CBossBehavior::TakeDamage(float aDamage, CGameObject* aGameObject)
 				myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth = myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
 		}
 
-		difference = (baseHealth - difference) / baseHealth;
-		if (difference <= 0.0)
-		{
-			difference = 0.0f;
-		}
-
-		aGameObject->GetComponent<CHealthBarComponent>()->GetCanvas()->GetAnimatedUI()[0]->Level(difference);
-		aGameObject->GetComponent<CHealthBarComponent>()->GetCanvas2()->GetAnimatedUI()[0]->Level(difference);
+		difference = (difference <= 0.0) ? 0.0f : (baseHealth - difference) / baseHealth;
+		myCanvas->GetAnimatedUI()[0]->Level(difference);
 	}
 
 
@@ -137,40 +150,111 @@ void CBossBehavior::TakeDamage(float aDamage, CGameObject* aGameObject)
 void CBossBehavior::IdlePhase(CGameObject* aParent)
 {
 	if (FindATarget(*aParent))
+	{
 		myPhase = Phase::Start;
+		auto sprites = myCanvas->GetSprites();
+		for (auto& sprite : sprites)
+		{
+			sprite->SetShouldRender(true);
+		}
+	}
 }
 
 void CBossBehavior::StartPhase(CGameObject* aParent)
 {
-	aParent->GetComponent<CNavMeshComponent>()->CalculatePath(myPlayer->GetComponent<CTransformComponent>()->Position());
+	//aParent->GetComponent<CNavMeshComponent>()->CalculatePath(myPlayer->GetComponent<CTransformComponent>()->Position());
+	FindATarget(*aParent);
 	float dist = DirectX::SimpleMath::Vector3::DistanceSquared(aParent->myTransform->Position(), myPlayer->GetComponent<CTransformComponent>()->Position());
 	CStatsComponent* stats = aParent->GetComponent<CStatsComponent>();
-	
 	if (dist <= stats->GetBaseStats().myBaseAttackRange)
 	{
+		aParent->GetComponent<CTransformComponent>()->ClearPath();
 		myTempAttackTimer += CTimer::Dt();
 
 		float playerBaseDamageCooldown = myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseDamageCooldown;
 		if (myTempAttackTimer > playerBaseDamageCooldown)
 		{
 			myTempAttackTimer -= playerBaseDamageCooldown;
-	
+
 			if (aParent->GetComponent<CAnimationComponent>())
 				aParent->GetComponent<CAnimationComponent>()->PlayAttack01ID();
 
-			aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility2, aParent->myTransform->Position());
-		}	
+			aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility1, aParent->myTransform->Position());
+		}
 	}
 }
 
-void CBossBehavior::MidPhase(CGameObject* /*aParent*/)
+void CBossBehavior::MidPhase(CGameObject* aParent)
 {
+	FindATarget(*aParent);
+	float dist = DirectX::SimpleMath::Vector3::DistanceSquared(aParent->myTransform->Position(), myPlayer->GetComponent<CTransformComponent>()->Position());
+	CStatsComponent* stats = aParent->GetComponent<CStatsComponent>();
+	if (dist <= stats->GetBaseStats().myBaseAttackRange)
+	{
+		aParent->GetComponent<CTransformComponent>()->ClearPath();
+		myTempAttackTimer += CTimer::Dt();
+
+		float playerBaseDamageCooldown = myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseDamageCooldown;
+		if (myTempAttackTimer > playerBaseDamageCooldown)
+		{
+			myTempAttackTimer -= playerBaseDamageCooldown;
+
+			if (aParent->GetComponent<CAnimationComponent>())
+				aParent->GetComponent<CAnimationComponent>()->PlayAttack01ID();
+
+			int attackType = Random(1, 2);
+			if (attackType == 1)
+			{
+				aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility1, aParent->myTransform->Position());
+			}
+			else if (attackType == 2)
+			{
+				aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility2, aParent->myTransform->Position());
+			}
+		}
+	}
 }
 
-void CBossBehavior::FinalPhase(CGameObject* /*aParent*/)
+void CBossBehavior::FinalPhase(CGameObject* aParent)
 {
+	FindATarget(*aParent);
+	float dist = DirectX::SimpleMath::Vector3::DistanceSquared(aParent->myTransform->Position(), myPlayer->GetComponent<CTransformComponent>()->Position());
+	CStatsComponent* stats = aParent->GetComponent<CStatsComponent>();
+	if (dist <= stats->GetBaseStats().myBaseAttackRange)
+	{
+		aParent->GetComponent<CTransformComponent>()->ClearPath();
+		myTempAttackTimer += CTimer::Dt();
+
+		float playerBaseDamageCooldown = myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseDamageCooldown;
+		if (myTempAttackTimer > playerBaseDamageCooldown)
+		{
+			myTempAttackTimer -= playerBaseDamageCooldown;
+
+			if (aParent->GetComponent<CAnimationComponent>())
+				aParent->GetComponent<CAnimationComponent>()->PlayAttack01ID();
+
+			int attackType = Random(1, 3);
+			if (attackType == 1)
+			{
+				aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility1, aParent->myTransform->Position());
+			}
+			else if (attackType == 2)
+			{
+				aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility2, aParent->myTransform->Position());
+			}
+			else if (attackType == 3)
+			{
+				aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility3, aParent->myTransform->Position());
+			}
+		}
+	}
 }
 
 void CBossBehavior::Die()
 {
+	auto sprites = myCanvas->GetSprites();
+	for (auto& sprite : sprites)
+	{
+		sprite->SetShouldRender(false);
+	}
 }

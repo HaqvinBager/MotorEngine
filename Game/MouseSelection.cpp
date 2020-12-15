@@ -43,8 +43,13 @@ CGameObject* CMouseSelection::FindSelectedEnemy()
 	Vector3 pos = GetPositionAtNavmesh();
 	for (auto& enemy : CEngine::GetInstance()->GetActiveScene().GetEnemies()) {
 		//float dist = DirectX::SimpleMath::Vector3::DistanceSquared(pos, enemy->GetComponent<CTransformComponent>()->Position());
+		CHealthBarComponent* healthBar = enemy->GetComponent<CHealthBarComponent>();
+		if (healthBar == nullptr)
+			continue;
+
 		if (enemy->GetComponent<CCircleColliderComponent>()->Collided(1.5f, pos) && enemy->GetComponent<CStatsComponent>()->GetStats().myHealth > 0.f) {
-			enemy->GetComponent<CHealthBarComponent>()->OnEnable();
+				enemy->GetComponent<CHealthBarComponent>()->OnEnable();
+			
 			return enemy;
 		}
 		else {
