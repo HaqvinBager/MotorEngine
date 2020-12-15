@@ -181,12 +181,9 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector
 
 		// Toggling render passes
 		if (myCurrentPixelShader == nullptr)
-		{
 			myContext->PSSetShader(modelData.myPixelShader, nullptr, 0);
-		}
-		else {
+		else 
 			myContext->PSSetShader(myCurrentPixelShader, nullptr, 0);
-		}
 
 		myContext->DrawIndexed(modelData.myNumberOfIndices, 0, 0);
 	}
@@ -274,12 +271,9 @@ void CForwardRenderer::InstancedRender(CEnvironmentLight* anEnvironmentLight, st
 
 		// Toggling render passes
 		if (myCurrentPixelShader == nullptr)
-		{
 			myContext->PSSetShader(modelData.myPixelShader, nullptr, 0);
-		}
-		else {
+		else 
 			myContext->PSSetShader(myCurrentPixelShader, nullptr, 0);
-		}
 
 		//myContext->PSSetShader(modelData.myPixelShader, nullptr, 0);
 
