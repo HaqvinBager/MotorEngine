@@ -83,6 +83,29 @@ void CPlayerControllerComponent::Start()
 }
 void CPlayerControllerComponent::Update()
 {
+#ifdef _DEBUG
+	if (Input::GetInstance()->IsKeyPressed('L'))
+	{
+
+		const int level = 3;
+		GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel = level;
+		switch (level)
+		{
+		case 3: // Activate ability 3
+			this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(3);
+		case 2: // Activate ability 2
+			this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position());
+			myAuraActive = true;
+			this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(2);
+		case 1: // Activate ability 1
+			this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(1);
+		case 0:
+			break;
+		}
+
+	}
+
+#endif
 	if (myIsMoving) {
 		this->GameObject().myTransform->MoveAlongPath();
 	}
