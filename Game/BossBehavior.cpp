@@ -110,9 +110,9 @@ void CBossBehavior::TakeDamage(float aDamage, CGameObject* aGameObject)
 
 		if (myPlayer->GetComponent<CPlayerControllerComponent>()->AuraActive())
 		{
-			if ((myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth + (difference / 2.5f))
+			if ((myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth + (difference * 0.15f))
 				< myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth)
-				myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth += difference / 2.5f;
+				myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth += difference * 0.15f;
 			else
 				myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth = myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
 		}

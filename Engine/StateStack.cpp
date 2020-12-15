@@ -98,11 +98,17 @@ bool CStateStack::PopUntil(const EState aState)
 {
 	ENGINE_ERROR_BOOL_MESSAGE(!myStateStack.empty(), "Trying to pop an empty stack");
 
+	if (myStateStack.top()->GetState() != aState) {
+		ENGINE_ERROR_BOOL_MESSAGE(myStateStack.size() != 1, "Trying to pop until a state that is not in the stack");
+		myStateStack.top()->Stop();
+		myStateStack.pop();
+		PopUntil(aState);
+	}/*
 	while(myStateStack.top()->GetState() != aState)
 	{
 		myStateStack.top()->Stop();
 		myStateStack.pop();
-	}
+	}*/
 	myStateStack.top()->Start();
 	return true;
 }
