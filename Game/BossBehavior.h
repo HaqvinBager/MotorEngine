@@ -7,7 +7,7 @@ class CAbilityComponent;
 class CBossBehavior : public IAIBehavior
 {
 public:
-	CBossBehavior(CGameObject* aPlayerObject);//Add Phases Here maybe..? :DD
+	CBossBehavior(CGameObject* aPlayerObject, Vector2 aPhaseOne = { 0,0 }, Vector2 aPhaseTwo = { 0,0 }, Vector2 aPhaseThree = {0,0});//Add Phases Here maybe..? :DD
 	~CBossBehavior() override;
 
 	void Update(CGameObject* aParent) override;

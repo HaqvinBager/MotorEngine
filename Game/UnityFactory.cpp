@@ -178,7 +178,7 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 
 	if (aData.myBossIsInScene > 0)
 	{
-		CBossBehavior* bossBehavior = new CBossBehavior(player);
+		CBossBehavior* bossBehavior = new CBossBehavior(player, aData.myBossData.myStageOne, aData.myBossData.myStageTwo, aData.myBossData.myStageThree);
 		CGameObject* aBossGameObject = CreateGameObject(aData.myBossData, aBinModelPaths[aData.myBossData.myModelIndex]);
 		aBossGameObject->AddComponent<CAIBehaviorComponent>(*aBossGameObject, bossBehavior);
 		aBossGameObject->AddComponent<CHealthBarComponent>(*aBossGameObject, aScene, "Json/UI_InGame_Enemy_HealthBar.json");
