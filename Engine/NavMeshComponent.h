@@ -23,6 +23,10 @@ public:
 	void CalculatePath();
 
 private:
+	STriangle* ReturnClosestTriangle(const DirectX::SimpleMath::Vector3& aStartPosition);
+	void ResolveStuck(STriangle* aStartTriangle, const DirectX::SimpleMath::Vector3& aStartPosition, const DirectX::SimpleMath::Vector3& aFinalPosition);
+
+private:
 	SNavMesh* myNavMesh;
 };
 
