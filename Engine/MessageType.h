@@ -49,5 +49,14 @@ enum class EMessageType
 	BossMeleeAttack, 
 	HealingAura, 
 	ShieldSpell,
+	LoadLevel1,
+	LoadLevel2,
+	LoadLevel3,
+	LoadLevel4,
+	LoadLevel5,
+	LoadLevel6,
+	LoadLevel7,
+	LoadLevel8,
+	LoadLevel9,
 	Count
 };

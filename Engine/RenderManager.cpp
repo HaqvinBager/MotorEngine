@@ -17,6 +17,7 @@
 #include <algorithm>
 
 CRenderManager::CRenderManager() /*: myScene(*CScene::GetInstance())*/
+	: myUseBloom(true)
 {
 }
 
@@ -74,13 +75,13 @@ bool CRenderManager::Init(CDirectXFramework* aFramework, CWindowHandler* aWindow
 	myBackbuffer = myFullscreenTextureFactory.CreateTexture(backbufferTexture);
 	myIntermediateDepth = myFullscreenTextureFactory.CreateDepth(aWindowHandler->GetResolution(), DXGI_FORMAT_D24_UNORM_S8_UINT);
 
-	myIntermediateTexture = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R8G8B8A8_UNORM);
-	myLuminanceTexture = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R8G8B8A8_UNORM);
-	myHalfSizeTexture = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution() / 2.0f, DXGI_FORMAT_R8G8B8A8_UNORM);
-	myQuaterSizeTexture = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution() / 4.0f, DXGI_FORMAT_R8G8B8A8_UNORM);
-	myBlurTexture1 = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R8G8B8A8_UNORM);
-	myBlurTexture2 = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R8G8B8A8_UNORM);
-	myVignetteTexture = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R8G8B8A8_UNORM);
+	myIntermediateTexture	= myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R8G8B8A8_UNORM);
+	myLuminanceTexture		= myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R8G8B8A8_UNORM);
+	myHalfSizeTexture		= myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution() / 2.0f, DXGI_FORMAT_R8G8B8A8_UNORM);
+	myQuaterSizeTexture		= myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution() / 4.0f, DXGI_FORMAT_R8G8B8A8_UNORM);
+	myBlurTexture1			= myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R8G8B8A8_UNORM);
+	myBlurTexture2			= myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R8G8B8A8_UNORM);
+	myVignetteTexture		= myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R8G8B8A8_UNORM);
 
 	return true;
 }
@@ -89,6 +90,11 @@ void CRenderManager::Render(CScene& aScene)
 {
 	//if (CScene::GetInstance()->Ready() == false)
 	//	return;
+
+	if (Input::GetInstance()->IsKeyPressed(VK_F6))
+	{
+		myUseBloom = myForwardRenderer.ToggleRenderPass();
+	}
 
 	myRenderStateManager.SetAllDefault();
 	myBackbuffer.ClearTexture({0.1f,0.1f,0.1f,1.0f});
@@ -189,7 +195,34 @@ void CRenderManager::Render(CScene& aScene)
 	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_DISABLE);
 	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_DEFAULT);
 
+	// Hope this works!
+	myUseBloom ? RenderBloom() : RenderWithoutBloom();
 
+	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_ALPHABLEND);
+	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_ONLYREAD);
+
+	std::vector<CSpriteInstance*> sprites = aScene.CullSprites();
+	CMainSingleton::PopupTextService().EmplaceSprites(sprites);
+	CMainSingleton::DialogueSystem().EmplaceSprites(sprites);
+	mySpriteRenderer.Render(sprites);
+
+	std::vector<CSpriteInstance*> animatedUIFrames;
+	std::vector<CAnimatedUIElement*> animatedUIElements = aScene.CullAnimatedUI(animatedUIFrames);
+	CEngine::GetInstance()->GetActiveScene().GetMainCamera()->EmplaceSprites(animatedUIFrames);
+	mySpriteRenderer.Render(animatedUIElements);
+	mySpriteRenderer.Render(animatedUIFrames);
+
+	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_DISABLE);
+	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_DEFAULT);
+
+	std::vector<CTextInstance*> textsToRender = aScene.GetTexts();
+	CMainSingleton::PopupTextService().EmplaceTexts(textsToRender);
+	CMainSingleton::DialogueSystem().EmplaceTexts(textsToRender);
+	myTextRenderer.Render(textsToRender);
+}
+
+void CRenderManager::RenderBloom()
+{
 	myLuminanceTexture.SetAsActiveTarget();
 	myIntermediateTexture.SetAsResourceOnSlot(0);
 	myFullscreenRenderer.Render(CFullscreenRenderer::FullscreenShader::FULLSCREENSHADER_LUMINANCE);
@@ -238,26 +271,11 @@ void CRenderManager::Render(CScene& aScene)
 	myVignetteTexture.SetAsResourceOnSlot(0);
 	myHalfSizeTexture.SetAsResourceOnSlot(1);
 	myFullscreenRenderer.Render(CFullscreenRenderer::FullscreenShader::FULLSCREENSHADER_BLOOM);
+}
 
-	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_ALPHABLEND);
-	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_ONLYREAD);
-
-	std::vector<CSpriteInstance*> sprites = aScene.CullSprites();
-	CMainSingleton::PopupTextService().EmplaceSprites(sprites);
-	CMainSingleton::DialogueSystem().EmplaceSprites(sprites);
-	mySpriteRenderer.Render(sprites);
-
-	std::vector<CSpriteInstance*> animatedUIFrames;
-	std::vector<CAnimatedUIElement*> animatedUIElements = aScene.CullAnimatedUI(animatedUIFrames);
-	CEngine::GetInstance()->GetActiveScene().GetMainCamera()->EmplaceSprites(animatedUIFrames);
-	mySpriteRenderer.Render(animatedUIElements);
-	mySpriteRenderer.Render(animatedUIFrames);
-
-	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_DISABLE);
-	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_DEFAULT);
-
-	std::vector<CTextInstance*> textsToRender = aScene.GetTexts();
-	CMainSingleton::PopupTextService().EmplaceTexts(textsToRender);
-	CMainSingleton::DialogueSystem().EmplaceTexts(textsToRender);
-	myTextRenderer.Render(textsToRender);
+void CRenderManager::RenderWithoutBloom()
+{
+	myBackbuffer.SetAsActiveTarget();
+	myIntermediateTexture.SetAsResourceOnSlot(0);
+	myFullscreenRenderer.Render(CFullscreenRenderer::FullscreenShader::FULLSCREENSHADER_VIGNETTE);
 }

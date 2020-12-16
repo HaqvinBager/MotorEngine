@@ -21,6 +21,10 @@ public:
 	void Render(CScene& aScene);
 
 private:
+	void RenderBloom();
+	void RenderWithoutBloom();
+
+private:
 	//CScene& myScene;
 	CRenderStateManager myRenderStateManager;
 	CForwardRenderer myForwardRenderer;
@@ -40,4 +44,6 @@ private:
 	CFullscreenTexture myBlurTexture1;
 	CFullscreenTexture myBlurTexture2;
 	CFullscreenTexture myVignetteTexture;
+
+	bool myUseBloom;
 };

@@ -20,7 +20,7 @@ public:
 
 	static DirectX::SimpleMath::Vector3 ScreenPositionToWorldPosition(/*const float aX, const float aY, float aWidth, float aHeight*/)
 	{
-		if (CEngine::GetInstance()->GetActiveScene().GetNavMesh()) {
+		if (/*CEngine::GetInstance()->GetActiveScene().GetNavMesh()*/true) {
 			DirectX::SimpleMath::Ray ray = MouseTracker::WorldSpacePick();
 			STriangle* triangle = nullptr;
 			for (unsigned int i = 0; i < CEngine::GetInstance()->GetActiveScene().GetNavMesh()->myTriangles.size(); ++i) {

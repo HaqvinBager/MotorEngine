@@ -18,7 +18,18 @@
 
 namespace SM = DirectX::SimpleMath;
 
-CForwardRenderer::CForwardRenderer() : myContext(nullptr), myFrameBuffer(nullptr), myFrameBufferData(), myObjectBuffer(nullptr), myObjectBufferData(), myBoneBuffer(nullptr), myBoneBufferData() {
+CForwardRenderer::CForwardRenderer() 
+	: myContext(nullptr)
+	, myFrameBuffer(nullptr)
+	, myFrameBufferData()
+	, myObjectBuffer(nullptr)
+	, myObjectBufferData()
+	, myBoneBuffer(nullptr)
+	, myBoneBufferData()
+	, myOutlineBuffer(nullptr)
+	, myOutlineBufferData()
+	, myRenderPassIndex(100)
+{
 
 }
 
@@ -57,6 +68,47 @@ bool CForwardRenderer::Init(CDirectXFramework* aFramework) {
 
 	bufferDescription.ByteWidth = static_cast<UINT>(sizeof(SOutlineBufferData) + (16 - (sizeof(SOutlineBufferData) % 16)));
 	ENGINE_HR_BOOL_MESSAGE(device->CreateBuffer(&bufferDescription, nullptr, &myOutlineBuffer), "Outline Buffer could not be created.");
+
+	// Render pass shaders
+	std::ifstream psFile;
+	psFile.open("Shaders/RenderPassColorPixelShader.cso", std::ios::binary);
+	std::string psData = { std::istreambuf_iterator<char>(psFile), std::istreambuf_iterator<char>() };
+	psFile.close();
+
+	myRenderPassPixelShaders.emplace_back();
+	ENGINE_HR_MESSAGE(device->CreatePixelShader(psData.data(), psData.size(), nullptr, &myRenderPassPixelShaders[0]), "Color Pixel Shader could not be created.");
+
+	// ===============
+	psFile.open("Shaders/RenderPassNormalPixelShader.cso", std::ios::binary);
+	psData = { std::istreambuf_iterator<char>(psFile), std::istreambuf_iterator<char>() };
+	psFile.close();
+
+	myRenderPassPixelShaders.emplace_back();
+	ENGINE_HR_MESSAGE(device->CreatePixelShader(psData.data(), psData.size(), nullptr, &myRenderPassPixelShaders[1]), "Normal Pixel Shader could not be created.");
+
+	// ===============
+	psFile.open("Shaders/RenderPassRoughnessPixelShader.cso", std::ios::binary);
+	psData = { std::istreambuf_iterator<char>(psFile), std::istreambuf_iterator<char>() };
+	psFile.close();
+
+	myRenderPassPixelShaders.emplace_back();
+	ENGINE_HR_MESSAGE(device->CreatePixelShader(psData.data(), psData.size(), nullptr, &myRenderPassPixelShaders[2]), "Roughness Pixel Shader could not be created.");
+
+	// ===============
+	psFile.open("Shaders/RenderPassMetalnessPixelShader.cso", std::ios::binary);
+	psData = { std::istreambuf_iterator<char>(psFile), std::istreambuf_iterator<char>() };
+	psFile.close();
+
+	myRenderPassPixelShaders.emplace_back();
+	ENGINE_HR_MESSAGE(device->CreatePixelShader(psData.data(), psData.size(), nullptr, &myRenderPassPixelShaders[3]), "Metalness Pixel Shader could not be created.");
+
+	// ===============
+	psFile.open("Shaders/RenderPassAmbientOcclusionPixelShader.cso", std::ios::binary);
+	psData = { std::istreambuf_iterator<char>(psFile), std::istreambuf_iterator<char>() };
+	psFile.close();
+
+	myRenderPassPixelShaders.emplace_back();
+	ENGINE_HR_MESSAGE(device->CreatePixelShader(psData.data(), psData.size(), nullptr, &myRenderPassPixelShaders[4]), "Ambient Occlusion Pixel Shader could not be created.");
 
 	return true;
 }
@@ -126,15 +178,14 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector
 		myContext->PSSetConstantBuffers(1, 1, &myObjectBuffer);
 		myContext->PSSetShaderResources(1, 3, &modelData.myTexture[0]);
 		myContext->PSSetSamplers(0, 1, &modelData.mySamplerState);
-		myContext->PSSetShader(modelData.myPixelShader, nullptr, 0);
 
-		//myContext->PSSetShaderResources(0, 1, &nullView);
-		// TODO: Check this?
-		//myContext->PSSetShaderResources(0, 1, anEnvironmentLight->GetCubeMap());
+		// Toggling render passes
+		if (myCurrentPixelShader == nullptr)
+			myContext->PSSetShader(modelData.myPixelShader, nullptr, 0);
+		else 
+			myContext->PSSetShader(myCurrentPixelShader, nullptr, 0);
+
 		myContext->DrawIndexed(modelData.myNumberOfIndices, 0, 0);
-
-		///*ID3D11ShaderResourceView* */nullView = NULL;
-		//myContext->PSSetShaderResources(0, 1, &nullView);
 	}
 }
 
@@ -217,15 +268,19 @@ void CForwardRenderer::InstancedRender(CEnvironmentLight* anEnvironmentLight, st
 		myContext->PSSetConstantBuffers(1, 1, &myObjectBuffer);
 		myContext->PSSetShaderResources(1, 3, &modelData.myTexture[0]);
 		myContext->PSSetSamplers(0, 1, &modelData.mySamplerState);
-		myContext->PSSetShader(modelData.myPixelShader, nullptr, 0);
+
+		// Toggling render passes
+		if (myCurrentPixelShader == nullptr)
+			myContext->PSSetShader(modelData.myPixelShader, nullptr, 0);
+		else 
+			myContext->PSSetShader(myCurrentPixelShader, nullptr, 0);
+
+		//myContext->PSSetShader(modelData.myPixelShader, nullptr, 0);
 
 		//myContext->PSSetShaderResources(0, 1, &nullView);
 		// TODO: Check this?
 		//myContext->PSSetShaderResources(0, 1, anEnvironmentLight->GetCubeMap());
 		myContext->DrawIndexedInstanced(modelData.myNumberOfIndices, model->InstanceCount(), 0, 0, 0);
-
-		///*ID3D11ShaderResourceView* */nullView = NULL;
-		//myContext->PSSetShaderResources(0, 1, &nullView);
 	}
 }
 
@@ -345,4 +400,20 @@ void CForwardRenderer::RenderLineInstances(CCameraComponent* aCamera, const std:
 
 
     }
+}
+
+bool CForwardRenderer::ToggleRenderPass()
+{
+	++myRenderPassIndex;
+	if (myRenderPassIndex == myRenderPassPixelShaders.size())
+	{
+		myCurrentPixelShader = nullptr;
+		return true;
+	} 
+	else if (myRenderPassIndex > myRenderPassPixelShaders.size())
+	{
+		myRenderPassIndex = 0;
+	}
+	myCurrentPixelShader = myRenderPassPixelShaders[myRenderPassIndex];
+	return false;
 }

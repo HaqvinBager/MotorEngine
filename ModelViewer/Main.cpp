@@ -34,6 +34,8 @@
 #include "loadAssetsFromDirectory.h"
 #include "spriteViewer.h"
 
+#include <animationLoader.h>
+
 //using namespace CommonUtilities;
 namespace SM = DirectX::SimpleMath;
 namespace MW = ModelViewer;
@@ -192,7 +194,7 @@ CGameObject* InitModels(const std::string& aModelPath, CScene& aScene)
 {
 	//CScene* scene = CScene::GetInstance();
 
-	CGameObject* gameobject = new CGameObject();
+	CGameObject* gameobject = new CGameObject(1000);
 
 	gameobject->AddComponent<CModelComponent>(CModelComponent(*gameobject, aModelPath));
 	gameobject->myTransform->Position({ 0.0f,0.0f,0.0f });
@@ -249,10 +251,11 @@ CGameObject* InitAnimation(const std::string& aFilePath, CScene& aScene)
 
 	if (MW::GetSuffixFromString(aFilePath) == "_SK")
 	{
+		AddAnimationsToGameObject(gameObject, aFilePath)
 		std::vector<std::string> somePathsToAnimations = MW::Get_ANFiles(aFilePath);
 #ifndef VFX
 		CAnimationComponent* animComp = gameObject->AddComponent<CAnimationComponent>(*gameObject, aFilePath, somePathsToAnimations);
-		animComp->SetStateIDs(0,-1,-1);
+		//animComp->SetStateIDs(0,-1,-1);
 		animComp->Awake();
 #else
 		gameObject->AddComponent<CAnimationComponent>(*gameObject, aFilePath, somePathsToAnimations);
