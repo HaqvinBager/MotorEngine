@@ -40,7 +40,7 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent):
 	myPathMarker->GetComponent<CVFXComponent>()->Init(CVFXFactory::GetInstance()->GetVFXBaseSet(vfxPaths));
 	myPathMarker->Active(true);
 	myMarkerDuration = myPathMarker->GetComponent<CVFXComponent>()->GetVFXBases().back()->GetVFXBaseData().myDuration;
-	myPathMarker->myTransform->Position({ GameObject().myTransform->Position().x, GameObject().myTransform->Position().y , GameObject().myTransform->Position().z });
+	myPathMarker->myTransform->Position({GameObject().myTransform->Position().x, GameObject().myTransform->Position().y , GameObject().myTransform->Position().z});
 }
 
 CPlayerControllerComponent::~CPlayerControllerComponent()
@@ -68,28 +68,28 @@ void CPlayerControllerComponent::Awake()
 	CEngine::GetInstance()->GetActiveScene().AddInstance(myPathMarker);
 }
 
-void CPlayerControllerComponent::Start() 
+void CPlayerControllerComponent::Start()
 {
-	GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience	= CMainSingleton::PlayerGlobalState().GetSavedExperience();
+	GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience = CMainSingleton::PlayerGlobalState().GetSavedExperience();
 
 	const int level = CMainSingleton::PlayerGlobalState().GetSavedPlayerLevel();
-	GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel		= level;
+	GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel = level;
 	switch (level)
 	{
-		case 3: // Activate ability 3
-			this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(3);
-		case 2: // Activate ability 2
-			this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position());
-			myAuraActive = true;
-			this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(2);
-		case 1: // Activate ability 1
-			this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(1);
-		case 0:
+	case 3: // Activate ability 3
+		this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(3);
+	case 2: // Activate ability 2
+		this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position());
+		myAuraActive = true;
+		this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(2);
+	case 1: // Activate ability 1
+		this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(1);
+	case 0:
 		break;
 	}
 
-	if (this->GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myMaxLevel 
-		== this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel) 
+	if (this->GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myMaxLevel
+		== this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel)
 	{
 		MessagePostmaster(EMessageType::PlayerExperienceChanged, 1.0f);
 	} else {
@@ -193,20 +193,18 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 			if (mySelection)
 			{
 				myTargetEnemy = mySelection->FindSelectedEnemy();
-				if(myTargetEnemy && myTargetEnemy->GetComponent<CStatsComponent>()->GetStats().myHealth > 0.f){
+				if (myTargetEnemy && myTargetEnemy->GetComponent<CStatsComponent>()->GetStats().myHealth > 0.f) {
 
 					this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath(myTargetEnemy->myTransform->Position());
-				}
-				else {
+				} else {
 					this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
 				}
 
 				myTargetDestructible = mySelection->FindSelectedDestructible();
-				if(myTargetDestructible && myTargetDestructible->GetComponent<CDestructibleComponent>()->IsDead() == false){
+				if (myTargetDestructible && myTargetDestructible->GetComponent<CDestructibleComponent>()->IsDead() == false) {
 
 					this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath(myTargetDestructible->myTransform->Position());
-				}
-				else {
+				} else {
 					this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
 				}
 			}
@@ -227,7 +225,7 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 
 void CPlayerControllerComponent::Receive(const SMessage& aMessage)
 {
-	
+
 	switch (aMessage.myMessageType)
 	{
 	case EMessageType::EnemyDied:
@@ -293,20 +291,17 @@ void CPlayerControllerComponent::RegenerateMana()
 
 void CPlayerControllerComponent::UpdateExperience(const SMessage& aMessage)
 {
-	float difference;
-	float maxValue;
-
 	if (this->GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myMaxLevel
 		> this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel)
 	{
-
-		this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience += *static_cast<float*>(aMessage.data);
-
-		maxValue = this->GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myExperienceToLevelUp;
+		float difference;
+		float maxValue = this->GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myExperienceToLevelUp;
+		float experience = *static_cast<float*>(aMessage.data);
+		float experienceModifier = static_cast<float>(this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel) + 1.0f;
+		this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience += experience / experienceModifier;
 
 		if (maxValue <= this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience)
 		{
-
 			this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel += 1;
 			int level = this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel;
 			std::string abilityInfo = "Skill ";
@@ -322,8 +317,6 @@ void CPlayerControllerComponent::UpdateExperience(const SMessage& aMessage)
 			}
 
 			this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel);
-
-			std::cout << this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel << std::endl;
 			if (this->GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myMaxLevel
 				== this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel) {
 				MessagePostmaster(EMessageType::PlayerExperienceChanged, 1.0f);

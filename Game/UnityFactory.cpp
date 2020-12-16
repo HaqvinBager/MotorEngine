@@ -4,7 +4,9 @@
 #include "Scene.h"
 #include "GameObject.h"
 #include "Engine.h"
-
+#include "rapidjson/document.h"
+#include "rapidjson/istreamwrapper.h"
+#include <fstream>
 #include "ModelComponent.h"
 #include "AnimationComponent.h"
 #include "TransformComponent.h"
@@ -247,7 +249,21 @@ CGameObject* CUnityFactory::CreateGameObject(const SPlayerData& aData, const std
 	gameObject->AddComponent<CNavMeshComponent>(*gameObject);
 
 	gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 1.f, ECollisionLayer::PLAYER, static_cast<uint64_t>(ECollisionLayer::ALL));
-	gameObject->AddComponent<CStatsComponent>(*gameObject, 100.0f, 10.0f, 3.0f, 1.0f, 0.0f, 1.0f);
+
+	std::string filePath = "Json/PlayerBaseStats.json";
+	std::ifstream inputStream(filePath);
+	rapidjson::IStreamWrapper inputWrapper(inputStream);
+	rapidjson::Document document;
+	document.ParseStream(inputWrapper);
+	gameObject->AddComponent<CStatsComponent>(
+		*gameObject, 
+		document["Base Health"].GetFloat(),
+		document["Base Damage"].GetFloat(),
+		document["Base Movement Speed"].GetFloat(),
+		document["Base Damage Cooldown"].GetFloat(),
+		document["Base Vision Range"].GetFloat(),
+		document["Base Attack Range"].GetFloat()
+		);
 
 	std::pair<EAbilityType, unsigned int> ab1 = { EAbilityType::PlayerAbility1, 1 };
 	std::pair<EAbilityType, unsigned int> ab2 = { EAbilityType::PlayerAbility2, 1 };
