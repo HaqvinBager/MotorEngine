@@ -98,7 +98,6 @@ void CPlayerControllerComponent::Start()
 }
 void CPlayerControllerComponent::Update()
 {
-#ifdef _DEBUG
 	if (Input::GetInstance()->IsKeyPressed('L'))
 	{
 
@@ -120,7 +119,6 @@ void CPlayerControllerComponent::Update()
 
 	}
 
-#endif
 	if (myIsMoving) {
 		this->GameObject().myTransform->MoveAlongPath();
 	}
@@ -192,7 +190,12 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 		if (myIsMoving) {
 			if (mySelection)
 			{
-				myTargetEnemy = mySelection->FindSelectedEnemy();
+				if (CEngine::GetInstance()->GetActiveScene().GetBoss()) {
+					myTargetEnemy = mySelection->FindSelectedBoss();
+				}
+				else {
+					myTargetEnemy = mySelection->FindSelectedEnemy();
+				}
 				if(myTargetEnemy && myTargetEnemy->GetComponent<CStatsComponent>()->GetStats().myHealth > 0.f){
 
 					this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath(myTargetEnemy->myTransform->Position());

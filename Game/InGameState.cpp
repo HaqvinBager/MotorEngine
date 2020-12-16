@@ -193,6 +193,7 @@ void CInGameState::Update()
 	//myColliderPusher->PlayerPushOutEnemies();
 
 	CEngine::GetInstance()->GetActiveScene().SetEnemyToOutline(mySelection->FindSelectedEnemy());
+	CEngine::GetInstance()->GetActiveScene().SetEnemyToOutline(mySelection->FindSelectedBoss());
 
 	static SDamagePopupData damage;
 	damage.myDamage = 32.0f;

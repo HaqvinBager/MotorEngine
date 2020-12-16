@@ -183,7 +183,7 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 		aBossGameObject->AddComponent<CAIBehaviorComponent>(*aBossGameObject, bossBehavior);
 		//aBossGameObject->AddComponent<CHealthBarComponent>(*aBossGameObject, aScene, "Json/UI_InGame_Enemy_HealthBar.json");
 		aScene.AddInstance(aBossGameObject);
-		aScene.AddEnemies(aBossGameObject);
+		aScene.AddBoss(aBossGameObject);
 	}
 	return true;
 }
@@ -247,7 +247,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SPlayerData& aData, const std
 	gameObject->AddComponent<CNavMeshComponent>(*gameObject);
 
 	gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 1.f, ECollisionLayer::PLAYER, static_cast<uint64_t>(ECollisionLayer::ALL));
-	gameObject->AddComponent<CStatsComponent>(*gameObject, 100.0f, 10.0f, 3.0f, 1.0f, 0.0f, 1.0f);
+	gameObject->AddComponent<CStatsComponent>(*gameObject, 10000.0f, 10.0f, 3.0f, 1.0f, 0.0f, 1.0f);
 
 	std::pair<EAbilityType, unsigned int> ab1 = { EAbilityType::PlayerAbility1, 1 };
 	std::pair<EAbilityType, unsigned int> ab2 = { EAbilityType::PlayerAbility2, 1 };

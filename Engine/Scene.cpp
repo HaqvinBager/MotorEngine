@@ -387,6 +387,16 @@ bool CScene::AddEnemies(CGameObject* aEnemy)
 	return true;
 }
 
+bool CScene::AddBoss(CGameObject* aBoss)
+{
+	if (!aBoss)
+	{
+		return false;
+	}
+	myBoss = aBoss;
+	return true;
+}
+
 bool CScene::AddDestructible(CGameObject* aDestructible)
 {
 	if (!aDestructible)

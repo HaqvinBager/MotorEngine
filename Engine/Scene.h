@@ -62,12 +62,14 @@ public:
 	bool RemoveInstance(CAnimatedUIElement* anAnimatedUIElement);
 	bool AddInstance(CTextInstance* aText);
 	bool AddEnemies(CGameObject* aEnemy);
+	bool AddBoss(CGameObject* aBoss);
 	bool AddDestructible(CGameObject* aDestructible);
 	bool AddPlayer(CGameObject* aPlayer);
 
 	std::vector<CGameObject*> GetEnemies() { return myEnemies; }
 	std::vector<CGameObject*> GetDestructibles() { return myDestructibles; }
 	CGameObject* GetPlayer() { return myPlayer; }
+	CGameObject* GetBoss() { return myBoss; }
 
 	bool RemoveInstance(CGameObject* aGameObject);
 	bool RemoveInstance(CPointLight* aPointLight);
@@ -121,6 +123,7 @@ private:
 	std::vector<CGameObject*> myEnemies;
 	std::vector<CGameObject*> myDestructibles;
 	CGameObject* myPlayer;
+	CGameObject* myBoss;
 	IAIBehavior* myEnemyBehavior;
 
 	//CCollisionManager* myCollisionManager;
