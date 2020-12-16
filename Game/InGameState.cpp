@@ -197,6 +197,10 @@ void CInGameState::Update()
 
 	CEngine::GetInstance()->GetActiveScene().SetEnemyToOutline(mySelection->FindSelectedEnemy());
 
+	if (CEngine::GetInstance()->GetActiveScene().GetBoss() != nullptr) {
+		CEngine::GetInstance()->GetActiveScene().SetEnemyToOutline(mySelection->FindSelectedBoss());
+	}
+
 	static SDamagePopupData damage;
 	damage.myDamage = 32.0f;
 	damage.myHitType = Random(0, 4);

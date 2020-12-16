@@ -6,7 +6,7 @@ class CGameObject;
 class CAuraBehavior : public IAbilityBehavior
 {
 public:
-	CAuraBehavior(CGameObject* anObjectToFollow, float aRotationalSpeed);
+	CAuraBehavior(CGameObject* anObjectToFollow, float aRotationalSpeed, float aRegenerationPercentage);
 	~CAuraBehavior() override;
 
 	void Update(CGameObject* aParent) override;
@@ -15,5 +15,6 @@ public:
 private:
 	CGameObject* myObjectToFollow;
 	float myRotationalSpeed;
+	float myRegenerationPercentage;
 };
 
