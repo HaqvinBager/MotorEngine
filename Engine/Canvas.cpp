@@ -192,9 +192,6 @@ void CCanvas::Update()
 			myButtons[i]->Click(false, nullptr);
 		}
 	}
-
-	
-
 }
 
 void CCanvas::Receive(const SMessage& aMessage)

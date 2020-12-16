@@ -60,18 +60,11 @@ void CLevelSelectState::Start()
 	myCanvas->Init("Json/UI_LevelSelect_Description.json", *myScene);
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);
-	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel1, this);
-	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel2, this);
-	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel3, this);
-	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel4, this);
-	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel5, this);
-	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel6, this);
-	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel7, this);
-	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel8, this);
-	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel9, this);
-	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel10, this);
 
-	Group4Start();
+	if (myGrupp == 3)
+		Group3Sub();
+	else if (myGrupp == 4)
+		Group4Sub();
 
 	CEngine::GetInstance()->AddScene(myState, myScene);
 	CEngine::GetInstance()->SetActiveScene(myState);
@@ -83,18 +76,10 @@ void CLevelSelectState::Stop()
 	{
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::MainMenu, this);
 
-		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel1, this);
-		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel2, this);
-		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel3, this);
-		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel4, this);
-		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel5, this);
-		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel6, this);
-		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel7, this);
-		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel8, this);
-		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel9, this);
-		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel10, this);
-
-		Group4Unsub();
+		if (myGrupp == 3)
+			Group3Unsub();
+		else if (myGrupp == 4)
+			Group4Unsub();
 
 		delete myCanvas;
 		myCanvas = nullptr;
@@ -109,9 +94,43 @@ void CLevelSelectState::Update()
 void CLevelSelectState::Receive(const SMessage& aMessage)
 {
 	if (myGrupp == 3)
+		Group3Receive(aMessage);
+	else if(myGrupp == 4)
+		Group4Receive(aMessage);
+}
+
+void CLevelSelectState::Group3Sub()
+{
+	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel1, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel2, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel3, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel4, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel5, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel6, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel7, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel8, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel9, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel10, this);
+}
+
+void CLevelSelectState::Group3Unsub()
+{
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel1, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel2, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel3, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel4, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel5, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel6, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel7, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel8, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel9, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel10, this);
+}
+
+void CLevelSelectState::Group3Receive(const SMessage & aMessage)
+{
+	switch (aMessage.myMessageType)
 	{
-		switch (aMessage.myMessageType)
-		{
 		case EMessageType::MainMenu:
 		{
 			myStateStack.PopUntil(CStateStack::EState::MainMenu);
@@ -177,16 +196,11 @@ void CLevelSelectState::Receive(const SMessage& aMessage)
 			myStateStack.PushState(CStateStack::EState::LoadLevel);
 		} break;
 		default:
-			break;
-		}
-	}
-	else if(myGrupp == 4)
-	{
-		Group4Receive(aMessage);
+		break;
 	}
 }
 
-void CLevelSelectState::Group4Start()
+void CLevelSelectState::Group4Sub()
 {
 	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadDungeon, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadGardens, this);
