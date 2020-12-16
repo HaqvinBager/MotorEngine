@@ -26,9 +26,19 @@ public:
 	void RegenerateMana();
 	void UpdateExperience(const SMessage& aMessage);
 	bool AuraActive(){ return myAuraActive; }
+public:
+	void RegenerationPercentage(float aRegenerationPercentage) {
+		myRegenerationPercentage = aRegenerationPercentage;
+	}
+	
+	float RegenerationPercentage() {
+		return myRegenerationPercentage;
+	}
+
 private:
 	float myLastHP;
-	float myRegenerationSpeed;
+	float mySecourceRegenerationSpeed;
+	float myRegenerationPercentage = 0.0f;
 	CMouseSelection* mySelection;
 	CGameObject* myTargetEnemy;
 	CGameObject* myTargetDestructible;

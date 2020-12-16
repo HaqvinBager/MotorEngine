@@ -163,13 +163,14 @@ void CEnemyBehavior::TakeDamage(float aDamageMultiplier, CGameObject* aGameObjec
 		float baseHealth = myCurrentParent->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
 		float difference = baseHealth - myCurrentParent->GetComponent<CStatsComponent>()->GetStats().myHealth;
 
-		if (myPlayer->GetComponent<CPlayerControllerComponent>()->AuraActive()) {
-			if ((myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth + (difference * 0.15f))
+		//if (myPlayer->GetComponent<CPlayerControllerComponent>()->AuraActive()) {
+		float regenerationPercentage = myPlayer->GetComponent<CPlayerControllerComponent>()->RegenerationPercentage();
+			if ((myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth + (difference * regenerationPercentage))
 				< myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth)
-				myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth += difference * 0.15f;
+				myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth += difference * regenerationPercentage;
 			else
 				myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth = myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
-		}
+		//}
 
 		difference = (baseHealth - difference) / baseHealth;
 		if (difference <= 0.0)

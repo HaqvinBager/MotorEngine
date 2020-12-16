@@ -3,9 +3,10 @@
 #include "GameObject.h"
 #include "TransformComponent.h"
 #include "Timer.h"
+#include "PlayerControllerComponent.h"
 
-CAuraBehavior::CAuraBehavior(CGameObject* anObjectToFollow, float aRotationalSpeed)
-	: myObjectToFollow(anObjectToFollow), myRotationalSpeed(aRotationalSpeed)
+CAuraBehavior::CAuraBehavior(CGameObject* anObjectToFollow, float aRotationalSpeed, float aRegenerationPercentage)
+	: myObjectToFollow(anObjectToFollow), myRotationalSpeed(aRotationalSpeed), myRegenerationPercentage(aRegenerationPercentage)
 {
 	myDuration = 1.0f;
 	myTimer = 0.0f;
@@ -28,7 +29,9 @@ void CAuraBehavior::Update(CGameObject* aParent)
 	aParent->GetComponent<CTransformComponent>()->Rotate(rotation);
 }
 
-void CAuraBehavior::Init(CGameObject* /*aCaster*/)
+void CAuraBehavior::Init(CGameObject* aCaster)
 {
-
+	if (aCaster) {
+		aCaster->GetComponent<CPlayerControllerComponent>()->RegenerationPercentage(myRegenerationPercentage);
+	}
 }
