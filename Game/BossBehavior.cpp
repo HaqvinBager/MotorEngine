@@ -27,6 +27,8 @@
 CBossBehavior::CBossBehavior(CGameObject* aPlayerObject, CScene& aScene, Vector2 aPhaseOne, Vector2 aPhaseTwo, Vector2 aPhaseThree)
 	: myPlayer(aPlayerObject)
 	, myCanvas(new CCanvas())
+	, myIsVeryDead(false)
+	, myAblilityComponent(nullptr)
 {
 	myPhasePercents.emplace_back(aPhaseOne);
 	myPhasePercents.emplace_back(aPhaseTwo);
@@ -39,6 +41,11 @@ CBossBehavior::CBossBehavior(CGameObject* aPlayerObject, CScene& aScene, Vector2
 	for (auto& sprite : sprites)
 	{
 		sprite->SetShouldRender(false);
+	}
+	auto animUI = myCanvas->GetAnimatedUI();
+	for (auto& animated : animUI)
+	{
+		animated->SetShouldRender(false);
 	}
 }
 
@@ -53,17 +60,30 @@ CBossBehavior::~CBossBehavior()
 
 void CBossBehavior::Update(CGameObject* aParent)
 {
+	if (myIsVeryDead)
+	{
+		mySendDeathMessageTimer -= CTimer::Dt();
+		if (mySendDeathMessageTimer <= 0.0f)
+		{
+			CMainSingleton::PostMaster().Send({ EMessageType::BossDied, this });
+		}
+		return;
+	}
+
 	SStats stats = aParent->GetComponent<CStatsComponent>()->GetStats();
 
 	float precentHealth = stats.myHealth / aParent->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
 	precentHealth *= 100.f;
+	
 
-	if (precentHealth >= myPhasePercents[0].x && precentHealth <= myPhasePercents[0].y)
+/*	if (precentHealth >= myPhasePercents[0].x && precentHealth <= myPhasePercents[0].y)
 	{
+		std::cout << __FUNCTION__ << " start phase  " << std::endl;
 		myPhase = CBossBehavior::Phase::Start;
 	}
-	else if (precentHealth >= myPhasePercents[1].x && precentHealth <= myPhasePercents[1].y)
+	else*/ if (precentHealth >= myPhasePercents[1].x && precentHealth <= myPhasePercents[1].y)
 	{
+		
 		myPhase = CBossBehavior::Phase::Mid;
 	}
 	else if (precentHealth >= myPhasePercents[2].x && precentHealth <= myPhasePercents[2].y)
@@ -85,11 +105,6 @@ void CBossBehavior::Update(CGameObject* aParent)
 	case CBossBehavior::Phase::Final:
 		FinalPhase(aParent);
 		break;
-	}
-
-	if (stats.myHealth <= 0)
-	{
-		CMainSingleton::PostMaster().Send({ EMessageType::BossDied, this });
 	}
 }
 
@@ -121,7 +136,6 @@ void CBossBehavior::TakeDamage(float aDamage, CGameObject* aGameObject)
 	//static int count = 0;
 	if (statsComponent->AddDamage(damage))
 	{
-		//std::cout << "Boss Take Damage" << ++count << std::endl;
 		SDamagePopupData data = { damage, static_cast<int>(hitType), aGameObject };
 		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &data);
 		float baseHealth = statsComponent->GetBaseStats().myBaseHealth;
@@ -143,7 +157,7 @@ void CBossBehavior::TakeDamage(float aDamage, CGameObject* aGameObject)
 
 	if (stats.myHealth <= 0)
 	{
-		Die();
+		Die(aGameObject);
 	}
 }
 
@@ -157,6 +171,7 @@ void CBossBehavior::IdlePhase(CGameObject* aParent)
 		{
 			sprite->SetShouldRender(true);
 		}
+		myCanvas->GetAnimatedUI()[0]->SetShouldRender(true);
 	}
 }
 
@@ -175,9 +190,8 @@ void CBossBehavior::StartPhase(CGameObject* aParent)
 		if (myTempAttackTimer > playerBaseDamageCooldown)
 		{
 			myTempAttackTimer -= playerBaseDamageCooldown;
-
-			if (aParent->GetComponent<CAnimationComponent>())
-				aParent->GetComponent<CAnimationComponent>()->PlayAttack01ID();
+			
+			aParent->GetComponent<CAnimationComponent>()->PlayAttack01ID();
 
 			aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility1, aParent->myTransform->Position());
 		}
@@ -199,13 +213,11 @@ void CBossBehavior::MidPhase(CGameObject* aParent)
 		{
 			myTempAttackTimer -= playerBaseDamageCooldown;
 
-			if (aParent->GetComponent<CAnimationComponent>())
-				aParent->GetComponent<CAnimationComponent>()->PlayAttack01ID();
-
 			int attackType = Random(1, 2);
 			if (attackType == 1)
 			{
 				aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility1, aParent->myTransform->Position());
+				aParent->GetComponent<CAnimationComponent>()->PlayAttack01ID();
 			}
 			else if (attackType == 2)
 			{
@@ -230,12 +242,10 @@ void CBossBehavior::FinalPhase(CGameObject* aParent)
 		{
 			myTempAttackTimer -= playerBaseDamageCooldown;
 
-			if (aParent->GetComponent<CAnimationComponent>())
-				aParent->GetComponent<CAnimationComponent>()->PlayAttack01ID();
-
 			int attackType = Random(1, 3);
 			if (attackType == 1)
 			{
+				aParent->GetComponent<CAnimationComponent>()->PlayAttack01ID();
 				aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility1, aParent->myTransform->Position());
 			}
 			else if (attackType == 2)
@@ -245,16 +255,22 @@ void CBossBehavior::FinalPhase(CGameObject* aParent)
 			else if (attackType == 3)
 			{
 				aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility3, aParent->myTransform->Position());
+				aParent->GetComponent<CAnimationComponent>()->PlayAttack02ID();
 			}
 		}
 	}
 }
 
-void CBossBehavior::Die()
+void CBossBehavior::Die(CGameObject* aParent)
 {
 	auto sprites = myCanvas->GetSprites();
 	for (auto& sprite : sprites)
 	{
 		sprite->SetShouldRender(false);
 	}
+
+	aParent->GetComponent<CAnimationComponent>()->DeadState();
+
+	myIsVeryDead = true;
+	// Start countdown timer for Credits push
 }
