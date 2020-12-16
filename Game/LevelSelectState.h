@@ -21,6 +21,11 @@ public:
 	void Receive(const SMessage& aMessage) override;
 
 private:
+	void Group4Start();
+	void Group4Unsub();
+	void Group4Receive(const SMessage& aMessage);
+
+private:
 	UINT myGrupp;
 	CScene* myScene;
 	CSpriteInstance* myBackground;

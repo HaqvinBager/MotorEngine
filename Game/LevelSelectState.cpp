@@ -70,6 +70,8 @@ void CLevelSelectState::Start()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel8, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel9, this);
 
+	Group4Start();
+
 	CEngine::GetInstance()->AddScene(myState, myScene);
 	CEngine::GetInstance()->SetActiveScene(myState);
 }
@@ -79,6 +81,7 @@ void CLevelSelectState::Stop()
 	if (myScene)
 	{
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::MainMenu, this);
+
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel1, this);
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel2, this);
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel3, this);
@@ -88,6 +91,9 @@ void CLevelSelectState::Stop()
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel7, this);
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel8, this);
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel9, this);
+
+		Group4Unsub();
+
 		delete myCanvas;
 		myCanvas = nullptr;
 	}
@@ -168,16 +174,61 @@ void CLevelSelectState::Receive(const SMessage& aMessage)
 	}
 	else if(myGrupp == 4)
 	{
-		switch (aMessage.myMessageType)
-		{
+		Group4Receive(aMessage);
+	}
+}
+
+void CLevelSelectState::Group4Start()
+{
+	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadDungeon, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadGardens, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadCastle, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadBossRoom, this);
+}
+
+void CLevelSelectState::Group4Unsub()
+{
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadDungeon, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadGardens, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadCastle, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadBossRoom, this);
+}
+
+void CLevelSelectState::Group4Receive(const SMessage & aMessage)
+{
+	switch (aMessage.myMessageType)
+	{
 		case EMessageType::MainMenu:
 		{
 			myStateStack.PopUntil(CStateStack::EState::MainMenu);
 		} break;
+
+		case EMessageType::LoadDungeon:
+		{
+			SStringMessage stringMessage = { "Dungeon", nullptr };
+			CMainSingleton::PostMaster().Send(stringMessage);
+			myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
+		} break;
+		case EMessageType::LoadGardens:
+		{
+			SStringMessage stringMessage = { "Gardens", nullptr };
+			CMainSingleton::PostMaster().Send(stringMessage);
+			myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
+		} break;
+		case EMessageType::LoadCastle:
+		{
+			SStringMessage stringMessage = { "Castle", nullptr };
+			CMainSingleton::PostMaster().Send(stringMessage);
+			myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
+		} break;
+		case EMessageType::LoadBossRoom:
+		{
+			SStringMessage stringMessage = { "BossRoom", nullptr };
+			CMainSingleton::PostMaster().Send(stringMessage);
+			myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
+		} break;
+
 		default:
-			break;
-		}
+		break;
 	}
-
-
 }
