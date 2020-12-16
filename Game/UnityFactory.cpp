@@ -185,7 +185,7 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 		aBossGameObject->AddComponent<CAIBehaviorComponent>(*aBossGameObject, bossBehavior);
 		//aBossGameObject->AddComponent<CHealthBarComponent>(*aBossGameObject, aScene, "Json/UI_InGame_Enemy_HealthBar.json");
 		aScene.AddInstance(aBossGameObject);
-		aScene.AddEnemies(aBossGameObject);
+		aScene.AddBoss(aBossGameObject);
 	}
 	return true;
 }

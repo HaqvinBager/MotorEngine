@@ -23,7 +23,7 @@
 CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent):
 	CBehaviour(aParent),
 	myLastHP(0.0f),
-	myRegenerationSpeed(2.5f), //TODO: read from unity
+	mySecourceRegenerationSpeed(2.5f), //TODO: read from unity
 	mySelection(new CMouseSelection()),
 	myIsMoving(true),
 	myTargetEnemy(nullptr),
@@ -98,7 +98,6 @@ void CPlayerControllerComponent::Start()
 }
 void CPlayerControllerComponent::Update()
 {
-#ifdef _DEBUG
 	if (Input::GetInstance()->IsKeyPressed('L'))
 	{
 
@@ -120,7 +119,6 @@ void CPlayerControllerComponent::Update()
 
 	}
 
-#endif
 	if (myIsMoving) {
 		this->GameObject().myTransform->MoveAlongPath();
 	}
@@ -169,57 +167,67 @@ void CPlayerControllerComponent::OnDisable() {}
 
 void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent aEvent)
 {
-	switch (aEvent)
-	{
-	case IInputObserver::EInputEvent::MoveClick:
-		myPathMarker->Active(true);
-		myMarkerDuration = myPathMarker->GetComponent<CVFXComponent>()->GetVFXBases().back()->GetVFXBaseData().myDuration;
-		myPathMarker->myTransform->Position(mySelection->GetPositionAtNavmesh());
-		break;
-	case  IInputObserver::EInputEvent::StandStill:
-		myMiddleMousePressed = false;
+	if (CEngine::GetInstance()->GetActiveScene().GetNavMesh()) {
+		switch (aEvent)
+		{
+		case IInputObserver::EInputEvent::MoveClick:
+			myPathMarker->Active(true);
+			myMarkerDuration = myPathMarker->GetComponent<CVFXComponent>()->GetVFXBases().back()->GetVFXBaseData().myDuration;
+			myPathMarker->myTransform->Position(mySelection->GetPositionAtNavmesh());
+			break;
+		case  IInputObserver::EInputEvent::StandStill:
+			myMiddleMousePressed = false;
 
-		myIsMoving = false;
-		this->GameObject().GetComponent<CTransformComponent>()->ClearPath();
-		break;
-	case  IInputObserver::EInputEvent::Moving:
-		myMiddleMousePressed = false;
-		myIsMoving = true;
-		break;
-	case IInputObserver::EInputEvent::MoveDown:
-		myMiddleMousePressed = false;
+			myIsMoving = false;
+			this->GameObject().GetComponent<CTransformComponent>()->ClearPath();
+			break;
+		case  IInputObserver::EInputEvent::Moving:
+			myMiddleMousePressed = false;
+			myIsMoving = true;
+			break;
+		case IInputObserver::EInputEvent::MoveDown:
+			myMiddleMousePressed = false;
 
-		if (myIsMoving) {
-			if (mySelection)
-			{
-				myTargetEnemy = mySelection->FindSelectedEnemy();
-				if (myTargetEnemy && myTargetEnemy->GetComponent<CStatsComponent>()->GetStats().myHealth > 0.f) {
+			if (myIsMoving) {
+				if (mySelection)
+				{
+					if (CEngine::GetInstance()->GetActiveScene().GetBoss()) {
+						myTargetEnemy = mySelection->FindSelectedBoss();
+					}
+					else {
+						myTargetEnemy = mySelection->FindSelectedEnemy();
+					}
+					if (myTargetEnemy && myTargetEnemy->GetComponent<CStatsComponent>()->GetStats().myHealth > 0.f) {
 
-					this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath(myTargetEnemy->myTransform->Position());
-				} else {
-					this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
-				}
+						this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath(myTargetEnemy->myTransform->Position());
+					}
+					else {
+						this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
+					}
 
-				myTargetDestructible = mySelection->FindSelectedDestructible();
-				if (myTargetDestructible && myTargetDestructible->GetComponent<CDestructibleComponent>()->IsDead() == false) {
+					myTargetDestructible = mySelection->FindSelectedDestructible();
+					if (myTargetDestructible && myTargetDestructible->GetComponent<CDestructibleComponent>()->IsDead() == false) {
 
-					this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath(myTargetDestructible->myTransform->Position());
-				} else {
-					this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
+						this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath(myTargetDestructible->myTransform->Position());
+					}
+					else {
+						this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
+					}
 				}
 			}
-		} else {
-			this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position());
-			this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack01ID();
+			else {
+				this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position());
+				this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack01ID();
+			}
+			break;
+		case IInputObserver::EInputEvent::MiddleMouseMove:
+			if (myIsMoving) {
+				this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
+			}
+			break;
+		default:
+			break;
 		}
-		break;
-	case IInputObserver::EInputEvent::MiddleMouseMove:
-		if (myIsMoving) {
-			this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
-		}
-		break;
-	default:
-		break;
 	}
 }
 
@@ -282,7 +290,7 @@ void CPlayerControllerComponent::TakeDamage(float aDamageMultiplier, CGameObject
 void CPlayerControllerComponent::RegenerateMana()
 {
 	if (GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myBaseResource > GameObject().GetComponent<CStatsComponent>()->GetStats().myResource) {
-		GameObject().GetComponent<CStatsComponent>()->GetStats().myResource += myRegenerationSpeed * CTimer::Dt();
+		GameObject().GetComponent<CStatsComponent>()->GetStats().myResource += mySecourceRegenerationSpeed * CTimer::Dt();
 		float difference = GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myBaseResource - GameObject().GetComponent<CStatsComponent>()->GetStats().myResource;
 		difference = (100.0f - difference) / 100.0f;
 		MessagePostmaster(EMessageType::PlayerResourceChanged, difference);
