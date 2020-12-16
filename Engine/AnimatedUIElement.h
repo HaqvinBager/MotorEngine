@@ -41,6 +41,7 @@ public:
 	float Level() const;
 	
 	void SetPosition(DirectX::SimpleMath::Vector2 aPosition);
+	void SetShouldRender(const bool aShouldRender);
 
 public:
 	CSpriteInstance* GetInstance() const;

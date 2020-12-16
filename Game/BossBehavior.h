@@ -23,7 +23,7 @@ private:
 	void StartPhase(CGameObject* aParent);
 	void MidPhase(CGameObject* aParent);
 	void FinalPhase(CGameObject* aParent);
-	void Die();
+	void Die(CGameObject* aParent);
 
 	enum class Phase
 	{
@@ -40,5 +40,8 @@ private:
 	CCanvas* myCanvas;
 	Phase myPhase;
 	std::vector<Vector2> myPhasePercents;
+
+	bool myIsVeryDead;
+	float mySendDeathMessageTimer = 3.0f;
 };
 

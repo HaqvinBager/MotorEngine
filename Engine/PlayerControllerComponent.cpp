@@ -217,7 +217,6 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 			}
 			else {
 				this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position());
-				this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack01ID();
 			}
 			break;
 		case IInputObserver::EInputEvent::MiddleMouseMove:
@@ -265,8 +264,9 @@ bool CPlayerControllerComponent::PlayerIsAlive()
 {
 	if (myLastHP != GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth)
 	{
-		float difference = GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth - GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth;
-		difference = (100.0f - difference) / 100.0f;
+		float baseHealth = GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
+		float difference = baseHealth - GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth;
+		difference = (baseHealth - difference) / baseHealth;
 		MessagePostmaster(EMessageType::PlayerHealthChanged, difference);
 
 		myLastHP = GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth;

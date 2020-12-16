@@ -15,15 +15,22 @@
 using namespace rapidjson;
 CLoadLevelState::CLoadLevelState(CStateStack& aStateStack, const CStateStack::EState aState)
 	: CState(aStateStack, aState)
-	, myLevelToLoad(ELevel::Castle)
+	, myLevelToLoad(ELevel::Level1)
 {}
 
 CLoadLevelState::~CLoadLevelState()
 {
 	//Grupp3
 	CMainSingleton::PostMaster().Unsubscribe("Level_1_1", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_1_2", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_1_3", this);
 	CMainSingleton::PostMaster().Unsubscribe("Level_2_1", this);
-	CMainSingleton::PostMaster().Unsubscribe("DiabloLevel_Andres_Dungeon_2", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_2_2", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_3_1", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_3_2", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_3_3", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_3_4", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_3_5", this);
 
 	//Grupp4
 	CMainSingleton::PostMaster().Unsubscribe("Dungeon", this);
@@ -38,8 +45,15 @@ void CLoadLevelState::Awake()
 
 	//Grupp3
 	CMainSingleton::PostMaster().Subscribe("Level_1_1", this);
+	CMainSingleton::PostMaster().Subscribe("Level_1_2", this);
+	CMainSingleton::PostMaster().Subscribe("Level_1_3", this);
 	CMainSingleton::PostMaster().Subscribe("Level_2_1", this);
-	CMainSingleton::PostMaster().Subscribe("DiabloLevel_Andres_Dungeon_2", this);
+	CMainSingleton::PostMaster().Subscribe("Level_2_2", this);
+	CMainSingleton::PostMaster().Subscribe("Level_3_1", this);
+	CMainSingleton::PostMaster().Subscribe("Level_3_2", this);
+	CMainSingleton::PostMaster().Subscribe("Level_3_3", this);
+	CMainSingleton::PostMaster().Subscribe("Level_3_4", this);
+	CMainSingleton::PostMaster().Subscribe("Level_3_5", this);
 
 	//Grupp4
 	CMainSingleton::PostMaster().Subscribe("Dungeon", this);
@@ -107,7 +121,7 @@ void CLoadLevelState::Receive(const SStringMessage& aMessage)
 {
 	std::string level = "Levels/";
 	level.append(aMessage.myMessageType);
-	ELevel eLevel = ELevel::BossRoom;
+	ELevel eLevel = ELevel::Level1;
 	for (int i = 0; i < myLevelNames.size(); ++i)
 	{
 		if (myLevelNames[i] == level)

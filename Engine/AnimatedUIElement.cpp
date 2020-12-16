@@ -48,6 +48,11 @@ void CAnimatedUIElement::SetPosition(DirectX::SimpleMath::Vector2 aPosition)
     mySpriteInstance->SetPosition(aPosition);
 }
 
+void CAnimatedUIElement::SetShouldRender(const bool aShouldRender)
+{
+    mySpriteInstance->SetShouldRender(aShouldRender);
+}
+
 CSpriteInstance* CAnimatedUIElement::GetInstance() const
 {
     return mySpriteInstance;
