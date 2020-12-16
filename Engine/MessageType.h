@@ -58,6 +58,7 @@ enum class EMessageType
 	LoadLevel7,
 	LoadLevel8,
 	LoadLevel9,
+	LoadLevel10,
 	LoadDungeon,
 	LoadGardens,
 	LoadCastle,

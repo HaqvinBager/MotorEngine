@@ -69,6 +69,7 @@ void CLevelSelectState::Start()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel7, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel8, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel9, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::LoadLevel10, this);
 
 	Group4Start();
 
@@ -91,9 +92,13 @@ void CLevelSelectState::Stop()
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel7, this);
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel8, this);
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel9, this);
+<<<<<<< HEAD
 
 		Group4Unsub();
 
+=======
+		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel10, this);
+>>>>>>> 31fa68855716096a2d1bf3aef4bfc5c11b2b1a65
 		delete myCanvas;
 		myCanvas = nullptr;
 	}
@@ -122,49 +127,55 @@ void CLevelSelectState::Receive(const SMessage& aMessage)
 		} break;
 		case EMessageType::LoadLevel2:
 		{
-			SStringMessage stringMessage = { "Level_2_1", nullptr };
+			SStringMessage stringMessage = { "Level_1_2", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
 			myStateStack.PushState(CStateStack::EState::LoadLevel);
 		} break;
 		case EMessageType::LoadLevel3:
 		{
-			SStringMessage stringMessage = { "DiabloLevel_Andres_Dungeon_2", nullptr };
+			SStringMessage stringMessage = { "Level_1_3", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
 			myStateStack.PushState(CStateStack::EState::LoadLevel);
 		} break;
 		case EMessageType::LoadLevel4:
 		{
-			SStringMessage stringMessage = { "Level4", nullptr };
+			SStringMessage stringMessage = { "Level_2_1", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
 			myStateStack.PushState(CStateStack::EState::LoadLevel);
 		} break;
 		case EMessageType::LoadLevel5:
 		{
-			SStringMessage stringMessage = { "Level5", nullptr };
+			SStringMessage stringMessage = { "Level_2_2", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
 			myStateStack.PushState(CStateStack::EState::LoadLevel);
 		} break;
 		case EMessageType::LoadLevel6:
 		{
-			SStringMessage stringMessage = { "Level6", nullptr };
+			SStringMessage stringMessage = { "Level_3_1", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
 			myStateStack.PushState(CStateStack::EState::LoadLevel);
 		} break;
 		case EMessageType::LoadLevel7:
 		{
-			SStringMessage stringMessage = { "Level7", nullptr };
+			SStringMessage stringMessage = { "Level_3_2", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
 			myStateStack.PushState(CStateStack::EState::LoadLevel);
 		} break;
 		case EMessageType::LoadLevel8:
 		{
-			SStringMessage stringMessage = { "Level8", nullptr };
+			SStringMessage stringMessage = { "Level_3_3", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
 			myStateStack.PushState(CStateStack::EState::LoadLevel);
 		} break;
 		case EMessageType::LoadLevel9:
 		{
-			SStringMessage stringMessage = { "Level9", nullptr };
+			SStringMessage stringMessage = { "Level_3_4", nullptr };
+			CMainSingleton::PostMaster().Send(stringMessage);
+			myStateStack.PushState(CStateStack::EState::LoadLevel);
+		} break;
+		case EMessageType::LoadLevel10:
+		{
+			SStringMessage stringMessage = { "Level_3_5", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
 			myStateStack.PushState(CStateStack::EState::LoadLevel);
 		} break;

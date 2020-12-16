@@ -35,8 +35,9 @@ void CParticleEmitterComponent::Update()
 	if (!Enabled()) return;
 
 	//DirectX::SimpleMath::Vector3 gameObjectPos = GameObject().myTransform->Position();
+	DirectX::SimpleMath::Vector3 gameObjectPos = GameObject().myTransform->Position();
 	//GameObject().myTransform->Position({ 0.0f, 0.0f, 0.0f });
-	SetPosition(GameObject().myTransform->Position());
+	SetPosition(gameObjectPos);
 	DirectX::SimpleMath::Vector3 scale;
 	DirectX::SimpleMath::Quaternion quat;
 	DirectX::SimpleMath::Vector3 translation;
@@ -184,9 +185,9 @@ void CParticleEmitterComponent::SpawnParticles(unsigned int anIndex, DirectX::Si
 		myParticlePools[anIndex].pop();
 		myParticleVertices[anIndex].back().myLifeTime = someParticleData.myParticleLifetime + Random(someParticleData.myLifetimeLowerBound, someParticleData.myLifetimeUpperBound);
 		myParticleVertices[anIndex].back().myPosition = 
-			{ myTransform._41 + ((someParticleData.myOffsetPosition.x + Random(someParticleData.myOffsetLowerBound.x, someParticleData.myOffsetUpperBound.x)) * (1.0f /ENGINE_SCALE))
-			, myTransform._42 + ((someParticleData.myOffsetPosition.y + Random(someParticleData.myOffsetLowerBound.y, someParticleData.myOffsetUpperBound.y)) * (1.0f / ENGINE_SCALE))
-			, myTransform._43 + ((someParticleData.myOffsetPosition.z + Random(someParticleData.myOffsetLowerBound.z, someParticleData.myOffsetUpperBound.z)) * (1.0f / ENGINE_SCALE))
+			{ ((someParticleData.myOffsetPosition.x + Random(someParticleData.myOffsetLowerBound.x, someParticleData.myOffsetUpperBound.x)) * (1.0f /ENGINE_SCALE))
+			, ((someParticleData.myOffsetPosition.y + Random(someParticleData.myOffsetLowerBound.y, someParticleData.myOffsetUpperBound.y)) * (1.0f / ENGINE_SCALE))
+			, ((someParticleData.myOffsetPosition.z + Random(someParticleData.myOffsetLowerBound.z, someParticleData.myOffsetUpperBound.z)) * (1.0f / ENGINE_SCALE))
 			, 1.0f 
 			};
 		myParticleVertices[anIndex].back().myMovement = someParticleData.myParticleStartDirection;
