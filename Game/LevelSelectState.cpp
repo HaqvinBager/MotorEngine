@@ -92,13 +92,10 @@ void CLevelSelectState::Stop()
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel7, this);
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel8, this);
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel9, this);
-<<<<<<< HEAD
+		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel10, this);
 
 		Group4Unsub();
 
-=======
-		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel10, this);
->>>>>>> 31fa68855716096a2d1bf3aef4bfc5c11b2b1a65
 		delete myCanvas;
 		myCanvas = nullptr;
 	}
