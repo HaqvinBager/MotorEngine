@@ -40,6 +40,7 @@ CScene::CScene()
 	, myNavMeshGrid(nullptr)
 	, myEnemyBehavior(nullptr)
 	, myPlayer(nullptr)
+	, myBoss(nullptr)
 {
 
 #ifdef _DEBUG
