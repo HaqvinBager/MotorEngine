@@ -18,6 +18,9 @@ public:
 	void Die();
 
 private:
+	void SendAudioIdle();
+	bool myHasSentAudio;
+
 	CGameObject* myPlayer;
 	CGameObject* myCurrentParent;
 };
