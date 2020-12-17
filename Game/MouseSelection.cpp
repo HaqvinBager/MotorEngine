@@ -59,6 +59,21 @@ CGameObject* CMouseSelection::FindSelectedEnemy()
 	return nullptr;
 }
 
+CGameObject* CMouseSelection::FindSelectedBoss()
+{
+	Vector3 pos = GetPositionAtNavmesh();
+	CGameObject* boss = CEngine::GetInstance()->GetActiveScene().GetBoss();
+	if (boss != nullptr) {
+		if (boss->GetComponent<CCircleColliderComponent>()) {
+			if (boss->GetComponent<CCircleColliderComponent>()->Collided(1.5f, pos) && boss->GetComponent<CStatsComponent>()->GetStats().myHealth > 0.f) {
+
+				return boss;
+			}
+		}
+	}
+	return nullptr;
+}
+
 CGameObject* CMouseSelection::FindSelectedDestructible()
 {
 	Vector3 pos = GetPositionAtNavmesh();

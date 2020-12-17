@@ -142,6 +142,13 @@ bool CAbilityComponent::UseAbility(EAbilityType anAbilityType, DirectX::SimpleMa
 	myActiveAbilities.back()->myTransform->Position(aSpawnPosition);
 	myActiveAbilities.back()->GetComponent<CAbilityBehaviorComponent>()->Init(&GameObject());
 
+	if (anAbilityType == EAbilityType::PlayerMelee) {
+		if (myCurrentCooldowns[3] <= 0) {
+			myCurrentCooldowns[3] = myMaxCooldowns[3];
+			this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack01ID();
+		}
+	}
+
 	return true;
 }
 
@@ -176,6 +183,14 @@ void CAbilityComponent::SendEvent() {
 
 		myMessage.data = &messageValue;
 		CMainSingleton::PostMaster().Send(myMessage);
+	}
+	
+	if (myCurrentCooldowns[3] > 0) {
+		myCurrentCooldowns[3] -= CTimer::Dt();
+	}
+	
+	if (myCurrentCooldowns[4] > 0) {
+		myCurrentCooldowns[4] -= CTimer::Dt();
 	}
 }
 
@@ -239,6 +254,7 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 
 			if (UseAbility(EAbilityType::PlayerHeavyMelee, GameObject().myTransform->Position()))
 			{
+				myCurrentCooldowns[4] = myMaxCooldowns[4];
 				this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack02ID();
 			}
 			break;
@@ -324,7 +340,7 @@ CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)
 	auto behavior = document["Behavior"].GetObjectW();
 	if (behavior["Type"].GetString() == std::string("Aura"))
 	{
-		auraBehavior = new CAuraBehavior(&GameObject(), behavior["Rotational Speed"].GetFloat());
+		auraBehavior = new CAuraBehavior(&GameObject(), behavior["Rotational Speed"].GetFloat(), behavior["Regeneration Percentage"].GetFloat());
 		abilityObject->AddComponent<CAbilityBehaviorComponent>(*abilityObject, auraBehavior, anAbilityType);
 	} else if (behavior["Type"].GetString() == std::string("Projectile"))
 	{

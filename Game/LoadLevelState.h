@@ -26,7 +26,8 @@ enum class ELevel
 	//Level6,
 	//Level7,
 	//Level8,
-	//Level9
+	//Level9,
+	//Level10
 };
 
 class CScene;
@@ -45,6 +46,9 @@ public:
 private:
 	void Awake() override;
 
+	void PlayLevelMusicGroup3(const ELevel aLevel);
+	void PlayLevelMusicGroup4(const ELevel aLevel);
+
 	/// <summary>
 	/// Returns the Index this Scene will use in CEngine::myScenes
 	/// </summary>
@@ -56,8 +60,6 @@ private:
 	std::vector<std::string>& BinModelPaths(const ELevel aLevel);
 
 	ELevel myLevelToLoad;
-	
-
 	CSceneReader mySceneReader;
 	CUnityFactory myUnityFactory;
 

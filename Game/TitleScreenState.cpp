@@ -11,6 +11,9 @@
 #include "JsonReader.h"
 #include "Input.h"
 
+#include "MainSingleton.h"
+#include "PostMaster.h"
+
 CTitleScreenState::CTitleScreenState(CStateStack& aStateStack, const CStateStack::EState aState)
 	: CState(aStateStack, aState)
 	, myScene(nullptr)
@@ -30,6 +33,8 @@ void CTitleScreenState::Awake()
 
 void CTitleScreenState::Start()
 {
+	CMainSingleton::PostMaster().Send({ EMessageType::PlayMainMenuMusic, nullptr });
+
 	rapidjson::Document document = CJsonReader::LoadDocument("Json/TitleScreenSettings.json");
 
 	CGameObject* camera = new CGameObject(0);

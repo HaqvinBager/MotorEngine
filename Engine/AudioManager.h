@@ -9,9 +9,30 @@
 class CAudio;
 class CAudioChannel;
 
-enum class EMusic { MainMenu, Count };
+enum class EMusic 
+{ 
+	BossEncounter, 
+	Castle,
+	Dungeon,
+	Garden,
+	MainMenu, 
+	Count 
+};
 enum class EAmbiance { Castle, Cave1, Cave2,  Dungeon, Garden, Swamp1, Swamp2, Count };
-enum class ESFX { PlayerHitSound, KingBossDeathSound, BossMeleeAtk, DemonIdle1, DemonIdle2, HitDestructible, HealingAura,  PlayerLightAtk, PlayerHeavyAtk, ShieldSpell, Count };
+enum class ESFX 
+{ 
+	PlayerHitSound,
+	KingBossDeathSound, 
+	BossMeleeAtk, 
+	DemonIdle1, 
+	DemonIdle2, 
+	HitDestructible, 
+	HealingAura,  
+	PlayerLightAtk, 
+	PlayerHeavyAtk, 
+	ShieldSpell, 
+	Count 
+};
 enum class EUI { ButtonClick, Count };
 enum class EVoiceLine { Count };
 
@@ -29,13 +50,14 @@ enum class SoundChannels {
 	Count
 };
 
-class CAudioManager : public IObserver {
+class CAudioManager : public IObserver, public IStringObserver {
 public:
 	CAudioManager();
 	~CAudioManager();
 
 	// Listen to PostMaster
 	void Receive(const SMessage& aMessage);
+	void Receive(const SStringMessage& aMessage);
 
 
 	void Update();

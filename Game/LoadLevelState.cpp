@@ -22,8 +22,15 @@ CLoadLevelState::~CLoadLevelState()
 {
 	//Grupp3
 	CMainSingleton::PostMaster().Unsubscribe("Level_1_1", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_1_2", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_1_3", this);
 	CMainSingleton::PostMaster().Unsubscribe("Level_2_1", this);
-	CMainSingleton::PostMaster().Unsubscribe("DiabloLevel_Andres_Dungeon_2", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_2_2", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_3_1", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_3_2", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_3_3", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_3_4", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_3_5", this);
 
 	//Grupp4
 	CMainSingleton::PostMaster().Unsubscribe("Dungeon", this);
@@ -38,8 +45,15 @@ void CLoadLevelState::Awake()
 
 	//Grupp3
 	CMainSingleton::PostMaster().Subscribe("Level_1_1", this);
+	CMainSingleton::PostMaster().Subscribe("Level_1_2", this);
+	CMainSingleton::PostMaster().Subscribe("Level_1_3", this);
 	CMainSingleton::PostMaster().Subscribe("Level_2_1", this);
-	CMainSingleton::PostMaster().Subscribe("DiabloLevel_Andres_Dungeon_2", this);
+	CMainSingleton::PostMaster().Subscribe("Level_2_2", this);
+	CMainSingleton::PostMaster().Subscribe("Level_3_1", this);
+	CMainSingleton::PostMaster().Subscribe("Level_3_2", this);
+	CMainSingleton::PostMaster().Subscribe("Level_3_3", this);
+	CMainSingleton::PostMaster().Subscribe("Level_3_4", this);
+	CMainSingleton::PostMaster().Subscribe("Level_3_5", this);
 
 	//Grupp4
 	CMainSingleton::PostMaster().Subscribe("Dungeon", this);
@@ -48,8 +62,58 @@ void CLoadLevelState::Awake()
 	CMainSingleton::PostMaster().Subscribe("BossRoom", this);
 }
 
+void CLoadLevelState::PlayLevelMusicGroup3(const ELevel /*aLevel*/)
+{
+	//switch (aLevel)
+	//{
+	//	case ELevel::Level1:
+	//	break;
+	//	case ELevel::Level2:
+	//	break;
+	//	case ELevel::Level3:
+	//	break;
+	//	case ELevel::Level4:
+	//	break;
+	//	case ELevel::Level5:
+	//	break;
+	//	case ELevel::Level6:
+	//	break;
+	//	case ELevel::Level7:
+	//	break;
+	//	case ELevel::Level8:
+	//	break;
+	//	case ELevel::Level9:
+	//	break;
+	//	case ELevel::Level0:
+	//	break;
+	//	default:break;
+	//}
+}
+
+void CLoadLevelState::PlayLevelMusicGroup4(const ELevel aLevel)
+{
+	switch (aLevel)
+	{
+		case ELevel::Dungeon:
+			CMainSingleton::PostMaster().Send({ EMessageType::PlayDungeonMusic, nullptr });
+		break;
+		case ELevel::Gardens:
+			CMainSingleton::PostMaster().Send({ EMessageType::PlayGardensMusic, nullptr });
+		break;
+		case ELevel::Castle:
+			CMainSingleton::PostMaster().Send({ EMessageType::PlayCastleMusic, nullptr });
+		break;
+		case ELevel::BossRoom:
+		break;
+
+		default:break;
+	}
+}
+
 void CLoadLevelState::Start()
 {
+	CMainSingleton::PostMaster().Send({ EMessageType::StopMusic, nullptr });
+
 	CEngine::GetInstance()->ClearModelFactory();
 
 	CEngine::GetInstance()->SetActiveScene(Load(ELevel::LoadScreen));
@@ -166,6 +230,12 @@ const CStateStack::EState CLoadLevelState::Load(const ELevel aLevel)
 			inGameScene->InitNavMesh(navMeshPath);
 
 			myUnityFactory.FillScene(data, BinModelPaths(aLevel), *inGameScene);
+			//std::cout << "Adding Loading Screen" << std::endl;
+
+			// Send message to play Music for a alevel
+			//PlayLevelMusicGroup3(aLevel);
+			PlayLevelMusicGroup4(aLevel);
+
 			return CEngine::GetInstance()->AddScene(CStateStack::EState::InGame, inGameScene);
 		}
 	}

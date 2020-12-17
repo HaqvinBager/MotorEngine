@@ -40,6 +40,7 @@ CScene::CScene()
 	, myNavMeshGrid(nullptr)
 	, myEnemyBehavior(nullptr)
 	, myPlayer(nullptr)
+	, myBoss(nullptr)
 {
 
 #ifdef _DEBUG
@@ -384,6 +385,16 @@ bool CScene::AddEnemies(CGameObject* aEnemy)
 		return false;
 	}
 	myEnemies.emplace_back(aEnemy);
+	return true;
+}
+
+bool CScene::AddBoss(CGameObject* aBoss)
+{
+	if (!aBoss)
+	{
+		return false;
+	}
+	myBoss = aBoss;
 	return true;
 }
 

@@ -89,6 +89,8 @@ void CInGameState::Start()
 	CMainSingleton::PostMaster().Subscribe("BossRoom", this);
 	CInputMapper::GetInstance()->AddObserver(IInputObserver::EInputEvent::PauseGame, this);
 
+	CMainSingleton::PostMaster().Subscribe(EMessageType::BossDied, this);
+
 	CEngine::GetInstance()->SetActiveScene(myState);
 
 	myCanvas = new CCanvas();
@@ -127,6 +129,7 @@ void CInGameState::Start()
 void CInGameState::Stop()
 {
 	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::PauseGame, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::BossDied, this);
 	CMainSingleton::CollisionManager().ClearColliders();
 
 	delete myTokenPool;
@@ -157,6 +160,10 @@ void CInGameState::Update()
 	//myColliderPusher->PlayerPushOutEnemies();
 
 	CEngine::GetInstance()->GetActiveScene().SetEnemyToOutline(mySelection->FindSelectedEnemy());
+
+	if (CEngine::GetInstance()->GetActiveScene().GetBoss() != nullptr) {
+		CEngine::GetInstance()->GetActiveScene().SetEnemyToOutline(mySelection->FindSelectedBoss());
+	}
 
 	//static SDamagePopupData damage;
 	//damage.myDamage = 32.0f;
@@ -256,4 +263,16 @@ void CInGameState::ReceiveEvent(const EInputEvent aEvent)
 void CInGameState::Receive(const SStringMessage& /*aMessage*/)
 {
 	myExitLevel = true;
+}
+
+void CInGameState::Receive(const SMessage& aMessage)
+{
+	switch (aMessage.myMessageType)
+	{
+		case EMessageType::BossDied:
+			myStateStack.PopTopAndPush(CStateStack::EState::Credits);
+		break;
+
+		default:break;
+	}
 }
