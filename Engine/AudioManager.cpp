@@ -52,7 +52,7 @@ CAudioManager::CAudioManager() : myWrapper() {
 		for (unsigned int i = 0; i < audioDataArray.Size(); ++i)
 		{
 			auto audioData = audioDataArray[i].GetObjectW();
-			myMusicAudio.emplace_back(myWrapper.RequestSound(myMusicPath + audioData["Path"].GetString()));
+			myMusicAudio.emplace_back(myWrapper.RequestLoopingSound(myMusicPath + audioData["Path"].GetString()));
 
 		}
 
