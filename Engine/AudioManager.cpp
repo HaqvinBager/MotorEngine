@@ -238,7 +238,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		}
 	}break;
 
-	case EMessageType::BossDied:
+	case EMessageType::PlayBossDeathSFX:
 	{
 		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::KingBossDeathSound))
 		{
@@ -356,7 +356,7 @@ void CAudioManager::SubscribeToMessages()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayAmbienceCave1, this);
 	
 	CMainSingleton::PostMaster().Subscribe(EMessageType::AttackHits, this);
-	CMainSingleton::PostMaster().Subscribe(EMessageType::BossDied, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayBossDeathSFX, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::BossMeleeAttack, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::DemonIdle1, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::DemonIdle2, this);
@@ -385,7 +385,7 @@ void CAudioManager::UnsubscribeToMessages()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayAmbienceCave1, this);
 
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::AttackHits, this);
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::BossDied, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayBossDeathSFX, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::BossMeleeAttack, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::DemonIdle1, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::DemonIdle2, this);

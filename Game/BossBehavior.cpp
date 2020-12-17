@@ -273,7 +273,7 @@ void CBossBehavior::Die(CGameObject* aParent)
 	}
 
 	aParent->GetComponent<CAnimationComponent>()->DeadState();
-
+	CMainSingleton::PostMaster().Send({ EMessageType::PlayBossDeathSFX, this });
 	myIsVeryDead = true;
 	// Start countdown timer for Credits push
 }
