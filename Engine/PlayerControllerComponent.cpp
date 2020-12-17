@@ -19,6 +19,7 @@
 #include <PlayerGlobalState.h>
 #include "VFXComponent.h"
 #include "VFXFactory.h"
+#include "DialogueSystem.h"
 
 CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent):
 	CBehaviour(aParent),
@@ -98,66 +99,72 @@ void CPlayerControllerComponent::Start()
 }
 void CPlayerControllerComponent::Update()
 {
-	if (Input::GetInstance()->IsKeyPressed('L'))
-	{
-
-		const int level = 3;
-		GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel = level;
-		switch (level)
+	if (!CMainSingleton::DialogueSystem().Active()) {
+		if (Input::GetInstance()->IsKeyPressed('L'))
 		{
-		case 3: // Activate ability 3
-			this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(3);
-		case 2: // Activate ability 2
-			this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position());
-			myAuraActive = true;
-			this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(2);
-		case 1: // Activate ability 1
-			this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(1);
-		case 0:
-			break;
+
+			const int level = 3;
+			GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel = level;
+			switch (level)
+			{
+			case 3: // Activate ability 3
+				this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(3);
+			case 2: // Activate ability 2
+				this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position());
+				myAuraActive = true;
+				this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(2);
+			case 1: // Activate ability 1
+				this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(1);
+			case 0:
+				break;
+			}
+
 		}
 
-	}
+		if (myIsMoving) {
+			this->GameObject().myTransform->MoveAlongPath();
+		}
 
-	if (myIsMoving) {
-		this->GameObject().myTransform->MoveAlongPath();
-	}
+		if (myTargetEnemy) {
+			if (myTargetEnemy->GetComponent<CStatsComponent>()->GetStats().myHealth > 0) {
+				float abilityLength = GameObject().GetComponent<CAbilityComponent>()->MeleeAttackRange();
+				this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath(myTargetEnemy->myTransform->Position());
+				if (DirectX::SimpleMath::Vector3::Distance(myTargetEnemy->myTransform->Position(), GameObject().myTransform->Position())
+					< (myTargetEnemy->GetComponent<CCircleColliderComponent>()->GetRadius() + abilityLength)) {
+					this->GameObject().GetComponent<CTransformComponent>()->ClearPath();
+					this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position());
+					this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack01ID();
+				}
+			}
+		}
 
-	if (myTargetEnemy) {
-		if (myTargetEnemy->GetComponent<CStatsComponent>()->GetStats().myHealth > 0) {
-			float abilityLength = GameObject().GetComponent<CAbilityComponent>()->MeleeAttackRange();
-			this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath(myTargetEnemy->myTransform->Position());
-			if (DirectX::SimpleMath::Vector3::Distance(myTargetEnemy->myTransform->Position(), GameObject().myTransform->Position())
-				< (myTargetEnemy->GetComponent<CCircleColliderComponent>()->GetRadius() + abilityLength)) {
-				this->GameObject().GetComponent<CTransformComponent>()->ClearPath();
-				this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position());
-				this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack01ID();
+		if (myTargetDestructible) {
+			if (myTargetDestructible->GetComponent<CDestructibleComponent>()->IsDead() == false) {
+				if (DirectX::SimpleMath::Vector3::Distance(myTargetDestructible->myTransform->Position(), GameObject().myTransform->Position()) < myTargetDestructible->GetComponent<CCircleColliderComponent>()->GetRadius()) {
+					myTargetDestructible->GetComponent<CDestructibleComponent>()->IsDead(true);
+					this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack01ID();
+					this->GameObject().GetComponent<CTransformComponent>()->ClearPath();
+				}
+			}
+		}
+
+		if (!PlayerIsAlive()) {
+			ResetPlayer();
+		}
+		else {
+			RegenerateMana();
+		}
+		if (myPathMarker->Active()) {
+			if (myMarkerDuration >= 0.0f) {
+				myMarkerDuration -= CTimer::Dt();
+			}
+			if (myMarkerDuration <= 0.0f) {
+				myPathMarker->Active(false);
 			}
 		}
 	}
-
-	if (myTargetDestructible) {
-		if (myTargetDestructible->GetComponent<CDestructibleComponent>()->IsDead() == false) {
-			if (DirectX::SimpleMath::Vector3::Distance(myTargetDestructible->myTransform->Position(), GameObject().myTransform->Position()) < myTargetDestructible->GetComponent<CCircleColliderComponent>()->GetRadius()) {
-				myTargetDestructible->GetComponent<CDestructibleComponent>()->IsDead(true);
-				this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack01ID();
-				this->GameObject().GetComponent<CTransformComponent>()->ClearPath();
-			}
-		}
-	}
-
-	if (!PlayerIsAlive()) {
-		ResetPlayer();
-	} else {
-		RegenerateMana();
-	}
-	if (myPathMarker->Active()) {
-		if (myMarkerDuration >= 0.0f) {
-			myMarkerDuration -= CTimer::Dt();
-		}
-		if (myMarkerDuration <= 0.0f) {
-			myPathMarker->Active(false);
-		}
+	else {
+		this->GameObject().GetComponent<CTransformComponent>()->ClearPath();
 	}
 }
 
@@ -167,7 +174,7 @@ void CPlayerControllerComponent::OnDisable() {}
 
 void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent aEvent)
 {
-	if (CEngine::GetInstance()->GetActiveScene().GetNavMesh()) {
+	if (CEngine::GetInstance()->GetActiveScene().GetNavMesh() && !CMainSingleton::DialogueSystem().Active()) {
 		switch (aEvent)
 		{
 		case IInputObserver::EInputEvent::MoveClick:
