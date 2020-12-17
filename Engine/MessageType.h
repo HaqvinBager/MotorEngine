@@ -72,5 +72,6 @@ enum class EMessageType
 	SetResolution1280x720,
 	SetResolution1600x900,
 	SetResolution1920x1080,
+	PlayExplosionSFX,
 	Count
 };

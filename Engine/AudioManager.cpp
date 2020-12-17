@@ -97,7 +97,8 @@ CAudioManager::CAudioManager() : myWrapper() {
 #pragma endregion
 
 	// Set starting volume
-	for (auto& channel : myChannels) {
+	for (auto& channel : myChannels) 
+	{
 		channel->SetVolume(0.1f);
 	}
 
@@ -113,7 +114,7 @@ CAudioManager::CAudioManager() : myWrapper() {
 	//CMainSingleton::PostMaster().Send({ EMessageType::BossDied, NULL });
 
 
-		//CMainSingleton::PostMaster().Send({ EMessageType::UIButtonPress, NULL });
+	//CMainSingleton::PostMaster().Send({ EMessageType::UIButtonPress, NULL });
 
 }
 
@@ -302,6 +303,14 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		}
 	}break;
 
+	case EMessageType::PlayExplosionSFX:
+	{
+		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::Explosion))
+		{
+			myWrapper.Play(mySFXAudio[CAST(ESFX::Explosion)], myChannels[CAST(EChannels::SFX)]);
+		}
+	}break;
+
 	// UI
 	case EMessageType::UIButtonPress:
 	{
@@ -365,6 +374,7 @@ void CAudioManager::SubscribeToMessages()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::LightAttack, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::HeavyAttack, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::ShieldSpell, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayExplosionSFX, this);
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::UIButtonPress, this);
 
@@ -394,6 +404,7 @@ void CAudioManager::UnsubscribeToMessages()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LightAttack, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::HeavyAttack, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::ShieldSpell, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayExplosionSFX, this);
 
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::UIButtonPress, this);
 

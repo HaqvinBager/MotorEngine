@@ -102,7 +102,6 @@ void CPlayerControllerComponent::Update()
 	if (!CMainSingleton::DialogueSystem().Active()) {
 		if (Input::GetInstance()->IsKeyPressed('L'))
 		{
-
 			const int level = 3;
 			GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel = level;
 			switch (level)
@@ -113,6 +112,7 @@ void CPlayerControllerComponent::Update()
 				this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position());
 				myAuraActive = true;
 				this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(2);
+				CMainSingleton::PostMaster().Send({ EMessageType::ShieldSpell, nullptr });
 			case 1: // Activate ability 1
 				this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(1);
 			case 0:
@@ -133,7 +133,6 @@ void CPlayerControllerComponent::Update()
 					< (myTargetEnemy->GetComponent<CCircleColliderComponent>()->GetRadius() + abilityLength)) {
 					this->GameObject().GetComponent<CTransformComponent>()->ClearPath();
 					this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position());
-					this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack01ID();
 				}
 			}
 		}
@@ -144,6 +143,7 @@ void CPlayerControllerComponent::Update()
 					myTargetDestructible->GetComponent<CDestructibleComponent>()->IsDead(true);
 					this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack01ID();
 					this->GameObject().GetComponent<CTransformComponent>()->ClearPath();
+					CMainSingleton::PostMaster().Send({ EMessageType::LightAttack, nullptr });
 				}
 			}
 		}
@@ -329,6 +329,7 @@ void CPlayerControllerComponent::UpdateExperience(const SMessage& aMessage)
 			////Comment this in before last build
 			if (level == 2) {
 				this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position());
+				CMainSingleton::PostMaster().Send({ EMessageType::ShieldSpell, nullptr });
 				myAuraActive = true;
 			}
 

@@ -26,11 +26,12 @@ enum class ESFX
 	BossMeleeAtk, 
 	DemonIdle1, 
 	DemonIdle2, 
+	Explosion,
 	HitDestructible, 
 	HealingAura,  
 	PlayerLightAtk, 
 	PlayerHeavyAtk, 
-	ShieldSpell, 
+	ShieldSpell,
 	Count 
 };
 enum class EUI { ButtonClick, Count };

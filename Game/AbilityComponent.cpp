@@ -146,6 +146,7 @@ bool CAbilityComponent::UseAbility(EAbilityType anAbilityType, DirectX::SimpleMa
 		if (myCurrentCooldowns[3] <= 0) {
 			myCurrentCooldowns[3] = myMaxCooldowns[3];
 			this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack01ID();
+			CMainSingleton::PostMaster().Send({ EMessageType::LightAttack, nullptr });
 		}
 	}
 
@@ -207,8 +208,10 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 				if (myCurrentCooldowns[0] > 0)
 					break;
 
+
 				if (UseAbility(EAbilityType::PlayerAbility1, GameObject().myTransform->Position()))
 				{
+					CMainSingleton::PostMaster().Send({ EMessageType::HealingAura, nullptr });
 					this->GameObject().GetComponent<CAnimationComponent>()->PlayAbility01ID();
 					myMessage.myMessageType = EMessageType::AbilityOneCooldown;
 					myCurrentCooldowns[0] = myMaxCooldowns[0];
@@ -240,6 +243,7 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 
 				if (UseAbility(EAbilityType::PlayerAbility3, GameObject().myTransform->Position()))
 				{
+					CMainSingleton::PostMaster().Send({ EMessageType::PlayExplosionSFX, nullptr });
 					this->GameObject().GetComponent<CAnimationComponent>()->PlayAbility02ID();
 					myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
 					myCurrentCooldowns[2] = myMaxCooldowns[2];
@@ -256,6 +260,7 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 			{
 				myCurrentCooldowns[4] = myMaxCooldowns[4];
 				this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack02ID();
+				CMainSingleton::PostMaster().Send({ EMessageType::HeavyAttack, nullptr });
 			}
 			break;
 		default:
