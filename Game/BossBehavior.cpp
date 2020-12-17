@@ -204,6 +204,7 @@ void CBossBehavior::StartPhase(CGameObject* aParent)
 			aParent->GetComponent<CAnimationComponent>()->PlayAttack01ID();
 
 			aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility1, aParent->myTransform->Position());
+			CMainSingleton::PostMaster().Send({ EMessageType::BossMeleeAttack, nullptr });
 		}
 	}
 }
@@ -228,10 +229,12 @@ void CBossBehavior::MidPhase(CGameObject* aParent)
 			{
 				aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility1, aParent->myTransform->Position());
 				aParent->GetComponent<CAnimationComponent>()->PlayAttack01ID();
+				CMainSingleton::PostMaster().Send({ EMessageType::BossMeleeAttack, nullptr });
 			}
 			else if (attackType == 2)
 			{
 				aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility2, aParent->myTransform->Position());
+				CMainSingleton::PostMaster().Send({ EMessageType::HealingAura, nullptr });
 			}
 		}
 	}
@@ -257,15 +260,18 @@ void CBossBehavior::FinalPhase(CGameObject* aParent)
 			{
 				aParent->GetComponent<CAnimationComponent>()->PlayAttack01ID();
 				aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility1, aParent->myTransform->Position());
+				CMainSingleton::PostMaster().Send({ EMessageType::BossMeleeAttack, nullptr });
 			}
 			else if (attackType == 2)
 			{
 				aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility2, aParent->myTransform->Position());
+				CMainSingleton::PostMaster().Send({ EMessageType::HealingAura, nullptr });
 			}
 			else if (attackType == 3)
 			{
 				aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility3, aParent->myTransform->Position());
 				aParent->GetComponent<CAnimationComponent>()->PlayAttack02ID();
+				CMainSingleton::PostMaster().Send({ EMessageType::PlayExplosionSFX, nullptr });
 			}
 		}
 	}

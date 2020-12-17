@@ -24,6 +24,7 @@ enum class ESFX
 	PlayerHitSound,
 	KingBossDeathSound, 
 	BossMeleeAtk, 
+	BossExplosion, 
 	DemonIdle1, 
 	DemonIdle2, 
 	Explosion,

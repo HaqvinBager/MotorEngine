@@ -247,6 +247,14 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		}
 	}break;
 
+	case EMessageType::PlayBossExplosionSFX:
+	{
+		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::BossExplosion))
+		{
+			myWrapper.Play(mySFXAudio[CAST(ESFX::BossExplosion)], myChannels[CAST(EChannels::SFX)]);
+		}
+	}break;
+
 	case EMessageType::DemonIdle1:
 	{
 		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::DemonIdle1))
@@ -367,6 +375,7 @@ void CAudioManager::SubscribeToMessages()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::AttackHits, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayBossDeathSFX, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::BossMeleeAttack, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayBossExplosionSFX, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::DemonIdle1, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::DemonIdle2, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::HitDestructible, this);
@@ -397,6 +406,7 @@ void CAudioManager::UnsubscribeToMessages()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::AttackHits, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayBossDeathSFX, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::BossMeleeAttack, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayBossExplosionSFX, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::DemonIdle1, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::DemonIdle2, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::HitDestructible, this);
