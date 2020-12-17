@@ -77,6 +77,7 @@ void CPauseState::Receive(const SMessage& aMessage) {
 	if (this == myStateStack.GetTop()) {
 		switch (aMessage.myMessageType) {
 		case EMessageType::MainMenu:
+		CMainSingleton::PostMaster().Send({ EMessageType::StopMusic, nullptr });
 			myStateStack.PopUntil(CStateStack::EState::MainMenu);
 			break;
 		case EMessageType::Resume:

@@ -218,6 +218,12 @@ void CPopupTextService::SpawnDamageNumber(void* someData)
 
 	SDamagePopupData data = *static_cast<SDamagePopupData*>(someData);
 	damage = data.myDamage;
+	
+	if (damage < 1.0f)
+	{
+		return;
+	}
+	
 	text = std::to_string(damage);
 	text = text.substr(0, text.find_first_of("."));
 	if (data.myGameObject != nullptr) {
@@ -248,6 +254,7 @@ void CPopupTextService::SpawnDamageNumber(void* someData)
 	case 0: // Normal
 		myDamageAnimationData.back()->myMinScale = { 0.5f, 0.5f };
 		myDamageAnimationData.back()->myMaxScale = { 1.5f, 1.5f };
+		CEngine::GetInstance()->GetActiveScene().GetMainCamera()->SetTrauma(0.5f);
 		break;
 	case 1: // Crit
 		myDamageAnimationData.back()->myMinScale = { 1.5f, 1.5f };
