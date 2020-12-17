@@ -97,25 +97,26 @@ CAudioManager::CAudioManager() : myWrapper() {
 #pragma endregion
 
 	// Set starting volume
-	for (auto& channel : myChannels) 
-	{
-		channel->SetVolume(0.1f);
-	}
+	//for (auto& channel : myChannels) 
+	//{
+	//	channel->SetVolume(0.1f);
+	//}
 
+	// Add JSON reading:
+	// Group 4 
+	myChannels[CAST(EChannels::Music)]->SetVolume(0.3f);
+	myChannels[CAST(EChannels::Ambiance)]->SetVolume(0.2f);
+	myChannels[CAST(EChannels::SFX)]->SetVolume(0.15f);
+	myChannels[CAST(EChannels::UI)]->SetVolume(0.4f);
+	myChannels[CAST(EChannels::VOX)]->SetVolume(0.5f);
+
+	// Unused?
 	// SEND MESSAGE TO START PLAYING MUSIC
-
 	//CMainSingleton::PostMaster().Send({ EMessageType::MainMenu, NULL });
-
 	//CMainSingleton::PostMaster().Send({ EMessageType::EnemyHealthChanged, NULL });
-
 	//CMainSingleton::PostMaster().Send({ EMessageType::PlayAmbienceCastle, NULL });
-
-
 	//CMainSingleton::PostMaster().Send({ EMessageType::BossDied, NULL });
-
-
 	//CMainSingleton::PostMaster().Send({ EMessageType::UIButtonPress, NULL });
-
 }
 
 	CAudioManager::~CAudioManager()
