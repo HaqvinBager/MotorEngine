@@ -157,166 +157,128 @@ CAudioManager::CAudioManager() : myWrapper() {
 void CAudioManager::Receive(const SMessage& aMessage) {
 	switch (aMessage.myMessageType)
 	{
-		// MUSIC
+	// MUSIC
 	case EMessageType::MainMenu:
 	{
 	    //myWrapper.Play(myMusicAudio[CAST(EMusic::MainMenu)], myChannels[CAST(EChannels::Music)]);
-	}
-		break;
-
-
-
+	}break;
 
 	case EMessageType::PlayAmbienceCastle:
 	{
-
 		if (myAmbianceAudio.size() >= static_cast<unsigned int>(EAmbiance::Castle)) 
 		{
 			myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
 		}
+	}break;
 
-
-	}
-		break;
 	case EMessageType::PlayAmbienceCave1:
 	{
-
 		if (myAmbianceAudio.size() >= static_cast<unsigned int>(EAmbiance::Cave1))
 		{
 			myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Cave1)], myChannels[CAST(EChannels::Ambiance)]);
 		}
-
-		//myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Cave1)], myChannels[CAST(EChannels::Ambiance)]);
-
-	}
-		break;
+		//myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Cave1)], myChannels[CAST(EChannels::Ambiance)])
+	}break;
 
 	case EMessageType::PlayAmbienceDungeon:
 	{
-
 		if (myAmbianceAudio.size() >= static_cast<unsigned int>(EAmbiance::Dungeon))
 		{
 			myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Dungeon)], myChannels[CAST(EChannels::Ambiance)]);
-
-
 		}
-		break;
-	}
+	}break;
+
 	case EMessageType::PlayAmbienceSwamp1:
 	{
-
 		if (myAmbianceAudio.size() >= static_cast<unsigned int>(EAmbiance::Swamp1))
 		{
 			myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Swamp1)], myChannels[CAST(EChannels::Ambiance)]);
 		}
-
-
-	}
-		break;
+	}break;
 	
-		
-
-		// SFX
+	// SFX
 	case EMessageType::AttackHits:
 	{
-
 		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::PlayerHitSound))
 		{
 			myWrapper.Play(mySFXAudio[CAST(ESFX::PlayerHitSound)], myChannels[CAST(EChannels::SFX)]);
 		}
-	}
-		break;
+	}break;
+
 	case EMessageType::BossDied:
 	{
-
 		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::KingBossDeathSound))
 		{
 			myWrapper.Play(mySFXAudio[CAST(ESFX::KingBossDeathSound)], myChannels[CAST(EChannels::SFX)]);
 		}
-	}
-	break;
+	}break;
+
 	case EMessageType::DemonIdle1:
 	{
-
 		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::DemonIdle1))
 		{
 			myWrapper.Play(mySFXAudio[CAST(ESFX::DemonIdle1)], myChannels[CAST(EChannels::SFX)]);
 		}
-	}
-	break;
+	}break;
+
 	case EMessageType::DemonIdle2:
 	{
-
 		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::DemonIdle2))
 		{
 			myWrapper.Play(mySFXAudio[CAST(ESFX::DemonIdle2)], myChannels[CAST(EChannels::SFX)]);
 		}
-	}
-	break;
+	}break;
+
 	case EMessageType::HitDestructible:
 	{
-
 		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::HitDestructible))
 		{
 			myWrapper.Play(mySFXAudio[CAST(ESFX::HitDestructible)], myChannels[CAST(EChannels::SFX)]);
 		}
-	}
-	break;
+	}break;
 
 	case EMessageType::HealingAura:
 	{
-
 		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::HealingAura))
 		{
 			myWrapper.Play(mySFXAudio[CAST(ESFX::HealingAura)], myChannels[CAST(EChannels::SFX)]);
 		}
-	}
-	break;
+	}break;
 
 	case EMessageType::LightAttack:
 	{
-
 		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::PlayerLightAtk))
 		{
 			myWrapper.Play(mySFXAudio[CAST(ESFX::PlayerLightAtk)], myChannels[CAST(EChannels::SFX)]);
 		}
-	}
-	break;
+	}break;
+
 	case EMessageType::HeavyAttack:
 	{
-
 		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::PlayerHeavyAtk))
 		{
 			myWrapper.Play(mySFXAudio[CAST(ESFX::PlayerHeavyAtk)], myChannels[CAST(EChannels::SFX)]);
 		}
-	}
-	break;
+	}break;
+
 	case EMessageType::ShieldSpell:
 	{
-
 		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::ShieldSpell))
 		{
 			myWrapper.Play(mySFXAudio[CAST(ESFX::ShieldSpell)], myChannels[CAST(EChannels::SFX)]);
 		}
-	}
-	break;
+	}break;
 
 	// UI
-
 	case EMessageType::UIButtonPress:
 	{
-
 		if (myUIAudio.size() >= static_cast<unsigned int>(EUI::ButtonClick))
 		{
 			myWrapper.Play(myUIAudio[CAST(EUI::ButtonClick)], myChannels[CAST(EChannels::UI)]);
 		}
-	}
-	break;
+	}break;
 
-
-
-
-		// VOICELINES
+	// VOICELINES
 	case EMessageType::PlayVoiceLine:
 	{
 		if (!myVoicelineAudio.empty()) {
@@ -324,19 +286,16 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 			myChannels[CAST(EChannels::VOX)]->Stop();
 			myWrapper.Play(myVoicelineAudio[index], myChannels[CAST(EChannels::VOX)]);
 		}
-	}
-		break;
+	}break;
 
 	case EMessageType::StopDialogue:
 	{
 		if (!myVoicelineAudio.empty()) {
 			myChannels[CAST(EChannels::VOX)]->Stop();
 		}
-	}
-		break;
+	}break;
 
-	default:
-		break;
+	default: break;
 	}
 }
 
@@ -348,13 +307,10 @@ void CAudioManager::Update()
 
 void CAudioManager::SubscribeToMessages()
 {
-
 	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);
-
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayAmbienceCastle, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayAmbienceCave1, this);
-
 	
 	CMainSingleton::PostMaster().Subscribe(EMessageType::AttackHits, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::BossDied, this);
@@ -367,20 +323,15 @@ void CAudioManager::SubscribeToMessages()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::HeavyAttack, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::ShieldSpell, this);
 
-
 	CMainSingleton::PostMaster().Subscribe(EMessageType::UIButtonPress, this);
-
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayVoiceLine, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::StopDialogue, this);
-
-
 }
 
 void CAudioManager::UnsubscribeToMessages()
 {
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::MainMenu, this);
-
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayAmbienceCastle, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayAmbienceCave1, this);
 
@@ -395,6 +346,7 @@ void CAudioManager::UnsubscribeToMessages()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::HeavyAttack, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::ShieldSpell, this);
 
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::UIButtonPress, this);
 
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayVoiceLine, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::StopDialogue, this);

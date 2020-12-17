@@ -7,6 +7,7 @@
 #include "Engine.h"
 #include "WindowHandler.h"
 #include "Scene.h"
+#include "PostMaster.h"
 
 void CButton::OnHover()
 {
@@ -20,6 +21,9 @@ void CButton::OnClickDown()
 	myState = EButtonState::Click;
 	mySprites.at(static_cast<size_t>(EButtonState::Hover))->SetShouldRender(false);
 	mySprites.at(static_cast<size_t>(EButtonState::Click))->SetShouldRender(true);
+
+	SMessage msg = { EMessageType::UIButtonPress, nullptr };
+	CMainSingleton::PostMaster().Send(msg);
 }
 
 void CButton::OnClickUp(void* someData)
