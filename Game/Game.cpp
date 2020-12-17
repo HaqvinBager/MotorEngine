@@ -5,6 +5,9 @@
 #include "LoadLevelState.h"
 #include "InGameState.h"
 #include "PauseState.h"
+#include "OptionsState.h"
+#include "MainSingleton.h"
+#include "PostMaster.h"
 
 #ifdef _DEBUG
 #pragma comment(lib, "Engine_Debug.lib")
@@ -29,7 +32,10 @@ void CGame::Init()
 
 bool CGame::Update()
 {
-	return myStateStack.Update();
+	bool stateStackHasUpdated = myStateStack.Update();
+	CMainSingleton::PostMaster().FlushEvents();
+	return stateStackHasUpdated;
+	//return myStateStack.Update();
 }
 
 void CGame::InitDev()

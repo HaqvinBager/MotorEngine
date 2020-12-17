@@ -15,7 +15,7 @@
 using namespace rapidjson;
 CLoadLevelState::CLoadLevelState(CStateStack& aStateStack, const CStateStack::EState aState)
 	: CState(aStateStack, aState)
-	, myLevelToLoad(ELevel::Castle)
+	, myLevelToLoad(ELevel::Dungeon)
 {}
 
 CLoadLevelState::~CLoadLevelState()
@@ -78,7 +78,6 @@ void CLoadLevelState::Start()
 
 void CLoadLevelState::Stop()
 {
-
 }
 
 void CLoadLevelState::Update()
@@ -88,9 +87,7 @@ void CLoadLevelState::Update()
 	{
 		//myLoadedLevelFuture returnType is the same as the CLoadLevelState::Load return type.
 		//The value it will get is the Scene index in which the SceneLoaded will use in CEngine::myScenes
-		//myActiveScene = ;
 		myLoadLevelFuture.get();
-		//CEngine::GetInstance()->SetActiveScene();
 		myStateStack.PopTopAndPush(CStateStack::EState::InGame);
 	}
 	else
@@ -157,7 +154,6 @@ const CStateStack::EState CLoadLevelState::Load(const ELevel aLevel)
 			CScene* loadScreenScene = new CScene();// myLoadScreenScene
 			myUnityFactory.FillScene(data, BinModelPaths(aLevel), *loadScreenScene);
 
-			std::cout << "Adding Loading Screen" << std::endl;
 			return CEngine::GetInstance()->AddScene(CStateStack::EState::LoadLevel, loadScreenScene);
 		}
 		else //All other Scenes are regarded as "InGame" scenes. And will have to contain at least a Camera, Directional Light & Player (player is currently "utkommenterad", Fix Monday)
@@ -170,7 +166,6 @@ const CStateStack::EState CLoadLevelState::Load(const ELevel aLevel)
 			inGameScene->InitNavMesh(navMeshPath);
 
 			myUnityFactory.FillScene(data, BinModelPaths(aLevel), *inGameScene);
-			//std::cout << "Adding Loading Screen" << std::endl;
 			return CEngine::GetInstance()->AddScene(CStateStack::EState::InGame, inGameScene);
 		}
 	}

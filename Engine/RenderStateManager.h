@@ -49,6 +49,8 @@ public:
 	void SetAllStates(BlendStates aBlendState, DepthStencilStates aDepthStencilState, RasterizerStates aRasterizerState, SamplerStates aSamplerState);
 	void SetAllDefault();
 
+	void Release();
+
 private:
 	bool CreateBlendStates(ID3D11Device* aDevice);
 	bool CreateDepthStencilStates(ID3D11Device* aDevice);

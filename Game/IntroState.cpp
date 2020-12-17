@@ -69,7 +69,7 @@ void CIntroState::Start()
 			myBackground->SetSize({ 15.1f, 8.5f });
 
 			myIntroStateActive = true;
-			CMainSingleton::PostMaster().Send({ EMessageType::IntroStarted, NULL });
+			CMainSingleton::PostMaster().SendLate({ EMessageType::IntroStarted, NULL });
 		}
 	}
 
@@ -86,7 +86,6 @@ void CIntroState::Stop()
 	if (myScene) {
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::StopDialogue, this);
 		myScene->DestroySprites();
-		delete myScene;
 		myScene = nullptr;
 	}
 }
@@ -102,8 +101,7 @@ void CIntroState::Update()
 	if (myNarrationIsFinished && !myIntroDialogueStarted)
 	{
 		myIntroDialogueStarted = true;
-		int sceneIndex = 0;
-		CMainSingleton::PostMaster().Send({ EMessageType::LoadDialogue, &sceneIndex });
+		CMainSingleton::PostMaster().SendLate({ EMessageType::LoadDialogue, &mySceneIndex });
 	}
 
 	myFeedbackTimer += CTimer::Dt();
@@ -124,7 +122,7 @@ void CIntroState::Update()
 	}
 
 	if (Input::GetInstance()->IsKeyPressed(VK_ESCAPE)) {
-		CMainSingleton::PostMaster().Send({ EMessageType::StopDialogue, NULL });
+		CMainSingleton::PostMaster().SendLate({ EMessageType::StopDialogue, NULL });
 		CMainSingleton::DialogueSystem().ExitDialogue();
 	}
 }

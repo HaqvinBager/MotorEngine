@@ -96,32 +96,6 @@ void CInGameState::Start()
 
 	myTokenPool = new CTokenPool(4, 1.0f);// todo: fix reset
 
-	//NO TOUCHY UNLESS BOSS TEST
-	//myTestBoss = new CGameObject();
-	//CBossBehavior* bossBehavior = new CBossBehavior(&CEngine::GetInstance()->GetActiveScene().FindObjectOfType<CPlayerControllerComponent>()->GameObject());
-	//myTestBoss->myTransform->Position({ -2.0f, 0.0f, 6.0f });
-	//myTestBoss->AddComponent<CCircleColliderComponent>(*myTestBoss, 0.5f, ECollisionLayer::BOSS, static_cast<int>(ECollisionLayer::PLAYER));
-	//myTestBoss->AddComponent<CModelComponent>(*myTestBoss, "Assets/Graphics/Animations/CH_E_Boss_SK/CH_E_Boss_SK.fbx");
-
-	//AddAnimationsToGameObject(*myTestBoss, "Assets/Graphics/Animations/CH_E_Boss_SK/CH_E_Boss_SK.fbx", EAnimatedObject::Boss);
-
-	//myTestBoss->AddComponent<CStatsComponent>(*myTestBoss, 10.0f, 10.0f, 3.0f, 3.0f, 20.0f, 15.0f);
-	//myTestBoss->AddComponent<CAIBehaviorComponent>(*myTestBoss, bossBehavior);
-
-	//myTestBoss->AddComponent<CNavMeshComponent>(*myTestBoss);
-
-	//std::pair<EAbilityType, unsigned int> ab1 = { EAbilityType::BossAbility1, 1 };
-	//std::pair<EAbilityType, unsigned int> ab2 = { EAbilityType::BossAbility2, 1 };
-	//std::pair<EAbilityType, unsigned int> ab3 = { EAbilityType::BossAbility3, 1 };
-	//std::vector<std::pair<EAbilityType, unsigned int>> abs;
-	//abs.emplace_back(ab1);
-	//abs.emplace_back(ab2);
-	//abs.emplace_back(ab3);
-	//myTestBoss->AddComponent<CAbilityComponent>(*myTestBoss, abs);
-
-	//CEngine::GetInstance()->GetActiveScene().AddInstance(myTestBoss);
-	//NO TOUCHY UNLESS BOSS TEST
-
 	std::vector<CGameObject*>& gameObjects = CEngine::GetInstance()->GetActiveScene().myGameObjects;
 	size_t currentSize = gameObjects.size();
 	for (size_t i = 0; i < currentSize; ++i)
@@ -141,16 +115,6 @@ void CInGameState::Start()
 			gameObjects[j]->Awake();
 		}
 	}
-	//myEnemy = new CGameObject();
-	////myEnemy->AddComponent<CModelComponent>(*myEnemy, "Assets/3D/Character/CH_NPC_enemy_01_19G4_1_19/CH_NPC_enemy_01_19G4_1_19.fbx");
-	//myEnemy->AddComponent<CModelComponent>(*myEnemy, "Assets/Graphics/Skeletons/CH_E_Melee_SK.fbx");
-	//myEnemy->AddComponent<CStatsComponent>(*myEnemy, 10.0f, 10.0f, 3.0f);
-	//CEnemyBehavior* enemyBehavior = new CEnemyBehavior(&CEngine::GetInstance()->GetActiveScene().FindObjectOfType<CPlayerControllerComponent>()->GameObject());
-	//myEnemy->AddComponent<CAIBehaviorComponent>(*myEnemy, enemyBehavior);
-	//myEnemy->myTransform->Position({ -2.0f, 0.0f, 6.0f });
-	//myEnemy->AddComponent<CCircleColliderComponent>(*myEnemy, 0.5f, ECollisionLayer::ENEMY, static_cast<int>(ECollisionLayer::PLAYER));
-	//CEngine::GetInstance()->GetActiveScene().AddInstance(myEnemy);
-	//myEnemy->Awake();
 
 	for (auto& gameObject : CEngine::GetInstance()->GetActiveScene().myGameObjects)
 	{
@@ -194,77 +158,77 @@ void CInGameState::Update()
 
 	CEngine::GetInstance()->GetActiveScene().SetEnemyToOutline(mySelection->FindSelectedEnemy());
 
-	static SDamagePopupData damage;
-	damage.myDamage = 32.0f;
-	damage.myHitType = Random(0, 4);
-	if (Input::GetInstance()->IsKeyPressed('U')) {
-		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &damage);
-	}
+	//static SDamagePopupData damage;
+	//damage.myDamage = 32.0f;
+	//damage.myHitType = Random(0, 4);
+	//if (Input::GetInstance()->IsKeyPressed('U')) {
+	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &damage);
+	//}
 
-	static std::string tutorial = "Press Space to Continue";
-	if (Input::GetInstance()->IsKeyPressed('I')) {
-		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Tutorial, tutorial);
-	}
+	//static std::string tutorial = "Press Space to Continue";
+	//if (Input::GetInstance()->IsKeyPressed('I')) {
+	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Tutorial, tutorial);
+	//}
 
-	static std::string warning = "You require more Mana";
-	if (Input::GetInstance()->IsKeyPressed('O')) {
-		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Warning, warning);
-	}
+	//static std::string warning = "You require more Mana";
+	//if (Input::GetInstance()->IsKeyPressed('O')) {
+	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Warning, warning);
+	//}
 
-	static std::string text1 = "Skill 1";
-	if (Input::GetInstance()->IsKeyPressed('J')) {
-		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text1);
-	}
+	//static std::string text1 = "Skill 1";
+	//if (Input::GetInstance()->IsKeyPressed('J')) {
+	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text1);
+	//}
 
-	static std::string text2 = "Skill 2";
-	if (Input::GetInstance()->IsKeyPressed('K')) {
-		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text2);
-	}
+	//static std::string text2 = "Skill 2";
+	//if (Input::GetInstance()->IsKeyPressed('K')) {
+	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text2);
+	//}
 
-	static std::string text3 = "Skill 3";
-	if (Input::GetInstance()->IsKeyPressed('L')) {
-		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text3);
-	}
+	//static std::string text3 = "Skill 3";
+	//if (Input::GetInstance()->IsKeyPressed('L')) {
+	//	CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Info, text3);
+	//}
 
-	if (Input::GetInstance()->IsKeyPressed('7'))
-	{
-		int aSceneIndex = 0;
-		CMainSingleton::PostMaster().Send({ EMessageType::LoadDialogue, &aSceneIndex });
-	}
+	//if (Input::GetInstance()->IsKeyPressed('7'))
+	//{
+	//	int aSceneIndex = 0;
+	//	CMainSingleton::PostMaster().Send({ EMessageType::LoadDialogue, &aSceneIndex });
+	//}
 
-	if (Input::GetInstance()->IsKeyPressed('8'))
-	{
-		int aSceneIndex = 1;
-		CMainSingleton::PostMaster().Send({ EMessageType::LoadDialogue, &aSceneIndex });
-	}
+	//if (Input::GetInstance()->IsKeyPressed('8'))
+	//{
+	//	int aSceneIndex = 1;
+	//	CMainSingleton::PostMaster().Send({ EMessageType::LoadDialogue, &aSceneIndex });
+	//}
 
-	if (Input::GetInstance()->IsKeyPressed('9'))
-	{
-		int aSceneIndex = 2;
-		CMainSingleton::PostMaster().Send({ EMessageType::LoadDialogue, &aSceneIndex });
-	}
+	//if (Input::GetInstance()->IsKeyPressed('9'))
+	//{
+	//	int aSceneIndex = 2;
+	//	CMainSingleton::PostMaster().Send({ EMessageType::LoadDialogue, &aSceneIndex });
+	//}
 
-	if (Input::GetInstance()->IsKeyPressed('0'))
-	{
-		CMainSingleton::PostMaster().Send({ EMessageType::IntroStarted, NULL });
-	}
+	//if (Input::GetInstance()->IsKeyPressed('0'))
+	//{
+	//	CMainSingleton::PostMaster().Send({ EMessageType::IntroStarted, NULL });
+	//}
 
-	if (Input::GetInstance()->IsKeyPressed('T'))
-	{
-		CEngine::GetInstance()->GetActiveScene().GetMainCamera()->SetTrauma(0.65f);
-	}
+	//if (Input::GetInstance()->IsKeyPressed('T'))
+	//{
+	//	CEngine::GetInstance()->GetActiveScene().GetMainCamera()->SetTrauma(0.65f);
+	//}
 
-	if (Input::GetInstance()->IsKeyPressed('Y'))
-	{
-		CEngine::GetInstance()->GetActiveScene().GetMainCamera()->SetTrauma(0.85f);
-	}
+	//if (Input::GetInstance()->IsKeyPressed('Y'))
+	//{
+	//	CEngine::GetInstance()->GetActiveScene().GetMainCamera()->SetTrauma(0.85f);
+	//}
 
 	if (myExitLevel)
 	{
 		myExitLevel = false;
 		CEngine::GetInstance()->SetRenderScene(false);
 		CMainSingleton::CollisionManager().ClearColliders();
-		CMainSingleton::PostMaster().Send({ EMessageType::StopDialogue, 0 });
+		CMainSingleton::PostMaster().SendLate({ EMessageType::StopDialogue, 0 });
 		CMainSingleton::DialogueSystem().ExitDialogue();
 
 		myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
@@ -277,7 +241,7 @@ void CInGameState::ReceiveEvent(const EInputEvent aEvent)
 		switch (aEvent) {
 		case IInputObserver::EInputEvent::PauseGame:
 			if (CMainSingleton::DialogueSystem().Active()) {
-				CMainSingleton::PostMaster().Send({ EMessageType::StopDialogue, 0 });
+				CMainSingleton::PostMaster().SendLate({ EMessageType::StopDialogue, 0 });
 				CMainSingleton::DialogueSystem().ExitDialogue();
 			} else {
 				myStateStack.PushState(CStateStack::EState::PauseMenu);

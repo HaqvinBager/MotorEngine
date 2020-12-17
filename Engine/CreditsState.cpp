@@ -65,11 +65,28 @@ void CCreditsState::Stop()
 		//delete myScene;
 		//myScene = nullptr;
 	}
+	CEngine::GetInstance()->RemoveScene(myState);
 }
 
 void CCreditsState::Update()
 {
 	myCanvas->Update();
+
+	//if (Input::GetInstance()->IsKeyPressed('1'))
+	//{
+	//	CEngine::GetInstance()->SetResolution({ 1280.0f, 720.0f });
+	//	myStateStack.PopTopAndPush(CStateStack::EState::Credits);
+	//}
+	//if (Input::GetInstance()->IsKeyPressed('2'))
+	//{
+	//	CEngine::GetInstance()->SetResolution({ 1600.0f, 900.0f });
+	//	myStateStack.PopTopAndPush(CStateStack::EState::Credits);
+	//}
+	//if (Input::GetInstance()->IsKeyPressed('3'))
+	//{
+	//	CEngine::GetInstance()->SetResolution({ 1920.0f, 1080.0f });
+	//	myStateStack.PopTopAndPush(CStateStack::EState::Credits);
+	//}
 }
 
 void CCreditsState::Receive(const SMessage& aMessage)

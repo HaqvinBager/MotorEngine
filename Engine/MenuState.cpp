@@ -22,6 +22,7 @@ CMenuState::CMenuState(CStateStack& aStateStack, const CStateStack::EState aStat
 	: CState(aStateStack, aState)
 	, myCanvas(nullptr)
 	, myScene(nullptr)
+	, myShouldQuit(false)
 {}
 
 CMenuState::~CMenuState() 
@@ -50,6 +51,20 @@ void CMenuState::Awake()
 	myScene->AddInstance(envLight);
 	myScene->SetEnvironmentLight(envLight->GetComponent<CEnviromentLightComponent>()->GetEnviromentLight());
 
+	//myCanvas = new CCanvas();
+	//myCanvas->Init("Json/UI_MainMenu_Description.json", *myScene);
+
+	//for (auto buttons : myCanvas->GetButtons())
+	//{
+	//	for (auto messageType : buttons->GetMessagesToSend())
+	//		CMainSingleton::PostMaster().Subscribe(messageType, this);
+	//}
+
+	CEngine::GetInstance()->AddScene(myState, myScene);
+}
+
+void CMenuState::Start() 
+{
 	myCanvas = new CCanvas();
 	myCanvas->Init("Json/UI_MainMenu_Description.json", *myScene);
 
@@ -59,11 +74,6 @@ void CMenuState::Awake()
 			CMainSingleton::PostMaster().Subscribe(messageType, this);
 	}
 
-	CEngine::GetInstance()->AddScene(myState, myScene);
-}
-
-void CMenuState::Start() 
-{
 	CEngine::GetInstance()->SetActiveScene(myState);
 }
 
@@ -74,10 +84,14 @@ void CMenuState::Stop()
 		for (auto messageType : buttons->GetMessagesToSend())
 			CMainSingleton::PostMaster().Unsubscribe(messageType, this);
 	}
+
+	delete myCanvas;
+	myCanvas = nullptr;
 }
 
 void CMenuState::Update() {
 	myCanvas->Update();
+	
 }
 
 #include <iostream>
@@ -102,6 +116,7 @@ void CMenuState::Receive(const SMessage &aMessage) {
 		} break;
 		case EMessageType::Quit:
 		{
+			CEngine::GetInstance()->SetRenderScene(false);
 			myStateStack.PopState();
 		} break;
 		}

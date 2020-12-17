@@ -18,6 +18,7 @@
 
 CRenderManager::CRenderManager() /*: myScene(*CScene::GetInstance())*/
 	: myUseBloom(true)
+	, myClearColor(0.1f, 0.1f, 0.1f, 1.0f)
 {
 }
 
@@ -86,6 +87,33 @@ bool CRenderManager::Init(CDirectXFramework* aFramework, CWindowHandler* aWindow
 	return true;
 }
 
+bool CRenderManager::ReInit(CDirectXFramework* aFramework, CWindowHandler* aWindowHandler)
+{
+
+	if (!myRenderStateManager.Init(aFramework))
+	{
+		return false;
+	}
+
+	ID3D11Texture2D* backbufferTexture = aFramework->GetBackbufferTexture();
+	if (!backbufferTexture)
+	{
+		return false;
+	}
+	myBackbuffer = myFullscreenTextureFactory.CreateTexture(backbufferTexture);
+	myIntermediateDepth = myFullscreenTextureFactory.CreateDepth(aWindowHandler->GetResolution(), DXGI_FORMAT_D24_UNORM_S8_UINT);
+
+	myIntermediateTexture = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R8G8B8A8_UNORM);
+	myLuminanceTexture = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R8G8B8A8_UNORM);
+	myHalfSizeTexture = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution() / 2.0f, DXGI_FORMAT_R8G8B8A8_UNORM);
+	myQuaterSizeTexture = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution() / 4.0f, DXGI_FORMAT_R8G8B8A8_UNORM);
+	myBlurTexture1 = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R8G8B8A8_UNORM);
+	myBlurTexture2 = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R8G8B8A8_UNORM);
+	myVignetteTexture = myFullscreenTextureFactory.CreateTexture(aWindowHandler->GetResolution(), DXGI_FORMAT_R8G8B8A8_UNORM);
+	
+	return true;
+}
+
 void CRenderManager::Render(CScene& aScene)
 {
 	//if (CScene::GetInstance()->Ready() == false)
@@ -97,8 +125,8 @@ void CRenderManager::Render(CScene& aScene)
 	}
 
 	myRenderStateManager.SetAllDefault();
-	myBackbuffer.ClearTexture({0.1f,0.1f,0.1f,1.0f});
-	myIntermediateTexture.ClearTexture({0.1f,0.1f,0.1f,1.0f});
+	myBackbuffer.ClearTexture(myClearColor);
+	myIntermediateTexture.ClearTexture(myClearColor);
 	myIntermediateDepth.ClearDepth();
 
 	myIntermediateTexture.SetAsActiveTarget(&myIntermediateDepth);
@@ -219,6 +247,30 @@ void CRenderManager::Render(CScene& aScene)
 	CMainSingleton::PopupTextService().EmplaceTexts(textsToRender);
 	CMainSingleton::DialogueSystem().EmplaceTexts(textsToRender);
 	myTextRenderer.Render(textsToRender);
+}
+
+void CRenderManager::Release()
+{
+	Clear(myClearColor);
+	CEngine::GetInstance()->myFramework->GetContext()->OMSetRenderTargets(0, 0, 0);
+	CEngine::GetInstance()->myFramework->GetContext()->OMGetDepthStencilState(0, 0);
+	CEngine::GetInstance()->myFramework->GetContext()->ClearState();
+
+	myBackbuffer.ReleaseTexture();
+	myIntermediateTexture.ReleaseTexture();
+	myIntermediateDepth.ReleaseDepth();
+	myLuminanceTexture.ReleaseTexture();
+	myHalfSizeTexture.ReleaseTexture();
+	myQuaterSizeTexture.ReleaseTexture();
+	myBlurTexture1.ReleaseTexture();
+	myBlurTexture2.ReleaseTexture();
+	myVignetteTexture.ReleaseTexture();
+}
+
+void CRenderManager::Clear(DirectX::SimpleMath::Vector4 aClearColor)
+{
+	myBackbuffer.ClearTexture(aClearColor);
+	myIntermediateDepth.ClearDepth();
 }
 
 void CRenderManager::RenderBloom()

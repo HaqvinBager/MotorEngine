@@ -49,7 +49,7 @@ void CEnemyBehavior::Update(CGameObject* aParent)
 	SStats stats = myCurrentParent->GetComponent<CStatsComponent>()->GetStats();
 
 	if (stats.myHealth <= 0) {
-		CMainSingleton::PostMaster().Send({EMessageType::EnemyDied, this});
+		CMainSingleton::PostMaster().SendLate({EMessageType::EnemyDied, this});
 		if (stats.myTokenSlot != nullptr) {
 			CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
 			stats.myTokenSlot = nullptr;
@@ -200,7 +200,7 @@ void CEnemyBehavior::Die()
 	SMessage message;
 	message.myMessageType = EMessageType::EnemyDied;
 	message.data = &myCurrentParent->GetComponent<CStatsComponent>()->GetStats().myExperience;
-	CMainSingleton::PostMaster().Send(message);
+	CMainSingleton::PostMaster().SendLate(message);
 
 	SStats stats = myCurrentParent->GetComponent<CStatsComponent>()->GetStats();
 	if (stats.myTokenSlot != nullptr) {

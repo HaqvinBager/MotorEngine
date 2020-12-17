@@ -293,7 +293,7 @@ void CPlayerControllerComponent::RegenerateMana()
 
 void CPlayerControllerComponent::UpdateExperience(const SMessage& aMessage)
 {
-	float difference;
+	static float difference;
 	float maxValue;
 
 	if (this->GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myMaxLevel

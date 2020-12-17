@@ -87,7 +87,7 @@ void CCameraComponent::Update()
 				myFadingPlaneActive = false;
 				myFadeTimer = 1.0f;
 				myFadingPlane->SetShouldRender(false);
-				CMainSingleton::PostMaster().Send({ EMessageType::FadeInComplete, 0 });
+				CMainSingleton::PostMaster().SendLate({ EMessageType::FadeInComplete, 0 });
 			}
 			myFadingPlane->SetColor({ color.x, color.y, color.z, alpha });
 		}
@@ -100,7 +100,7 @@ void CCameraComponent::Update()
 				myFadingPlaneActive = false;
 				myFadeTimer = 1.0f;
 				myFadingPlane->SetShouldRender(false);
-				CMainSingleton::PostMaster().Send({ EMessageType::FadeOutComplete, 0 });
+				CMainSingleton::PostMaster().SendLate({ EMessageType::FadeOutComplete, 0 });
 			}
 			myFadingPlane->SetColor({ color.x, color.y, color.z, alpha });
 		}

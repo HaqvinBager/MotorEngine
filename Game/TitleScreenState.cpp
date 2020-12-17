@@ -64,8 +64,9 @@ void CTitleScreenState::Start()
 void CTitleScreenState::Stop()
 {
 	myScene->DestroySprites();
-	delete myScene;
 	myScene = nullptr;
+	//delete myScene;
+	//myScene = nullptr;
 }
 
 void CTitleScreenState::Update()

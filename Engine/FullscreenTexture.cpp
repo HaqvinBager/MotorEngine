@@ -28,3 +28,35 @@ void CFullscreenTexture::SetAsActiveTarget(CFullscreenTexture* aDepth) {
 void CFullscreenTexture::SetAsResourceOnSlot(unsigned int aSlot) {
 	myContext->PSSetShaderResources(aSlot, 1, &myShaderResource);
 }
+
+void CFullscreenTexture::ReleaseTexture()
+{
+	myContext = nullptr;
+	myTexture->Release();
+	myTexture = nullptr;
+	myRenderTarget->Release();
+	myRenderTarget = nullptr;
+	if (myShaderResource)
+	{
+		myShaderResource->Release();
+		myShaderResource = nullptr;
+	}
+	delete myViewport;
+	myViewport = nullptr;
+}
+
+void CFullscreenTexture::ReleaseDepth()
+{
+	myContext = nullptr;
+	myTexture->Release();
+	myTexture = nullptr;
+	myDepth->Release();
+	myDepth = nullptr;
+	if (myShaderResource)
+	{
+		myShaderResource->Release();
+		myShaderResource = nullptr;
+	}
+	delete myViewport;
+	myViewport = nullptr;
+}

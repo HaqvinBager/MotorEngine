@@ -216,7 +216,7 @@ void CDialogueSystem::Update() {
 	
 	if (myIsActive && (myCurrentDialogueIndex != myLastDialogueIndex))
 	{
-		CMainSingleton::PostMaster().Send({ EMessageType::PlayVoiceLine, &myDialogueBuffer[myCurrentDialogueIndex].myVoiceLine });
+		CMainSingleton::PostMaster().SendLate({ EMessageType::PlayVoiceLine, &myDialogueBuffer[myCurrentDialogueIndex].myVoiceLine });
 		ProcessLineBreaks();
 	}
 
@@ -289,7 +289,7 @@ void CDialogueSystem::HandleInput() {
 		myCurrentLine = "";
 
 		if (myCurrentDialogueIndex == 0) {
-			CMainSingleton::PostMaster().Send({ EMessageType::StopDialogue, NULL });
+			CMainSingleton::PostMaster().SendLate({ EMessageType::StopDialogue, NULL });
 			ExitDialogue();
 		}
 	}

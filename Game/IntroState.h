@@ -30,4 +30,5 @@ private:
 	bool myIntroStateActive;
 	bool myNarrationIsFinished;
 	bool myIntroDialogueStarted;
+	int mySceneIndex = 0;
 };

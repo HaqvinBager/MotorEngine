@@ -130,7 +130,7 @@ bool CEngine::Init(CWindowHandler::SWindowData& someWindowData)
 {
 	ENGINE_ERROR_BOOL_MESSAGE(myWindowHandler->Init(someWindowData), "Window Handler could not be initialized.");
 	ENGINE_ERROR_BOOL_MESSAGE(myFramework->Init(myWindowHandler), "Framework could not be initialized.");
-	myWindowHandler->SetResolution();
+	myWindowHandler->SetInternalResolution();
 	ENGINE_ERROR_BOOL_MESSAGE(myModelFactory->Init(*this), "Model Factory could not be initiliazed.");
 	ENGINE_ERROR_BOOL_MESSAGE(myCameraFactory->Init(myWindowHandler), "Camera Factory could not be initialized.");
 	ENGINE_ERROR_BOOL_MESSAGE(myScene->Init(), "Scene could not be initialized.");
@@ -157,12 +157,7 @@ float CEngine::BeginFrame()
 	size_t decimalIndex = fpsString.find_first_of('.');
 	fpsString = fpsString.substr(0, decimalIndex);
 	myWindowHandler->SetWindowTitle("IronWrought | FPS: " + fpsString);
-#endif // _DEBUG
 
-	std::array<float, 4> clearColor = { 0.15f, 0.15f, 0.15f, 1.0f };
-	myFramework->BeginFrame(clearColor);
-
-#ifdef _DEBUG
 	myDebug->Update();
 	//CDebug::GetInstance()->Update();
 #endif
@@ -175,8 +170,11 @@ float CEngine::BeginFrame()
 
 void CEngine::RenderFrame()
 {
-	if(myRenderSceneActive)
-		myRenderManager->Render(*mySceneMap[myActiveState]);
+	if (!myRenderSceneActive)
+		return;
+
+	ENGINE_BOOL_POPUP(mySceneMap[myActiveState], "The Scene you want to render is nullptr");
+	myRenderManager->Render(*mySceneMap[myActiveState]);
 }
 
 void CEngine::EndFrame()
@@ -222,6 +220,13 @@ void CEngine::CrashWithScreenShot(std::wstring &aSubPath)
 	CoUninitialize();
 }
 
+void CEngine::SetResolution(DirectX::SimpleMath::Vector2 aResolution)
+{
+	myWindowHandler->SetResolution(aResolution);
+	myRenderManager->Release();
+	myRenderManager->ReInit(myFramework, myWindowHandler);
+}
+
 CEngine* CEngine::GetInstance()
 {
 	return ourInstance;
@@ -255,6 +260,15 @@ void CEngine::ModelViewerSetScene(CScene* aScene)
 {
 	myActiveState = CStateStack::EState::InGame;
 	mySceneMap[myActiveState] = aScene;
+}
+
+void CEngine::RemoveScene(CStateStack::EState aState)
+{
+	if (mySceneMap.find(aState) == mySceneMap.end())
+		return;
+
+	delete mySceneMap.at(aState);
+	mySceneMap.at(aState) = nullptr;
 }
 
 void CEngine::ClearModelFactory()

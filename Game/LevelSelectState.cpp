@@ -90,6 +90,7 @@ void CLevelSelectState::Stop()
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel9, this);
 		delete myCanvas;
 		myCanvas = nullptr;
+		myScene = nullptr;
 	}
 }
 

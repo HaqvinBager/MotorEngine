@@ -10,6 +10,8 @@ namespace DirectX {
 
 class CWindowHandler
 {
+	friend class CEngine;
+
 public:
 	struct SWindowData
 	{
@@ -24,20 +26,16 @@ public:
 	CWindowHandler();
 	~CWindowHandler();
 
-	bool Init(CWindowHandler::SWindowData someWindowData);
 	const HWND GetWindowHandle() const;
-
 	DirectX::SimpleMath::Vector2 GetResolution();
-	void SetResolution();
-
-	void SetWindowTitle(std::string aString);
-	
 	const float GetResolutionScale() const;
+	void SetWindowTitle(std::string aString);
 
 private:
-	UINT GetWidth() const;
-	UINT GetHeight() const;
-	
+	bool Init(CWindowHandler::SWindowData someWindowData);
+	void SetInternalResolution();
+	void SetResolution(DirectX::SimpleMath::Vector2 aResolution);
+
 private:
 	CWindowHandler::SWindowData myWindowData;
 	HWND myWindowHandle;

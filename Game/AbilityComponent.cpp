@@ -171,9 +171,6 @@ void CAbilityComponent::SendEvent() {
 		SMessage myMessage;
 		myCurrentCooldowns[2] -= CTimer::Dt();
 
-		std::cout << "Current cooldown: " << myCurrentCooldowns[2] << std::endl;
-		std::cout << "Max cooldown: " << myMaxCooldowns[2] << std::endl;
-
 		float messageValue = myCurrentCooldowns[2] / myMaxCooldowns[2];
 		myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
 

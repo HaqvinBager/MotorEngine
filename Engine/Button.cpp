@@ -30,7 +30,7 @@ void CButton::OnClickUp(void* someData)
 
 	for (unsigned int i = 0; i < myMessagesToSend.size(); ++i)
 	{
-		CMainSingleton::PostMaster().Send({ myMessagesToSend[i],  someData });
+		CMainSingleton::PostMaster().SendLate({ myMessagesToSend[i],  someData });
 	}
 }
 

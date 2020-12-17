@@ -4,7 +4,13 @@
 
 void CPostMaster::Subscribe(const EMessageType aMessageType, IObserver* anObserver)
 {
-	myObserverMap[aMessageType].push_back(anObserver);
+	if (myObserverMap.find(aMessageType) != myObserverMap.end())
+	{
+		if (std::find(myObserverMap[aMessageType].begin(), myObserverMap[aMessageType].end(), anObserver) == myObserverMap[aMessageType].end())
+		{
+			myObserverMap[aMessageType].push_back(anObserver);
+		}
+	}
 }
 
 void CPostMaster::Unsubscribe(const EMessageType aMessageType, IObserver* anObserver)
@@ -20,6 +26,14 @@ void CPostMaster::Unsubscribe(const EMessageType aMessageType, IObserver* anObse
 	}
 }
 
+void CPostMaster::SendLate(const SMessage& aMessage)
+{
+	if (aMessage.myMessageType == EMessageType::Count)
+		return;
+
+	myMessageQueue.push(SMessage(aMessage));
+}
+
 void CPostMaster::Send(const SMessage& aMessage)
 {
 	for (int i = 0; i < myObserverMap[aMessage.myMessageType].size(); ++i)
@@ -30,16 +44,13 @@ void CPostMaster::Send(const SMessage& aMessage)
 
 void CPostMaster::Subscribe(const char* aMessageType, IStringObserver* anObserver)
 {
-	/*if (aMessageType.data()[aMessageType.length() - 1] != '\0')
-	{*/
-		//std::string formattedMessage = std::string(aMessageType);
-		//formattedMessage.append("\0");
-		//myStringObserverMap[formattedMessage].push_back(anObserver);
-	//}
-	//else
-	//{
-		myStringObserverMap[aMessageType].push_back(anObserver);
-	//}
+	if (myStringObserverMap.find(aMessageType) != myStringObserverMap.end())
+	{
+		if (std::find(myStringObserverMap[aMessageType].begin(), myStringObserverMap[aMessageType].end(), anObserver) == myStringObserverMap[aMessageType].end())
+		{
+			myStringObserverMap[aMessageType].push_back(anObserver);
+		}
+	}
 }
 
 
@@ -58,9 +69,36 @@ void CPostMaster::Unsubscribe(const std::string aMessageType, IStringObserver* a
 
 void CPostMaster::Send(const SStringMessage& aMessage)
 {
-	for (int i = 0; i < myStringObserverMap[aMessage.myMessageType].size(); ++i)
+	//for (int i = 0; i < myStringObserverMap[aMessage.myMessageType].size(); ++i)
+	//{
+	//	myStringObserverMap[aMessage.myMessageType][i]->Receive(aMessage);
+	//}
+	if (strlen(aMessage.myMessageType) == 0)
+		return;
+
+	myStringMessageQueue.push(SStringMessage(aMessage));
+}
+
+void CPostMaster::FlushEvents()
+{
+	while (!myMessageQueue.empty())
 	{
-		myStringObserverMap[aMessage.myMessageType][i]->Receive(aMessage);
+		SMessage message = myMessageQueue.front();
+		for (int i = 0; i < myObserverMap[message.myMessageType].size(); ++i)
+		{
+			myObserverMap[message.myMessageType][i]->Receive(message);
+		}
+		myMessageQueue.pop();
+	}
+
+	while (!myStringMessageQueue.empty())
+	{
+		SStringMessage message = myStringMessageQueue.front();
+		for (int i = 0; i < myStringObserverMap[message.myMessageType].size(); ++i)
+		{
+			myStringObserverMap[message.myMessageType][i]->Receive(message);
+		}
+		myStringMessageQueue.pop();
 	}
 }
 

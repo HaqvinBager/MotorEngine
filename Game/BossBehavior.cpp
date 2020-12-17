@@ -89,7 +89,7 @@ void CBossBehavior::Update(CGameObject* aParent)
 
 	if (stats.myHealth <= 0)
 	{
-		CMainSingleton::PostMaster().Send({ EMessageType::BossDied, this });
+		CMainSingleton::PostMaster().SendLate({ EMessageType::BossDied, this });
 	}
 }
 

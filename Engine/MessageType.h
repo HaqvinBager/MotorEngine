@@ -58,5 +58,8 @@ enum class EMessageType
 	LoadLevel7,
 	LoadLevel8,
 	LoadLevel9,
+	SetResolution1280x720,
+	SetResolution1600x900,
+	SetResolution1920x1080,
 	Count
 };

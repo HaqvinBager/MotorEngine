@@ -65,7 +65,6 @@ void CBootUpState::Start()
 void CBootUpState::Stop()
 {
 	myScene->DestroySprites();
-	delete myScene;
 	myScene = nullptr;
 }
 

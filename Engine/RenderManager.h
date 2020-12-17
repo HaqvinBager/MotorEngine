@@ -18,14 +18,19 @@ public:
 	CRenderManager();
 	~CRenderManager();
 	bool Init(CDirectXFramework* aFramework, CWindowHandler* aWindowHandler);
+	bool ReInit(CDirectXFramework* aFramework, CWindowHandler* aWindowHandler);
 	void Render(CScene& aScene);
+
+	void Release();
+
+private:
+	void Clear(DirectX::SimpleMath::Vector4 aClearColor);
 
 private:
 	void RenderBloom();
 	void RenderWithoutBloom();
 
 private:
-	//CScene& myScene;
 	CRenderStateManager myRenderStateManager;
 	CForwardRenderer myForwardRenderer;
 	CFullscreenRenderer myFullscreenRenderer;
@@ -44,6 +49,9 @@ private:
 	CFullscreenTexture myBlurTexture1;
 	CFullscreenTexture myBlurTexture2;
 	CFullscreenTexture myVignetteTexture;
+
+
+	DirectX::SimpleMath::Vector4 myClearColor;
 
 	bool myUseBloom;
 };

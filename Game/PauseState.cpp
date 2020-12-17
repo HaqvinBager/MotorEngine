@@ -27,6 +27,11 @@ CPauseState::~CPauseState()
 
 void CPauseState::Awake() 
 {
+}
+
+void CPauseState::Start()  
+{
+
 	myScene = new CScene();
 
 	CGameObject* camera = new CGameObject(0);
@@ -46,10 +51,7 @@ void CPauseState::Awake()
 	myCanvas->Init("Json/UI_PauseMenu_Description.json", *myScene);
 
 	CEngine::GetInstance()->AddScene(myState, myScene);
-}
 
-void CPauseState::Start()  
-{
 	CEngine::GetInstance()->SetActiveScene(myState);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::Resume, this);
@@ -59,7 +61,10 @@ void CPauseState::Stop()
 {
 	CEngine::GetInstance()->SetActiveScene(CStateStack::EState::InGame);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::MainMenu,this);
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::Resume,this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::Resume,this);	
+	delete myCanvas;
+	myCanvas = nullptr;
+	myScene = nullptr;
 }
 
 void CPauseState::Update() 
@@ -75,8 +80,7 @@ void CPauseState::Receive(const SMessage& aMessage) {
 			myStateStack.PopUntil(CStateStack::EState::MainMenu);
 			break;
 		case EMessageType::Resume:
-			std::cout << "Should not pop yet" << std::endl;
-			myStateStack.PopState()/*Until(CStateStack::EState::InGame)*/;
+			myStateStack.PopState();/*Until(CStateStack::EState::InGame)*/;
 			break;
 		default:
 			break;
