@@ -281,6 +281,7 @@ void CPlayerControllerComponent::TakeDamage(float aDamageMultiplier, CGameObject
 	float damage = CDamageUtility::CalculateDamage(hitType, aGameObject->GetComponent<CStatsComponent>()->GetBaseStats().myDamage, aDamageMultiplier);
 
 	if (GameObject().GetComponent<CStatsComponent>()->AddDamage(damage)) {
+		CMainSingleton::PostMaster().Send({ EMessageType::AttackHits, nullptr });
 		SDamagePopupData data = {damage, static_cast<int>(hitType), &GameObject()};
 		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &data);
 	}
