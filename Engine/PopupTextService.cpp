@@ -380,8 +380,8 @@ void CPopupTextService::UpdateResources()
 
 		//Text space position
 		DirectX::SimpleMath::Vector2 newPos = text->GetPosition();
-		newPos.x /= CEngine::GetInstance()->GetWindowHandler()->GetResolution().x;
-		newPos.y /= CEngine::GetInstance()->GetWindowHandler()->GetResolution().y;
+		newPos.x /= 1920.0f/*CEngine::GetInstance()->GetWindowHandler()->GetResolution().x*/;
+		newPos.y /= 1080.0f/*CEngine::GetInstance()->GetWindowHandler()->GetResolution().y*/;
 		newPos.x -= 0.5f;
 		newPos.y -= 0.5f;
 		newPos *= 2.0f;
