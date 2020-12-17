@@ -27,6 +27,7 @@ public:
 	void SetEnabled(bool isEnabled);
 
 	std::vector<CButton*> GetButtons() { return myButtons; }
+	std::vector<CTextInstance*> GetTexts() { return myTexts; }
 	std::vector<CSpriteInstance*> GetSprites() { return mySprites; }
 	std::vector<CAnimatedUIElement*> GetAnimatedUI() { return myAnimatedUIs; }
 

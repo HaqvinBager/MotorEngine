@@ -31,6 +31,7 @@ enum class ELevel
 };
 
 class CScene;
+class CCanvas;
 
 class CLoadLevelState : public CState, public IStringObserver
 {
@@ -68,4 +69,5 @@ private:
 	std::vector<std::string> myBinPaths;
 	std::unordered_map<ELevel, std::string> myModelJsonFileMap;
 	std::unordered_map<ELevel, std::vector<std::string>> myBinModelPaths;
+	CCanvas* myLoadCanvas;
 };

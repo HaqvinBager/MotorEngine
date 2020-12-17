@@ -29,6 +29,8 @@
 #include "HealthBarComponent.h"
 #include "ParticleEmitterComponent.h"
 #include "BossBehavior.h"
+#include "LoadObjectComponent.h"
+#include "RandomNumberGenerator.h"
 
 #include "CollisionManager.h"
 #include "LightFactory.h"
@@ -68,7 +70,22 @@ bool CUnityFactory::FillScene(const SLoadScreenData& aData, const std::vector<st
 	CGameObject* envLight = CreateGameObject(aData.myDirectionalLight);
 	aScene.AddInstance(envLight);
 	aScene.SetEnvironmentLight(envLight->GetComponent<CEnviromentLightComponent>()->GetEnviromentLight());
-	aScene.AddInstance(CreateGameObject(aData.myGameObject, someModelPaths[aData.myGameObject.myModelIndex])); //pls no more crash //Nico 09 dec
+	int random = Random(0, (static_cast<int>(aData.myGameObjects.size()) - 1));
+	CGameObject* loadScreenGameObject = CreateGameObject(aData.myGameObjects[random], someModelPaths[aData.myGameObjects[random].myModelIndex]);
+	loadScreenGameObject->AddComponent<CLoadObjectComponent>(*loadScreenGameObject);
+	aScene.AddInstance(loadScreenGameObject); //pls no more crash //Nico 09 dec
+
+	random = Random(0, 1);
+
+	for (auto& environmentFX : aData.myEnvironmentFXs)
+	{
+		aScene.AddInstance(CreateGameObject(environmentFX, aData.myEnvironmentFXStringMap.at(environmentFX.myInstanceID)));
+	}
+
+	for (auto& particleFX : aData.myParticleFXs)
+	{
+		aScene.AddInstance(CreateGameObject(particleFX, aData.myParticleFXStringMap.at(particleFX.myInstanceID)));
+	}
 	return true;
 }
 

@@ -147,7 +147,11 @@ struct SLoadScreenData
 {
 	SCameraData myCamera;
 	SDirectionalLightData myDirectionalLight;
-	SGameObjectData myGameObject;
+	std::vector<SGameObjectData> myGameObjects;
+	std::vector<SParticleFXData> myParticleFXs;
+	std::vector<SEnvironmentFXData> myEnvironmentFXs;
+	std::unordered_map<int, std::string> myEnvironmentFXStringMap;
+	std::unordered_map<int, std::vector<std::string>> myParticleFXStringMap;
 
 	std::string myBinPath;
 };
