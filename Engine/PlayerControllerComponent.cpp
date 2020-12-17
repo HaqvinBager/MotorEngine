@@ -19,11 +19,13 @@
 #include <PlayerGlobalState.h>
 #include "VFXComponent.h"
 #include "VFXFactory.h"
+#include "ParticleEmitterComponent.h"
+#include "ParticleFactory.h"
 
 CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent):
 	CBehaviour(aParent),
 	myLastHP(0.0f),
-	mySecourceRegenerationSpeed(2.5f), //TODO: read from unity
+	mySecourceRegenerationSpeed(4.0f), //TODO: read from unity
 	mySelection(new CMouseSelection()),
 	myIsMoving(true),
 	myTargetEnemy(nullptr),
@@ -34,12 +36,12 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent):
 	myLastPosition = {0.0f,0.0f,0.0f};
 
 	myPathMarker = new CGameObject(-1337);
-	myPathMarker->AddComponent<CVFXComponent>(*myPathMarker);
-	std::vector<std::string> vfxPaths;
-	vfxPaths.emplace_back("Json/VFXData_PathMarker.json");
-	myPathMarker->GetComponent<CVFXComponent>()->Init(CVFXFactory::GetInstance()->GetVFXBaseSet(vfxPaths));
+	myPathMarker->AddComponent<CParticleEmitterComponent>(*myPathMarker);
+	std::vector<std::string> particlePaths;
+	particlePaths.emplace_back("Json/PD_MouseRing.json");
+	myPathMarker->GetComponent<CParticleEmitterComponent>()->Init(CParticleFactory::GetInstance()->GetParticleSet(particlePaths));
 	myPathMarker->Active(true);
-	myMarkerDuration = myPathMarker->GetComponent<CVFXComponent>()->GetVFXBases().back()->GetVFXBaseData().myDuration;
+	myMarkerDuration = myPathMarker->GetComponent<CParticleEmitterComponent>()->EmitterDurations().back();
 	myPathMarker->myTransform->Position({GameObject().myTransform->Position().x, GameObject().myTransform->Position().y , GameObject().myTransform->Position().z});
 }
 
@@ -152,6 +154,9 @@ void CPlayerControllerComponent::Update()
 		RegenerateMana();
 	}
 	if (myPathMarker->Active()) {
+		std::cout << "Position at X:" << myPathMarker->GetComponent<CParticleEmitterComponent>()->GetTransform()._41 << std::endl;
+		std::cout << "Position at Y:" << myPathMarker->GetComponent<CParticleEmitterComponent>()->GetTransform()._42 << std::endl;
+		std::cout << "Position at Z:" << myPathMarker->GetComponent<CParticleEmitterComponent>()->GetTransform()._43 << std::endl;
 		if (myMarkerDuration >= 0.0f) {
 			myMarkerDuration -= CTimer::Dt();
 		}
@@ -172,7 +177,7 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 		{
 		case IInputObserver::EInputEvent::MoveClick:
 			myPathMarker->Active(true);
-			myMarkerDuration = myPathMarker->GetComponent<CVFXComponent>()->GetVFXBases().back()->GetVFXBaseData().myDuration;
+			myMarkerDuration = myPathMarker->GetComponent<CParticleEmitterComponent>()->EmitterDurations().back();
 			myPathMarker->myTransform->Position(mySelection->GetPositionAtNavmesh());
 			break;
 		case  IInputObserver::EInputEvent::StandStill:

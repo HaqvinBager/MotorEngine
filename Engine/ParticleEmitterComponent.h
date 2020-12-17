@@ -34,7 +34,7 @@ public:
 	std::vector<CParticle*>& GetParticleSet() { return myParticles; }
 	std::vector<std::vector<CParticle::SParticleVertex>>& GetParticleVertices() { return myParticleVertices; }
 	DirectX::SimpleMath::Matrix GetTransform() { return myTransform; }
-
+	const std::vector<float> EmitterDurations() const { return myEmitterDurations; }
 private:
 	void SpawnParticles(unsigned int anIndex, DirectX::SimpleMath::Vector3& aCameraPosition, CParticle::SParticleData& particleData);
 	void UpdateParticles(unsigned int anIndex, DirectX::SimpleMath::Vector3& aCameraPosition, CParticle::SParticleData& particleData);
