@@ -246,6 +246,7 @@ void CPlayerControllerComponent::Receive(const SMessage& aMessage)
 	{
 	case EMessageType::EnemyDied:
 		UpdateExperience(aMessage);
+		break;
 	default:
 		break;
 	}
