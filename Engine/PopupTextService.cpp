@@ -356,7 +356,7 @@ void CPopupTextService::SpawnTutorialText(std::string aText)
 void CPopupTextService::SpawnWarningText(std::string aText)
 {
 	myWarningText->SetPivot({ 0.5f, 0.5f });
-	myWarningText->SetPosition({ 0.0f, -0.75f });
+	myWarningText->SetPosition({ 0.0f, -0.6f });
 	myWarningText->SetScale({ 1.0f, 1.0f });
 	myWarningText->SetText(aText);
 	myWarningAnimationData->myStartColor = { 1.0f, 0.0f, 0.0f, 1.0f };

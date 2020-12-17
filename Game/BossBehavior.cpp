@@ -14,6 +14,7 @@
 #include "AbilityComponent.h"
 #include "NavMeshComponent.h"
 #include "StatsComponent.h"
+#include "CameraComponent.h"
 #include "Canvas.h"
 #include "AnimatedUIElement.h"
 
@@ -32,6 +33,7 @@ CBossBehavior::CBossBehavior(CGameObject* aPlayerObject, CScene& aScene, Vector2
 	, myIsVeryDead(false)
 	, myAblilityComponent(nullptr)
 	, myFoundPlayer(false)
+	, myHasFadedOut(false)
 {
 	myPhasePercents.emplace_back(aPhaseOne);
 	myPhasePercents.emplace_back(aPhaseTwo);
@@ -69,6 +71,14 @@ void CBossBehavior::Update(CGameObject* aParent)
 		if (myIsVeryDead)
 		{
 			mySendDeathMessageTimer -= CTimer::Dt();
+
+			// This fade threshold is (1.0f / 0.75f), based on camera fade out decay and camera fade out speed
+			// Can't bother doing it properly
+			if (mySendDeathMessageTimer <= 1.32f && !myHasFadedOut)
+			{
+				myHasFadedOut = true;
+				CEngine::GetInstance()->GetActiveScene().GetMainCamera()->Fade(false);
+			}
 			if (mySendDeathMessageTimer <= 0.0f)
 			{
 				CMainSingleton::PostMaster().SendLate({ EMessageType::StopMusic, this });
