@@ -216,7 +216,7 @@ void CEnemyBehavior::SendAudioIdle()
 {
 	if (!myHasSentAudio)
 	{
-		CMainSingleton::PostMaster().Send({ EMessageType::DemonIdle2, nullptr });
+		//CMainSingleton::PostMaster().Send({ EMessageType::DemonIdle2, nullptr });
 		myHasSentAudio = true;
 	}
 }

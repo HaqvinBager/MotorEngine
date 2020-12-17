@@ -46,6 +46,9 @@ public:
 private:
 	void Awake() override;
 
+	void PlayLevelMusicGroup3(const ELevel aLevel);
+	void PlayLevelMusicGroup4(const ELevel aLevel);
+
 	/// <summary>
 	/// Returns the Index this Scene will use in CEngine::myScenes
 	/// </summary>

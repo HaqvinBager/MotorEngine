@@ -67,9 +67,6 @@ enum class EMessageType
 	PlayDungeonMusic,
 	PlayGardensMusic,
 	PlayCastleMusic,
-	StopMainMenuMusic,
-	StopDungeonMusic,
-	StopGardensMusic,
-	StopCastleMusic,
+	StopMusic,
 	Count
 };

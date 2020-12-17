@@ -8,6 +8,7 @@
 #include "Engine.h"
 #include "Scene.h"
 #include "MainSingleton.h"
+#include "PostMaster.h"
 #include "NavMeshComponent.h"
 #include "AnimationComponent.h"
 #include "AbilityComponent.h"
@@ -65,6 +66,7 @@ void CBossBehavior::Update(CGameObject* aParent)
 		mySendDeathMessageTimer -= CTimer::Dt();
 		if (mySendDeathMessageTimer <= 0.0f)
 		{
+			CMainSingleton::PostMaster().Send({ EMessageType::StopMusic, this });
 			CMainSingleton::PostMaster().Send({ EMessageType::BossDied, this });
 		}
 		return;
@@ -172,6 +174,7 @@ void CBossBehavior::IdlePhase(CGameObject* aParent)
 			sprite->SetShouldRender(true);
 		}
 		myCanvas->GetAnimatedUI()[0]->SetShouldRender(true);
+		CMainSingleton::PostMaster().Send({ EMessageType::BossFightStart, nullptr });
 	}
 }
 
