@@ -164,6 +164,8 @@ void CPlayerControllerComponent::Update()
 		}
 	}
 	else {
+		myTargetEnemy = nullptr;
+
 		this->GameObject().GetComponent<CTransformComponent>()->ClearPath();
 	}
 }
