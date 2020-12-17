@@ -50,7 +50,6 @@ public:
 	std::vector<CGameObject*> GetModelsToOutline() const { return myModelsToOutline; }
 
 	bool AddInstances(std::vector<CGameObject*>& someGameObjects);
-	bool AddInstance(CCamera* aCamera);
 	bool SetEnvironmentLight(CEnvironmentLight* anEnvironmentLight);
 	bool AddInstance(CPointLight* aPointLight);
 	bool AddInstance(CGameObject* aGameObject);
