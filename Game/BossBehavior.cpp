@@ -26,6 +26,7 @@
 #include "RandomNumberGenerator.h"
 #include "Canvas.h"
 #include "DialogueSystem.h"
+#include "TextInstance.h"
 
 CBossBehavior::CBossBehavior(CGameObject* aPlayerObject, CScene& aScene, Vector2 aPhaseOne, Vector2 aPhaseTwo, Vector2 aPhaseThree)
 	: myPlayer(aPlayerObject)
@@ -51,6 +52,9 @@ CBossBehavior::CBossBehavior(CGameObject* aPlayerObject, CScene& aScene, Vector2
 	for (auto& animated : animUI)
 	{
 		animated->SetShouldRender(false);
+	}
+	for (auto& text: myCanvas->GetTexts()) {
+		text->SetShouldRender(false);
 	}
 }
 
@@ -143,7 +147,7 @@ bool CBossBehavior::FindATarget(CGameObject& aParent)
 
 		aParent.GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
 	}
-	return true;
+	return myFoundPlayer;
 }
 
 void CBossBehavior::TakeDamage(float aDamage, CGameObject* aGameObject)
@@ -191,6 +195,10 @@ void CBossBehavior::IdlePhase(CGameObject* aParent)
 			sprite->SetShouldRender(true);
 		}
 		myCanvas->GetAnimatedUI()[0]->SetShouldRender(true);
+
+		for (auto& text : myCanvas->GetTexts()) {
+			text->SetShouldRender(true);
+		}
 		CMainSingleton::PostMaster().Send({ EMessageType::BossFightStart, nullptr });
 	}
 }
