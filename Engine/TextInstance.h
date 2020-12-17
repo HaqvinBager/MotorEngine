@@ -18,6 +18,8 @@ public:
 	void SetColor(DirectX::SimpleMath::Vector4 aColor);
 	void SetPivot(DirectX::SimpleMath::Vector2 aPivot);
 	void SetScale(DirectX::SimpleMath::Vector2 aScale);
+	void SetShouldRender(bool aShouldRender);
+	bool GetShouldRender() { return myShouldRender; }
 
 public:
 	CText* GetTextData() { return myTextData; }
@@ -36,5 +38,6 @@ private:
 	DirectX::SimpleMath::Vector2 myPivot;
 	DirectX::SimpleMath::Vector2 myScale;
 	std::string myText;
+	bool myShouldRender;
 };
 

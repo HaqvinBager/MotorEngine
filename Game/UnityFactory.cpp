@@ -319,7 +319,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SEnemyData& aData, const std:
 
 	AddAnimationsToGameObject(*gameObject, aModelPath, EAnimatedObject::Enemy);
 
-	gameObject->AddComponent<CHealthBarComponent>(*gameObject, aScene, "Json/UI_InGame_Enemy_HealthBar.json");
+	gameObject->AddComponent<CHealthBarComponent>(*gameObject, aScene);
 
 	return gameObject;
 }

@@ -8,6 +8,7 @@ namespace SM = DirectX::SimpleMath;
 
 CTextInstance::CTextInstance(CScene& aScene, bool aAddToScene) 
     : myTextData(nullptr)
+    , myShouldRender(true)
 {
     if (aAddToScene)
        aScene.AddInstance(this);
@@ -71,4 +72,9 @@ void CTextInstance::SetPivot(DirectX::SimpleMath::Vector2 aPivot)
 void CTextInstance::SetScale(DirectX::SimpleMath::Vector2 aScale)
 {
     myScale = aScale;
+}
+
+void CTextInstance::SetShouldRender(bool aShouldRender)
+{
+    myShouldRender = aShouldRender;
 }
