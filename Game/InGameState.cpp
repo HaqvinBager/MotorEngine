@@ -124,6 +124,7 @@ void CInGameState::Start()
 	}
 
 	CEngine::GetInstance()->GetActiveScene().SetPlayerToOutline(CEngine::GetInstance()->GetActiveScene().GetPlayer());
+	CEngine::GetInstance()->GetActiveScene().GetMainCamera()->Fade(true);
 }
 
 void CInGameState::Stop()

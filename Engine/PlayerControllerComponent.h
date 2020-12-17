@@ -26,6 +26,7 @@ public:
 	void RegenerateMana();
 	void UpdateExperience(const SMessage& aMessage);
 	bool AuraActive(){ return myAuraActive; }
+
 public:
 	void RegenerationPercentage(float aRegenerationPercentage) {
 		myRegenerationPercentage = aRegenerationPercentage;

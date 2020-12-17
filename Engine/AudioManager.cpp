@@ -52,7 +52,7 @@ CAudioManager::CAudioManager() : myWrapper() {
 		for (unsigned int i = 0; i < audioDataArray.Size(); ++i)
 		{
 			auto audioData = audioDataArray[i].GetObjectW();
-			myMusicAudio.emplace_back(myWrapper.RequestSound(myMusicPath + audioData["Path"].GetString()));
+			myMusicAudio.emplace_back(myWrapper.RequestLoopingSound(myMusicPath + audioData["Path"].GetString()));
 
 		}
 
@@ -97,24 +97,26 @@ CAudioManager::CAudioManager() : myWrapper() {
 #pragma endregion
 
 	// Set starting volume
-	for (auto& channel : myChannels) {
-		channel->SetVolume(0.1f);
-	}
+	//for (auto& channel : myChannels) 
+	//{
+	//	channel->SetVolume(0.1f);
+	//}
 
+	// Add JSON reading:
+	// Group 4 
+	myChannels[CAST(EChannels::Music)]->SetVolume(0.3f);
+	myChannels[CAST(EChannels::Ambiance)]->SetVolume(0.2f);
+	myChannels[CAST(EChannels::SFX)]->SetVolume(0.15f);
+	myChannels[CAST(EChannels::UI)]->SetVolume(0.4f);
+	myChannels[CAST(EChannels::VOX)]->SetVolume(0.5f);
+
+	// Unused?
 	// SEND MESSAGE TO START PLAYING MUSIC
-
 	//CMainSingleton::PostMaster().Send({ EMessageType::MainMenu, NULL });
-
 	//CMainSingleton::PostMaster().Send({ EMessageType::EnemyHealthChanged, NULL });
-
 	//CMainSingleton::PostMaster().Send({ EMessageType::PlayAmbienceCastle, NULL });
-
-
 	//CMainSingleton::PostMaster().Send({ EMessageType::BossDied, NULL });
-
-
-		//CMainSingleton::PostMaster().Send({ EMessageType::UIButtonPress, NULL });
-
+	//CMainSingleton::PostMaster().Send({ EMessageType::UIButtonPress, NULL });
 }
 
 	CAudioManager::~CAudioManager()
@@ -246,6 +248,14 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		}
 	}break;
 
+	case EMessageType::PlayBossExplosionSFX:
+	{
+		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::BossExplosion))
+		{
+			myWrapper.Play(mySFXAudio[CAST(ESFX::BossExplosion)], myChannels[CAST(EChannels::SFX)]);
+		}
+	}break;
+
 	case EMessageType::DemonIdle1:
 	{
 		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::DemonIdle1))
@@ -299,6 +309,14 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::ShieldSpell))
 		{
 			myWrapper.Play(mySFXAudio[CAST(ESFX::ShieldSpell)], myChannels[CAST(EChannels::SFX)]);
+		}
+	}break;
+
+	case EMessageType::PlayExplosionSFX:
+	{
+		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::Explosion))
+		{
+			myWrapper.Play(mySFXAudio[CAST(ESFX::Explosion)], myChannels[CAST(EChannels::SFX)]);
 		}
 	}break;
 
@@ -358,6 +376,7 @@ void CAudioManager::SubscribeToMessages()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::AttackHits, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayBossDeathSFX, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::BossMeleeAttack, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayBossExplosionSFX, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::DemonIdle1, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::DemonIdle2, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::HitDestructible, this);
@@ -365,6 +384,7 @@ void CAudioManager::SubscribeToMessages()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::LightAttack, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::HeavyAttack, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::ShieldSpell, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayExplosionSFX, this);
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::UIButtonPress, this);
 
@@ -387,6 +407,7 @@ void CAudioManager::UnsubscribeToMessages()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::AttackHits, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayBossDeathSFX, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::BossMeleeAttack, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayBossExplosionSFX, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::DemonIdle1, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::DemonIdle2, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::HitDestructible, this);
@@ -394,6 +415,7 @@ void CAudioManager::UnsubscribeToMessages()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LightAttack, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::HeavyAttack, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::ShieldSpell, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayExplosionSFX, this);
 
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::UIButtonPress, this);
 

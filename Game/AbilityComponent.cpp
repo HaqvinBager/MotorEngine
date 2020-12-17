@@ -134,8 +134,10 @@ bool CAbilityComponent::UseAbility(EAbilityType anAbilityType, DirectX::SimpleMa
 		return false;
 	}
 
-	if (myAbilityPools.at(anAbilityType).back()->GetComponent<CAbilityBehaviorComponent>()->AbilityBehavior()->myResourceCost > GameObject().GetComponent<CStatsComponent>()->GetStats().myResource)
+	if (myAbilityPools.at(anAbilityType).back()->GetComponent<CAbilityBehaviorComponent>()->AbilityBehavior()->myResourceCost > GameObject().GetComponent<CStatsComponent>()->GetStats().myResource) {
+		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Warning, "You require more Energy");
 		return false;
+	}
 
 	myActiveAbilities.emplace_back(myAbilityPools.at(anAbilityType).back());
 	myAbilityPools.at(anAbilityType).pop_back();
@@ -147,6 +149,7 @@ bool CAbilityComponent::UseAbility(EAbilityType anAbilityType, DirectX::SimpleMa
 		if (myCurrentCooldowns[3] <= 0) {
 			myCurrentCooldowns[3] = myMaxCooldowns[3];
 			this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack01ID();
+			CMainSingleton::PostMaster().Send({ EMessageType::LightAttack, nullptr });
 		}
 	}
 
@@ -206,10 +209,15 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 		case EInputEvent::Ability1:
 			if (this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel > 0) {
 				if (myCurrentCooldowns[0] > 0)
+				{
+					CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Warning, "That ability is not ready yet");
 					break;
+				}
+
 
 				if (UseAbility(EAbilityType::PlayerAbility1, GameObject().myTransform->Position()))
 				{
+					CMainSingleton::PostMaster().Send({ EMessageType::HealingAura, nullptr });
 					this->GameObject().GetComponent<CAnimationComponent>()->PlayAbility01ID();
 					myMessage.myMessageType = EMessageType::AbilityOneCooldown;
 					myCurrentCooldowns[0] = myMaxCooldowns[0];
@@ -223,7 +231,10 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 		/*case EInputEvent::Ability2:
 			if (this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel > 1) {
 				if (myCurrentCooldowns[1] > 0)
+				{
+					CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Warning, "That ability is not ready yet");
 					break;
+				}
 
 				if (UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position()))
 				{
@@ -237,10 +248,14 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 		case EInputEvent::Ability3:
 			if (this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel > 2) {
 				if (myCurrentCooldowns[2] > 0)
+				{
+					CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Warning, "That ability is not ready yet");
 					break;
+				}
 
 				if (UseAbility(EAbilityType::PlayerAbility3, GameObject().myTransform->Position()))
 				{
+					CMainSingleton::PostMaster().Send({ EMessageType::PlayExplosionSFX, nullptr });
 					this->GameObject().GetComponent<CAnimationComponent>()->PlayAbility02ID();
 					myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
 					myCurrentCooldowns[2] = myMaxCooldowns[2];
@@ -257,6 +272,7 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 			{
 				myCurrentCooldowns[4] = myMaxCooldowns[4];
 				this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack02ID();
+				CMainSingleton::PostMaster().Send({ EMessageType::HeavyAttack, nullptr });
 			}
 			break;
 		default:

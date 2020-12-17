@@ -29,6 +29,7 @@
 #include "HealthBarComponent.h"
 #include "Canvas.h"
 #include "AnimatedUIElement.h"
+#include "PopupTextService.h"
 
 CEnemyBehavior::CEnemyBehavior(CGameObject* aPlayerObject)
 	: myPlayer(aPlayerObject)
@@ -169,10 +170,17 @@ void CEnemyBehavior::TakeDamage(float aDamageMultiplier, CGameObject* aGameObjec
 		float difference = baseHealth - myCurrentParent->GetComponent<CStatsComponent>()->GetStats().myHealth;
 
 		//if (myPlayer->GetComponent<CPlayerControllerComponent>()->AuraActive()) {
-		float regenerationPercentage = myPlayer->GetComponent<CPlayerControllerComponent>()->RegenerationPercentage();
+			float regenerationPercentage = myPlayer->GetComponent<CPlayerControllerComponent>()->RegenerationPercentage();
 			if ((myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth + (difference * regenerationPercentage))
 				< myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth)
+			{
+				SDamagePopupData healingData;
+				healingData.myHitType = 4; // Healing
+				healingData.myDamage = difference * regenerationPercentage;
+				healingData.myGameObject = myPlayer;
+				CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &healingData);
 				myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth += difference * regenerationPercentage;
+			}
 			else
 				myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth = myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
 		//}

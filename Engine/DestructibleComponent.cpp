@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "DestructibleComponent.h"
 
+#include "MainSingleton.h"
+#include "PostMaster.h"
 #include "AnimationComponent.h"
 
 CDestructibleComponent::CDestructibleComponent(CGameObject& aParent)
@@ -34,5 +36,6 @@ void CDestructibleComponent::IsDead(bool isDead)
 	myIsDead = isDead;
 	if (myIsDead == true) {
 		GameObject().GetComponent<CAnimationComponent>()->DeadState();
+		CMainSingleton::PostMaster().Send({ EMessageType::HitDestructible, nullptr });
 	}
 }

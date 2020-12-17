@@ -20,6 +20,11 @@ CAudio* CFModWrapper::RequestSound(std::string aFilePath)
 	return new CAudio(myFModInstance->CreateSound(aFilePath));
 }
 
+CAudio* CFModWrapper::RequestLoopingSound(std::string aFilePath)
+{
+	return new CAudio(myFModInstance->CreateLoopingSound(aFilePath));
+}
+
 CAudioChannel* CFModWrapper::RequestChannel(std::string aChannelName)
 {
 	return new CAudioChannel(myFModInstance->CreateChannel(aChannelName));
