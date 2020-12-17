@@ -82,7 +82,7 @@ void CMenuState::Stop()
 	for (auto buttons : myCanvas->GetButtons())
 	{
 		for (auto messageType : buttons->GetMessagesToSend())
-			CMainSingleton::PostMaster().Unsubscribe(messageType, this);
+			CMainSingleton::PostMaster().Unsubscribe(messageType, this);				
 	}
 
 	delete myCanvas;
@@ -91,7 +91,6 @@ void CMenuState::Stop()
 
 void CMenuState::Update() {
 	myCanvas->Update();
-	
 }
 
 #include <iostream>
@@ -105,18 +104,30 @@ void CMenuState::Receive(const SMessage &aMessage) {
 		} break;
 		case EMessageType::Credits:
 		{
+			for (auto button : myCanvas->GetButtons())
+				button->OnLeave();
+			
 			myStateStack.PushState(CStateStack::EState::Credits);
 		} break;
 		case EMessageType::LevelSelect:
 		{
+			for (auto button : myCanvas->GetButtons())
+				button->OnLeave();
+
 			myStateStack.PushState(CStateStack::EState::LevelSelect);
 		} break;
 		case EMessageType::Options:
 		{
+			for (auto button : myCanvas->GetButtons())
+				button->OnLeave();
+
 			myStateStack.PushState(CStateStack::EState::Options);
 		} break;
 		case EMessageType::Quit:
 		{
+			for (auto button : myCanvas->GetButtons())
+				button->OnLeave();
+
 			CEngine::GetInstance()->SetRenderScene(false);
 			myStateStack.PopState();
 		} break;
