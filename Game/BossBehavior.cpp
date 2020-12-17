@@ -66,8 +66,8 @@ void CBossBehavior::Update(CGameObject* aParent)
 		mySendDeathMessageTimer -= CTimer::Dt();
 		if (mySendDeathMessageTimer <= 0.0f)
 		{
-			CMainSingleton::PostMaster().Send({ EMessageType::StopMusic, this });
-			CMainSingleton::PostMaster().Send({ EMessageType::BossDied, this });
+			CMainSingleton::PostMaster().SendLate({ EMessageType::StopMusic, this });
+			CMainSingleton::PostMaster().SendLate({ EMessageType::BossDied, this });
 		}
 		return;
 	}
@@ -76,7 +76,7 @@ void CBossBehavior::Update(CGameObject* aParent)
 
 	float precentHealth = stats.myHealth / aParent->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
 	precentHealth *= 100.f;
-	
+
 
 /*	if (precentHealth >= myPhasePercents[0].x && precentHealth <= myPhasePercents[0].y)
 	{
@@ -85,7 +85,7 @@ void CBossBehavior::Update(CGameObject* aParent)
 	}
 	else*/ if (precentHealth >= myPhasePercents[1].x && precentHealth <= myPhasePercents[1].y)
 	{
-		
+
 		myPhase = CBossBehavior::Phase::Mid;
 	}
 	else if (precentHealth >= myPhasePercents[2].x && precentHealth <= myPhasePercents[2].y)
@@ -193,7 +193,7 @@ void CBossBehavior::StartPhase(CGameObject* aParent)
 		if (myTempAttackTimer > playerBaseDamageCooldown)
 		{
 			myTempAttackTimer -= playerBaseDamageCooldown;
-			
+
 			aParent->GetComponent<CAnimationComponent>()->PlayAttack01ID();
 
 			aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility1, aParent->myTransform->Position());

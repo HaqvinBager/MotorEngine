@@ -84,18 +84,19 @@ bool CWindowHandler::Init(CWindowHandler::SWindowData someWindowData)
     windowclass.lpszClassName = L"3DEngine";
     RegisterClassEx(&windowclass);
 
-    myWindowHandle = CreateWindow(L"3DEngine", L"IronWrought",
-        WS_OVERLAPPEDWINDOW | WS_POPUP | WS_VISIBLE,
-        myWindowData.myX, myWindowData.myY, myWindowData.myWidth, myWindowData.myHeight,
-        nullptr, nullptr, nullptr, this);
+    // Start in bordered window
+    //myWindowHandle = CreateWindow(L"3DEngine", L"IronWrought",
+    //    WS_OVERLAPPEDWINDOW | WS_POPUP | WS_VISIBLE,
+    //    myWindowData.myX, myWindowData.myY, myWindowData.myWidth, myWindowData.myHeight,
+    //    nullptr, nullptr, nullptr, this);
+
+    // Start in fullscreen
+    myWindowHandle = CreateWindow(L"3DEngine", L"IronWrought", 
+        WS_POPUP | WS_VISIBLE,
+        0, 0, /*GetSystemMetrics(SM_CXSCREEN)*/1920, /*GetSystemMetrics(SM_CYSCREEN)*/1080,
+        NULL, NULL, GetModuleHandle(nullptr), this);
 
     myResolution = new Vector2();
-    // //Start in fullscreen
-    //myWindowHandle = CreateWindow(L"3DEngine", L"IronWrought", 
-    //    WS_POPUP | WS_VISIBLE,
-    //    0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN),
-    //    NULL, NULL, GetModuleHandle(nullptr), NULL);
-
     return true;
 }
 
@@ -104,37 +105,29 @@ const HWND CWindowHandler::GetWindowHandle() const
     return myWindowHandle;
 }
 
-UINT CWindowHandler::GetWidth() const {
-    LPRECT rect = new RECT{ 0, 0, 0, 0 };// does this need to be newed?
-    if (GetClientRect(myWindowHandle, rect) != 0) {
-        return rect->right;
-    }
-
-    return myWindowData.myWidth;
-}
-
-UINT CWindowHandler::GetHeight() const {
-    LPRECT rect = new RECT{ 0, 0, 0, 0 };// does this need to be newed?
-    if (GetClientRect(myWindowHandle, rect) != 0) {
-        return rect->bottom;
-    }
-    return myWindowData.myHeight;
-}
-
 DirectX::SimpleMath::Vector2 CWindowHandler::GetResolution()
 {
     return *myResolution;
 }
 
-void CWindowHandler::SetResolution()
+void CWindowHandler::SetResolution(DirectX::SimpleMath::Vector2 aResolution)
+{
+    ::SetWindowPos(myWindowHandle, 0, 0, 0, (UINT)aResolution.x, (UINT)aResolution.y, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
+    
+    SetInternalResolution();
+}
+
+void CWindowHandler::SetInternalResolution()
 {
     LPRECT rect = new RECT{ 0, 0, 0, 0 };
     if (GetClientRect(myWindowHandle, rect) != 0) {
         myResolution->x = static_cast<float>(rect->right);
         myResolution->y = static_cast<float>(rect->bottom);
     }
+    delete rect;
 
     myResolutionScale = myResolution->y / 1080.0f;
+    std::cout << myResolutionScale << std::endl;
 }
 
 void CWindowHandler::SetWindowTitle(std::string aString)

@@ -37,7 +37,6 @@
 #include "StateStack.h"
 #include "State.h"
 
-
 #define SAFE_DELETE(aPointer) delete aPointer; aPointer = nullptr;
 
 //namesapce SM = DirectX::SimpleMath;

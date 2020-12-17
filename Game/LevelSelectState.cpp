@@ -83,6 +83,7 @@ void CLevelSelectState::Stop()
 
 		delete myCanvas;
 		myCanvas = nullptr;
+		myScene = nullptr;
 	}
 }
 

@@ -35,6 +35,7 @@ class CEngine
 	friend class CModelFactory;
 	friend class CVFXFactory;
 	friend class CLightFactory;
+	friend class CRenderManager;
 
 public:
 	friend class CLineFactory;
@@ -47,6 +48,8 @@ public:
 	CWindowHandler* GetWindowHandler();
 	void InitWindowsImaging();
 	void CrashWithScreenShot(std::wstring& aSubPath);
+
+	void SetResolution(DirectX::SimpleMath::Vector2 aResolution);
 
 	static CEngine* GetInstance();
 	
@@ -61,7 +64,7 @@ public:
 	//unsigned int ScenesSize();
 
 	void SetRenderScene(const bool aRenderSceneActive) { myRenderSceneActive = aRenderSceneActive; }
-
+	void RemoveScene(CStateStack::EState aState);
 	void ClearModelFactory();
 
 private:

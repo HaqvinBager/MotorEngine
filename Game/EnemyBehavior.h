@@ -18,7 +18,7 @@ public:
 	void Die();
 
 private:
-	void SendAudioIdle();
+	void SendAudio();
 	bool myHasSentAudio;
 
 	CGameObject* myPlayer;

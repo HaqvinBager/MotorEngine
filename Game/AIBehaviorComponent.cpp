@@ -2,6 +2,7 @@
 #include "AIBehaviorComponent.h"
 #include "GameObject.h"
 #include "AIBehavior.h"
+#include "DialogueSystem.h"
 
 CAIBehaviorComponent::CAIBehaviorComponent(CGameObject& aParent, IAIBehavior* aBehavior)
 	: CBehaviour(aParent), myBehavior(aBehavior)
@@ -23,7 +24,9 @@ void CAIBehaviorComponent::Start()
 
 void CAIBehaviorComponent::Update()
 {
-	myBehavior->Update(&GameObject());
+	if (!CMainSingleton::DialogueSystem().Active()) {
+		myBehavior->Update(&GameObject());
+	}
 }
 
 void CAIBehaviorComponent::Collided(CGameObject* aCollidedGameObject)

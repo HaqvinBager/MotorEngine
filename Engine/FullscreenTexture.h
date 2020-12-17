@@ -18,7 +18,8 @@ public:
 	void ClearDepth(float aClearDepth = 1.0f, unsigned int aClearStencil = 0);
 	void SetAsActiveTarget(CFullscreenTexture* aDepth = nullptr);
 	void SetAsResourceOnSlot(unsigned int aSlot);
-
+	void ReleaseTexture();
+	void ReleaseDepth();
 	friend CFullscreenTextureFactory;
 
 private:

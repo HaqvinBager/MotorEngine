@@ -69,5 +69,8 @@ enum class EMessageType
 	PlayCastleMusic,
 	StopMusic,
 	PlayBossDeathSFX,
+	SetResolution1280x720,
+	SetResolution1600x900,
+	SetResolution1920x1080,
 	Count
 };

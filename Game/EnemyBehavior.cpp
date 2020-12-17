@@ -51,7 +51,7 @@ void CEnemyBehavior::Update(CGameObject* aParent)
 	SStats stats = myCurrentParent->GetComponent<CStatsComponent>()->GetStats();
 
 	if (stats.myHealth <= 0) {
-		CMainSingleton::PostMaster().Send({EMessageType::EnemyDied, this});
+		CMainSingleton::PostMaster().SendLate({EMessageType::EnemyDied, this});
 		if (stats.myTokenSlot != nullptr) {
 			CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
 			stats.myTokenSlot = nullptr;
@@ -108,7 +108,7 @@ void CEnemyBehavior::FindATarget()
 	float dist = DirectX::SimpleMath::Vector3::DistanceSquared(parentPos, targetPos);
 	if (dist <= baseStats.myBaseVisionRange) {
 		
-		SendAudioIdle();
+		
 
 		//NavMesh movement
 		myCurrentParent->GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
@@ -123,18 +123,19 @@ void CEnemyBehavior::FindATarget()
 				//CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
 				//stats.myTokenSlot = nullptr;
 				//myCurrentParent->GetComponent<CStatsComponent>()->NextTokenCooldown();
+				SendAudio();
 			}
 		} else {
 			if (stats.myTokenSlot != nullptr) {
 				CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
 				stats.myTokenSlot = nullptr;
 				myCurrentParent->GetComponent<CStatsComponent>()->NextTokenCooldown();
-
+				myHasSentAudio = false;
 			}
 		}
 	} else {
 		//myCurrentParent->GetComponent<CTransformComponent>()->ClearPath();
-		myHasSentAudio = false;
+		
 		stats.myRandomWalkTime -= CTimer::Dt();
 		if (stats.myRandomWalkTime <= 0) {
 			//DirectX::SimpleMath::Vector3 randomPos = { myCurrentParent->myTransform->Position().x + Random(-1.f, 1.f) , myCurrentParent->myTransform->Position().y, myCurrentParent->myTransform->Position().z + Random(-2.f, 2.f) };
@@ -203,7 +204,8 @@ void CEnemyBehavior::Die()
 	SMessage message;
 	message.myMessageType = EMessageType::EnemyDied;
 	message.data = &myCurrentParent->GetComponent<CStatsComponent>()->GetStats().myExperience;
-	CMainSingleton::PostMaster().Send(message);
+	CMainSingleton::PostMaster().Send({ EMessageType::DemonIdle2, nullptr });
+	CMainSingleton::PostMaster().SendLate(message);
 
 	SStats stats = myCurrentParent->GetComponent<CStatsComponent>()->GetStats();
 	if (stats.myTokenSlot != nullptr) {
@@ -212,7 +214,7 @@ void CEnemyBehavior::Die()
 	}
 }
 
-void CEnemyBehavior::SendAudioIdle()
+void CEnemyBehavior::SendAudio()
 {
 	if (!myHasSentAudio)
 	{

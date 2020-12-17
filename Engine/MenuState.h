@@ -19,4 +19,5 @@ public:
 private:
 	CCanvas* myCanvas;
 	CScene* myScene;
+	bool myShouldQuit;
 };

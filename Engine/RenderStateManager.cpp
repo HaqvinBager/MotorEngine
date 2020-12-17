@@ -88,6 +88,29 @@ void CRenderStateManager::SetAllDefault()
     SetSamplerState(SamplerStates::SAMPLERSTATE_TRILINEAR);
 }
 
+void CRenderStateManager::Release()
+{
+    for (unsigned int i = 0; i < static_cast<unsigned int>(BlendStates::BLENDSTATE_COUNT); ++i)
+    {
+        myBlendStates[i]->Release();
+    }
+    
+    for (unsigned int i = 0; i < static_cast<unsigned int>(DepthStencilStates::DEPTHSTENCILSTATE_COUNT); ++i)
+    {
+        myDepthStencilStates[i]->Release();
+    }
+
+    for (unsigned int i = 0; i < static_cast<unsigned int>(RasterizerStates::RASTERIZERSTATE_COUNT); ++i)
+    {
+        myRasterizerStates[i]->Release();
+    }
+
+    for (unsigned int i = 0; i < static_cast<unsigned int>(SamplerStates::SAMPLERSTATE_COUNT); ++i)
+    {
+        mySamplerStates[i]->Release();
+    }
+}
+
 bool CRenderStateManager::CreateBlendStates(ID3D11Device* aDevice)
 {
     D3D11_BLEND_DESC alphaBlendDesc = { 0 };

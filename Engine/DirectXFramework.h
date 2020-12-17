@@ -16,10 +16,11 @@ public:
 	CDirectXFramework();
 	~CDirectXFramework();
 
-	void BeginFrame(std::array<float, 4> aClearColor);
 	void EndFrame();
 
 	bool Init(CWindowHandler* aWindowHandler);
+
+	void ToggleFullscreenState(bool aSetFullscreen);
 
 	bool ResizeBackBufferTexture();
 
@@ -31,6 +32,4 @@ private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain> mySwapChain;
 	Microsoft::WRL::ComPtr<ID3D11Device> myDevice;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> myContext;
-	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> myBackBuffer;
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> myDepthBuffer;
 };

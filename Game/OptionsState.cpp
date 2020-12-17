@@ -50,6 +50,9 @@ void COptionsState::Start()
 	myCanvas->Init("Json/UI_Options_Description.json", *myScene);
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::SetResolution1280x720, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::SetResolution1600x900, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::SetResolution1920x1080, this);
 
 	CEngine::GetInstance()->AddScene(myState, myScene);
 	CEngine::GetInstance()->SetActiveScene(myState);
@@ -60,8 +63,12 @@ void COptionsState::Stop()
 	if (myScene)
 	{
 		CMainSingleton::PostMaster().Unsubscribe(EMessageType::MainMenu, this);
+		CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetResolution1280x720, this);
+		CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetResolution1600x900, this);
+		CMainSingleton::PostMaster().Unsubscribe(EMessageType::SetResolution1920x1080, this);
 		delete myCanvas;
 		myCanvas = nullptr;
+		myScene = nullptr;
 	}
 }
 
@@ -77,6 +84,21 @@ void COptionsState::Receive(const SMessage& aMessage)
 	case EMessageType::MainMenu:
 	{
 		myStateStack.PopUntil(CStateStack::EState::MainMenu);
+	} break;
+	case EMessageType::SetResolution1280x720:
+	{
+		CEngine::GetInstance()->SetResolution({ 1280.0f, 720.0f });
+		myStateStack.PopTopAndPush(CStateStack::EState::Options);
+	} break;
+	case EMessageType::SetResolution1600x900:
+	{
+		CEngine::GetInstance()->SetResolution({ 1600.0f, 900.0f });
+		myStateStack.PopTopAndPush(CStateStack::EState::Options);
+	} break;
+	case EMessageType::SetResolution1920x1080:
+	{
+		CEngine::GetInstance()->SetResolution({ 1920.0f, 1080.0f });
+		myStateStack.PopTopAndPush(CStateStack::EState::Options);
 	} break;
 	default:
 		break;

@@ -11,6 +11,7 @@
 #include "CreditsState.h"
 #include "OptionsState.h"
 #include "LevelSelectState.h"
+#include "Engine.h"
 
 CStateStack::~CStateStack()
 {
@@ -90,6 +91,7 @@ bool CStateStack::PopState()
 {
 	ENGINE_ERROR_BOOL_MESSAGE(!myStateStack.empty(), "Trying to pop an empty stack");
 	myStateStack.top()->Stop();
+	CEngine::GetInstance()->RemoveScene(myStateStack.top()->myState);
 	myStateStack.pop();
 	return true;
 }
@@ -139,6 +141,8 @@ void CStateStack::Awake()
 
 bool CStateStack::Update()
 {
-	myStateStack.top()->Update();
+	if(!myStateStack.empty())
+		myStateStack.top()->Update();
+
 	return myStateStack.size() > 0;
 }
