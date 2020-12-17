@@ -41,25 +41,30 @@ CEnemyBehavior::~CEnemyBehavior()
 
 void CEnemyBehavior::Update(CGameObject* aParent)
 {
-	if (Input::GetInstance()->IsKeyPressed('P')) {
-		TakeDamage(0.1f, CEngine::GetInstance()->GetActiveScene().GetEnemies()[0]);
-	}
-	myCurrentParent = aParent;
-
-	//enemy logic
-	SBaseStats baseStats = myCurrentParent->GetComponent<CStatsComponent>()->GetBaseStats();
-	SStats stats = myCurrentParent->GetComponent<CStatsComponent>()->GetStats();
-
-	if (stats.myHealth <= 0) {
-		CMainSingleton::PostMaster().SendLate({EMessageType::EnemyDied, this});
-		if (stats.myTokenSlot != nullptr) {
-			CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
-			stats.myTokenSlot = nullptr;
+	if (!CMainSingleton::DialogueSystem().Active()) {
+		if (Input::GetInstance()->IsKeyPressed('P')) {
+			TakeDamage(0.1f, CEngine::GetInstance()->GetActiveScene().GetEnemies()[0]);
 		}
-		//aParent->Active(false);
-	}
+		myCurrentParent = aParent;
 
-	FindATarget();
+		//enemy logic
+		SBaseStats baseStats = myCurrentParent->GetComponent<CStatsComponent>()->GetBaseStats();
+		SStats stats = myCurrentParent->GetComponent<CStatsComponent>()->GetStats();
+
+		if (stats.myHealth <= 0) {
+			CMainSingleton::PostMaster().SendLate({ EMessageType::EnemyDied, this });
+			if (stats.myTokenSlot != nullptr) {
+				CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
+				stats.myTokenSlot = nullptr;
+			}
+			//aParent->Active(false);
+		}
+
+		FindATarget();
+	}
+	else {
+		aParent->GetComponent<CTransformComponent>()->ClearPath();
+	}
 }
 
 // Sending in the parent feels safer than relying on myCurrentParent
@@ -107,9 +112,6 @@ void CEnemyBehavior::FindATarget()
 
 	float dist = DirectX::SimpleMath::Vector3::DistanceSquared(parentPos, targetPos);
 	if (dist <= baseStats.myBaseVisionRange) {
-		
-		
-
 		//NavMesh movement
 		myCurrentParent->GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
 		if (dist <= baseStats.myBaseAttackRange) {

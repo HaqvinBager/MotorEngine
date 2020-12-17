@@ -43,5 +43,6 @@ private:
 
 	bool myIsVeryDead;
 	float mySendDeathMessageTimer = 3.0f;
+	bool myFoundPlayer;
 };
 
