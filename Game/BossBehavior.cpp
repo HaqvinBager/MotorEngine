@@ -24,12 +24,14 @@
 #include "HealthBarComponent.h"
 #include "RandomNumberGenerator.h"
 #include "Canvas.h"
+#include "DialogueSystem.h"
 
 CBossBehavior::CBossBehavior(CGameObject* aPlayerObject, CScene& aScene, Vector2 aPhaseOne, Vector2 aPhaseTwo, Vector2 aPhaseThree)
 	: myPlayer(aPlayerObject)
 	, myCanvas(new CCanvas())
 	, myIsVeryDead(false)
 	, myAblilityComponent(nullptr)
+	, myFoundPlayer(false)
 {
 	myPhasePercents.emplace_back(aPhaseOne);
 	myPhasePercents.emplace_back(aPhaseTwo);
@@ -61,52 +63,57 @@ CBossBehavior::~CBossBehavior()
 
 void CBossBehavior::Update(CGameObject* aParent)
 {
-	if (myIsVeryDead)
-	{
-		mySendDeathMessageTimer -= CTimer::Dt();
-		if (mySendDeathMessageTimer <= 0.0f)
+	if (!CMainSingleton::DialogueSystem().Active()) {
+		SStats stats = aParent->GetComponent<CStatsComponent>()->GetStats();
+
+		if (myIsVeryDead)
 		{
-			CMainSingleton::PostMaster().SendLate({ EMessageType::StopMusic, this });
-			CMainSingleton::PostMaster().SendLate({ EMessageType::BossDied, this });
+			mySendDeathMessageTimer -= CTimer::Dt();
+			if (mySendDeathMessageTimer <= 0.0f)
+			{
+				CMainSingleton::PostMaster().SendLate({ EMessageType::StopMusic, this });
+				CMainSingleton::PostMaster().SendLate({ EMessageType::BossDied, this });
+			}
+			return;
 		}
-		return;
-	}
-
-	SStats stats = aParent->GetComponent<CStatsComponent>()->GetStats();
-
-	float precentHealth = stats.myHealth / aParent->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
-	precentHealth *= 100.f;
 
 
-/*	if (precentHealth >= myPhasePercents[0].x && precentHealth <= myPhasePercents[0].y)
-	{
-		std::cout << __FUNCTION__ << " start phase  " << std::endl;
-		myPhase = CBossBehavior::Phase::Start;
-	}
-	else*/ if (precentHealth >= myPhasePercents[1].x && precentHealth <= myPhasePercents[1].y)
-	{
+		float precentHealth = stats.myHealth / aParent->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
+		precentHealth *= 100.f;
 
-		myPhase = CBossBehavior::Phase::Mid;
-	}
-	else if (precentHealth >= myPhasePercents[2].x && precentHealth <= myPhasePercents[2].y)
-	{
-		myPhase = CBossBehavior::Phase::Final;
-	}
 
-	switch (myPhase)
-	{
-	case CBossBehavior::Phase::Idle:
-		IdlePhase(aParent);
-		break;
-	case CBossBehavior::Phase::Start:
-		StartPhase(aParent);
-		break;
-	case CBossBehavior::Phase::Mid:
-		MidPhase(aParent);
-		break;
-	case CBossBehavior::Phase::Final:
-		FinalPhase(aParent);
-		break;
+		/*	if (precentHealth >= myPhasePercents[0].x && precentHealth <= myPhasePercents[0].y)
+			{
+				std::cout << __FUNCTION__ << " start phase  " << std::endl;
+				myPhase = CBossBehavior::Phase::Start;
+			}
+			else*/ if (precentHealth >= myPhasePercents[1].x && precentHealth <= myPhasePercents[1].y)
+			{
+
+				myPhase = CBossBehavior::Phase::Mid;
+			}
+			else if (precentHealth >= myPhasePercents[2].x && precentHealth <= myPhasePercents[2].y)
+			{
+				myPhase = CBossBehavior::Phase::Final;
+			}
+
+			switch (myPhase)
+			{
+			case CBossBehavior::Phase::Idle:
+				IdlePhase(aParent);
+				break;
+			case CBossBehavior::Phase::Start:
+				StartPhase(aParent);
+				break;
+			case CBossBehavior::Phase::Mid:
+				MidPhase(aParent);
+				break;
+			case CBossBehavior::Phase::Final:
+				FinalPhase(aParent);
+				break;
+			}
+	} else {
+		aParent->GetComponent<CTransformComponent>()->ClearPath();
 	}
 }
 
@@ -119,13 +126,13 @@ bool CBossBehavior::FindATarget(CGameObject& aParent)
 	DirectX::SimpleMath::Vector3 targetPos = myPlayer->GetComponent<CTransformComponent>()->Position();
 
 	float dist = DirectX::SimpleMath::Vector3::DistanceSquared(aParent.GetComponent<CTransformComponent>()->Position(), targetPos);
-	if (!(dist <= aParent.GetComponent<CStatsComponent>()->GetBaseStats().myBaseVisionRange))
+	if (!myFoundPlayer && dist <= aParent.GetComponent<CStatsComponent>()->GetBaseStats().myBaseVisionRange)
 	{
-		aParent.GetComponent<CTransformComponent>()->ClearPath();
-		return false;
-	}
+		myFoundPlayer = true;
+	} else if (myFoundPlayer) {
 
-	aParent.GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
+		aParent.GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
+	}
 	return true;
 }
 

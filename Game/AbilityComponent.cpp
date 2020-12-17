@@ -28,6 +28,7 @@
 #include "rapidjson\document.h"
 #include "rapidjson\istreamwrapper.h"
 #include "StateStack.h"
+#include "DialogueSystem.h"
 using namespace rapidjson;
 
 CAbilityComponent::CAbilityComponent(CGameObject& aParent, std::vector<std::pair<EAbilityType, unsigned int>> someAbilities)
@@ -197,7 +198,7 @@ void CAbilityComponent::SendEvent() {
 
 void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 {
-	if (CEngine::GetInstance()->GetActiveScene().GetNavMesh()) {
+	if (CEngine::GetInstance()->GetActiveScene().GetNavMesh() && !CMainSingleton::DialogueSystem().Active()) {
 		float messageValue = 1.0f;
 
 		switch (aEvent)
