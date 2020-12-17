@@ -86,6 +86,7 @@ void CMenuState::Receive(const SMessage &aMessage) {
 		switch (aMessage.myMessageType) {
 		case EMessageType::StartGame:
 		{
+			CMainSingleton::PostMaster().Send({ EMessageType::StopMainMenuMusic, nullptr });
 			myStateStack.PushState(CStateStack::EState::Intro);
 		} break;
 		case EMessageType::Credits:

@@ -158,9 +158,42 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	switch (aMessage.myMessageType)
 	{
 	// MUSIC
-	case EMessageType::MainMenu:
+
+	case EMessageType::PlayDungeonMusic:
 	{
-	    //myWrapper.Play(myMusicAudio[CAST(EMusic::MainMenu)], myChannels[CAST(EChannels::Music)]);
+		if (myMusicAudio.size() >= static_cast<unsigned int>(EMusic::Dungeon))
+			myWrapper.Play(myMusicAudio[CAST(EMusic::Dungeon)], myChannels[CAST(EChannels::Music)]);
+	}break;
+
+	case EMessageType::PlayGardensMusic:
+	{
+		if (myMusicAudio.size() >= static_cast<unsigned int>(EMusic::Garden))
+			myWrapper.Play(myMusicAudio[CAST(EMusic::Garden)], myChannels[CAST(EChannels::Music)]);
+	}break;
+
+	case EMessageType::PlayCastleMusic:
+	{
+		if (myMusicAudio.size() >= static_cast<unsigned int>(EMusic::Castle))
+			myWrapper.Play(myMusicAudio[CAST(EMusic::Castle)], myChannels[CAST(EChannels::Music)]);
+	}break;
+
+	case EMessageType::BossFightStart:
+	{
+		if (myMusicAudio.size() >= static_cast<unsigned int>(EMusic::BossEncounter))
+			myWrapper.Play(myMusicAudio[CAST(EMusic::BossEncounter)], myChannels[CAST(EChannels::Music)]);
+	}break;
+
+	case EMessageType::PlayMainMenuMusic:
+	{
+		if (myMusicAudio.size() >= static_cast<unsigned int>(EMusic::MainMenu))
+			myWrapper.Play(myMusicAudio[CAST(EMusic::MainMenu)], myChannels[CAST(EChannels::Music)]);
+	}break;
+
+	case EMessageType::StopMainMenuMusic:
+	{
+		if (!myMusicAudio.empty()) {
+			myChannels[CAST(EChannels::Music)]->Stop();
+		}
 	}break;
 
 	case EMessageType::PlayAmbienceCastle:
@@ -299,6 +332,11 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	}
 }
 
+void CAudioManager::Receive(const SStringMessage& /*aMessage*/)
+{
+	//if(aMessage.myMessageType == "")
+}
+
 
 void CAudioManager::Update()
 {
@@ -307,7 +345,8 @@ void CAudioManager::Update()
 
 void CAudioManager::SubscribeToMessages()
 {
-	CMainSingleton::PostMaster().Subscribe(EMessageType::MainMenu, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayMainMenuMusic, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::StopMainMenuMusic, this);
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayAmbienceCastle, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayAmbienceCave1, this);
@@ -331,7 +370,9 @@ void CAudioManager::SubscribeToMessages()
 
 void CAudioManager::UnsubscribeToMessages()
 {
-	CMainSingleton::PostMaster().Unsubscribe(EMessageType::MainMenu, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayMainMenuMusic, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::StopMainMenuMusic, this);
+
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayAmbienceCastle, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayAmbienceCave1, this);
 

@@ -15,7 +15,7 @@
 using namespace rapidjson;
 CLoadLevelState::CLoadLevelState(CStateStack& aStateStack, const CStateStack::EState aState)
 	: CState(aStateStack, aState)
-	, myLevelToLoad(ELevel::BossRoom)
+	, myLevelToLoad(ELevel::Dungeon)
 {}
 
 CLoadLevelState::~CLoadLevelState()
@@ -64,6 +64,8 @@ void CLoadLevelState::Awake()
 
 void CLoadLevelState::Start()
 {
+	CMainSingleton::PostMaster().Send({ EMessageType::StopMainMenuMusic, nullptr });
+
 	CEngine::GetInstance()->ClearModelFactory();
 
 	CEngine::GetInstance()->SetActiveScene(Load(ELevel::LoadScreen));

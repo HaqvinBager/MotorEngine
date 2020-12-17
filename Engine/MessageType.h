@@ -63,5 +63,13 @@ enum class EMessageType
 	LoadGardens,
 	LoadCastle,
 	LoadBossRoom,
+	PlayMainMenuMusic,
+	PlayDungeonMusic,
+	PlayGardensMusic,
+	PlayCastleMusic,
+	StopMainMenuMusic,
+	StopDungeonMusic,
+	StopGardensMusic,
+	StopCastleMusic,
 	Count
 };
