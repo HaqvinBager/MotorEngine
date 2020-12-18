@@ -16,12 +16,13 @@
 #include <string>
 #include <map>
 #include <array>
+
+#include "EngineDefines.h"
+
 #include "Input.h"
 #include "Timer.h"
 #include "DirectXFramework.h"
 #include "EngineException.h"
-#include "GameObject.h"
-#include "Component.h"
 #include "Behaviour.h"
 #include "Collider.h"
 #include "LightFactory.h"
@@ -33,12 +34,11 @@
 #include "ParticleFactory.h"
 #include "SpriteFactory.h"
 #include "TextFactory.h"
-#include "Scene.h"
 #include "StateStack.h"
 #include "State.h"
 
+using namespace DirectX::SimpleMath;
 
 #define SAFE_DELETE(aPointer) delete aPointer; aPointer = nullptr;
 
 //namesapce SM = DirectX::SimpleMath;
-using namespace DirectX::SimpleMath;

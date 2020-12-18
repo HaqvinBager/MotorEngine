@@ -139,6 +139,16 @@ void CScene::SetMainCamera(CCameraComponent* aCamera)
 	myMainCamera = aCamera;
 }
 
+void CScene::UpdateLightsNearestPlayer()
+{
+	if (myPlayer == nullptr) {
+		return;
+	}
+
+	ourNearestPlayerComparer.myPos = myPlayer->myTransform->Position();
+	std::sort(myPointLights.begin(), myPointLights.end(), ourNearestPlayerComparer);
+}
+
 CCameraComponent* CScene::GetMainCamera()
 {
 	return myMainCamera;
@@ -154,37 +164,37 @@ SNavMesh* CScene::GetNavMesh()
 	return myNavMesh;
 }
 
-std::vector<CGameObject*> CScene::CullGameObjects(CCameraComponent* aMainCamera)
+std::vector<CGameObject*> CScene::CullGameObjects(CCameraComponent* /*aMainCamera*/)
 {
-	using namespace DirectX::SimpleMath;
-	Vector3 cameraPosition = aMainCamera->GameObject().myTransform->Transform().Translation();
-	std::vector<CGameObject*> culledGameObjects;
-	for (auto& gameObject : myGameObjects)
-	{
-		if (!gameObject->Active())
-		{
-			continue;
-		}
-		if (gameObject->GetComponent<CInstancedModelComponent>())
-		{
-			culledGameObjects.emplace_back(gameObject);
-			continue;
-		}
-
-		float distanceToCameraSquared = Vector3::DistanceSquared(gameObject->GetComponent<CTransformComponent>()->Position(), cameraPosition);
-		if (distanceToCameraSquared < 10000.0f)
-		{
-			culledGameObjects.emplace_back(gameObject);
-		}
-	}
-	return culledGameObjects;
+	return myGameObjects;
+	//using namespace DirectX::SimpleMath;
+	//Vector3 cameraPosition = aMainCamera->GameObject().myTransform->Transform().Translation();
+	//std::vector<CGameObject*> culledGameObjects;
+	//for (auto& gameObject : myGameObjects)
+	//{
+	//	if (!gameObject->Active())
+	//	{
+	//		continue;
+	//	}
+	//	if (gameObject->GetComponent<CInstancedModelComponent>())
+	//	{
+	//		culledGameObjects.emplace_back(gameObject);
+	//		continue;
+	//	}
+	//
+	//	float distanceToCameraSquared = Vector3::DistanceSquared(gameObject->GetComponent<CTransformComponent>()->Position(), cameraPosition);
+	//	if (distanceToCameraSquared < 10000.0f)
+	//	{
+	//		culledGameObjects.emplace_back(gameObject);
+	//	}
+	//}
+	//return culledGameObjects;
 }
 
-std::pair<unsigned int, std::array<CPointLight*, 8>> CScene::CullLights(CGameObject* aGameObject)
+std::pair<unsigned int, std::array<CPointLight*, LIGHTCOUNT>> CScene::CullLights(CGameObject* aGameObject)
 {
-	std::pair<unsigned int, std::array<CPointLight*, 8>> pointLightPair;
+	std::pair<unsigned int, std::array<CPointLight*, LIGHTCOUNT>> pointLightPair;
 	UINT counter = 0;
-
 	for (UINT i = 0; i < myPointLights.size(); ++i)
 	{
 		float distanceSquared = DirectX::SimpleMath::Vector3::DistanceSquared(myPointLights[i]->GetPosition(), aGameObject->GetComponent<CTransformComponent>()->Transform().Translation());
@@ -193,8 +203,92 @@ std::pair<unsigned int, std::array<CPointLight*, 8>> CScene::CullLights(CGameObj
 		{
 			pointLightPair.second[counter] = myPointLights[i];
 			++counter;
-	
-			if (counter == 8)
+
+			if (counter == LIGHTCOUNT)
+			{
+				break;
+			}
+		}
+	}
+
+	pointLightPair.first = counter;
+	return pointLightPair;
+}
+
+//std::pair<unsigned int, std::array<CPointLight*, LIGHTCOUNT>> CScene::CullLights(const DirectX::SimpleMath::Vector3& aPosition)
+//{
+//	std::pair<unsigned int, std::array<CPointLight*, LIGHTCOUNT>> pointLightPair;
+//	UINT counter = 0;
+//	for (UINT i = 0; i < myPointLights.size(); ++i)
+//	{
+//		float distanceSquared = DirectX::SimpleMath::Vector3::DistanceSquared(myPointLights[i]->GetPosition(), aPosition);
+//		float range = myPointLights[i]->GetRange();
+//
+//		if (distanceSquared < (range * range))
+//		{
+//			pointLightPair.second[counter] = myPointLights[i];
+//			++counter;
+//
+//			if (counter == 8)
+//			{
+//				break;
+//			}
+//		}
+//	}
+//	pointLightPair.first = counter;
+//	return pointLightPair;
+//}
+//
+//std::pair<unsigned int, std::array<CPointLight*, LIGHTCOUNT>> CScene::CullLights(const std::vector<DirectX::SimpleMath::Matrix>& somePositions) const
+//{
+//
+//
+//	std::pair<unsigned int, std::array<CPointLight*, LIGHTCOUNT>> pointLightPair;
+//
+//	unsigned int counter = 0;
+//	for (unsigned int pointLightIndex = 0; pointLightIndex < myPointLights.size(); ++pointLightIndex)
+//	{
+//		for (unsigned int positionIndex = 0; positionIndex < somePositions.size(); ++positionIndex)
+//		{
+//			float distanceSquared = DirectX::SimpleMath::Vector3::DistanceSquared(myPointLights[pointLightIndex]->GetPosition(), somePositions[positionIndex].Translation());
+//			float range = myPointLights[pointLightIndex]->GetRange();
+//
+//			if (distanceSquared < (range * range))
+//			{
+//				pointLightPair.second[counter] = myPointLights[pointLightIndex];
+//				++counter;
+//				break;
+//			}
+//		}
+//
+//		if (counter >= 8)
+//		{
+//			break;
+//		}
+//	}
+//	pointLightPair.first = counter;
+//	return pointLightPair;
+//}
+
+LightPair CScene::CullLightInstanced(CInstancedModelComponent* aModelType)
+{
+	//Sätt så att Range täcker objektet längst bort
+	if (myPlayer != nullptr) {
+		aModelType->GameObject().myTransform->Position(GetPlayer()->myTransform->Position());
+	}
+
+	std::pair<unsigned int, std::array<CPointLight*, LIGHTCOUNT>> pointLightPair;
+	UINT counter = 0;
+	for (UINT i = 0; i < myPointLights.size(); ++i)
+	{
+		float distanceSquared = DirectX::SimpleMath::Vector3::DistanceSquared(myPointLights[i]->GetPosition(), aModelType->GetComponent<CTransformComponent>()->Position());
+		float range = myPointLights[i]->GetRange() * 200.0f;
+		if (distanceSquared < (range * range))
+		{
+			pointLightPair.second[counter] = myPointLights[i];
+			++counter;
+
+			if (counter == LIGHTCOUNT)
 			{
 				break;
 			}
@@ -582,4 +676,11 @@ void CScene::SetShouldRenderLineInstance(const bool aShouldRender)
 void CScene::TakeOwnershipOfAIBehavior(IAIBehavior* aBehavior)
 {
 	myEnemyBehavior = aBehavior;
+}
+
+bool CScene::NearestPlayerComparer::operator()(const CPointLight* a, const CPointLight* b) const
+{
+	float dist0 = Vector3::DistanceSquared(a->GetPosition(), myPos);
+	float dist1 = Vector3::DistanceSquared(b->GetPosition(), myPos);
+	return dist0 < dist1;
 }
