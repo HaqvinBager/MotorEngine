@@ -46,5 +46,6 @@ private:
 	bool myFoundPlayer;
 	
 	bool myHasFadedOut;
+	bool firstTime;
 };
 
