@@ -299,6 +299,8 @@ void CPlayerControllerComponent::UpdateExperience(const SMessage& aMessage)
 
 		if (maxValue <= this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience)
 		{
+			CMainSingleton::PostMaster().Send({ EMessageType::PlayLevelUpSFX, nullptr });
+
 			this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel += 1;
 			int level = this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel;
 			std::string abilityInfo = "Skill ";
