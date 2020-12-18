@@ -102,7 +102,7 @@ CAudioManager::CAudioManager() : myWrapper() {
 	//	channel->SetVolume(0.1f);
 	//}
 
-	// Add JSON reading:
+	// Add JSON reading?
 	// Group 4 
 	myChannels[CAST(EChannels::Music)]->SetVolume(0.3f);
 	myChannels[CAST(EChannels::Ambiance)]->SetVolume(0.5f);
@@ -292,6 +292,14 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		}
 	}break;
 
+	case EMessageType::PlayLevelUpSFX:
+	{
+		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::LevelUp))
+		{
+			myWrapper.Play(mySFXAudio[CAST(ESFX::LevelUp)], myChannels[CAST(EChannels::SFX)]);
+		}
+	}break;
+
 	case EMessageType::HealingAura:
 	{
 		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::HealingAura))
@@ -394,6 +402,7 @@ void CAudioManager::SubscribeToMessages()
 	CMainSingleton::PostMaster().Subscribe(EMessageType::DemonIdle1, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::DemonIdle2, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::HitDestructible, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayLevelUpSFX, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::HealingAura, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::LightAttack, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::HeavyAttack, this);
@@ -427,6 +436,7 @@ void CAudioManager::UnsubscribeToMessages()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::DemonIdle1, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::DemonIdle2, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::HitDestructible, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayLevelUpSFX, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::HealingAura, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LightAttack, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::HeavyAttack, this);

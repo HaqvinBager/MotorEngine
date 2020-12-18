@@ -258,8 +258,8 @@ const CStateStack::EState CLoadLevelState::Load(const ELevel aLevel)
 			myUnityFactory.FillScene(data, BinModelPaths(aLevel), *inGameScene);
 			//std::cout << "Adding Loading Screen" << std::endl;
 
-			// Send message to play Music for a alevel
 			//PlayLevelMusicGroup3(aLevel);
+
 			PlayLevelMusicGroup4(aLevel);
 
 			return CEngine::GetInstance()->AddScene(CStateStack::EState::InGame, inGameScene);

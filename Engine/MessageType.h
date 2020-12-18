@@ -75,5 +75,6 @@ enum class EMessageType
 	PlayExplosionSFX,
 	PlayBossExplosionSFX,
 	PlayAmbienceGarden,
+	PlayLevelUpSFX,
 	Count
 };
