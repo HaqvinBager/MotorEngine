@@ -42,7 +42,7 @@ private:
 	std::vector<Vector2> myPhasePercents;
 
 	bool myIsVeryDead;
-	float mySendDeathMessageTimer = 5.0f;
+	float mySendDeathMessageTimer = 7.0f;
 	bool myFoundPlayer;
 	
 	bool myHasFadedOut;
