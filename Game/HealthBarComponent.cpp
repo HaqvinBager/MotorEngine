@@ -15,6 +15,10 @@ CHealthBarComponent::CHealthBarComponent(CGameObject& aParant, CScene& aScene)
 
 	myCanvas2 = new CCanvas();
 	myCanvas2->Init("Json/UI_InGame_Enemy_HealthBar.json", aScene, false);
+
+	if (aParant.GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth >= 80.f) {
+		myCanvas2->GetTexts()[0]->SetText("Guard Captain Loghaine");
+	}
 }
 
 CHealthBarComponent::~CHealthBarComponent()
