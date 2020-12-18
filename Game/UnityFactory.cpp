@@ -29,6 +29,8 @@
 #include "HealthBarComponent.h"
 #include "ParticleEmitterComponent.h"
 #include "BossBehavior.h"
+#include "LoadObjectComponent.h"
+#include "RandomNumberGenerator.h"
 
 #include "CollisionManager.h"
 #include "LightFactory.h"
@@ -42,6 +44,14 @@
 #include "Debug.h"
 
 #define ENGINE_SCALE 0.01f
+
+float Lerp(float a, float b, float t) {
+	return a + t * (b - a);
+}
+
+float InverseLerp(float a, float b, float t) {
+	return (t - a) / (b - a);
+}
 
 //#define BAREBONES_SCENE
 	// Used for debugging 2020 12 05
@@ -68,7 +78,22 @@ bool CUnityFactory::FillScene(const SLoadScreenData& aData, const std::vector<st
 	CGameObject* envLight = CreateGameObject(aData.myDirectionalLight);
 	aScene.AddInstance(envLight);
 	aScene.SetEnvironmentLight(envLight->GetComponent<CEnviromentLightComponent>()->GetEnviromentLight());
-	aScene.AddInstance(CreateGameObject(aData.myGameObject, someModelPaths[aData.myGameObject.myModelIndex])); //pls no more crash //Nico 09 dec
+	int random = Random(0, (static_cast<int>(aData.myGameObjects.size()) - 1));
+	CGameObject* loadScreenGameObject = CreateGameObject(aData.myGameObjects[random], someModelPaths[aData.myGameObjects[random].myModelIndex]);
+	loadScreenGameObject->AddComponent<CLoadObjectComponent>(*loadScreenGameObject);
+	aScene.AddInstance(loadScreenGameObject); //pls no more crash //Nico 09 dec
+
+	random = Random(0, 1);
+
+	for (auto& environmentFX : aData.myEnvironmentFXs)
+	{
+		aScene.AddInstance(CreateGameObject(environmentFX, aData.myEnvironmentFXStringMap.at(environmentFX.myInstanceID)));
+	}
+
+	for (auto& particleFX : aData.myParticleFXs)
+	{
+		aScene.AddInstance(CreateGameObject(particleFX, aData.myParticleFXStringMap.at(particleFX.myInstanceID)));
+	}
 	return true;
 }
 
@@ -181,8 +206,8 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 	if (aData.myBossIsInScene > 0)
 	{
 		CBossBehavior* bossBehavior = new CBossBehavior(player, aScene, aData.myBossData.myStageOne, aData.myBossData.myStageTwo, aData.myBossData.myStageThree);
-		CGameObject* aBossGameObject = CreateGameObject(aData.myBossData, aBinModelPaths[aData.myBossData.myModelIndex]);
-		aBossGameObject->AddComponent<CAIBehaviorComponent>(*aBossGameObject, bossBehavior);
+		CGameObject* aBossGameObject = CreateGameObject(aData.myBossData, aBinModelPaths[aData.myBossData.myModelIndex], bossBehavior);
+		//aBossGameObject->AddComponent<CAIBehaviorComponent>(*aBossGameObject, bossBehavior);
 		//aBossGameObject->AddComponent<CHealthBarComponent>(*aBossGameObject, aScene, "Json/UI_InGame_Enemy_HealthBar.json");
 		aScene.AddInstance(aBossGameObject);
 		aScene.AddBoss(aBossGameObject);
@@ -289,16 +314,16 @@ CGameObject* CUnityFactory::CreateGameObject(const SEnemyData& aData, const std:
 	CGameObject* gameObject = new CGameObject(id++);
 	gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
 	auto stats = gameObject->AddComponent<CStatsComponent>(*gameObject, aData.myHealth, aData.myDamage, aData.myMoveSpeed, aData.myDamageCooldown, aData.myVisionRange, aData.myAttackRange, 6.0f);
-	gameObject->AddComponent<CAIBehaviorComponent>(*gameObject, aBehavior);
-	gameObject->AddComponent<CNavMeshComponent>(*gameObject);
-	gameObject->myTransform->Position(aData.myPosition);
-	gameObject->myTransform->Rotation(aData.myRotation);
-
 	float sizePercent = InverseLerp(15.0f, 100.0f, stats->GetBaseStats().myBaseHealth);
 	float size = Lerp(0.0f, 1.0f, sizePercent * sizePercent) + 1.0f;
-
 	gameObject->myTransform->Scale(size);
+
 	gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 0.3f * size, ECollisionLayer::ENEMY, static_cast<uint64_t>(ECollisionLayer::PLAYERABILITY));
+	gameObject->AddComponent<CAIBehaviorComponent>(*gameObject, aBehavior);
+	gameObject->AddComponent<CNavMeshComponent>(*gameObject);
+
+	gameObject->myTransform->Position(aData.myPosition);
+	gameObject->myTransform->Rotation(aData.myRotation);
 
 	std::pair<EAbilityType, unsigned int> ab1 = { EAbilityType::EnemyAbility, 1 };
 	std::vector<std::pair<EAbilityType, unsigned int>> abs;
@@ -307,7 +332,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SEnemyData& aData, const std:
 
 	AddAnimationsToGameObject(*gameObject, aModelPath, EAnimatedObject::Enemy);
 
-	gameObject->AddComponent<CHealthBarComponent>(*gameObject, aScene, "Json/UI_InGame_Enemy_HealthBar.json");
+	gameObject->AddComponent<CHealthBarComponent>(*gameObject, aScene);
 
 	return gameObject;
 }
@@ -380,7 +405,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SParticleFXData& aData, const
 	return nullptr;
 }
 
-CGameObject* CUnityFactory::CreateGameObject(const SBossData& aData, const std::string& aModelPath)
+CGameObject* CUnityFactory::CreateGameObject(const SBossData& aData, const std::string& aModelPath, IAIBehavior* aBehavior)
 {
 	CGameObject* gameObject = new CGameObject(aData.myInstanceID);
 	gameObject->myTransform->Position(aData.myPosition);
@@ -401,6 +426,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SBossData& aData, const std::
 	abs.emplace_back(ab2);
 	abs.emplace_back(ab3);
 	gameObject->AddComponent<CAbilityComponent>(*gameObject, abs);
+	gameObject->AddComponent<CAIBehaviorComponent>(*gameObject, aBehavior);
 
 	return gameObject;
 }

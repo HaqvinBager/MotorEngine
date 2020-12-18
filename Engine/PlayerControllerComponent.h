@@ -6,6 +6,8 @@
 
 class CMouseSelection;
 
+#define ON_DEATH_TIMER 1.77f
+
 class CPlayerControllerComponent : public CBehaviour, public IInputObserver, public IObserver
 {
 public:
@@ -26,6 +28,7 @@ public:
 	void RegenerateMana();
 	void UpdateExperience(const SMessage& aMessage);
 	bool AuraActive(){ return myAuraActive; }
+
 public:
 	void RegenerationPercentage(float aRegenerationPercentage) {
 		myRegenerationPercentage = aRegenerationPercentage;
@@ -36,6 +39,11 @@ public:
 	}
 
 private:
+	float myOnDeathTimer = ON_DEATH_TIMER;
+
+private:
+	void SetLevel(const int aLevel);
+
 	float myLastHP;
 	float mySecourceRegenerationSpeed;
 	float myRegenerationPercentage = 0.0f;
@@ -47,5 +55,6 @@ private:
 	bool myIsMoving;
 	bool myMiddleMousePressed;
 	bool myAuraActive;
+	bool myHasAttacked;
 	DirectX::SimpleMath::Vector3 myLastPosition;
 };

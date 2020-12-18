@@ -73,12 +73,30 @@ void CAnimationComponent::Update()
 	{
 		SwitchBackToIdle();
 	}
+	
+	//For testing
+	//if(myCurrentAnimationID != myIdleAnimationID && myCurrentAnimationID != myMovingAnimationID)
+	//	std::cout << __FUNCTION__ << " " << GetCurrentAnimationPercent() << std::endl;
 }
 
 void CAnimationComponent::OnEnable()
 {}
 void CAnimationComponent::OnDisable()
 {}
+
+const float CAnimationComponent::GetCurrentAnimationPercent()
+{
+	return myAnimation->GetMyController().CurrentAnimationTimePercent();
+}
+const float CAnimationComponent::GetCurrentAnimationDuration()
+{
+	return myAnimation->GetMyController().CurrentAnimationDuration();
+}
+
+const float CAnimationComponent::GetCurrentAnimationTicksPerSecond()
+{
+	return myAnimation->GetMyController().CurrentAnimationTicksPerSecond();
+}
 
 void CAnimationComponent::GetAnimatedBlendTransforms(float dt, SlimMatrix44 * transforms)
 {

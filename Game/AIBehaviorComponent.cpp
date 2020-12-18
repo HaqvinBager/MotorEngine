@@ -2,6 +2,7 @@
 #include "AIBehaviorComponent.h"
 #include "GameObject.h"
 #include "AIBehavior.h"
+#include "DialogueSystem.h"
 
 CAIBehaviorComponent::CAIBehaviorComponent(CGameObject& aParent, IAIBehavior* aBehavior)
 	: CBehaviour(aParent), myBehavior(aBehavior)

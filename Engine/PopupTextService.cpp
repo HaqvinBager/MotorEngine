@@ -218,6 +218,12 @@ void CPopupTextService::SpawnDamageNumber(void* someData)
 
 	SDamagePopupData data = *static_cast<SDamagePopupData*>(someData);
 	damage = data.myDamage;
+	
+	if (damage < 1.0f)
+	{
+		return;
+	}
+	
 	text = std::to_string(damage);
 	text = text.substr(0, text.find_first_of("."));
 	if (data.myGameObject != nullptr) {
@@ -248,6 +254,7 @@ void CPopupTextService::SpawnDamageNumber(void* someData)
 	case 0: // Normal
 		myDamageAnimationData.back()->myMinScale = { 0.5f, 0.5f };
 		myDamageAnimationData.back()->myMaxScale = { 1.5f, 1.5f };
+		CEngine::GetInstance()->GetActiveScene().GetMainCamera()->SetTrauma(0.5f);
 		break;
 	case 1: // Crit
 		myDamageAnimationData.back()->myMinScale = { 1.5f, 1.5f };
@@ -349,7 +356,7 @@ void CPopupTextService::SpawnTutorialText(std::string aText)
 void CPopupTextService::SpawnWarningText(std::string aText)
 {
 	myWarningText->SetPivot({ 0.5f, 0.5f });
-	myWarningText->SetPosition({ 0.0f, -0.75f });
+	myWarningText->SetPosition({ 0.0f, -0.6f });
 	myWarningText->SetScale({ 1.0f, 1.0f });
 	myWarningText->SetText(aText);
 	myWarningAnimationData->myStartColor = { 1.0f, 0.0f, 0.0f, 1.0f };
@@ -380,8 +387,8 @@ void CPopupTextService::UpdateResources()
 
 		//Text space position
 		DirectX::SimpleMath::Vector2 newPos = text->GetPosition();
-		newPos.x /= CEngine::GetInstance()->GetWindowHandler()->GetResolution().x;
-		newPos.y /= CEngine::GetInstance()->GetWindowHandler()->GetResolution().y;
+		newPos.x /= 1920.0f/*CEngine::GetInstance()->GetWindowHandler()->GetResolution().x*/;
+		newPos.y /= 1080.0f/*CEngine::GetInstance()->GetWindowHandler()->GetResolution().y*/;
 		newPos.x -= 0.5f;
 		newPos.y -= 0.5f;
 		newPos *= 2.0f;

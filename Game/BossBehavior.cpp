@@ -14,6 +14,7 @@
 #include "AbilityComponent.h"
 #include "NavMeshComponent.h"
 #include "StatsComponent.h"
+#include "CameraComponent.h"
 #include "Canvas.h"
 #include "AnimatedUIElement.h"
 
@@ -24,12 +25,16 @@
 #include "HealthBarComponent.h"
 #include "RandomNumberGenerator.h"
 #include "Canvas.h"
+#include "DialogueSystem.h"
+#include "TextInstance.h"
 
 CBossBehavior::CBossBehavior(CGameObject* aPlayerObject, CScene& aScene, Vector2 aPhaseOne, Vector2 aPhaseTwo, Vector2 aPhaseThree)
 	: myPlayer(aPlayerObject)
 	, myCanvas(new CCanvas())
 	, myIsVeryDead(false)
 	, myAblilityComponent(nullptr)
+	, myFoundPlayer(false)
+	, myHasFadedOut(false)
 {
 	myPhasePercents.emplace_back(aPhaseOne);
 	myPhasePercents.emplace_back(aPhaseTwo);
@@ -48,6 +53,9 @@ CBossBehavior::CBossBehavior(CGameObject* aPlayerObject, CScene& aScene, Vector2
 	{
 		animated->SetShouldRender(false);
 	}
+	for (auto& text: myCanvas->GetTexts()) {
+		text->SetShouldRender(false);
+	}
 }
 
 CBossBehavior::~CBossBehavior()
@@ -61,52 +69,65 @@ CBossBehavior::~CBossBehavior()
 
 void CBossBehavior::Update(CGameObject* aParent)
 {
-	if (myIsVeryDead)
-	{
-		mySendDeathMessageTimer -= CTimer::Dt();
-		if (mySendDeathMessageTimer <= 0.0f)
+	if (!CMainSingleton::DialogueSystem().Active()) {
+		SStats stats = aParent->GetComponent<CStatsComponent>()->GetStats();
+
+		if (myIsVeryDead)
 		{
-			CMainSingleton::PostMaster().SendLate({ EMessageType::StopMusic, this });
-			CMainSingleton::PostMaster().SendLate({ EMessageType::BossDied, this });
+			mySendDeathMessageTimer -= CTimer::Dt();
+
+			// This fade threshold is (1.0f / 0.75f), based on camera fade out decay and camera fade out speed
+			// Can't bother doing it properly
+			if (mySendDeathMessageTimer <= 1.32f && !myHasFadedOut)
+			{
+				myHasFadedOut = true;
+				CEngine::GetInstance()->GetActiveScene().GetMainCamera()->Fade(false);
+			}
+			if (mySendDeathMessageTimer <= 0.0f)
+			{
+				CMainSingleton::PostMaster().SendLate({ EMessageType::StopMusic, this });
+				CMainSingleton::PostMaster().SendLate({ EMessageType::BossDied, this });
+			}
+			return;
 		}
-		return;
-	}
-
-	SStats stats = aParent->GetComponent<CStatsComponent>()->GetStats();
-
-	float precentHealth = stats.myHealth / aParent->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
-	precentHealth *= 100.f;
 
 
-/*	if (precentHealth >= myPhasePercents[0].x && precentHealth <= myPhasePercents[0].y)
-	{
-		std::cout << __FUNCTION__ << " start phase  " << std::endl;
-		myPhase = CBossBehavior::Phase::Start;
-	}
-	else*/ if (precentHealth >= myPhasePercents[1].x && precentHealth <= myPhasePercents[1].y)
-	{
+		float precentHealth = stats.myHealth / aParent->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
+		precentHealth *= 100.f;
 
-		myPhase = CBossBehavior::Phase::Mid;
-	}
-	else if (precentHealth >= myPhasePercents[2].x && precentHealth <= myPhasePercents[2].y)
-	{
-		myPhase = CBossBehavior::Phase::Final;
-	}
 
-	switch (myPhase)
-	{
-	case CBossBehavior::Phase::Idle:
-		IdlePhase(aParent);
-		break;
-	case CBossBehavior::Phase::Start:
-		StartPhase(aParent);
-		break;
-	case CBossBehavior::Phase::Mid:
-		MidPhase(aParent);
-		break;
-	case CBossBehavior::Phase::Final:
-		FinalPhase(aParent);
-		break;
+		/*	if (precentHealth >= myPhasePercents[0].x && precentHealth <= myPhasePercents[0].y)
+			{
+				std::cout << __FUNCTION__ << " start phase  " << std::endl;
+				myPhase = CBossBehavior::Phase::Start;
+			}
+			else*/ if (precentHealth >= myPhasePercents[1].x && precentHealth <= myPhasePercents[1].y)
+			{
+
+				myPhase = CBossBehavior::Phase::Mid;
+			}
+			else if (precentHealth >= myPhasePercents[2].x && precentHealth <= myPhasePercents[2].y)
+			{
+				myPhase = CBossBehavior::Phase::Final;
+			}
+
+			switch (myPhase)
+			{
+			case CBossBehavior::Phase::Idle:
+				IdlePhase(aParent);
+				break;
+			case CBossBehavior::Phase::Start:
+				StartPhase(aParent);
+				break;
+			case CBossBehavior::Phase::Mid:
+				MidPhase(aParent);
+				break;
+			case CBossBehavior::Phase::Final:
+				FinalPhase(aParent);
+				break;
+			}
+	} else {
+		aParent->GetComponent<CTransformComponent>()->ClearPath();
 	}
 }
 
@@ -119,14 +140,14 @@ bool CBossBehavior::FindATarget(CGameObject& aParent)
 	DirectX::SimpleMath::Vector3 targetPos = myPlayer->GetComponent<CTransformComponent>()->Position();
 
 	float dist = DirectX::SimpleMath::Vector3::DistanceSquared(aParent.GetComponent<CTransformComponent>()->Position(), targetPos);
-	if (!(dist <= aParent.GetComponent<CStatsComponent>()->GetBaseStats().myBaseVisionRange))
+	if (!myFoundPlayer && dist <= aParent.GetComponent<CStatsComponent>()->GetBaseStats().myBaseVisionRange)
 	{
-		aParent.GetComponent<CTransformComponent>()->ClearPath();
-		return false;
-	}
+		myFoundPlayer = true;
+	} else if (myFoundPlayer) {
 
-	aParent.GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
-	return true;
+		aParent.GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
+	}
+	return myFoundPlayer;
 }
 
 void CBossBehavior::TakeDamage(float aDamage, CGameObject* aGameObject)
@@ -143,14 +164,21 @@ void CBossBehavior::TakeDamage(float aDamage, CGameObject* aGameObject)
 		float baseHealth = statsComponent->GetBaseStats().myBaseHealth;
 		float difference = baseHealth - statsComponent->GetStats().myHealth;
 
-		if (myPlayer->GetComponent<CPlayerControllerComponent>()->AuraActive())
+		float regenerationPercentage = myPlayer->GetComponent<CPlayerControllerComponent>()->RegenerationPercentage();
+		if ((myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth + (difference * regenerationPercentage))
+			< myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth)
 		{
-			if ((myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth + (difference * 0.15f))
-				< myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth)
-				myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth += difference * 0.15f;
-			else
-				myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth = myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
+			if (myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth > 0.f) {
+				SDamagePopupData healingData;
+				healingData.myHitType = 4; // Healing
+				healingData.myDamage = difference * regenerationPercentage;
+				healingData.myGameObject = myPlayer;
+				CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &healingData);
+				myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth += difference * regenerationPercentage;
+			}
 		}
+		else
+			myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth = myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
 
 		difference = (difference <= 0.0) ? 0.0f : (baseHealth - difference) / baseHealth;
 		myCanvas->GetAnimatedUI()[0]->Level(difference);
@@ -174,6 +202,10 @@ void CBossBehavior::IdlePhase(CGameObject* aParent)
 			sprite->SetShouldRender(true);
 		}
 		myCanvas->GetAnimatedUI()[0]->SetShouldRender(true);
+
+		for (auto& text : myCanvas->GetTexts()) {
+			text->SetShouldRender(true);
+		}
 		CMainSingleton::PostMaster().Send({ EMessageType::BossFightStart, nullptr });
 	}
 }
@@ -197,6 +229,7 @@ void CBossBehavior::StartPhase(CGameObject* aParent)
 			aParent->GetComponent<CAnimationComponent>()->PlayAttack01ID();
 
 			aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility1, aParent->myTransform->Position());
+			CMainSingleton::PostMaster().Send({ EMessageType::BossMeleeAttack, nullptr });
 		}
 	}
 }
@@ -221,10 +254,12 @@ void CBossBehavior::MidPhase(CGameObject* aParent)
 			{
 				aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility1, aParent->myTransform->Position());
 				aParent->GetComponent<CAnimationComponent>()->PlayAttack01ID();
+				CMainSingleton::PostMaster().Send({ EMessageType::BossMeleeAttack, nullptr });
 			}
 			else if (attackType == 2)
 			{
 				aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility2, aParent->myTransform->Position());
+				CMainSingleton::PostMaster().Send({ EMessageType::HealingAura, nullptr });
 			}
 		}
 	}
@@ -248,17 +283,23 @@ void CBossBehavior::FinalPhase(CGameObject* aParent)
 			int attackType = Random(1, 3);
 			if (attackType == 1)
 			{
-				aParent->GetComponent<CAnimationComponent>()->PlayAttack01ID();
 				aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility1, aParent->myTransform->Position());
+				auto animComp = aParent->GetComponent<CAnimationComponent>();
+				animComp->PlayAttack01ID();
+				float delay = animComp->GetCurrentAnimationDuration() / animComp->GetCurrentAnimationTicksPerSecond() / 2.0f;
+				CMainSingleton::PostMaster().Send({ EMessageType::BossMeleeAttack, &delay });
 			}
 			else if (attackType == 2)
 			{
 				aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility2, aParent->myTransform->Position());
+				CMainSingleton::PostMaster().Send({ EMessageType::HealingAura, nullptr });
 			}
 			else if (attackType == 3)
 			{
 				aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility3, aParent->myTransform->Position());
 				aParent->GetComponent<CAnimationComponent>()->PlayAttack02ID();
+				float delay = 1.0f;
+				CMainSingleton::PostMaster().Send({ EMessageType::PlayExplosionSFX, &delay });
 			}
 		}
 	}
@@ -273,7 +314,10 @@ void CBossBehavior::Die(CGameObject* aParent)
 	}
 
 	aParent->GetComponent<CAnimationComponent>()->DeadState();
-	CMainSingleton::PostMaster().Send({ EMessageType::PlayBossDeathSFX, this });
+
+	CMainSingleton::PostMaster().Send({ EMessageType::StopMusic, nullptr });
+	if(!myIsVeryDead)
+		CMainSingleton::PostMaster().Send({ EMessageType::PlayBossDeathSFX, nullptr });
 	myIsVeryDead = true;
 	// Start countdown timer for Credits push
 }

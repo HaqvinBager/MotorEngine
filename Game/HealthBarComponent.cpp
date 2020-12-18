@@ -5,15 +5,20 @@
 #include "Utility.h"
 #include "TransformComponent.h"
 #include "StatsComponent.h"
+#include "TextInstance.h"
 
-CHealthBarComponent::CHealthBarComponent(CGameObject& aParant, CScene& aScene, std::string aPath)
+CHealthBarComponent::CHealthBarComponent(CGameObject& aParant, CScene& aScene)
 	: CBehaviour(aParant)
 {
 	myCanvas = new CCanvas();
 	myCanvas->Init("Json/UI_InGame_Enemy_HealthBarSmall.json", aScene, false);
 
 	myCanvas2 = new CCanvas();
-	myCanvas2->Init(aPath, aScene, false);
+	myCanvas2->Init("Json/UI_InGame_Enemy_HealthBar.json", aScene, false);
+
+	if (aParant.GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth >= 80.f) {
+		myCanvas2->GetTexts()[0]->SetText("Guard Captain Loghaine");
+	}
 }
 
 CHealthBarComponent::~CHealthBarComponent()
@@ -32,6 +37,9 @@ void CHealthBarComponent::Awake()
 	}
 	for (const auto& sprite : myCanvas2->GetAnimatedUI()) {
 		CEngine::GetInstance()->GetActiveScene().AddInstance(sprite);
+	}
+	for (auto text : myCanvas2->GetTexts()) {
+		CEngine::GetInstance()->GetActiveScene().AddInstance(text);
 	}
 }
 
@@ -62,6 +70,9 @@ void CHealthBarComponent::OnEnable()
 		for (auto sprite : myCanvas2->GetAnimatedUI()) {
 			sprite->GetInstance()->SetShouldRender(true);
 		}
+		for (auto text : myCanvas2->GetTexts()) {
+			text->SetShouldRender(true);
+		}
 	}
 }
 
@@ -69,5 +80,8 @@ void CHealthBarComponent::OnDisable()
 {
 	for (const auto& sprite : myCanvas2->GetAnimatedUI()) {
 		sprite->GetInstance()->SetShouldRender(false);
+	}
+	for (auto text : myCanvas2->GetTexts()) {
+		text->SetShouldRender(false);
 	}
 }

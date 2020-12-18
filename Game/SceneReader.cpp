@@ -222,12 +222,59 @@ SLoadScreenData& CSceneReader::ReadLoadScreenData()
 	unsigned int destructible = 0;
 	myStreamPtr += Read(destructible);
 
-	unsigned int gameObjectCount = 0;
-	myStreamPtr += Read(gameObjectCount);
+	//unsigned int gameObjectCount = 0;
+	//myStreamPtr += Read(gameObjectCount);
 	
-	SGameObjectData gameObjectData = {};
+	/*SGameObjectData gameObjectData = {};
 	myStreamPtr += Read(gameObjectData);
-	myLoadScreenData.back()->myGameObject = gameObjectData;
+	myLoadScreenData.back()->myGameObject = gameObjectData;*/
+
+	int myGameObjectDataCount = 0;
+	myStreamPtr += Read(myGameObjectDataCount);
+
+	assert(myGameObjectDataCount < 100000 && "Something went wrong when reading GameObjectData");
+
+	myLoadScreenData.back()->myGameObjects.reserve(myGameObjectDataCount);
+	for (int i = 0; i < myGameObjectDataCount; ++i)
+	{
+		SGameObjectData gameObjectData = { 0 };
+		myStreamPtr += Read(gameObjectData);
+		myLoadScreenData.back()->myGameObjects.emplace_back(gameObjectData);
+	}
+
+	int myEnvironmentFXCount = 0;
+	myStreamPtr += Read(myEnvironmentFXCount);
+	for (int i = 0; i < myEnvironmentFXCount; ++i)
+	{
+		SEnvironmentFXData data = {};
+		myStreamPtr += Read(data);
+
+		std::string jsonName = "";
+		jsonName = ReadStringAuto();
+
+		myLoadScreenData.back()->myEnvironmentFXs.emplace_back(data);
+		myLoadScreenData.back()->myEnvironmentFXStringMap[data.myInstanceID] = std::string(jsonName);
+	}
+
+	int myParticleFXCount = 0;
+	myStreamPtr += Read(myParticleFXCount);
+	for (int i = 0; i < myParticleFXCount; ++i)
+	{
+		SParticleFXData data = {};
+		myStreamPtr += Read(data);
+
+		myLoadScreenData.back()->myParticleFXs.emplace_back(data);
+
+		int myJsonNameCount = 0;
+		myStreamPtr += Read(myJsonNameCount);
+
+		for (int j = 0; j < myJsonNameCount; ++j)
+		{
+			std::string jsonName = "";
+			jsonName = ReadStringAuto();
+			myLoadScreenData.back()->myParticleFXStringMap[data.myInstanceID].emplace_back(std::string(jsonName));
+		}
+	}
 
 	myStream.close();
 	myStreamPtr = nullptr;
