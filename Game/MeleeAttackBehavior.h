@@ -24,4 +24,5 @@ public:
 private:
 	DirectX::SimpleMath::Vector3 myDirection;
 	CGameObject* myParent;
+	float myTimeToActivateCollider;
 };

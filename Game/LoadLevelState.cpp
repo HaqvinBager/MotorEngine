@@ -15,7 +15,7 @@
 using namespace rapidjson;
 CLoadLevelState::CLoadLevelState(CStateStack& aStateStack, const CStateStack::EState aState)
 	: CState(aStateStack, aState)
-	, myLevelToLoad(ELevel::Dungeon)
+	, myLevelToLoad(ELevel::Gardens)
 {}
 
 CLoadLevelState::~CLoadLevelState()

@@ -150,8 +150,7 @@ void CPlayerControllerComponent::Update()
 
 		if (!PlayerIsAlive()) {
 			ResetPlayer();
-		}
-		else {
+		} else {
 			RegenerateMana();
 		}
 		if (myPathMarker->Active()) {
@@ -162,8 +161,7 @@ void CPlayerControllerComponent::Update()
 				myPathMarker->Active(false);
 			}
 		}
-	}
-	else {
+	} else {
 		myTargetEnemy = nullptr;
 
 		this->GameObject().GetComponent<CTransformComponent>()->ClearPath();
@@ -180,9 +178,13 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 		switch (aEvent)
 		{
 		case IInputObserver::EInputEvent::MoveClick:
-			myPathMarker->Active(true);
-			myMarkerDuration = myPathMarker->GetComponent<CParticleEmitterComponent>()->EmitterDurations().back();
-			myPathMarker->myTransform->Position(mySelection->GetPositionAtNavmesh());
+			if (myPathMarker->Active()) {
+				myPathMarker->GetComponent<CParticleEmitterComponent>()->Reset();
+			}
+				myPathMarker->Active(true);
+				myMarkerDuration = myPathMarker->GetComponent<CParticleEmitterComponent>()->EmitterDurations().back();
+				myPathMarker->myTransform->Position(mySelection->GetPositionAtNavmesh());
+			
 			break;
 		case  IInputObserver::EInputEvent::StandStill:
 			myMiddleMousePressed = false;
@@ -202,15 +204,13 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 				{
 					if (CEngine::GetInstance()->GetActiveScene().GetBoss()) {
 						myTargetEnemy = mySelection->FindSelectedBoss();
-					}
-					else {
+					} else {
 						myTargetEnemy = mySelection->FindSelectedEnemy();
 					}
 					if (myTargetEnemy && myTargetEnemy->GetComponent<CStatsComponent>()->GetStats().myHealth > 0.f) {
 
 						this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath(myTargetEnemy->myTransform->Position());
-					}
-					else {
+					} else {
 						this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
 					}
 
@@ -218,13 +218,11 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 					if (myTargetDestructible && myTargetDestructible->GetComponent<CDestructibleComponent>()->IsDead() == false) {
 
 						this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath(myTargetDestructible->myTransform->Position());
-					}
-					else {
+					} else {
 						this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
 					}
 				}
-			}
-			else {
+			} else {
 				this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position());
 			}
 			break;
@@ -236,7 +234,9 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 		default:
 			break;
 		}
-	}
+	} /*else if (CMainSingleton::DialogueSystem().Active()){
+		myIsMoving = false;
+	}*/
 }
 
 void CPlayerControllerComponent::Receive(const SMessage& aMessage)
@@ -271,15 +271,16 @@ void CPlayerControllerComponent::MessagePostmaster(EMessageType aMessageType, fl
 
 bool CPlayerControllerComponent::PlayerIsAlive()
 {
-	if (myLastHP != GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth)
-	{
-		float baseHealth = GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
-		float difference = baseHealth - GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth;
-		difference = (baseHealth - difference) / baseHealth;
-		MessagePostmaster(EMessageType::PlayerHealthChanged, difference);
+	GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth += CTimer::Dt();
+	/*if (myLastHP != GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth)
+	{*/
+	float baseHealth = GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
+	float difference = baseHealth - GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth;
+	difference = (baseHealth - difference) / baseHealth;
+	MessagePostmaster(EMessageType::PlayerHealthChanged, difference);
 
-		myLastHP = GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth;
-	}
+	myLastHP = GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth;
+	//}
 
 	return myLastHP > 0.0f;
 }
@@ -290,7 +291,7 @@ void CPlayerControllerComponent::TakeDamage(float aDamageMultiplier, CGameObject
 	float damage = CDamageUtility::CalculateDamage(hitType, aGameObject->GetComponent<CStatsComponent>()->GetBaseStats().myDamage, aDamageMultiplier);
 
 	if (GameObject().GetComponent<CStatsComponent>()->AddDamage(damage)) {
-		CMainSingleton::PostMaster().Send({ EMessageType::AttackHits, nullptr });
+		CMainSingleton::PostMaster().Send({EMessageType::AttackHits, nullptr});
 		SDamagePopupData data = {damage, static_cast<int>(hitType), &GameObject()};
 		CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &data);
 	}
