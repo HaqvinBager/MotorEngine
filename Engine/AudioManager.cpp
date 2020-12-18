@@ -104,11 +104,39 @@ CAudioManager::CAudioManager() : myWrapper() {
 
 	// Add JSON reading?
 	// Group 4 
-	myChannels[CAST(EChannels::Music)]->SetVolume(0.3f);
-	myChannels[CAST(EChannels::Ambiance)]->SetVolume(0.5f);
-	myChannels[CAST(EChannels::SFX)]->SetVolume(0.15f);
-	myChannels[CAST(EChannels::UI)]->SetVolume(0.4f);
-	myChannels[CAST(EChannels::VOX)]->SetVolume(0.5f);
+
+	std::ifstream volumeStream("Json/AudioVolume.json");
+	IStreamWrapper volumeWrapper(volumeStream);
+	Document volDoc;
+	volDoc.ParseStream(volumeWrapper);
+	
+	if (volDoc.HasParseError()) { return; }
+	
+	if (volDoc.HasMember("Ambience"))
+	{
+		float value = volDoc["Ambience"].GetFloat();
+		myChannels[CAST(EChannels::Ambiance)]->SetVolume(value);
+	}
+	if (volDoc.HasMember("Music"))
+	{
+		float value = volDoc["Music"].GetFloat();
+		myChannels[CAST(EChannels::Music)]->SetVolume(value);
+	}
+	if (volDoc.HasMember("SFX"))
+	{
+		float value = volDoc["SFX"].GetFloat();
+		myChannels[CAST(EChannels::SFX)]->SetVolume(value);
+	}
+	if (volDoc.HasMember("UI"))
+	{
+		float value = volDoc["UI"].GetFloat();
+		myChannels[CAST(EChannels::UI)]->SetVolume(value);
+	}
+	if (volDoc.HasMember("Voice"))
+	{
+		float value = volDoc["Voice"].GetFloat();
+		myChannels[CAST(EChannels::VOX)]->SetVolume(value);
+	}
 
 	// Unused?
 	// SEND MESSAGE TO START PLAYING MUSIC
