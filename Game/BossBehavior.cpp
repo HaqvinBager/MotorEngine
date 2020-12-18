@@ -67,6 +67,8 @@ CBossBehavior::~CBossBehavior()
 
 	myPhasePercents.clear();
 	myPlayer = nullptr;
+
+	firstTime = false;
 }
 
 void CBossBehavior::Update(CGameObject* aParent)

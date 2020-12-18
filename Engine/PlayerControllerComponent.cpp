@@ -81,17 +81,17 @@ void CPlayerControllerComponent::Start()
 	{
 		MessagePostmaster(EMessageType::PlayerExperienceChanged, 1.0f);
 	} else {
-		MessagePostmaster(EMessageType::PlayerExperienceChanged, this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience);
+		float maxValue = this->GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myExperienceToLevelUp;
+		float difference = this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience;
+		this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience = difference;
+
+		difference = difference / maxValue;
+		MessagePostmaster(EMessageType::PlayerExperienceChanged, difference);
 	}
 }
 void CPlayerControllerComponent::Update()
 {
 	if (!CMainSingleton::DialogueSystem().Active()) {
-		if (Input::GetInstance()->IsKeyPressed('L'))
-		{
-			SetLevel(3);
-		}
-
 		if (myIsMoving) {
 			this->GameObject().myTransform->MoveAlongPath();
 		}
