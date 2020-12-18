@@ -9,7 +9,7 @@
 #include "AIBehavior.h"
 #include "AIBehaviorComponent.h"
 #include "PlayerControllerComponent.h"
-#include "AnimationComponent.h"
+//#include "AnimationComponent.h"
 
 CMeleeAttackBehavior::CMeleeAttackBehavior(float aDuration, float aDamage, CGameObject* aParent)
 {
@@ -27,7 +27,8 @@ CMeleeAttackBehavior::~CMeleeAttackBehavior()
 
 void CMeleeAttackBehavior::Init(CGameObject* aCaster)
 {
-	myTimeToActivateCollider = aCaster->GetComponent<CAnimationComponent>()->ReturnToIdleTimer() / 2.0f;
+	myCaster = aCaster;
+	myTimeToActivateCollider = myDuration - 0.05f;
 	CTriangleColliderComponent* triangleCollider = myParent->GetComponent<CTriangleColliderComponent>();
 	DirectX::SimpleMath::Vector3 vector = myCaster->GetComponent<CTransformComponent>()->Position() + myCaster->GetComponent<CTransformComponent>()->Transform().Forward() * triangleCollider->GetHeight() * 100.0f;
 	triangleCollider->SetPosition(myCaster->GetComponent<CTransformComponent>()->Position());
@@ -51,12 +52,6 @@ void CMeleeAttackBehavior::Update(CGameObject* aParent)
 	if (myCaster)
 	{
 		CTriangleColliderComponent* triangleCollider = myParent->GetComponent<CTriangleColliderComponent>();
-		if (myTimeToActivateCollider >= 0.0f) {
-			myTimeToActivateCollider -= CTimer::Dt();
-		}
-		if (myTimeToActivateCollider <= 0.0f) {
-			triangleCollider->Enabled(true);
-		}
 
 		if (triangleCollider->Enabled()) {
 			DirectX::SimpleMath::Vector3 vector = myCaster->GetComponent<CTransformComponent>()->Position() + myCaster->GetComponent<CTransformComponent>()->Transform().Forward() * triangleCollider->GetHeight() * 100.0f;
@@ -68,6 +63,11 @@ void CMeleeAttackBehavior::Update(CGameObject* aParent)
 		}
 
 		myTimer += CTimer::Dt();
+
+		if (myTimer > myTimeToActivateCollider) {
+			triangleCollider->Enabled(true);
+		}
+
 		if (myTimer > myDuration)
 		{
 			myTimer = 0.0f;
