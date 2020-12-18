@@ -116,11 +116,14 @@ bool CRenderManager::ReInit(CDirectXFramework* aFramework, CWindowHandler* aWind
 
 void CRenderManager::Render(CScene& aScene)
 {
-	//if (CScene::GetInstance()->Ready() == false)
-	//	return;
+	if (myFrameCounter % 5 == 0) {
+		aScene.UpdateLightsNearestPlayer();
 
-
-	aScene.UpdateLightsNearestPlayer();
+		if (myFrameCounter > 50005) {
+			myFrameCounter = 0;
+		}
+	}
+	myFrameCounter++;
 
 	if (Input::GetInstance()->IsKeyPressed(VK_F6))
 	{

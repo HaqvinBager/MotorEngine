@@ -50,9 +50,6 @@ public:
 	std::pair<unsigned int, std::array<CPointLight*, LIGHTCOUNT>> CullLights(CGameObject* aGameObject);
 	LightPair CullLightInstanced(CInstancedModelComponent* aModelType);
 
-	//std::pair<unsigned int, std::array<CPointLight*, LIGHTCOUNT>> CullLights(const DirectX::SimpleMath::Vector3& aPosition);
-	//std::pair<unsigned int, std::array<CPointLight*, LIGHTCOUNT>> CullLights(const std::vector<DirectX::SimpleMath::Matrix>& somePositions) const;
-
 	std::vector<CParticleInstance*> CullParticles(CCameraComponent* aMainCamera);
 	std::vector<CVFXInstance*> CullVFX(CCameraComponent* aMainCamera);
 	const std::vector<SLineTime>& CullLines() const;
@@ -123,12 +120,10 @@ public:
 	}
 
 private:
-	DirectX::SimpleMath::Vector3 myPlayerPositionThisFrame;
-
 	struct NearestPlayerComparer {
 		DirectX::SimpleMath::Vector3 myPos;
 		bool operator()(const CPointLight* a, const CPointLight* b) const;
-	}ourNearestPlayerComparer;
+	} ourNearestPlayerComparer;
 
 	std::vector<CGameObject*> myGameObjects;
 	CCameraComponent* myMainCamera;
