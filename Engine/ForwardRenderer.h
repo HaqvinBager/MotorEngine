@@ -3,7 +3,7 @@
 #include "SimpleMath.h"
 #include "ModelMath.h"
 #include <wrl.h>
-
+#include "EngineDefines.h"
 
 class CModelComponent;
 class CEngine;
@@ -15,6 +15,8 @@ class CLineInstance;
 class CModel;
 class CCameraComponent;
 struct SLineTime;
+class CInstancedModelComponent;
+class CScene;
 
 class CForwardRenderer
 {
@@ -23,8 +25,8 @@ public:
 	~CForwardRenderer();
 
 	bool Init(CDirectXFramework* aFramework);
-	void Render(CEnvironmentLight* anEnvironmentLight, std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> aModelPointLightList, CCameraComponent* aCamera, std::vector<CGameObject*>& aGameObjectList);
-	void InstancedRender(CEnvironmentLight* anEnvironmentLight, std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> aModelPointLightList, CCameraComponent* aCamera, std::vector<CGameObject*>& aGameObjectList);
+	void Render(CEnvironmentLight* anEnvironmentLight, std::vector<std::pair<unsigned int, std::array<CPointLight*, LIGHTCOUNT>>> aModelPointLightList, CCameraComponent* aCamera, std::vector<CGameObject*>& aGameObjectList);
+	void InstancedRender(CEnvironmentLight* anEnvironmentLight, std::vector<std::pair<unsigned int, std::array<CPointLight*, LIGHTCOUNT>>> aModelPointLightList, CCameraComponent* aCamera, std::vector<CGameObject*>& aGameObjectList);
 	void RenderLines(CCameraComponent* aCamera, const std::vector<SLineTime>& aLineList);
 	void RenderOutline(CCameraComponent* aCamera, CGameObject* aModelInstance, CModel* someOutlineModelData, DirectX::SimpleMath::Vector4 aColor);
 	void RenderLineInstances(CCameraComponent* aCamera, const std::vector<CLineInstance*>& aLineList);
@@ -63,7 +65,7 @@ private:
 		struct SPointLightBufferData {
 			DirectX::SimpleMath::Vector4 myPositionAndIntensity;
 			DirectX::SimpleMath::Vector4 myColorAndRange;
-		} myPointLights[8];
+		} myPointLights[LIGHTCOUNT];
 
 		unsigned int myNumberOfUsedPointLights;
 		unsigned int myPadding[3];

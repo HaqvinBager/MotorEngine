@@ -119,6 +119,9 @@ void CRenderManager::Render(CScene& aScene)
 	//if (CScene::GetInstance()->Ready() == false)
 	//	return;
 
+
+	aScene.UpdateLightsNearestPlayer();
+
 	if (Input::GetInstance()->IsKeyPressed(VK_F6))
 	{
 		myUseBloom = myForwardRenderer.ToggleRenderPass();
@@ -137,8 +140,10 @@ void CRenderManager::Render(CScene& aScene)
 	std::vector<CGameObject*> gameObjects = aScene.CullGameObjects(maincamera);
 	std::vector<CGameObject*> instancedGameObjects;
 	std::vector<CGameObject*> instancedGameObjectsWithAlpha;
-	std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> pointlights;
-	
+	std::vector<std::pair<unsigned int, std::array<CPointLight*, LIGHTCOUNT>>> pointlights;
+	std::vector<std::pair<unsigned int, std::array<CPointLight*, LIGHTCOUNT>>> pointLightsInstanced;
+
+
 	std::vector<int> indicesOfOutlineModels;
 	for (unsigned int i = 0; i < gameObjects.size(); ++i)
 	{
@@ -149,18 +154,39 @@ void CRenderManager::Render(CScene& aScene)
 			}
 		}
 
-		if (instance->GetComponent<CModelComponent>()) {
+		CModelComponent* modelComponent = nullptr;
+		CInstancedModelComponent* instancedModelComponent = nullptr;
+
+		if (instance->TryGetComponent(&modelComponent)) 
+		{
 			pointlights.emplace_back(aScene.CullLights(instance));
-		} else if (instance->GetComponent<CInstancedModelComponent>()) {
+		}
+		else if (instance->TryGetComponent(&instancedModelComponent)) 
+		{
+			pointLightsInstanced.emplace_back(aScene.CullLightInstanced(instancedModelComponent));
+			instancedGameObjects.emplace_back(instance);
+			instancedModelComponent->RenderWithAlpha() ?
+				instancedGameObjectsWithAlpha.emplace_back(instance) :
+				instancedGameObjects.emplace_back(instance);
+
+		}
+
+		/*if (instance->GetComponent<CModelComponent>()) {
 			pointlights.emplace_back(aScene.CullLights(instance));
+		}
+		else if (instance->GetComponent<CInstancedModelComponent>()) {
+
+			pointLightsInstanced.emplace_back(aScene.CullLights(instance));
+
 			if (instance->GetComponent<CInstancedModelComponent>()->RenderWithAlpha())
 			{
 				instancedGameObjectsWithAlpha.emplace_back(instance);
 				continue;
 			}
 			instancedGameObjects.emplace_back(instance);
-		}
+		}*/
 	}
+	std::cout << std::endl;
 
 	std::sort(indicesOfOutlineModels.begin(), indicesOfOutlineModels.end(), [](UINT a, UINT b) { return a > b; });
 
@@ -171,8 +197,8 @@ void CRenderManager::Render(CScene& aScene)
 	}
 
 	myForwardRenderer.Render(environmentlight, pointlights, maincamera, gameObjects);
-	myForwardRenderer.InstancedRender(environmentlight, pointlights, maincamera, instancedGameObjects);
-		
+	myForwardRenderer.InstancedRender(environmentlight, pointLightsInstanced, maincamera, instancedGameObjects);
+
 	for (auto modelToOutline : aScene.GetModelsToOutline()) {
 		std::vector<CGameObject*> interimVector;
 		if (modelToOutline) {
@@ -181,7 +207,7 @@ void CRenderManager::Render(CScene& aScene)
 			myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_STENCILWRITE, 0xFF);
 
 			myForwardRenderer.Render(environmentlight, pointlights, maincamera, interimVector);
-			
+
 			if (modelToOutline != aScene.GetPlayer()) {
 				modelToOutline->GetComponent<CTransformComponent>()->SetOutlineScale();
 			}
@@ -208,7 +234,7 @@ void CRenderManager::Render(CScene& aScene)
 	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_ALPHABLEND);
 	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_ONLYREAD);
 
-	myForwardRenderer.InstancedRender(environmentlight, pointlights, maincamera, instancedGameObjectsWithAlpha);
+	//myForwardRenderer.InstancedRender(environmentlight, pointlights, maincamera, instancedGameObjectsWithAlpha);
 
 	myVFXRenderer.Render(maincamera, gameObjects);
 

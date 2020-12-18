@@ -15,6 +15,7 @@
 #include "Debug.h"
 #include "CameraComponent.h"
 #include "InstancedModelComponent.h"
+#include "Scene.h"
 
 namespace SM = DirectX::SimpleMath;
 
@@ -113,7 +114,7 @@ bool CForwardRenderer::Init(CDirectXFramework* aFramework) {
 	return true;
 }
 
-void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> aModelPointLightList, CCameraComponent* aCamera, std::vector<CGameObject*>& aGameObjectList)
+void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector<std::pair<unsigned int, std::array<CPointLight*, LIGHTCOUNT>>> aModelPointLightList, CCameraComponent* aCamera, std::vector<CGameObject*>& aGameObjectList)
 {
 	DirectX::SimpleMath::Matrix& cameraMatrix = aCamera->GameObject().myTransform->Transform();
 	myFrameBufferData.myToCamera = cameraMatrix.Invert();;
@@ -128,7 +129,7 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector
 	myContext->PSSetConstantBuffers(0, 1, &myFrameBuffer);
 	myContext->PSSetShaderResources(0, 1, anEnvironmentLight->GetCubeMap());
 
-	// MODELCOMPONENT
+	//MODELCOMPONENT
 	int modelIndex = 0;
 	for (auto& gameobject : aGameObjectList)
 	{
@@ -143,13 +144,15 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector
 		if (gameobject->GetComponent<CModelComponent>()->GetMyModel() == nullptr)
 			continue;
 
-		for (unsigned int i = 0; i < aModelPointLightList[modelIndex].first; ++i) {
-			SM::Vector3 position = aModelPointLightList[modelIndex].second[i]->GetPosition();
-			SM::Vector3 color = aModelPointLightList[modelIndex].second[i]->GetColor();
-			myObjectBufferData.myPointLights[i].myPositionAndIntensity = { position.x, position.y, position.z, aModelPointLightList[modelIndex].second[i]->GetIntensity() };
-			myObjectBufferData.myPointLights[i].myColorAndRange = { color.x, color.y, color.z, aModelPointLightList[modelIndex].second[i]->GetRange() };
-		}
-		myObjectBufferData.myNumberOfUsedPointLights = aModelPointLightList[modelIndex].first;
+			for (unsigned int i = 0; i < aModelPointLightList[modelIndex].first; ++i)
+			{
+				SM::Vector3 position = aModelPointLightList[modelIndex].second[i]->GetPosition();
+				SM::Vector3 color = aModelPointLightList[modelIndex].second[i]->GetColor();
+				myObjectBufferData.myPointLights[i].myPositionAndIntensity = { position.x, position.y, position.z, aModelPointLightList[modelIndex].second[i]->GetIntensity() };
+				myObjectBufferData.myPointLights[i].myColorAndRange = { color.x, color.y, color.z, aModelPointLightList[modelIndex].second[i]->GetRange() };
+			}
+			myObjectBufferData.myNumberOfUsedPointLights = aModelPointLightList[modelIndex].first;
+			modelIndex++;
 
 		CModel* model = gameobject->GetComponent<CModelComponent>()->GetMyModel();
 
@@ -189,7 +192,7 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, std::vector
 	}
 }
 
-void CForwardRenderer::InstancedRender(CEnvironmentLight* anEnvironmentLight, std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> aModelPointLightList, CCameraComponent* aCamera, std::vector<CGameObject*>& aGameObjectList)
+void CForwardRenderer::InstancedRender(CEnvironmentLight* anEnvironmentLight, std::vector<std::pair<unsigned int, std::array<CPointLight*, LIGHTCOUNT>>> aModelPointLightList, CCameraComponent* aCamera, std::vector<CGameObject*>& aGameObjectList)
 {
 	DirectX::SimpleMath::Matrix& cameraMatrix = aCamera->GameObject().myTransform->Transform();
 	myFrameBufferData.myToCamera = cameraMatrix.Invert();;
@@ -207,46 +210,44 @@ void CForwardRenderer::InstancedRender(CEnvironmentLight* anEnvironmentLight, st
 	myContext->PSSetShaderResources(0, 1, anEnvironmentLight->GetCubeMap());
 
 	// MODELCOMPONENT
-	int modelIndex = 0;
 	for (auto& gameobject : aGameObjectList)
 	{
-		//Added this if Check because not all GameObjects Must have a CModelComponent.
-		//Refactoring suggestion: Have CModelComponents be "created" in some kind of Factory.
-		//This factory will make sure to hold all CModelComponent Data in a Cache friendly array <3
-		//Big hype!
-
-		//if (gameobject->GetComponent<CModelComponent>() == nullptr)
-		//	continue;
-		//
-		//if (gameobject->GetComponent<CModelComponent>()->GetMyModel() == nullptr)
-		//	continue;
-
-		for (unsigned int i = 0; i < aModelPointLightList[modelIndex].first; ++i) {
-			SM::Vector3 position = aModelPointLightList[modelIndex].second[i]->GetPosition();
-			SM::Vector3 color = aModelPointLightList[modelIndex].second[i]->GetColor();
-			myObjectBufferData.myPointLights[i].myPositionAndIntensity = { position.x, position.y, position.z, aModelPointLightList[modelIndex].second[i]->GetIntensity() };
-			myObjectBufferData.myPointLights[i].myColorAndRange = { color.x, color.y, color.z, aModelPointLightList[modelIndex].second[i]->GetRange() };
-		}
-		myObjectBufferData.myNumberOfUsedPointLights = aModelPointLightList[modelIndex].first;
-
 		CInstancedModelComponent* instanceComponent = gameobject->GetComponent<CInstancedModelComponent>();
+		if (instanceComponent == nullptr)
+			continue;
+
+
+		//InstancedRender(aScene, instanceComponent);
+
+		/*const std::vector<Matrix>& instanceMatrixes = instanceComponent->GetInstancedTransforms();
+		for (unsigned int instanceIndex = 0; instanceIndex < instanceMatrixes.size(); ++instanceIndex)
+		{
+			for (unsigned int pointLightCount = 0; pointLightCount < aModelPointLightList[instanceIndex].first; ++pointLightCount)
+			{
+				SM::Vector3 lightPosition = aModelPointLightList[gameObjectIndex].second[pointLightCount]->GetPosition();
+				SM::Vector3 lightColor = aModelPointLightList[gameObjectIndex].second[pointLightCount]->GetColor();
+
+				float lightRange = aModelPointLightList[gameObjectIndex].second[pointLightCount]->GetRange();
+			}
+		}*/
+
+		for (unsigned int matrix = 0; matrix < instanceComponent->GetInstancedTransforms().size(); ++matrix) {
+			int instancedIndex = 0;
+			for (unsigned int i = 0; i < aModelPointLightList[instancedIndex].first; ++i) {
+				SM::Vector3 position = aModelPointLightList[instancedIndex].second[i]->GetPosition();
+				SM::Vector3 color = aModelPointLightList[instancedIndex].second[i]->GetColor();
+				myObjectBufferData.myPointLights[i].myPositionAndIntensity = { position.x, position.y, position.z, aModelPointLightList[instancedIndex].second[i]->GetIntensity() };
+				myObjectBufferData.myPointLights[i].myColorAndRange = { color.x, color.y, color.z, aModelPointLightList[instancedIndex].second[i]->GetRange() };
+			}
+			myObjectBufferData.myNumberOfUsedPointLights = aModelPointLightList[instancedIndex].first;
+			instancedIndex++;
+
+			BindBuffer(myObjectBuffer, myObjectBufferData, "Object Buffer");
+		}
+
 		CModel* model = instanceComponent->GetModel();
-
 		CModel::SModelInstanceData modelData = model->GetModelInstanceData();
-
-		//dont really need to add CTransforms transform to ObjectBuffers myToWorld
-		//myObjectBufferData.myToWorld = gameobject->GetComponent<CTransformComponent>()->Transform();
-
-		BindBuffer(myObjectBuffer, myObjectBufferData, "Object Buffer");
-
-		//if (gameobject->GetComponent<CAnimationComponent>() != nullptr) {
-		//	memcpy(myBoneBufferData.myBones, gameobject->GetComponent<CAnimationComponent>()->GetBones().data(), sizeof(SlimMatrix44) * 64);
-		//
-		//	BindBuffer(myBoneBuffer, myBoneBufferData, "Bone Buffer");
-		//
-		//	myContext->VSSetConstantBuffers(2, 1, &myBoneBuffer);
-		//}
-
+		
 		{
 			D3D11_MAPPED_SUBRESOURCE instanceBuffer;
 			ZeroMemory(&instanceBuffer, sizeof(D3D11_MAPPED_SUBRESOURCE));
@@ -269,17 +270,17 @@ void CForwardRenderer::InstancedRender(CEnvironmentLight* anEnvironmentLight, st
 		myContext->PSSetShaderResources(1, 3, &modelData.myTexture[0]);
 		myContext->PSSetSamplers(0, 1, &modelData.mySamplerState);
 
+
+
+
 		// Toggling render passes
 		if (myCurrentPixelShader == nullptr)
 			myContext->PSSetShader(modelData.myPixelShader, nullptr, 0);
 		else 
 			myContext->PSSetShader(myCurrentPixelShader, nullptr, 0);
 
-		//myContext->PSSetShader(modelData.myPixelShader, nullptr, 0);
 
-		//myContext->PSSetShaderResources(0, 1, &nullView);
-		// TODO: Check this?
-		//myContext->PSSetShaderResources(0, 1, anEnvironmentLight->GetCubeMap());
+
 		myContext->DrawIndexedInstanced(modelData.myNumberOfIndices, model->InstanceCount(), 0, 0, 0);
 	}
 }

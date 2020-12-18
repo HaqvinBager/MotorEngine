@@ -69,6 +69,9 @@ public:
 	template<class T>
 	T* GetComponent() const;
 
+	template<class T>
+	bool TryGetComponent(T** outComponent) const;
+
 	CTransformComponent* myTransform;
 
 	const int InstanceID() const { return  myInstanceID; }
@@ -115,4 +118,15 @@ inline T* CGameObject::GetComponent() const
 	}
 	//throw std::exception("Component is missing.");
 	return nullptr;
+}
+
+template<class T>
+inline bool CGameObject::TryGetComponent(T** outComponent) const
+{
+	*outComponent = GetComponent<T>();
+	return *outComponent != nullptr;
+	//if (component != nullptr) 
+	//	outComponent = component;
+	//
+	//return outComponent != nullptr;
 }

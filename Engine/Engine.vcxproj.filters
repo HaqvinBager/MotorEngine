@@ -692,6 +692,9 @@
     <ClInclude Include="CreditsState.h">
       <Filter>State Stack</Filter>
     </ClInclude>
+    <ClInclude Include="EngineDefines.h">
+      <Filter>Engine Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="PBRDirectionalLight.hlsli">

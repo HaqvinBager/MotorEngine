@@ -1,3 +1,5 @@
+#include "EngineDefines.h"
+
 TextureCube environmentTexture : register(t0);
 Texture2D diffuseTexture : register(t1); //RGB-A = Albedo
 Texture2D materialTexture : register(t2); //R = Metalness, G = Roughness, B = Emissive
@@ -21,7 +23,7 @@ cbuffer ObjectBuffer : register(b1)
     {
         float4 myPositionAndIntensity;
         float4 myColorAndRange;
-    }myPointLights[8];
+    }myPointLights[LIGHTCOUNT];
     
     unsigned int myNumberOfUsedPointLights;
     unsigned int myPadding[3];
