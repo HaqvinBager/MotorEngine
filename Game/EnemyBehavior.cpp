@@ -173,12 +173,14 @@ void CEnemyBehavior::TakeDamage(float aDamageMultiplier, CGameObject* aGameObjec
 		if ((myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth + (difference * regenerationPercentage))
 			< myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth)
 		{
-			SDamagePopupData healingData;
-			healingData.myHitType = 4; // Healing
-			healingData.myDamage = difference * regenerationPercentage;
-			healingData.myGameObject = myPlayer;
-			CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &healingData);
-			myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth += difference * regenerationPercentage;
+			if (myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth > 0.f) {
+				SDamagePopupData healingData;
+				healingData.myHitType = 4; // Healing
+				healingData.myDamage = difference * regenerationPercentage;
+				healingData.myGameObject = myPlayer;
+				CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &healingData);
+				myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth += difference * regenerationPercentage;
+			}
 		}
 		else
 			myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth = myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
