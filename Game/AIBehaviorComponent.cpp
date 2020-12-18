@@ -24,9 +24,7 @@ void CAIBehaviorComponent::Start()
 
 void CAIBehaviorComponent::Update()
 {
-	if (!CMainSingleton::DialogueSystem().Active()) {
-		myBehavior->Update(&GameObject());
-	}
+	myBehavior->Update(&GameObject());
 }
 
 void CAIBehaviorComponent::Collided(CGameObject* aCollidedGameObject)

@@ -24,13 +24,16 @@ enum class ESFX
 	PlayerHitSound,
 	KingBossDeathSound, 
 	BossMeleeAtk, 
+	BossExplosion, 
 	DemonIdle1, 
 	DemonIdle2, 
-	HitDestructible, 
+	Explosion,
+	HitDestructible,
+	LevelUp,
 	HealingAura,  
 	PlayerLightAtk, 
 	PlayerHeavyAtk, 
-	ShieldSpell, 
+	ShieldSpell,
 	Count 
 };
 enum class EUI { ButtonClick, Count };

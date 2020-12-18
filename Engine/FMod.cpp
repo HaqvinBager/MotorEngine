@@ -48,6 +48,13 @@ FMOD::Sound* CFMod::CreateSound(std::string aFilePath)
     return soundPtr;
 }
 
+FMOD::Sound* CFMod::CreateLoopingSound(std::string aFilePath)
+{
+    FMOD::Sound* soundPtr;
+    FMOD_EXCEPTION(myCoreSystem->createSound(aFilePath.c_str(), FMOD_LOOP_NORMAL, nullptr, &soundPtr));
+    return soundPtr;
+}
+
 FMOD::ChannelGroup* CFMod::CreateChannel(std::string aChannelName)
 {
     FMOD::ChannelGroup* channelPtr;

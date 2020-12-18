@@ -280,7 +280,13 @@ std::vector<CAnimatedUIElement*> CScene::CullAnimatedUI(std::vector<CSpriteInsta
 
 std::vector<CTextInstance*> CScene::GetTexts()
 {
-	return myTexts;
+	std::vector<CTextInstance*> textToRender;
+	for (auto& text : myTexts) {
+		if (text->GetShouldRender()) {
+			textToRender.emplace_back(text);
+		}
+	}
+	return textToRender;
 }
 
 bool CScene::AddInstances(std::vector<CGameObject*>& someGameObjects)

@@ -28,7 +28,7 @@ PixelOutput main(GeometryToPixel input)
     }
     else
     {
-        uvLevelOffset.x = squishedLevel;
+        uvLevelOffset.x = (maxLevel - squishedLevel);
     }
     
     float4 textureColor = instanceTexture1.Sample(defaultSampler, (uv * uvScale1) + randomOffset + scrollSpeed1 * scrollTimer).rgba;

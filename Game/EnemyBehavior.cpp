@@ -29,6 +29,7 @@
 #include "HealthBarComponent.h"
 #include "Canvas.h"
 #include "AnimatedUIElement.h"
+#include "PopupTextService.h"
 
 CEnemyBehavior::CEnemyBehavior(CGameObject* aPlayerObject)
 	: myPlayer(aPlayerObject)
@@ -41,25 +42,30 @@ CEnemyBehavior::~CEnemyBehavior()
 
 void CEnemyBehavior::Update(CGameObject* aParent)
 {
-	if (Input::GetInstance()->IsKeyPressed('P')) {
-		TakeDamage(0.1f, CEngine::GetInstance()->GetActiveScene().GetEnemies()[0]);
-	}
-	myCurrentParent = aParent;
-
-	//enemy logic
-	SBaseStats baseStats = myCurrentParent->GetComponent<CStatsComponent>()->GetBaseStats();
-	SStats stats = myCurrentParent->GetComponent<CStatsComponent>()->GetStats();
-
-	if (stats.myHealth <= 0) {
-		CMainSingleton::PostMaster().SendLate({EMessageType::EnemyDied, this});
-		if (stats.myTokenSlot != nullptr) {
-			CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
-			stats.myTokenSlot = nullptr;
+	if (!CMainSingleton::DialogueSystem().Active()) {
+		if (Input::GetInstance()->IsKeyPressed('P')) {
+			TakeDamage(0.1f, CEngine::GetInstance()->GetActiveScene().GetEnemies()[0]);
 		}
-		//aParent->Active(false);
-	}
+		myCurrentParent = aParent;
 
-	FindATarget();
+		//enemy logic
+		SBaseStats baseStats = myCurrentParent->GetComponent<CStatsComponent>()->GetBaseStats();
+		SStats stats = myCurrentParent->GetComponent<CStatsComponent>()->GetStats();
+
+		if (stats.myHealth <= 0) {
+			CMainSingleton::PostMaster().SendLate({ EMessageType::EnemyDied, this });
+			if (stats.myTokenSlot != nullptr) {
+				CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
+				stats.myTokenSlot = nullptr;
+			}
+			//aParent->Active(false);
+		}
+
+		FindATarget();
+	}
+	else {
+		aParent->GetComponent<CTransformComponent>()->ClearPath();
+	}
 }
 
 // Sending in the parent feels safer than relying on myCurrentParent
@@ -107,9 +113,6 @@ void CEnemyBehavior::FindATarget()
 
 	float dist = DirectX::SimpleMath::Vector3::DistanceSquared(parentPos, targetPos);
 	if (dist <= baseStats.myBaseVisionRange) {
-		
-		
-
 		//NavMesh movement
 		myCurrentParent->GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
 		if (dist <= baseStats.myBaseAttackRange) {
@@ -166,14 +169,20 @@ void CEnemyBehavior::TakeDamage(float aDamageMultiplier, CGameObject* aGameObjec
 		float baseHealth = myCurrentParent->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
 		float difference = baseHealth - myCurrentParent->GetComponent<CStatsComponent>()->GetStats().myHealth;
 
-		//if (myPlayer->GetComponent<CPlayerControllerComponent>()->AuraActive()) {
 		float regenerationPercentage = myPlayer->GetComponent<CPlayerControllerComponent>()->RegenerationPercentage();
-			if ((myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth + (difference * regenerationPercentage))
-				< myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth)
-				myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth += difference * regenerationPercentage;
-			else
-				myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth = myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
-		//}
+		if ((myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth + (difference * regenerationPercentage))
+			< myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth)
+		{
+			SDamagePopupData healingData;
+			healingData.myHitType = 4; // Healing
+			healingData.myDamage = difference * regenerationPercentage;
+			healingData.myGameObject = myPlayer;
+			CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &healingData);
+			myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth += difference * regenerationPercentage;
+		}
+		else
+			myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth = myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
+
 
 		difference = (baseHealth - difference) / baseHealth;
 		if (difference <= 0.0)

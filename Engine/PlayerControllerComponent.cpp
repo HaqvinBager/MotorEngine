@@ -73,22 +73,8 @@ void CPlayerControllerComponent::Start()
 {
 	GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience = CMainSingleton::PlayerGlobalState().GetSavedExperience();
 
-	const int level = CMainSingleton::PlayerGlobalState().GetSavedPlayerLevel();
-	GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel = level;
-	switch (level)
-	{
-	case 3: // Activate ability 3
-		this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(3);
-	case 2: // Activate ability 2
-		this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position());
-		myAuraActive = true;
-		this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(2);
-	case 1: // Activate ability 1
-		this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(1);
-	case 0:
-		break;
-	}
-
+	SetLevel(CMainSingleton::PlayerGlobalState().GetSavedPlayerLevel());
+	
 	if (this->GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myMaxLevel
 		== this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel)
 	{
@@ -102,23 +88,7 @@ void CPlayerControllerComponent::Update()
 	if (!CMainSingleton::DialogueSystem().Active()) {
 		if (Input::GetInstance()->IsKeyPressed('L'))
 		{
-
-			const int level = 3;
-			GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel = level;
-			switch (level)
-			{
-			case 3: // Activate ability 3
-				this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(3);
-			case 2: // Activate ability 2
-				this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position());
-				myAuraActive = true;
-				this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(2);
-			case 1: // Activate ability 1
-				this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(1);
-			case 0:
-				break;
-			}
-
+			SetLevel(3);
 		}
 
 		if (myIsMoving) {
@@ -133,7 +103,6 @@ void CPlayerControllerComponent::Update()
 					< (myTargetEnemy->GetComponent<CCircleColliderComponent>()->GetRadius() + abilityLength)) {
 					this->GameObject().GetComponent<CTransformComponent>()->ClearPath();
 					this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerMelee, GameObject().myTransform->Position());
-					this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack01ID();
 				}
 			}
 		}
@@ -144,13 +113,19 @@ void CPlayerControllerComponent::Update()
 					myTargetDestructible->GetComponent<CDestructibleComponent>()->IsDead(true);
 					this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack01ID();
 					this->GameObject().GetComponent<CTransformComponent>()->ClearPath();
+					CMainSingleton::PostMaster().Send({ EMessageType::LightAttack, nullptr });
 				}
 			}
 		}
 
 		if (!PlayerIsAlive()) {
-			ResetPlayer();
-		} else {
+			myOnDeathTimer -= CTimer::Dt();
+			if (myOnDeathTimer <= 0.0f)
+			{
+				ResetPlayer();
+			}
+		}
+		else {
 			RegenerateMana();
 		}
 		if (myPathMarker->Active()) {
@@ -246,6 +221,7 @@ void CPlayerControllerComponent::Receive(const SMessage& aMessage)
 	{
 	case EMessageType::EnemyDied:
 		UpdateExperience(aMessage);
+		break;
 	default:
 		break;
 	}
@@ -259,6 +235,8 @@ void CPlayerControllerComponent::ResetPlayer()
 	GameObject().GetComponent<CTransformComponent>()->ClearPath();
 	MessagePostmaster(EMessageType::PlayerHealthChanged, 1.0f);
 	MessagePostmaster(EMessageType::PlayerResourceChanged, 1.0f);
+	GameObject().GetComponent<CAnimationComponent>()->Start();
+	myOnDeathTimer = ON_DEATH_TIMER;
 }
 
 void CPlayerControllerComponent::MessagePostmaster(EMessageType aMessageType, float aValue)
@@ -279,8 +257,15 @@ bool CPlayerControllerComponent::PlayerIsAlive()
 	difference = (baseHealth - difference) / baseHealth;
 	MessagePostmaster(EMessageType::PlayerHealthChanged, difference);
 
+<<<<<<< HEAD
 	myLastHP = GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth;
 	//}
+=======
+		myLastHP = GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth;
+		if (myLastHP < 0.0f)
+			GameObject().GetComponent<CAnimationComponent>()->DeadState();
+	}
+>>>>>>> 9e67b58a083454183ba43333e141d45f981185c4
 
 	return myLastHP > 0.0f;
 }
@@ -321,6 +306,8 @@ void CPlayerControllerComponent::UpdateExperience(const SMessage& aMessage)
 
 		if (maxValue <= this->GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience)
 		{
+			CMainSingleton::PostMaster().Send({ EMessageType::PlayLevelUpSFX, nullptr });
+
 			this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel += 1;
 			int level = this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel;
 			std::string abilityInfo = "Skill ";
@@ -332,6 +319,7 @@ void CPlayerControllerComponent::UpdateExperience(const SMessage& aMessage)
 			////Comment this in before last build
 			if (level == 2) {
 				this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position());
+				CMainSingleton::PostMaster().Send({ EMessageType::ShieldSpell, nullptr });
 				myAuraActive = true;
 			}
 
@@ -354,4 +342,25 @@ void CPlayerControllerComponent::UpdateExperience(const SMessage& aMessage)
 	}
 
 	CMainSingleton::PlayerGlobalState().SetStatsToSave(GameObject().GetComponent<CStatsComponent>()->GetStats());
+}
+
+void CPlayerControllerComponent::SetLevel(const int aLevel)
+{
+	const int level = aLevel > 3 ? 3 : aLevel;
+
+	GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel = level;
+	switch (level)
+	{
+		case 3: // Activate ability 3
+		this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(3);
+		case 2: // Activate ability 2
+		this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position());
+		myAuraActive = true;
+		this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(2);
+		CMainSingleton::PostMaster().Send({ EMessageType::ShieldSpell, nullptr });
+		case 1: // Activate ability 1
+		this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(1);
+		case 0:
+		break;
+	}
 }

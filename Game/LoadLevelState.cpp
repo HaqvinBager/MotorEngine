@@ -9,14 +9,19 @@
 #include "GameObject.h"
 #include "PostMaster.h"
 #include "MainSingleton.h"
+#include "Canvas.h"
+#include "AnimatedUIElement.h"
+#include "TextInstance.h"
+#include "RandomNumberGenerator.h"
 
 #include "CollisionEventComponent.h"
 
 using namespace rapidjson;
 CLoadLevelState::CLoadLevelState(CStateStack& aStateStack, const CStateStack::EState aState)
 	: CState(aStateStack, aState)
-	, myLevelToLoad(ELevel::Gardens)
-{}
+	, myLevelToLoad(ELevel::Dungeon)
+{
+}
 
 CLoadLevelState::~CLoadLevelState()
 {
@@ -96,14 +101,18 @@ void CLoadLevelState::PlayLevelMusicGroup4(const ELevel aLevel)
 	{
 		case ELevel::Dungeon:
 			CMainSingleton::PostMaster().Send({ EMessageType::PlayDungeonMusic, nullptr });
+			CMainSingleton::PostMaster().Send({ EMessageType::PlayAmbienceDungeon, nullptr });
 		break;
 		case ELevel::Gardens:
 			CMainSingleton::PostMaster().Send({ EMessageType::PlayGardensMusic, nullptr });
+			CMainSingleton::PostMaster().Send({ EMessageType::PlayAmbienceGarden, nullptr });
 		break;
 		case ELevel::Castle:
 			CMainSingleton::PostMaster().Send({ EMessageType::PlayCastleMusic, nullptr });
+			CMainSingleton::PostMaster().Send({ EMessageType::PlayAmbienceCastle, nullptr });
 		break;
 		case ELevel::BossRoom:
+			CMainSingleton::PostMaster().Send({ EMessageType::PlayAmbienceCastle, nullptr });
 		break;
 
 		default:break;
@@ -119,13 +128,27 @@ void CLoadLevelState::Start()
 	CEngine::GetInstance()->SetActiveScene(Load(ELevel::LoadScreen));
 	CEngine::GetInstance()->SetRenderScene(true);
 
+	myLoadCanvas = new CCanvas();
+	myLoadCanvas->Init("Json/UI_LoadingScreen_Description.json", CEngine::GetInstance()->GetActiveScene());
+
+	std::ifstream inputStream("Json/LoadingScreenText.json");
+	IStreamWrapper inputWrapper(inputStream);
+	Document document;
+	document.ParseStream(inputWrapper);
+
+	if (document.HasMember("Lore")) {
+		auto lores = document["Lore"].GetArray();
+		int random = Random(0, static_cast<int>(lores.Size()) - 1);
+		myLoadCanvas->GetTexts()[0]->SetText(lores[random]["Text"].GetString());
+	}
+
 	// Only use this for testing. Use myLevelToLoad for correct level to level loading. Its data is updated on Level Load Events
 	/*Document latestExportedLevelDoc = CJsonReader::LoadDocument("Levels/DebugLevel.json");
-	int levelIndex = latestExportedLevelDoc["LevelIndex"].GetInt();*/
-	//levelIndex;
+	int levelIndex = latestExportedLevelDoc["LevelIndex"].GetInt();
+	levelIndex;*/
 
 	//Start Loading the ELevel::<Level> on a seperate thread.
-	myLoadLevelFuture = std::async(std::launch::async, &CLoadLevelState::Load, this, /*static_cast<ELevel>(levelIndex)*/myLevelToLoad);
+	myLoadLevelFuture = std::async(std::launch::async, &CLoadLevelState::Load, this,/* static_cast<ELevel>(levelIndex)*/myLevelToLoad);
 	//myLoadLevelFuture = std::async(std::launch::async, &CLoadLevelState::Load, this, myLevelToLoad);
 
 
@@ -142,10 +165,13 @@ void CLoadLevelState::Start()
 
 void CLoadLevelState::Stop()
 {
+	delete myLoadCanvas;
+	myLoadCanvas = nullptr;
 }
 
 void CLoadLevelState::Update()
 {
+	myLoadCanvas->GetAnimatedUI()[0]->Level(abs(sinf(CTimer::Time())));
 	//When the Thread loading the ELevell::<Level> level is complete this will be true.
 	if (myLoadLevelFuture._Is_ready())
 	{
@@ -232,8 +258,8 @@ const CStateStack::EState CLoadLevelState::Load(const ELevel aLevel)
 			myUnityFactory.FillScene(data, BinModelPaths(aLevel), *inGameScene);
 			//std::cout << "Adding Loading Screen" << std::endl;
 
-			// Send message to play Music for a alevel
 			//PlayLevelMusicGroup3(aLevel);
+
 			PlayLevelMusicGroup4(aLevel);
 
 			return CEngine::GetInstance()->AddScene(CStateStack::EState::InGame, inGameScene);
