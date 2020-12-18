@@ -294,7 +294,8 @@ void CBossBehavior::FinalPhase(CGameObject* aParent)
 			{
 				aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility3, aParent->myTransform->Position());
 				aParent->GetComponent<CAnimationComponent>()->PlayAttack02ID();
-				CMainSingleton::PostMaster().Send({ EMessageType::PlayExplosionSFX, nullptr });
+				float delay = 1.0f;
+				CMainSingleton::PostMaster().Send({ EMessageType::PlayExplosionSFX, &delay });
 			}
 		}
 	}
@@ -309,7 +310,10 @@ void CBossBehavior::Die(CGameObject* aParent)
 	}
 
 	aParent->GetComponent<CAnimationComponent>()->DeadState();
-	CMainSingleton::PostMaster().Send({ EMessageType::PlayBossDeathSFX, this });
+
+	CMainSingleton::PostMaster().Send({ EMessageType::StopMusic, nullptr });
+	if(!myIsVeryDead)
+		CMainSingleton::PostMaster().Send({ EMessageType::PlayBossDeathSFX, nullptr });
 	myIsVeryDead = true;
 	// Start countdown timer for Credits push
 }

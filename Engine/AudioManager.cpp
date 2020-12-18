@@ -262,7 +262,11 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::PlayBossExplosionSFX:
 	{
-		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::BossExplosion))
+		if (aMessage.data != nullptr)
+		{
+			SDelayedSFX sfx = { ESFX::BossExplosion, *static_cast<float*>(aMessage.data) };
+			myDelayedSFX.emplace_back(sfx);
+		}else if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::BossExplosion))
 		{
 			myWrapper.Play(mySFXAudio[CAST(ESFX::BossExplosion)], myChannels[CAST(EChannels::SFX)]);
 		}
@@ -310,7 +314,11 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::LightAttack:
 	{
-		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::PlayerLightAtk))
+		if (aMessage.data != nullptr)
+		{
+			SDelayedSFX sfx = { ESFX::PlayerLightAtk, *static_cast<float*>(aMessage.data) };
+			myDelayedSFX.emplace_back(sfx);
+		}else if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::PlayerLightAtk))
 		{
 			myWrapper.Play(mySFXAudio[CAST(ESFX::PlayerLightAtk)], myChannels[CAST(EChannels::SFX)]);
 		}
@@ -318,7 +326,11 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::HeavyAttack:
 	{
-		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::PlayerHeavyAtk))
+		if (aMessage.data != nullptr)
+		{
+			SDelayedSFX sfx = { ESFX::PlayerHeavyAtk, *static_cast<float*>(aMessage.data) };
+			myDelayedSFX.emplace_back(sfx);
+		}else if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::PlayerHeavyAtk))
 		{
 			myWrapper.Play(mySFXAudio[CAST(ESFX::PlayerHeavyAtk)], myChannels[CAST(EChannels::SFX)]);
 		}
@@ -326,7 +338,11 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::ShieldSpell:
 	{
-		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::ShieldSpell))
+		if (aMessage.data != nullptr)
+		{
+			SDelayedSFX sfx = { ESFX::ShieldSpell, *static_cast<float*>(aMessage.data) };
+			myDelayedSFX.emplace_back(sfx);
+		}else if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::ShieldSpell))
 		{
 			myWrapper.Play(mySFXAudio[CAST(ESFX::ShieldSpell)], myChannels[CAST(EChannels::SFX)]);
 		}
@@ -334,7 +350,11 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::PlayExplosionSFX:
 	{
-		if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::Explosion))
+		if (static_cast<float*>(aMessage.data) != nullptr)
+		{
+			SDelayedSFX sfx = { ESFX::Explosion, *static_cast<float*>(aMessage.data) };
+			myDelayedSFX.emplace_back(sfx);
+		}else if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::Explosion))
 		{
 			myWrapper.Play(mySFXAudio[CAST(ESFX::Explosion)], myChannels[CAST(EChannels::SFX)]);
 		}
@@ -343,6 +363,7 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 	// UI
 	case EMessageType::UIButtonPress:
 	{
+
 		if (myUIAudio.size() >= static_cast<unsigned int>(EUI::ButtonClick))
 		{
 			myWrapper.Play(myUIAudio[CAST(EUI::ButtonClick)], myChannels[CAST(EChannels::UI)]);
@@ -378,7 +399,22 @@ void CAudioManager::Receive(const SStringMessage& /*aMessage*/)
 
 void CAudioManager::Update()
 {
+	if (myDelayedSFX.size() > 0)
+	{
+		const float dt = CTimer::Dt();
 
+		for (auto it = myDelayedSFX.begin(); it != myDelayedSFX.end();)
+		{
+			it->myTimer -= dt;
+			if (it->myTimer <= 0.0f)
+			{
+				myWrapper.Play(mySFXAudio[CAST(it->mySFX)], myChannels[CAST(EChannels::SFX)]);
+				it = myDelayedSFX.erase(it);
+				continue;
+			}
+			++it;
+		}
+	}
 }
 
 void CAudioManager::SubscribeToMessages()

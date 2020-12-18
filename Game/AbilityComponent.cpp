@@ -148,8 +148,11 @@ bool CAbilityComponent::UseAbility(EAbilityType anAbilityType, DirectX::SimpleMa
 	if (anAbilityType == EAbilityType::PlayerMelee) {
 		if (myCurrentCooldowns[3] <= 0) {
 			myCurrentCooldowns[3] = myMaxCooldowns[3];
-			this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack01ID();
-			CMainSingleton::PostMaster().Send({ EMessageType::LightAttack, nullptr });
+
+			auto animComp = this->GameObject().GetComponent<CAnimationComponent>();
+			animComp->PlayAttack01ID();
+			float delay = (animComp->GetCurrentAnimationDuration() / animComp->GetCurrentAnimationTicksPerSecond()) / 6.0f;
+			CMainSingleton::PostMaster().Send({ EMessageType::LightAttack, &delay });
 		}
 	}
 
@@ -255,7 +258,9 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 
 				if (UseAbility(EAbilityType::PlayerAbility3, GameObject().myTransform->Position()))
 				{
-					CMainSingleton::PostMaster().Send({ EMessageType::PlayExplosionSFX, nullptr });
+					float delay = 1.0f;
+					CMainSingleton::PostMaster().Send({ EMessageType::PlayExplosionSFX, &delay });
+
 					this->GameObject().GetComponent<CAnimationComponent>()->PlayAbility02ID();
 					myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
 					myCurrentCooldowns[2] = myMaxCooldowns[2];
@@ -271,8 +276,10 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 			if (UseAbility(EAbilityType::PlayerHeavyMelee, GameObject().myTransform->Position()))
 			{
 				myCurrentCooldowns[4] = myMaxCooldowns[4];
-				this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack02ID();
-				CMainSingleton::PostMaster().Send({ EMessageType::HeavyAttack, nullptr });
+				auto animComp = this->GameObject().GetComponent<CAnimationComponent>();
+				animComp->PlayAttack02ID();
+				float delay = (animComp->GetCurrentAnimationDuration() / animComp->GetCurrentAnimationTicksPerSecond()) / 2.0f;
+				CMainSingleton::PostMaster().Send({ EMessageType::HeavyAttack, &delay });
 			}
 			break;
 		default:

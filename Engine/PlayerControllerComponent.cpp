@@ -111,9 +111,12 @@ void CPlayerControllerComponent::Update()
 			if (myTargetDestructible->GetComponent<CDestructibleComponent>()->IsDead() == false) {
 				if (DirectX::SimpleMath::Vector3::Distance(myTargetDestructible->myTransform->Position(), GameObject().myTransform->Position()) < myTargetDestructible->GetComponent<CCircleColliderComponent>()->GetRadius()) {
 					myTargetDestructible->GetComponent<CDestructibleComponent>()->IsDead(true);
-					this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack01ID();
 					this->GameObject().GetComponent<CTransformComponent>()->ClearPath();
-					CMainSingleton::PostMaster().Send({ EMessageType::LightAttack, nullptr });
+
+					auto animComp = this->GameObject().GetComponent<CAnimationComponent>();
+					animComp->PlayAttack01ID();
+					float delay = (animComp->GetCurrentAnimationDuration() / animComp->GetCurrentAnimationTicksPerSecond()) / 6.0f;
+					CMainSingleton::PostMaster().Send({ EMessageType::LightAttack, &delay });
 				}
 			}
 		}

@@ -32,6 +32,8 @@ public:
 
 public:
 	const float GetCurrentAnimationPercent();
+	const float GetCurrentAnimationDuration();
+	const float GetCurrentAnimationTicksPerSecond();
 
 	std::array<SlimMatrix44, 64> GetBones() { return myBones; }
 	void GetAnimatedBlendTransforms(float dt, SlimMatrix44* transforms);
