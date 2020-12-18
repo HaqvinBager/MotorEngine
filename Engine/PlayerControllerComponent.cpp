@@ -265,7 +265,7 @@ void CPlayerControllerComponent::MessagePostmaster(EMessageType aMessageType, fl
 
 bool CPlayerControllerComponent::PlayerIsAlive()
 {
-	if (GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth >= 0.0f)
+	if (GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth >= 0.0f && GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth < GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth)
 		GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth += CTimer::Dt();
 	/*if (myLastHP != GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth)
 	{*/
