@@ -54,4 +54,5 @@ private:
 	DirectX::SimpleMath::Vector4 myClearColor;
 
 	bool myUseBloom;
+	int myFrameCounter;
 };
