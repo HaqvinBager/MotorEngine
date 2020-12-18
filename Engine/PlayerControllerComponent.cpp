@@ -17,8 +17,8 @@
 #include "TransformComponent.h"
 #include "DestructibleComponent.h"
 #include <PlayerGlobalState.h>
-#include "ParticleEmitterComponent.h"
-#include "ParticleFactory.h"
+#include "VFXComponent.h"
+#include "VFXFactory.h"
 #include "DialogueSystem.h"
 
 CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent):
@@ -36,12 +36,12 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent):
 	myLastPosition = {0.0f,0.0f,0.0f};
 
 	myPathMarker = new CGameObject(-1337);
-	myPathMarker->AddComponent<CParticleEmitterComponent>(*myPathMarker);
-	std::vector<std::string> particlePaths;
-	particlePaths.emplace_back("Json/PD_MouseRing.json");
-	myPathMarker->GetComponent<CParticleEmitterComponent>()->Init(CParticleFactory::GetInstance()->GetParticleSet(particlePaths));
+	myPathMarker->AddComponent<CVFXComponent>(*myPathMarker);
+	std::vector<std::string> VFXPaths;
+	VFXPaths.emplace_back("Json/VFXData_PathMarker.json");
+	myPathMarker->GetComponent<CVFXComponent>()->Init(CVFXFactory::GetInstance()->GetVFXBaseSet(VFXPaths));
 	myPathMarker->Active(true);
-	myMarkerDuration = myPathMarker->GetComponent<CParticleEmitterComponent>()->EmitterDurations().back();
+	myMarkerDuration = myPathMarker->GetComponent<CVFXComponent>()->GetVFXBases().back()->GetVFXBaseData().myDuration;
 	myPathMarker->myTransform->Position({GameObject().myTransform->Position().x, GameObject().myTransform->Position().y , GameObject().myTransform->Position().z});
 }
 
@@ -161,11 +161,11 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 		case IInputObserver::EInputEvent::MoveClick:
 			myHasAttacked = false;
 
-			if (myPathMarker->Active()) {
-				myPathMarker->GetComponent<CParticleEmitterComponent>()->Reset();
-			}
+			/*if (myPathMarker->Active()) {
+				myPathMarker->GetComponent<CVFXComponent>()->();
+			}*/
 			myPathMarker->Active(true);
-			myMarkerDuration = myPathMarker->GetComponent<CParticleEmitterComponent>()->EmitterDurations().back();
+			myMarkerDuration = myPathMarker->GetComponent<CVFXComponent>()->GetVFXBases().back()->GetVFXBaseData().myDuration;
 			myPathMarker->myTransform->Position(mySelection->GetPositionAtNavmesh());
 
 			break;
