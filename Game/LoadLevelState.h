@@ -15,7 +15,7 @@ enum class ELevel
 	Gardens,
 	Castle,
 	NavTest,
-	BossRoom	
+	BossRoom,	
 	
 	//LoadScreen,
 	//Level1,

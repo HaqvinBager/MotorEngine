@@ -10,6 +10,7 @@
 #include "CameraControllerComponent.h"
 #include "TransformComponent.h"
 #include "EnviromentLightComponent.h"
+#include "PlayerGlobalState.h"
 #include "JsonReader.h"
 #include "MainSingleton.h"
 #include "rapidjson\document.h"
@@ -128,6 +129,34 @@ void CLevelSelectState::Group3Unsub()
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::LoadLevel10, this);
 }
 
+int Group3PlayerLevel(const EMessageType aLevel)
+{
+	int playerLevel = 0;
+	switch (aLevel)
+	{
+		case EMessageType::LoadLevel1:
+			case EMessageType::LoadLevel2:
+				playerLevel = 0;
+		break;
+		case EMessageType::LoadLevel3:
+			case EMessageType::LoadLevel4:
+				case EMessageType::LoadLevel5:
+					playerLevel = 1;
+		break;
+		case EMessageType::LoadLevel6:
+			case EMessageType::LoadLevel7:
+				case EMessageType::LoadLevel8:
+					playerLevel = 2;
+		break;
+		case EMessageType::LoadLevel9:
+			case EMessageType::LoadLevel10:
+				playerLevel = 3;
+		break;
+		default:break;
+	}
+	return playerLevel;
+}
+
 void CLevelSelectState::Group3Receive(const SMessage & aMessage)
 {
 	switch (aMessage.myMessageType)
@@ -140,60 +169,90 @@ void CLevelSelectState::Group3Receive(const SMessage & aMessage)
 		{
 			SStringMessage stringMessage = { "Level_1_1", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
+
+			CMainSingleton::PlayerGlobalState().SetSavedPlayerLevel(Group3PlayerLevel(EMessageType::LoadLevel1));
+
 			myStateStack.PushState(CStateStack::EState::LoadLevel);
 		} break;
 		case EMessageType::LoadLevel2:
 		{
 			SStringMessage stringMessage = { "Level_1_2", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
+
+			CMainSingleton::PlayerGlobalState().SetSavedPlayerLevel(Group3PlayerLevel(EMessageType::LoadLevel2));
+
 			myStateStack.PushState(CStateStack::EState::LoadLevel);
 		} break;
 		case EMessageType::LoadLevel3:
 		{
 			SStringMessage stringMessage = { "Level_1_3", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
+
+			CMainSingleton::PlayerGlobalState().SetSavedPlayerLevel(Group3PlayerLevel(EMessageType::LoadLevel3));
+
 			myStateStack.PushState(CStateStack::EState::LoadLevel);
 		} break;
 		case EMessageType::LoadLevel4:
 		{
 			SStringMessage stringMessage = { "Level_2_1", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
+
+			CMainSingleton::PlayerGlobalState().SetSavedPlayerLevel(Group3PlayerLevel(EMessageType::LoadLevel4));
+
 			myStateStack.PushState(CStateStack::EState::LoadLevel);
 		} break;
 		case EMessageType::LoadLevel5:
 		{
 			SStringMessage stringMessage = { "Level_2_2", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
+
+			CMainSingleton::PlayerGlobalState().SetSavedPlayerLevel(Group3PlayerLevel(EMessageType::LoadLevel5));
+
 			myStateStack.PushState(CStateStack::EState::LoadLevel);
 		} break;
 		case EMessageType::LoadLevel6:
 		{
 			SStringMessage stringMessage = { "Level_3_1", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
+
+			CMainSingleton::PlayerGlobalState().SetSavedPlayerLevel(Group3PlayerLevel(EMessageType::LoadLevel6));
+
 			myStateStack.PushState(CStateStack::EState::LoadLevel);
 		} break;
 		case EMessageType::LoadLevel7:
 		{
 			SStringMessage stringMessage = { "Level_3_2", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
+
+			CMainSingleton::PlayerGlobalState().SetSavedPlayerLevel(Group3PlayerLevel(EMessageType::LoadLevel7));
+
 			myStateStack.PushState(CStateStack::EState::LoadLevel);
 		} break;
 		case EMessageType::LoadLevel8:
 		{
 			SStringMessage stringMessage = { "Level_3_3", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
+
+			CMainSingleton::PlayerGlobalState().SetSavedPlayerLevel(Group3PlayerLevel(EMessageType::LoadLevel8));
+
 			myStateStack.PushState(CStateStack::EState::LoadLevel);
 		} break;
 		case EMessageType::LoadLevel9:
 		{
 			SStringMessage stringMessage = { "Level_3_4", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
+
+			CMainSingleton::PlayerGlobalState().SetSavedPlayerLevel(Group3PlayerLevel(EMessageType::LoadLevel9));
+
 			myStateStack.PushState(CStateStack::EState::LoadLevel);
 		} break;
 		case EMessageType::LoadLevel10:
 		{
 			SStringMessage stringMessage = { "Level_3_5", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
+
+			CMainSingleton::PlayerGlobalState().SetSavedPlayerLevel(Group3PlayerLevel(EMessageType::LoadLevel10));
+
 			myStateStack.PushState(CStateStack::EState::LoadLevel);
 		} break;
 		default:
@@ -230,24 +289,36 @@ void CLevelSelectState::Group4Receive(const SMessage & aMessage)
 		{
 			SStringMessage stringMessage = { "Dungeon", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
+
+			CMainSingleton::PlayerGlobalState().SetSavedPlayerLevel(0);
+
 			myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
 		} break;
 		case EMessageType::LoadGardens:
 		{
 			SStringMessage stringMessage = { "Gardens", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
+
+			CMainSingleton::PlayerGlobalState().SetSavedPlayerLevel(1);
+
 			myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
 		} break;
 		case EMessageType::LoadCastle:
 		{
 			SStringMessage stringMessage = { "Castle", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
+
+			CMainSingleton::PlayerGlobalState().SetSavedPlayerLevel(2);
+
 			myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
 		} break;
 		case EMessageType::LoadBossRoom:
 		{
 			SStringMessage stringMessage = { "BossRoom", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
+
+			CMainSingleton::PlayerGlobalState().SetSavedPlayerLevel(3);
+
 			myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
 		} break;
 

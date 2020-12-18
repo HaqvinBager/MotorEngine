@@ -37,6 +37,8 @@ public:
 	}
 
 private:
+	void SetLevel(const int aLevel);
+
 	float myLastHP;
 	float mySecourceRegenerationSpeed;
 	float myRegenerationPercentage = 0.0f;

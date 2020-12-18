@@ -73,22 +73,8 @@ void CPlayerControllerComponent::Start()
 {
 	GameObject().GetComponent<CStatsComponent>()->GetStats().myExperience = CMainSingleton::PlayerGlobalState().GetSavedExperience();
 
-	const int level = CMainSingleton::PlayerGlobalState().GetSavedPlayerLevel();
-	GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel = level;
-	switch (level)
-	{
-	case 3: // Activate ability 3
-		this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(3);
-	case 2: // Activate ability 2
-		this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position());
-		myAuraActive = true;
-		this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(2);
-	case 1: // Activate ability 1
-		this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(1);
-	case 0:
-		break;
-	}
-
+	SetLevel(CMainSingleton::PlayerGlobalState().GetSavedPlayerLevel());
+	
 	if (this->GameObject().GetComponent<CStatsComponent>()->GetBaseStats().myMaxLevel
 		== this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel)
 	{
@@ -102,23 +88,7 @@ void CPlayerControllerComponent::Update()
 	if (!CMainSingleton::DialogueSystem().Active()) {
 		if (Input::GetInstance()->IsKeyPressed('L'))
 		{
-			const int level = 3;
-			GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel = level;
-			switch (level)
-			{
-			case 3: // Activate ability 3
-				this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(3);
-			case 2: // Activate ability 2
-				this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position());
-				myAuraActive = true;
-				this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(2);
-				CMainSingleton::PostMaster().Send({ EMessageType::ShieldSpell, nullptr });
-			case 1: // Activate ability 1
-				this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(1);
-			case 0:
-				break;
-			}
-
+			SetLevel(3);
 		}
 
 		if (myIsMoving) {
@@ -355,4 +325,25 @@ void CPlayerControllerComponent::UpdateExperience(const SMessage& aMessage)
 	}
 
 	CMainSingleton::PlayerGlobalState().SetStatsToSave(GameObject().GetComponent<CStatsComponent>()->GetStats());
+}
+
+void CPlayerControllerComponent::SetLevel(const int aLevel)
+{
+	const int level = aLevel > 3 ? 3 : aLevel;
+
+	GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel = level;
+	switch (level)
+	{
+		case 3: // Activate ability 3
+		this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(3);
+		case 2: // Activate ability 2
+		this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position());
+		myAuraActive = true;
+		this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(2);
+		CMainSingleton::PostMaster().Send({ EMessageType::ShieldSpell, nullptr });
+		case 1: // Activate ability 1
+		this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(1);
+		case 0:
+		break;
+	}
 }

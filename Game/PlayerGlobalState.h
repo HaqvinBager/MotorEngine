@@ -18,6 +18,9 @@ public:
 	const float GetSavedExperience();
 	const int GetSavedPlayerLevel();
 
+public:
+	void SetSavedPlayerLevel(const int aLevel) { myStatsToSave.myPlayerLevel = aLevel; }
+
 private:
 	SStatsToSave myStatsToSave;
 };
