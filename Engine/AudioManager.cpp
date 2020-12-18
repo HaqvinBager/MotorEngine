@@ -260,6 +260,18 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		}
 	}break;
 
+	case EMessageType::BossMeleeAttack:
+	{
+		if (aMessage.data != nullptr)
+		{
+			SDelayedSFX sfx = { ESFX::BossMeleeAtk, *static_cast<float*>(aMessage.data) };
+			myDelayedSFX.emplace_back(sfx);
+		}else if (mySFXAudio.size() >= static_cast<unsigned int>(ESFX::BossMeleeAtk))
+		{
+			myWrapper.Play(mySFXAudio[CAST(ESFX::BossMeleeAtk)], myChannels[CAST(EChannels::SFX)]);
+		}
+	}break;
+
 	case EMessageType::PlayBossExplosionSFX:
 	{
 		if (aMessage.data != nullptr)

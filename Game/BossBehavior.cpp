@@ -283,9 +283,11 @@ void CBossBehavior::FinalPhase(CGameObject* aParent)
 			int attackType = Random(1, 3);
 			if (attackType == 1)
 			{
-				aParent->GetComponent<CAnimationComponent>()->PlayAttack01ID();
 				aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility1, aParent->myTransform->Position());
-				CMainSingleton::PostMaster().Send({ EMessageType::BossMeleeAttack, nullptr });
+				auto animComp = aParent->GetComponent<CAnimationComponent>();
+				animComp->PlayAttack01ID();
+				float delay = animComp->GetCurrentAnimationDuration() / animComp->GetCurrentAnimationTicksPerSecond() / 2.0f;
+				CMainSingleton::PostMaster().Send({ EMessageType::BossMeleeAttack, &delay });
 			}
 			else if (attackType == 2)
 			{
