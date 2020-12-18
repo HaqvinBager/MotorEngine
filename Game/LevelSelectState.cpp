@@ -15,6 +15,7 @@
 #include "MainSingleton.h"
 #include "rapidjson\document.h"
 #include "rapidjson\istreamwrapper.h"
+#include "StatsComponent.h"
 
 using namespace rapidjson;
 
@@ -290,6 +291,9 @@ void CLevelSelectState::Group4Receive(const SMessage & aMessage)
 			SStringMessage stringMessage = { "Dungeon", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
 
+			SStats* stats = new SStats();
+			stats->myExperience = 0.f;
+			CMainSingleton::PlayerGlobalState().SetStatsToSave(*stats);
 			CMainSingleton::PlayerGlobalState().SetSavedPlayerLevel(0);
 
 			myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
@@ -298,6 +302,10 @@ void CLevelSelectState::Group4Receive(const SMessage & aMessage)
 		{
 			SStringMessage stringMessage = { "Gardens", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
+
+			SStats* stats = new SStats();
+			stats->myExperience = 0.f;
+			CMainSingleton::PlayerGlobalState().SetStatsToSave(*stats);
 
 			CMainSingleton::PlayerGlobalState().SetSavedPlayerLevel(1);
 
@@ -308,6 +316,10 @@ void CLevelSelectState::Group4Receive(const SMessage & aMessage)
 			SStringMessage stringMessage = { "Castle", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
 
+			SStats* stats = new SStats();
+			stats->myExperience = 0.f;
+			CMainSingleton::PlayerGlobalState().SetStatsToSave(*stats);
+
 			CMainSingleton::PlayerGlobalState().SetSavedPlayerLevel(2);
 
 			myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
@@ -317,6 +329,9 @@ void CLevelSelectState::Group4Receive(const SMessage & aMessage)
 			SStringMessage stringMessage = { "BossRoom", nullptr };
 			CMainSingleton::PostMaster().Send(stringMessage);
 
+			SStats* stats = new SStats();
+			stats->myExperience = 0.f;
+			CMainSingleton::PlayerGlobalState().SetStatsToSave(*stats);
 			CMainSingleton::PlayerGlobalState().SetSavedPlayerLevel(3);
 
 			myStateStack.PopTopAndPush(CStateStack::EState::LoadLevel);
