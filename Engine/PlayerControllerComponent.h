@@ -6,6 +6,8 @@
 
 class CMouseSelection;
 
+#define ON_DEATH_TIMER 1.77f
+
 class CPlayerControllerComponent : public CBehaviour, public IInputObserver, public IObserver
 {
 public:
@@ -35,6 +37,9 @@ public:
 	float RegenerationPercentage() {
 		return myRegenerationPercentage;
 	}
+
+private:
+	float myOnDeathTimer = ON_DEATH_TIMER;
 
 private:
 	void SetLevel(const int aLevel);

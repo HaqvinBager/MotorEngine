@@ -119,7 +119,11 @@ void CPlayerControllerComponent::Update()
 		}
 
 		if (!PlayerIsAlive()) {
-			ResetPlayer();
+			myOnDeathTimer -= CTimer::Dt();
+			if (myOnDeathTimer <= 0.0f)
+			{
+				ResetPlayer();
+			}
 		}
 		else {
 			RegenerateMana();
@@ -230,6 +234,8 @@ void CPlayerControllerComponent::ResetPlayer()
 	GameObject().GetComponent<CTransformComponent>()->ClearPath();
 	MessagePostmaster(EMessageType::PlayerHealthChanged, 1.0f);
 	MessagePostmaster(EMessageType::PlayerResourceChanged, 1.0f);
+	GameObject().GetComponent<CAnimationComponent>()->Start();
+	myOnDeathTimer = ON_DEATH_TIMER;
 }
 
 void CPlayerControllerComponent::MessagePostmaster(EMessageType aMessageType, float aValue)
@@ -250,6 +256,8 @@ bool CPlayerControllerComponent::PlayerIsAlive()
 		MessagePostmaster(EMessageType::PlayerHealthChanged, difference);
 
 		myLastHP = GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth;
+		if (myLastHP < 0.0f)
+			GameObject().GetComponent<CAnimationComponent>()->DeadState();
 	}
 
 	return myLastHP > 0.0f;
