@@ -164,14 +164,19 @@ void CBossBehavior::TakeDamage(float aDamage, CGameObject* aGameObject)
 		float baseHealth = statsComponent->GetBaseStats().myBaseHealth;
 		float difference = baseHealth - statsComponent->GetStats().myHealth;
 
-		if (myPlayer->GetComponent<CPlayerControllerComponent>()->AuraActive())
+		float regenerationPercentage = myPlayer->GetComponent<CPlayerControllerComponent>()->RegenerationPercentage();
+		if ((myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth + (difference * regenerationPercentage))
+			< myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth)
 		{
-			if ((myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth + (difference * 0.15f))
-				< myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth)
-				myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth += difference * 0.15f;
-			else
-				myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth = myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
+			SDamagePopupData healingData;
+			healingData.myHitType = 4; // Healing
+			healingData.myDamage = difference * regenerationPercentage;
+			healingData.myGameObject = myPlayer;
+			CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &healingData);
+			myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth += difference * regenerationPercentage;
 		}
+		else
+			myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth = myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
 
 		difference = (difference <= 0.0) ? 0.0f : (baseHealth - difference) / baseHealth;
 		myCanvas->GetAnimatedUI()[0]->Level(difference);
