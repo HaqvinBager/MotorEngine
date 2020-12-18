@@ -177,6 +177,21 @@ void CParticleEmitterComponent::OnDisable()
 	}
 }
 
+void CParticleEmitterComponent::Reset()
+{
+	for (unsigned int i = 0; i < myParticles.size(); ++i) {
+		myEmitterDelays[i] = myParticles[i]->GetParticleData().myDelay;
+		myEmitterDurations[i] = myParticles[i]->GetParticleData().myDuration;
+	}
+	for (unsigned int i = 0; i < myParticles.size(); ++i) {
+		size_t currentSize = myParticleVertices[i].size();
+		for (unsigned int j = 0; j < currentSize; ++j) {
+			myParticlePools[i].push(myParticleVertices[i].back());
+			myParticleVertices[i].pop_back();
+		}
+	}
+}
+
 void CParticleEmitterComponent::SpawnParticles(unsigned int anIndex, DirectX::SimpleMath::Vector3& aCameraPosition, CParticle::SParticleData& someParticleData)
 {
 	myEmitterTimers[anIndex] += CTimer::Dt();

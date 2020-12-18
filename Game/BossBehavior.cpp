@@ -283,9 +283,11 @@ void CBossBehavior::FinalPhase(CGameObject* aParent)
 			int attackType = Random(1, 3);
 			if (attackType == 1)
 			{
-				aParent->GetComponent<CAnimationComponent>()->PlayAttack01ID();
 				aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility1, aParent->myTransform->Position());
-				CMainSingleton::PostMaster().Send({ EMessageType::BossMeleeAttack, nullptr });
+				auto animComp = aParent->GetComponent<CAnimationComponent>();
+				animComp->PlayAttack01ID();
+				float delay = animComp->GetCurrentAnimationDuration() / animComp->GetCurrentAnimationTicksPerSecond() / 2.0f;
+				CMainSingleton::PostMaster().Send({ EMessageType::BossMeleeAttack, &delay });
 			}
 			else if (attackType == 2)
 			{
@@ -296,7 +298,8 @@ void CBossBehavior::FinalPhase(CGameObject* aParent)
 			{
 				aParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::BossAbility3, aParent->myTransform->Position());
 				aParent->GetComponent<CAnimationComponent>()->PlayAttack02ID();
-				CMainSingleton::PostMaster().Send({ EMessageType::PlayExplosionSFX, nullptr });
+				float delay = 1.0f;
+				CMainSingleton::PostMaster().Send({ EMessageType::PlayExplosionSFX, &delay });
 			}
 		}
 	}
@@ -311,7 +314,10 @@ void CBossBehavior::Die(CGameObject* aParent)
 	}
 
 	aParent->GetComponent<CAnimationComponent>()->DeadState();
-	CMainSingleton::PostMaster().Send({ EMessageType::PlayBossDeathSFX, this });
+
+	CMainSingleton::PostMaster().Send({ EMessageType::StopMusic, nullptr });
+	if(!myIsVeryDead)
+		CMainSingleton::PostMaster().Send({ EMessageType::PlayBossDeathSFX, nullptr });
 	myIsVeryDead = true;
 	// Start countdown timer for Credits push
 }

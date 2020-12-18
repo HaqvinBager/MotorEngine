@@ -107,5 +107,11 @@ private:
 
 	std::vector<EMusic> myMusics;
 
+	struct SDelayedSFX
+	{
+		ESFX mySFX;
+		float myTimer = 0.0f;
+	};
+	std::vector<SDelayedSFX> myDelayedSFX;
 };
 

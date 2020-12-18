@@ -362,7 +362,7 @@ public:
 	/// if 1 set myAnimationTimeCurrent = 0.0f
 	/// set myCurSceneIndex to myLoopingSceneIndex
 
-	void  BoneTransform(std::vector<aiMatrix4x4>& aTransformsVector, const float anAnimSpeedMultiplier)
+	void  BoneTransform(std::vector<aiMatrix4x4>& aTransformsVector, const float /*anAnimSpeedMultiplier*/)
 	{
 		aiMatrix4x4 identity;// Used for ReadNodeHierarchy
 		InitIdentityM4(identity);
@@ -371,7 +371,7 @@ public:
 		float AnimationTime = 0.0f;
 		if (myScenes[myCurSceneIndex]->mAnimations != nullptr)
 		{
-			float animTimeCurrentModified = (myAnimationTimeCurrent + 0.000001f) * anAnimSpeedMultiplier;
+			float animTimeCurrentModified = myAnimationTimeCurrent;//myAnimationTimeCurrent + 0.000001f) * anAnimSpeedMultiplier;
 
 			float TicksPerSecond = 
 				static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mTicksPerSecond) != 0 
@@ -390,8 +390,9 @@ public:
 			/// 
 			//switchBackToLooping = (ceil(AnimationTime * myAnimationTimeCurrent * (anAnimSpeedMultiplier / myScenes[myCurSceneIndex]->mAnimations[0]->mDuration)) >= static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration));
 			//switchBackToLooping = (ceil(AnimationTime * myScenes[myCurSceneIndex]->mAnimations[0]->mDuration) >= static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration));
-			switchBackToLooping		= (ceil(AnimationTime) >= static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration));
-			myAnimationTimePercent = AnimationTime / static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration);
+			const float duration = static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration);
+			switchBackToLooping		= (ceil(AnimationTime) >= duration);
+			myAnimationTimePercent = AnimationTime / duration;
 			 //std::cout << "switchBack " << switchBackToLooping << std::endl;
 		}
 
