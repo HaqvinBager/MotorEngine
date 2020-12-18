@@ -95,7 +95,7 @@ void CPlayerControllerComponent::Start()
 void CPlayerControllerComponent::Update()
 {
 	//bs fix aswell... fixes aura bug
-	if (this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel == 2 && firstTime == false) {
+	if (this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel >= 2 && firstTime == false) {
 		this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position());
 		myAuraActive = true;
 		firstTime = true;
