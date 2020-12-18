@@ -101,9 +101,6 @@ void CPlayerControllerComponent::Update()
 		firstTime = true;
 	}
 	if (!CMainSingleton::DialogueSystem().Active()) {
-		if (myIsMoving) {
-			this->GameObject().myTransform->MoveAlongPath();
-		}
 
 		if (!myHasAttacked) {
 			if (myTargetEnemy) {
@@ -150,6 +147,9 @@ void CPlayerControllerComponent::Update()
 			if (myMarkerDuration <= 0.0f) {
 				myPathMarker->Active(false);
 			}
+		}
+		if (myIsMoving) {
+			this->GameObject().myTransform->MoveAlongPath();
 		}
 	} else {
 		myTargetEnemy = nullptr;
@@ -200,7 +200,6 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 						myTargetEnemy = mySelection->FindSelectedEnemy();
 					}
 					if (myTargetEnemy && myTargetEnemy->GetComponent<CStatsComponent>()->GetStats().myHealth > 0.f) {
-
 						this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath(myTargetEnemy->myTransform->Position());
 					} else {
 						this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
