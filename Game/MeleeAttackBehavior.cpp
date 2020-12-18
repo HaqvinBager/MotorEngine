@@ -9,11 +9,12 @@
 #include "AIBehavior.h"
 #include "AIBehaviorComponent.h"
 #include "PlayerControllerComponent.h"
-//#include "AnimationComponent.h"
+#include "AnimationComponent.h"
+#include "StatsComponent.h"
 
 CMeleeAttackBehavior::CMeleeAttackBehavior(float aDuration, float aDamage, CGameObject* aParent)
 {
-	myDirection = { 0.0f, 0.0f, 0.0f };
+	myDirection = {0.0f, 0.0f, 0.0f};
 	myDuration = aDuration;
 	myTimer = 0.0f;
 	myParent = aParent;
@@ -28,7 +29,10 @@ CMeleeAttackBehavior::~CMeleeAttackBehavior()
 void CMeleeAttackBehavior::Init(CGameObject* aCaster)
 {
 	myCaster = aCaster;
-	myTimeToActivateCollider = myDuration - 0.05f;
+	myDuration = aCaster->GetComponent<CAnimationComponent>()->GetCurrentAnimationPercent();
+	std::cout << __FUNCTION__ << " Duration: " << myDuration << std::endl;
+	myTimeToActivateCollider = 0.5f;
+	std::cout << __FUNCTION__ << " Time to activate collider: " << myTimeToActivateCollider << std::endl;
 	CTriangleColliderComponent* triangleCollider = myParent->GetComponent<CTriangleColliderComponent>();
 	DirectX::SimpleMath::Vector3 vector = myCaster->GetComponent<CTransformComponent>()->Position() + myCaster->GetComponent<CTransformComponent>()->Transform().Forward() * triangleCollider->GetHeight() * 100.0f;
 	triangleCollider->SetPosition(myCaster->GetComponent<CTransformComponent>()->Position());
@@ -51,6 +55,10 @@ void CMeleeAttackBehavior::Update(CGameObject* aParent)
 {
 	if (myCaster)
 	{
+		if (myCaster->GetComponent<CStatsComponent>()->GetStats().myHealth <= 0.0f) {
+			aParent->Active(false);
+		}
+
 		CTriangleColliderComponent* triangleCollider = myParent->GetComponent<CTriangleColliderComponent>();
 
 		if (triangleCollider->Enabled()) {
@@ -64,13 +72,15 @@ void CMeleeAttackBehavior::Update(CGameObject* aParent)
 
 		myTimer += CTimer::Dt();
 
-		if (myTimer > myTimeToActivateCollider) {
-			triangleCollider->Enabled(true);
+		if (!triangleCollider->Enabled()) {
+			if (myCaster->GetComponent<CAnimationComponent>()->GetCurrentAnimationPercent() > myTimeToActivateCollider) {
+				triangleCollider->Enabled(true);
+			}
 		}
 
-		if (myTimer > myDuration)
+		if (myCaster->GetComponent<CAnimationComponent>()->GetCurrentAnimationPercent() >= 0.95f)
 		{
-			myTimer = 0.0f;
+			//myTimer = 0.0f;
 			aParent->Active(false);
 		}
 
