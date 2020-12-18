@@ -206,8 +206,8 @@ bool CUnityFactory::FillScene(const SInGameData& aData, const std::vector<std::s
 	if (aData.myBossIsInScene > 0)
 	{
 		CBossBehavior* bossBehavior = new CBossBehavior(player, aScene, aData.myBossData.myStageOne, aData.myBossData.myStageTwo, aData.myBossData.myStageThree);
-		CGameObject* aBossGameObject = CreateGameObject(aData.myBossData, aBinModelPaths[aData.myBossData.myModelIndex]);
-		aBossGameObject->AddComponent<CAIBehaviorComponent>(*aBossGameObject, bossBehavior);
+		CGameObject* aBossGameObject = CreateGameObject(aData.myBossData, aBinModelPaths[aData.myBossData.myModelIndex], bossBehavior);
+		//aBossGameObject->AddComponent<CAIBehaviorComponent>(*aBossGameObject, bossBehavior);
 		//aBossGameObject->AddComponent<CHealthBarComponent>(*aBossGameObject, aScene, "Json/UI_InGame_Enemy_HealthBar.json");
 		aScene.AddInstance(aBossGameObject);
 		aScene.AddBoss(aBossGameObject);
@@ -405,7 +405,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SParticleFXData& aData, const
 	return nullptr;
 }
 
-CGameObject* CUnityFactory::CreateGameObject(const SBossData& aData, const std::string& aModelPath)
+CGameObject* CUnityFactory::CreateGameObject(const SBossData& aData, const std::string& aModelPath, IAIBehavior* aBehavior)
 {
 	CGameObject* gameObject = new CGameObject(aData.myInstanceID);
 	gameObject->myTransform->Position(aData.myPosition);
@@ -426,6 +426,7 @@ CGameObject* CUnityFactory::CreateGameObject(const SBossData& aData, const std::
 	abs.emplace_back(ab2);
 	abs.emplace_back(ab3);
 	gameObject->AddComponent<CAbilityComponent>(*gameObject, abs);
+	gameObject->AddComponent<CAIBehaviorComponent>(*gameObject, aBehavior);
 
 	return gameObject;
 }

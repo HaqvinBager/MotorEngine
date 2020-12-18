@@ -43,9 +43,7 @@ CEnemyBehavior::~CEnemyBehavior()
 void CEnemyBehavior::Update(CGameObject* aParent)
 {
 	if (!CMainSingleton::DialogueSystem().Active()) {
-		if (Input::GetInstance()->IsKeyPressed('P')) {
-			TakeDamage(0.1f, CEngine::GetInstance()->GetActiveScene().GetEnemies()[0]);
-		}
+		
 		myCurrentParent = aParent;
 
 		//enemy logic
