@@ -105,7 +105,7 @@ CAudioManager::CAudioManager() : myWrapper() {
 	// Add JSON reading?
 	// Group 4 
 	myChannels[CAST(EChannels::Music)]->SetVolume(0.3f);
-	myChannels[CAST(EChannels::Ambiance)]->SetVolume(0.2f);
+	myChannels[CAST(EChannels::Ambiance)]->SetVolume(0.5f);
 	myChannels[CAST(EChannels::SFX)]->SetVolume(0.15f);
 	myChannels[CAST(EChannels::UI)]->SetVolume(0.4f);
 	myChannels[CAST(EChannels::VOX)]->SetVolume(0.5f);
@@ -196,14 +196,18 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 		if (!myMusicAudio.empty()) {
 			myChannels[CAST(EChannels::Music)]->Stop();
 		}
+
+		if (!myAmbianceAudio.empty()) {
+			myChannels[CAST(EChannels::Ambiance)]->Stop();
+		}
 	}break;
 
 	case EMessageType::PlayAmbienceCastle:
 	{
-		if (myAmbianceAudio.size() >= static_cast<unsigned int>(EAmbiance::Castle)) 
-		{
-			myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Castle)], myChannels[CAST(EChannels::Ambiance)]);
-		}
+		myWrapper.Play(myAmbianceAudio[0], myChannels[CAST(EChannels::Ambiance)]);
+		//if (myAmbianceAudio.size() >= static_cast<unsigned int>(EAmbiance::Castle)) 
+		//{
+		//}
 	}break;
 
 	case EMessageType::PlayAmbienceCave1:
@@ -217,10 +221,18 @@ void CAudioManager::Receive(const SMessage& aMessage) {
 
 	case EMessageType::PlayAmbienceDungeon:
 	{
-		if (myAmbianceAudio.size() >= static_cast<unsigned int>(EAmbiance::Dungeon))
-		{
-			myWrapper.Play(myAmbianceAudio[CAST(EAmbiance::Dungeon)], myChannels[CAST(EChannels::Ambiance)]);
-		}
+		myWrapper.Play(myAmbianceAudio[1], myChannels[CAST(EChannels::Ambiance)]);
+		//if (myAmbianceAudio.size() >= static_cast<unsigned int>(EAmbiance::Dungeon))
+		//{
+		//}
+	}break;
+
+	case EMessageType::PlayAmbienceGarden:
+	{
+		myWrapper.Play(myAmbianceAudio[2], myChannels[CAST(EChannels::Ambiance)]);
+		//if (myAmbianceAudio.size() >= static_cast<unsigned int>(EAmbiance::Garden))
+		//{
+		//}
 	}break;
 
 	case EMessageType::PlayAmbienceSwamp1:
@@ -380,6 +392,8 @@ void CAudioManager::SubscribeToMessages()
 
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayAmbienceCastle, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayAmbienceCave1, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayAmbienceDungeon, this);
+	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayAmbienceGarden, this);
 	
 	CMainSingleton::PostMaster().Subscribe(EMessageType::AttackHits, this);
 	CMainSingleton::PostMaster().Subscribe(EMessageType::PlayBossDeathSFX, this);
@@ -412,6 +426,8 @@ void CAudioManager::UnsubscribeToMessages()
 
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayAmbienceCastle, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayAmbienceCave1, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayAmbienceDungeon, this);
+	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayAmbienceGarden, this);
 
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::AttackHits, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::PlayBossDeathSFX, this);

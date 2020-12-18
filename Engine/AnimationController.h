@@ -89,6 +89,7 @@ private:
 	
 	float myAnimationTimePrev		= 0;
 	float myAnimationTimeCurrent	= 0;
+	float myAnimationTimePercent	= 0.f;
 	float myBlendingTime			= 0;
 	float myBlendingTimeMul			= 0;
 	int myPrevAnimIndex				= 0;
@@ -123,6 +124,7 @@ public:
 	void ResetAnimationTimeCurrent() { myAnimationTimeCurrent = 0.0f; }
 	const float CurrentAnimationDuration() { return static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration); }
 	const float CurrentAnimationTicksPerSecond() { return static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mTicksPerSecond); }
+	const float CurrentAnimationTimePercent() { return myAnimationTimePercent; }
 
 	~AnimationController()
 	{
@@ -388,8 +390,9 @@ public:
 			/// 
 			//switchBackToLooping = (ceil(AnimationTime * myAnimationTimeCurrent * (anAnimSpeedMultiplier / myScenes[myCurSceneIndex]->mAnimations[0]->mDuration)) >= static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration));
 			//switchBackToLooping = (ceil(AnimationTime * myScenes[myCurSceneIndex]->mAnimations[0]->mDuration) >= static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration));
-			switchBackToLooping = (ceil(AnimationTime) >= static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration));
-			//std::cout << "switchBack " << switchBackToLooping << std::endl;
+			switchBackToLooping		= (ceil(AnimationTime) >= static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration));
+			myAnimationTimePercent = AnimationTime / static_cast<float>(myScenes[myCurSceneIndex]->mAnimations[0]->mDuration);
+			 //std::cout << "switchBack " << switchBackToLooping << std::endl;
 		}
 
 		aTransformsVector.resize(myNumOfBones);

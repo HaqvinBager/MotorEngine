@@ -31,6 +31,8 @@ public:
 	void OnDisable() override;
 
 public:
+	const float GetCurrentAnimationPercent();
+
 	std::array<SlimMatrix44, 64> GetBones() { return myBones; }
 	void GetAnimatedBlendTransforms(float dt, SlimMatrix44* transforms);
 	void GetAnimatedTransforms(float dt, SlimMatrix44* transforms);

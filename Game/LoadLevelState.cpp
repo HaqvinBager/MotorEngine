@@ -101,14 +101,18 @@ void CLoadLevelState::PlayLevelMusicGroup4(const ELevel aLevel)
 	{
 		case ELevel::Dungeon:
 			CMainSingleton::PostMaster().Send({ EMessageType::PlayDungeonMusic, nullptr });
+			CMainSingleton::PostMaster().Send({ EMessageType::PlayAmbienceDungeon, nullptr });
 		break;
 		case ELevel::Gardens:
 			CMainSingleton::PostMaster().Send({ EMessageType::PlayGardensMusic, nullptr });
+			CMainSingleton::PostMaster().Send({ EMessageType::PlayAmbienceGarden, nullptr });
 		break;
 		case ELevel::Castle:
 			CMainSingleton::PostMaster().Send({ EMessageType::PlayCastleMusic, nullptr });
+			CMainSingleton::PostMaster().Send({ EMessageType::PlayAmbienceCastle, nullptr });
 		break;
 		case ELevel::BossRoom:
+			CMainSingleton::PostMaster().Send({ EMessageType::PlayAmbienceCastle, nullptr });
 		break;
 
 		default:break;
