@@ -35,4 +35,12 @@ private:
 	CGameObject* CreateGameObject(const SEnvironmentFXData& aData, std::string aEnvironmentFXName);
 	CGameObject* CreateGameObject(const SParticleFXData& aData, const std::vector<std::string>& somParticleFXNames);
 	CGameObject* CreateGameObject(const SBossData& aData, const std::string& aModelPath);
+
+	float Lerp(float a, float b, float t) {
+		return a + t * (b - a);
+	}
+
+	float InverseLerp(float a, float b, float t) {
+		return (t - a) / (b - a);
+	}
 };

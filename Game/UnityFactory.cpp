@@ -288,12 +288,17 @@ CGameObject* CUnityFactory::CreateGameObject(const SEnemyData& aData, const std:
 	static int id = 100;
 	CGameObject* gameObject = new CGameObject(id++);
 	gameObject->AddComponent<CModelComponent>(*gameObject, aModelPath);
-	gameObject->AddComponent<CStatsComponent>(*gameObject, aData.myHealth, aData.myDamage, aData.myMoveSpeed, aData.myDamageCooldown, aData.myVisionRange, aData.myAttackRange, 6.0f);
+	auto stats = gameObject->AddComponent<CStatsComponent>(*gameObject, aData.myHealth, aData.myDamage, aData.myMoveSpeed, aData.myDamageCooldown, aData.myVisionRange, aData.myAttackRange, 6.0f);
 	gameObject->AddComponent<CAIBehaviorComponent>(*gameObject, aBehavior);
 	gameObject->AddComponent<CNavMeshComponent>(*gameObject);
-	gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 0.3f, ECollisionLayer::ENEMY, static_cast<uint64_t>(ECollisionLayer::PLAYERABILITY));
 	gameObject->myTransform->Position(aData.myPosition);
 	gameObject->myTransform->Rotation(aData.myRotation);
+
+	float sizePercent = InverseLerp(15.0f, 100.0f, stats->GetBaseStats().myBaseHealth);
+	float size = Lerp(0.0f, 1.0f, sizePercent * sizePercent) + 1.0f;
+
+	gameObject->myTransform->Scale(size);
+	gameObject->AddComponent<CCircleColliderComponent>(*gameObject, 0.3f * size, ECollisionLayer::ENEMY, static_cast<uint64_t>(ECollisionLayer::PLAYERABILITY));
 
 	std::pair<EAbilityType, unsigned int> ab1 = { EAbilityType::EnemyAbility, 1 };
 	std::vector<std::pair<EAbilityType, unsigned int>> abs;
