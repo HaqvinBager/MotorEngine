@@ -12,6 +12,8 @@
 #include "AnimationComponent.h"
 #include "StatsComponent.h"
 
+#define ATTACK_RANGE 180.0f
+
 CMeleeAttackBehavior::CMeleeAttackBehavior(float aDuration, float aDamage, CGameObject* aParent)
 {
 	myDirection = {0.0f, 0.0f, 0.0f};
@@ -34,10 +36,10 @@ void CMeleeAttackBehavior::Init(CGameObject* aCaster)
 	myTimeToActivateCollider = 0.5f;
 	std::cout << __FUNCTION__ << " Time to activate collider: " << myTimeToActivateCollider << std::endl;
 	CTriangleColliderComponent* triangleCollider = myParent->GetComponent<CTriangleColliderComponent>();
-	DirectX::SimpleMath::Vector3 vector = myCaster->GetComponent<CTransformComponent>()->Position() + myCaster->GetComponent<CTransformComponent>()->Transform().Forward() * triangleCollider->GetHeight() * 100.0f;
+	DirectX::SimpleMath::Vector3 vector = myCaster->GetComponent<CTransformComponent>()->Position() + myCaster->GetComponent<CTransformComponent>()->Transform().Forward() * triangleCollider->GetHeight() * ATTACK_RANGE;
 	triangleCollider->SetPosition(myCaster->GetComponent<CTransformComponent>()->Position());
-	DirectX::SimpleMath::Vector3 aLeftVertex = vector - myCaster->myTransform->Transform().Right() * (triangleCollider->GetWidth() / 2.0f) * 100.0f;
-	DirectX::SimpleMath::Vector3 aRightVertex = vector + myCaster->myTransform->Transform().Right() * (triangleCollider->GetWidth() / 2.0f) * 100.0f;
+	DirectX::SimpleMath::Vector3 aLeftVertex = vector - myCaster->myTransform->Transform().Right() * (triangleCollider->GetWidth() / 2.0f) * ATTACK_RANGE;
+	DirectX::SimpleMath::Vector3 aRightVertex = vector + myCaster->myTransform->Transform().Right() * (triangleCollider->GetWidth() / 2.0f) * ATTACK_RANGE;
 	triangleCollider->SetLeftVertex(aLeftVertex);
 	triangleCollider->SetRightVertex(aRightVertex);
 	triangleCollider->Enabled(false);
@@ -64,8 +66,8 @@ void CMeleeAttackBehavior::Update(CGameObject* aParent)
 		if (triangleCollider->Enabled()) {
 			DirectX::SimpleMath::Vector3 vector = myCaster->GetComponent<CTransformComponent>()->Position() + myCaster->GetComponent<CTransformComponent>()->Transform().Forward() * triangleCollider->GetHeight() * 100.0f;
 			triangleCollider->SetPosition(myCaster->GetComponent<CTransformComponent>()->Position());
-			DirectX::SimpleMath::Vector3 aLeftVertex = vector - myCaster->myTransform->Transform().Right() * (triangleCollider->GetWidth() / 2.0f) * 100.0f;
-			DirectX::SimpleMath::Vector3 aRightVertex = vector + myCaster->myTransform->Transform().Right() * (triangleCollider->GetWidth() / 2.0f) * 100.0f;
+			DirectX::SimpleMath::Vector3 aLeftVertex = vector - myCaster->myTransform->Transform().Right() * (triangleCollider->GetWidth() / 2.0f) * ATTACK_RANGE;
+			DirectX::SimpleMath::Vector3 aRightVertex = vector + myCaster->myTransform->Transform().Right() * (triangleCollider->GetWidth() / 2.0f) * ATTACK_RANGE;
 			triangleCollider->SetLeftVertex(aLeftVertex);
 			triangleCollider->SetRightVertex(aRightVertex);
 		}
