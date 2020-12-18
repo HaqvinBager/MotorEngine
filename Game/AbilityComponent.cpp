@@ -80,6 +80,11 @@ CAbilityComponent::~CAbilityComponent()
 
 void CAbilityComponent::Awake()
 {
+
+}
+
+void CAbilityComponent::Start()
+{
 	// Setting up pools
 	for (unsigned int i = 0; i < myAbilityPoolDescriptions.size(); ++i) {
 		std::vector<CGameObject*> gameObjectsToPool;
@@ -89,10 +94,6 @@ void CAbilityComponent::Awake()
 		}
 		myAbilityPools.emplace(myAbilityPoolDescriptions[i].first, gameObjectsToPool);
 	}
-}
-
-void CAbilityComponent::Start()
-{
 }
 
 void CAbilityComponent::Update()

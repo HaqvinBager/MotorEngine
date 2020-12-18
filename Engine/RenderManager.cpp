@@ -157,10 +157,10 @@ void CRenderManager::Render(CScene& aScene)
 			}
 		}
 
-		CModelComponent* modelComponent = nullptr;
-		CInstancedModelComponent* instancedModelComponent = nullptr;
+		//CModelComponent* modelComponent = nullptr;
+		//CInstancedModelComponent* instancedModelComponent = nullptr;
 
-		if (instance->TryGetComponent(&modelComponent)) 
+		/*if (instance->TryGetComponent(&modelComponent)) 
 		{
 			pointlights.emplace_back(aScene.CullLights(instance));
 		}
@@ -172,14 +172,14 @@ void CRenderManager::Render(CScene& aScene)
 				instancedGameObjectsWithAlpha.emplace_back(instance) :
 				instancedGameObjects.emplace_back(instance);
 
-		}
+		}*/
 
-		/*if (instance->GetComponent<CModelComponent>()) {
+		if (instance->GetComponent<CModelComponent>()) {
 			pointlights.emplace_back(aScene.CullLights(instance));
 		}
 		else if (instance->GetComponent<CInstancedModelComponent>()) {
 
-			pointLightsInstanced.emplace_back(aScene.CullLights(instance));
+			pointLightsInstanced.emplace_back(aScene.CullLightInstanced(instance->GetComponent<CInstancedModelComponent>()));
 
 			if (instance->GetComponent<CInstancedModelComponent>()->RenderWithAlpha())
 			{
@@ -187,7 +187,7 @@ void CRenderManager::Render(CScene& aScene)
 				continue;
 			}
 			instancedGameObjects.emplace_back(instance);
-		}*/
+		}
 	}
 	std::cout << std::endl;
 
@@ -237,7 +237,7 @@ void CRenderManager::Render(CScene& aScene)
 	myRenderStateManager.SetBlendState(CRenderStateManager::BlendStates::BLENDSTATE_ALPHABLEND);
 	myRenderStateManager.SetDepthStencilState(CRenderStateManager::DepthStencilStates::DEPTHSTENCILSTATE_ONLYREAD);
 
-	//myForwardRenderer.InstancedRender(environmentlight, pointlights, maincamera, instancedGameObjectsWithAlpha);
+	myForwardRenderer.InstancedRender(environmentlight, pointlights, maincamera, instancedGameObjectsWithAlpha);
 
 	myVFXRenderer.Render(maincamera, gameObjects);
 

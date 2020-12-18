@@ -35,6 +35,7 @@ CBossBehavior::CBossBehavior(CGameObject* aPlayerObject, CScene& aScene, Vector2
 	, myAblilityComponent(nullptr)
 	, myFoundPlayer(false)
 	, myHasFadedOut(false)
+	, firstTime(false)
 {
 	myPhasePercents.emplace_back(aPhaseOne);
 	myPhasePercents.emplace_back(aPhaseTwo);
@@ -56,6 +57,7 @@ CBossBehavior::CBossBehavior(CGameObject* aPlayerObject, CScene& aScene, Vector2
 	for (auto& text: myCanvas->GetTexts()) {
 		text->SetShouldRender(false);
 	}
+	
 }
 
 CBossBehavior::~CBossBehavior()
@@ -69,6 +71,14 @@ CBossBehavior::~CBossBehavior()
 
 void CBossBehavior::Update(CGameObject* aParent)
 {
+	//BS lösning men hittar inte varför dens hp bar inte sätts förs man slår på bossen...
+	if (firstTime == false) {
+		aParent->GetComponent<CStatsComponent>()->GetStats().myHealth -= 1.f;
+		float difference = aParent->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth - aParent->GetComponent<CStatsComponent>()->GetStats().myHealth;
+		difference = (aParent->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth - difference) / aParent->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
+		myCanvas->GetAnimatedUI()[0]->Level(difference);
+		firstTime = true;
+	}
 	if (!CMainSingleton::DialogueSystem().Active()) {
 		SStats stats = aParent->GetComponent<CStatsComponent>()->GetStats();
 
