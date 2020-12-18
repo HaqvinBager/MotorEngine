@@ -11,9 +11,11 @@
 namespace SM = DirectX::SimpleMath;
 #define ENGINE_SCALE 0.01f
 
+#include <AbilityBehaviorComponent.h>
 CParticleEmitterComponent::CParticleEmitterComponent(CGameObject& aParent) : CBehaviour(aParent)
 {
 	SetScale(1.0f);
+
 	myTransform.Translation(GameObject().myTransform->Position());
 }
 
