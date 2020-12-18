@@ -267,7 +267,7 @@ bool CPlayerControllerComponent::PlayerIsAlive()
 	MessagePostmaster(EMessageType::PlayerHealthChanged, difference);
 
 	myLastHP = GameObject().GetComponent<CStatsComponent>()->GetStats().myHealth;
-
+	
 	if (myLastHP < 0.0f)
 		GameObject().GetComponent<CAnimationComponent>()->DeadState();
 
