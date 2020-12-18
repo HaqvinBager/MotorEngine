@@ -57,4 +57,5 @@ private:
 	bool myAuraActive;
 	bool myHasAttacked;
 	DirectX::SimpleMath::Vector3 myLastPosition;
+	bool firstTime;
 };

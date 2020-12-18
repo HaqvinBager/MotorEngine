@@ -31,7 +31,8 @@ CPlayerControllerComponent::CPlayerControllerComponent(CGameObject& aParent):
 	myTargetDestructible(nullptr),
 	myMiddleMousePressed(false),
 	myAuraActive(false),
-	myHasAttacked(false)
+	myHasAttacked(false),
+	firstTime(false)
 {
 	myLastPosition = {0.0f,0.0f,0.0f};
 
@@ -55,6 +56,7 @@ CPlayerControllerComponent::~CPlayerControllerComponent()
 	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::MiddleMouseMove, this);
 	CInputMapper::GetInstance()->RemoveObserver(IInputObserver::EInputEvent::Moving, this);
 	CMainSingleton::PostMaster().Unsubscribe(EMessageType::EnemyDied, this);
+	firstTime = false;
 }
 
 void CPlayerControllerComponent::Awake()
@@ -89,8 +91,15 @@ void CPlayerControllerComponent::Start()
 		MessagePostmaster(EMessageType::PlayerExperienceChanged, difference);
 	}
 }
+
 void CPlayerControllerComponent::Update()
 {
+	//bs fix aswell... fixes aura bug
+	if (this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel == 2 && firstTime == false) {
+		this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position());
+		myAuraActive = true;
+		firstTime = true;
+	}
 	if (!CMainSingleton::DialogueSystem().Active()) {
 		if (myIsMoving) {
 			this->GameObject().myTransform->MoveAlongPath();
@@ -359,9 +368,9 @@ void CPlayerControllerComponent::SetLevel(const int aLevel)
 		this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(3);
 	case 2: // Activate ability 2
 		this->GameObject().GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::PlayerAbility2, GameObject().myTransform->Position());
-		myAuraActive = true;
 		this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(2);
 		CMainSingleton::PostMaster().Send({EMessageType::ShieldSpell, nullptr});
+		myAuraActive = true;
 	case 1: // Activate ability 1
 		this->GameObject().GetComponent<CAbilityComponent>()->ResetCooldown(1);
 	case 0:
