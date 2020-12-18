@@ -200,11 +200,7 @@ void CPlayerControllerComponent::ReceiveEvent(const IInputObserver::EInputEvent 
 						myTargetEnemy = mySelection->FindSelectedEnemy();
 					}
 					if (myTargetEnemy && myTargetEnemy->GetComponent<CStatsComponent>()->GetStats().myHealth > 0.f) {
-						float abilityLength = GameObject().GetComponent<CAbilityComponent>()->MeleeAttackRange();
-						if (DirectX::SimpleMath::Vector3::Distance(myTargetEnemy->myTransform->Position(), GameObject().myTransform->Position())
-							> (myTargetEnemy->GetComponent<CCircleColliderComponent>()->GetRadius() + abilityLength)) {
-							this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath(myTargetEnemy->myTransform->Position());
-						}
+						this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath(myTargetEnemy->myTransform->Position());
 					} else {
 						this->GameObject().GetComponent<CNavMeshComponent>()->CalculatePath();
 					}
