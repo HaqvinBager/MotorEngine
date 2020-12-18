@@ -43,7 +43,7 @@ CEnemyBehavior::~CEnemyBehavior()
 void CEnemyBehavior::Update(CGameObject* aParent)
 {
 	if (!CMainSingleton::DialogueSystem().Active()) {
-		
+
 		myCurrentParent = aParent;
 
 		//enemy logic
@@ -51,7 +51,7 @@ void CEnemyBehavior::Update(CGameObject* aParent)
 		SStats stats = myCurrentParent->GetComponent<CStatsComponent>()->GetStats();
 
 		if (stats.myHealth <= 0) {
-			CMainSingleton::PostMaster().SendLate({ EMessageType::EnemyDied, this });
+			CMainSingleton::PostMaster().SendLate({EMessageType::EnemyDied, this});
 			if (stats.myTokenSlot != nullptr) {
 				CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
 				stats.myTokenSlot = nullptr;
@@ -60,8 +60,7 @@ void CEnemyBehavior::Update(CGameObject* aParent)
 		}
 
 		FindATarget();
-	}
-	else {
+	} else {
 		aParent->GetComponent<CTransformComponent>()->ClearPath();
 	}
 }
@@ -112,31 +111,34 @@ void CEnemyBehavior::FindATarget()
 	float dist = DirectX::SimpleMath::Vector3::DistanceSquared(parentPos, targetPos);
 	if (dist <= baseStats.myBaseVisionRange) {
 		//NavMesh movement
-		myCurrentParent->GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
-		if (dist <= baseStats.myBaseAttackRange) {
-			myCurrentParent->GetComponent<CTransformComponent>()->ClearPath();
-			if (stats.myTokenSlot == nullptr && stats.hadToken == false) {
-				stats.myTokenSlot = CTokenPool::GetInstance()->Request();
-			} else if (stats.myTokenSlot != nullptr) {
-				myPlayer->GetComponent<CStatsComponent>();
-				myCurrentParent->GetComponent<CAnimationComponent>()->PlayAttack01ID();
-				myCurrentParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::EnemyAbility, myCurrentParent->myTransform->Position());
-				//CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
-				//stats.myTokenSlot = nullptr;
-				//myCurrentParent->GetComponent<CStatsComponent>()->NextTokenCooldown();
-				SendAudio();
+		//if (myCurrentParent->GetComponent<CAbilityComponent>()->Cooldown(5) <= 0.0) {
+			myCurrentParent->GetComponent<CNavMeshComponent>()->CalculatePath(targetPos);
+			if (dist <= baseStats.myBaseAttackRange) {
+				myCurrentParent->GetComponent<CTransformComponent>()->ClearPath();
+				if (stats.myTokenSlot == nullptr && stats.hadToken == false) {
+					stats.myTokenSlot = CTokenPool::GetInstance()->Request();
+				} else if (stats.myTokenSlot != nullptr) {
+					if (myCurrentParent->GetComponent<CAbilityComponent>()->UseAbility(EAbilityType::EnemyAbility, myCurrentParent->myTransform->Position())) {
+						myPlayer->GetComponent<CStatsComponent>();
+						myCurrentParent->GetComponent<CAnimationComponent>()->PlayAttack01ID();
+						//CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
+						//stats.myTokenSlot = nullptr;
+						//myCurrentParent->GetComponent<CStatsComponent>()->NextTokenCooldown();
+						SendAudio();
+					}
+				}
+			} else {
+				if (stats.myTokenSlot != nullptr) {
+					CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
+					stats.myTokenSlot = nullptr;
+					myCurrentParent->GetComponent<CStatsComponent>()->NextTokenCooldown();
+					myHasSentAudio = false;
+				}
 			}
-		} else {
-			if (stats.myTokenSlot != nullptr) {
-				CTokenPool::GetInstance()->GiveBack(*stats.myTokenSlot, false);
-				stats.myTokenSlot = nullptr;
-				myCurrentParent->GetComponent<CStatsComponent>()->NextTokenCooldown();
-				myHasSentAudio = false;
-			}
-		}
+		//}
 	} else {
 		//myCurrentParent->GetComponent<CTransformComponent>()->ClearPath();
-		
+
 		stats.myRandomWalkTime -= CTimer::Dt();
 		if (stats.myRandomWalkTime <= 0) {
 			//DirectX::SimpleMath::Vector3 randomPos = { myCurrentParent->myTransform->Position().x + Random(-1.f, 1.f) , myCurrentParent->myTransform->Position().y, myCurrentParent->myTransform->Position().z + Random(-2.f, 2.f) };
@@ -179,8 +181,7 @@ void CEnemyBehavior::TakeDamage(float aDamageMultiplier, CGameObject* aGameObjec
 				CMainSingleton::PopupTextService().SpawnPopup(EPopupType::Damage, &healingData);
 				myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth += difference * regenerationPercentage;
 			}
-		}
-		else
+		} else
 			myPlayer->GetComponent<CStatsComponent>()->GetStats().myHealth = myPlayer->GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth;
 
 
@@ -213,7 +214,7 @@ void CEnemyBehavior::Die()
 	SMessage message;
 	message.myMessageType = EMessageType::EnemyDied;
 	message.data = &myCurrentParent->GetComponent<CStatsComponent>()->GetStats().myExperience;
-	CMainSingleton::PostMaster().Send({ EMessageType::DemonIdle2, nullptr });
+	CMainSingleton::PostMaster().Send({EMessageType::DemonIdle2, nullptr});
 	CMainSingleton::PostMaster().SendLate(message);
 
 	SStats stats = myCurrentParent->GetComponent<CStatsComponent>()->GetStats();
@@ -227,7 +228,7 @@ void CEnemyBehavior::SendAudio()
 {
 	if (!myHasSentAudio)
 	{
-		CMainSingleton::PostMaster().Send({ EMessageType::DemonIdle1, nullptr });
+		CMainSingleton::PostMaster().Send({EMessageType::DemonIdle1, nullptr});
 		myHasSentAudio = true;
 	}
 }
