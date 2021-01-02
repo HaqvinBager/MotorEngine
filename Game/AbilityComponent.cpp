@@ -228,7 +228,7 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 			break;
 			//this is for group 3
 			//TODO: Comment this out before last build
-		/*case EInputEvent::Ability2:
+		case EInputEvent::Ability2:
 			if (this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel > 1) {
 				if (myCurrentCooldowns[1] > 0)
 				{
@@ -244,7 +244,7 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 					CMainSingleton::PostMaster().Send(myMessage);
 				}
 			}
-			break;*/
+			break;
 		case EInputEvent::Ability3:
 			if (this->GameObject().GetComponent<CStatsComponent>()->GetStats().myLevel > 2) {
 				if (myCurrentCooldowns[2] > 0)

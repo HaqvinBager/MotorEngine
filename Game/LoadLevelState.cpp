@@ -19,7 +19,7 @@
 using namespace rapidjson;
 CLoadLevelState::CLoadLevelState(CStateStack& aStateStack, const CStateStack::EState aState)
 	: CState(aStateStack, aState)
-	, myLevelToLoad(ELevel::Dungeon)
+	, myLevelToLoad(ELevel::Level1)
 {
 }
 
@@ -67,37 +67,37 @@ void CLoadLevelState::Awake()
 	CMainSingleton::PostMaster().Subscribe("BossRoom", this);
 }
 
-void CLoadLevelState::PlayLevelMusicGroup3(const ELevel /*aLevel*/)
-{
-	//switch (aLevel)
-	//{
-	//	case ELevel::Level1:
-	//	break;
-	//	case ELevel::Level2:
-	//	break;
-	//	case ELevel::Level3:
-	//	break;
-	//	case ELevel::Level4:
-	//	break;
-	//	case ELevel::Level5:
-	//	break;
-	//	case ELevel::Level6:
-	//	break;
-	//	case ELevel::Level7:
-	//	break;
-	//	case ELevel::Level8:
-	//	break;
-	//	case ELevel::Level9:
-	//	break;
-	//	case ELevel::Level0:
-	//	break;
-	//	default:break;
-	//}
-}
-
-void CLoadLevelState::PlayLevelMusicGroup4(const ELevel aLevel)
+void CLoadLevelState::PlayLevelMusicGroup3(const ELevel aLevel)
 {
 	switch (aLevel)
+	{
+		case ELevel::Level1:
+		break;
+		case ELevel::Level2:
+		break;
+		case ELevel::Level3:
+		break;
+		case ELevel::Level4:
+		break;
+		case ELevel::Level5:
+		break;
+		case ELevel::Level6:
+		break;
+		case ELevel::Level7:
+		break;
+		case ELevel::Level8:
+		break;
+		case ELevel::Level9:
+		break;
+		case ELevel::Level10:
+		break;
+		default:break;
+	}
+}
+
+void CLoadLevelState::PlayLevelMusicGroup4(const ELevel /*aLevel*/)
+{
+	/*switch (aLevel)
 	{
 		case ELevel::Dungeon:
 			CMainSingleton::PostMaster().Send({ EMessageType::PlayDungeonMusic, nullptr });
@@ -116,7 +116,7 @@ void CLoadLevelState::PlayLevelMusicGroup4(const ELevel aLevel)
 		break;
 
 		default:break;
-	}
+	}*/
 }
 
 void CLoadLevelState::Start()
@@ -194,7 +194,7 @@ void CLoadLevelState::Receive(const SStringMessage& aMessage)
 {
 	std::string level = "Levels/";
 	level.append(aMessage.myMessageType);
-	ELevel eLevel = ELevel::BossRoom;
+	ELevel eLevel = ELevel::Level1;
 	for (int i = 0; i < myLevelNames.size(); ++i)
 	{
 		if (myLevelNames[i] == level)

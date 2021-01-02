@@ -82,6 +82,18 @@ void CInGameState::Start()
 	CInputMapper::GetInstance()->ClearObserverList(IInputObserver::EInputEvent::Ability3);
 	CInputMapper::GetInstance()->ClearObserverList(IInputObserver::EInputEvent::AttackClick);
 
+	CMainSingleton::PostMaster().Subscribe("Level_1_1", this);
+	CMainSingleton::PostMaster().Subscribe("Level_1_2", this);
+	CMainSingleton::PostMaster().Subscribe("Level_1_3", this);
+	CMainSingleton::PostMaster().Subscribe("Level_2_1", this);
+	CMainSingleton::PostMaster().Subscribe("Level_2_2", this);
+	CMainSingleton::PostMaster().Subscribe("Level_3_1", this);
+	CMainSingleton::PostMaster().Subscribe("Level_3_2", this);
+	CMainSingleton::PostMaster().Subscribe("Level_3_3", this);
+	CMainSingleton::PostMaster().Subscribe("Level_3_4", this);
+	CMainSingleton::PostMaster().Subscribe("Level_3_5", this);
+
+
 	myExitLevel = false;
 	CMainSingleton::PostMaster().Subscribe("Dungeon", this);
 	CMainSingleton::PostMaster().Subscribe("Gardens", this);
@@ -138,6 +150,17 @@ void CInGameState::Stop()
 
 	delete myCanvas;
 	myCanvas = nullptr;
+
+	CMainSingleton::PostMaster().Unsubscribe("Level_1_1", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_1_2", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_1_3", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_2_1", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_2_2", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_3_1", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_3_2", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_3_3", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_3_4", this);
+	CMainSingleton::PostMaster().Unsubscribe("Level_3_5", this);
 
 	CMainSingleton::PostMaster().Unsubscribe("Dungeon", this);
 	CMainSingleton::PostMaster().Unsubscribe("Gardens", this);
