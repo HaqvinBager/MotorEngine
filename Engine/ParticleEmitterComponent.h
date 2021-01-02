@@ -30,6 +30,7 @@ public:
 
 	void OnEnable() override;
 	void OnDisable() override;
+	void Reset();
 public:
 	std::vector<CParticle*>& GetParticleSet() { return myParticles; }
 	std::vector<std::vector<CParticle::SParticleVertex>>& GetParticleVertices() { return myParticleVertices; }

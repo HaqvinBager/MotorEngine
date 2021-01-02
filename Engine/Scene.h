@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "Component.h"
 #include "SpriteInstance.h"
+#include "EngineDefines.h"
 
 class CModelComponent;
 class CCamera;
@@ -20,6 +21,9 @@ struct SLineTime;
 struct SNavMesh;
 class CModel;
 class IAIBehavior;
+class CInstancedModelComponent;
+
+typedef std::pair<unsigned int, std::array<CPointLight*, LIGHTCOUNT>> LightPair;
 
 class CScene {
 	friend class CEngine;
@@ -34,11 +38,18 @@ public:
 	bool Init();
 	bool InitNavMesh(std::string aPath);
 	void SetMainCamera(CCameraComponent* aCamera);
+
+
+	//This will run every 5-10 frames (It doesn't need to run all the time anyway!)
+	void UpdateLightsNearestPlayer();
+
 	CCameraComponent* GetMainCamera();
 	CEnvironmentLight* GetEnvironmentLight();
 	SNavMesh* GetNavMesh();
 	std::vector<CGameObject*> CullGameObjects(CCameraComponent* aMainCamera);
-	std::pair<unsigned int, std::array<CPointLight*, 8>> CullLights(CGameObject* aGameObject);
+	std::pair<unsigned int, std::array<CPointLight*, LIGHTCOUNT>> CullLights(CGameObject* aGameObject);
+	LightPair CullLightInstanced(CInstancedModelComponent* aModelType);
+
 	std::vector<CParticleInstance*> CullParticles(CCameraComponent* aMainCamera);
 	std::vector<CVFXInstance*> CullVFX(CCameraComponent* aMainCamera);
 	const std::vector<SLineTime>& CullLines() const;
@@ -48,6 +59,9 @@ public:
 	std::vector<CTextInstance*> GetTexts();
 
 	std::vector<CGameObject*> GetModelsToOutline() const { return myModelsToOutline; }
+	std::vector<CPointLight*> GetLightsNearestPlayer() { return myLightsSortedNearestPlayer;  }
+
+	std::vector<CPointLight*>& GetPointLights() { return myPointLights; }
 
 	bool AddInstances(std::vector<CGameObject*>& someGameObjects);
 	bool SetEnvironmentLight(CEnvironmentLight* anEnvironmentLight);
@@ -69,6 +83,7 @@ public:
 	std::vector<CGameObject*> GetDestructibles() { return myDestructibles; }
 	CGameObject* GetPlayer() { return myPlayer; }
 	CGameObject* GetBoss() { return myBoss; }
+
 
 	bool RemoveInstance(CGameObject* aGameObject);
 	bool RemoveInstance(CPointLight* aPointLight);
@@ -105,6 +120,11 @@ public:
 	}
 
 private:
+	struct NearestPlayerComparer {
+		DirectX::SimpleMath::Vector3 myPos;
+		bool operator()(const CPointLight* a, const CPointLight* b) const;
+	} ourNearestPlayerComparer;
+
 	std::vector<CGameObject*> myGameObjects;
 	CCameraComponent* myMainCamera;
 	CEnvironmentLight* myEnvironmentLight;
@@ -112,6 +132,7 @@ private:
 	//Ev Remove // Ev? / Aki
 	//std::vector<CCamera*> myCameras;
 	//std::vector<CEnvironmentLight*> myEnvironmentLights;
+	std::vector<CPointLight*> myLightsSortedNearestPlayer;
 	std::vector<CPointLight*> myPointLights;
 	std::vector<CParticleInstance*> myParticles;
 	std::vector<CVFXInstance*> myVFXInstances;

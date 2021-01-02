@@ -99,6 +99,9 @@ void CMenuState::Receive(const SMessage &aMessage) {
 		switch (aMessage.myMessageType) {
 		case EMessageType::StartGame:
 		{
+			for (auto button : myCanvas->GetButtons())
+				button->OnLeave();
+
 			CMainSingleton::PostMaster().Send({ EMessageType::StopMusic, nullptr });
 			myStateStack.PushState(CStateStack::EState::Intro);
 		} break;

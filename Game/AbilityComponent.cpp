@@ -41,6 +41,10 @@ CAbilityComponent::CAbilityComponent(CGameObject& aParent, std::vector<std::pair
 	myCurrentCooldowns[2] = 0.0f;
 	myCurrentCooldowns[3] = 0.0f;
 	myCurrentCooldowns[4] = 0.0f;
+	myCurrentCooldowns[5] = 0.0f;
+	myCurrentCooldowns[6] = 0.0f;
+	myCurrentCooldowns[7] = 0.0f;
+	myCurrentCooldowns[8] = 0.0f;
 
 	std::ifstream inputStream("Json/AbilityPaths.json");
 	ENGINE_BOOL_POPUP(inputStream.good(), "Ability json paths could not be found! Looking for Json/AbilityPaths.json");
@@ -80,6 +84,11 @@ CAbilityComponent::~CAbilityComponent()
 
 void CAbilityComponent::Awake()
 {
+
+}
+
+void CAbilityComponent::Start()
+{
 	// Setting up pools
 	for (unsigned int i = 0; i < myAbilityPoolDescriptions.size(); ++i) {
 		std::vector<CGameObject*> gameObjectsToPool;
@@ -89,10 +98,6 @@ void CAbilityComponent::Awake()
 		}
 		myAbilityPools.emplace(myAbilityPoolDescriptions[i].first, gameObjectsToPool);
 	}
-}
-
-void CAbilityComponent::Start()
-{
 }
 
 void CAbilityComponent::Update()
@@ -139,6 +144,12 @@ bool CAbilityComponent::UseAbility(EAbilityType anAbilityType, DirectX::SimpleMa
 		return false;
 	}
 
+	int index = static_cast<int>(anAbilityType);
+
+	if (myCurrentCooldowns[index] > 0.0f) {
+		return false;
+	}
+
 	myActiveAbilities.emplace_back(myAbilityPools.at(anAbilityType).back());
 	myAbilityPools.at(anAbilityType).pop_back();
 	myActiveAbilities.back()->Active(true);
@@ -146,12 +157,14 @@ bool CAbilityComponent::UseAbility(EAbilityType anAbilityType, DirectX::SimpleMa
 	myActiveAbilities.back()->GetComponent<CAbilityBehaviorComponent>()->Init(&GameObject());
 
 	if (anAbilityType == EAbilityType::PlayerMelee) {
-		if (myCurrentCooldowns[3] <= 0) {
-			myCurrentCooldowns[3] = myMaxCooldowns[3];
-			this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack01ID();
-			CMainSingleton::PostMaster().Send({ EMessageType::LightAttack, nullptr });
-		}
+		auto animComp = this->GameObject().GetComponent<CAnimationComponent>();
+		animComp->PlayAttack01ID();
+		float delay = (animComp->GetCurrentAnimationDuration() / animComp->GetCurrentAnimationTicksPerSecond()) / 6.0f;
+		CMainSingleton::PostMaster().Send({EMessageType::LightAttack, &delay});
 	}
+
+	if (myCurrentCooldowns[index] <= 0.0f)
+		myCurrentCooldowns[index] = myMaxCooldowns[index];
 
 	return true;
 }
@@ -188,13 +201,29 @@ void CAbilityComponent::SendEvent() {
 		myMessage.data = &messageValue;
 		CMainSingleton::PostMaster().Send(myMessage);
 	}
-	
+
 	if (myCurrentCooldowns[3] > 0) {
 		myCurrentCooldowns[3] -= CTimer::Dt();
 	}
-	
+
 	if (myCurrentCooldowns[4] > 0) {
 		myCurrentCooldowns[4] -= CTimer::Dt();
+	}
+
+	if (myCurrentCooldowns[5] > 0) {
+		myCurrentCooldowns[5] -= CTimer::Dt();
+	}
+
+	if (myCurrentCooldowns[6] > 0) {
+		myCurrentCooldowns[6] -= CTimer::Dt();
+	}
+
+	if (myCurrentCooldowns[7] > 0) {
+		myCurrentCooldowns[7] -= CTimer::Dt();
+	}
+
+	if (myCurrentCooldowns[8] > 0) {
+		myCurrentCooldowns[8] -= CTimer::Dt();
 	}
 }
 
@@ -217,10 +246,9 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 
 				if (UseAbility(EAbilityType::PlayerAbility1, GameObject().myTransform->Position()))
 				{
-					CMainSingleton::PostMaster().Send({ EMessageType::HealingAura, nullptr });
+					CMainSingleton::PostMaster().Send({EMessageType::HealingAura, nullptr});
 					this->GameObject().GetComponent<CAnimationComponent>()->PlayAbility01ID();
 					myMessage.myMessageType = EMessageType::AbilityOneCooldown;
-					myCurrentCooldowns[0] = myMaxCooldowns[0];
 					myMessage.data = &messageValue;
 					CMainSingleton::PostMaster().Send(myMessage);
 				}
@@ -255,10 +283,11 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 
 				if (UseAbility(EAbilityType::PlayerAbility3, GameObject().myTransform->Position()))
 				{
-					CMainSingleton::PostMaster().Send({ EMessageType::PlayExplosionSFX, nullptr });
+					float delay = 1.0f;
+					CMainSingleton::PostMaster().Send({EMessageType::PlayExplosionSFX, &delay});
+
 					this->GameObject().GetComponent<CAnimationComponent>()->PlayAbility02ID();
 					myMessage.myMessageType = EMessageType::AbilityThreeCooldown;
-					myCurrentCooldowns[2] = myMaxCooldowns[2];
 					myMessage.data = &messageValue;
 					CMainSingleton::PostMaster().Send(myMessage);
 				}
@@ -270,9 +299,10 @@ void CAbilityComponent::ReceiveEvent(const EInputEvent aEvent)
 
 			if (UseAbility(EAbilityType::PlayerHeavyMelee, GameObject().myTransform->Position()))
 			{
-				myCurrentCooldowns[4] = myMaxCooldowns[4];
-				this->GameObject().GetComponent<CAnimationComponent>()->PlayAttack02ID();
-				CMainSingleton::PostMaster().Send({ EMessageType::HeavyAttack, nullptr });
+				auto animComp = this->GameObject().GetComponent<CAnimationComponent>();
+				animComp->PlayAttack02ID();
+				float delay = (animComp->GetCurrentAnimationDuration() / animComp->GetCurrentAnimationTicksPerSecond()) / 2.0f;
+				CMainSingleton::PostMaster().Send({EMessageType::HeavyAttack, &delay});
 			}
 			break;
 		default:
@@ -305,6 +335,11 @@ void CAbilityComponent::ResetCooldown(int anIndex)
 		message.data = &myCurrentCooldowns[anIndex - 1];
 		CMainSingleton::PostMaster().Send(message);
 	}
+}
+
+float CAbilityComponent::Cooldown(int anIndex)
+{
+	return myCurrentCooldowns[anIndex];
 }
 
 CGameObject* CAbilityComponent::LoadAbilityFromFile(EAbilityType anAbilityType)

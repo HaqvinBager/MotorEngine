@@ -55,5 +55,7 @@ private:
 	bool myIsMoving;
 	bool myMiddleMousePressed;
 	bool myAuraActive;
+	bool myHasAttacked;
 	DirectX::SimpleMath::Vector3 myLastPosition;
+	bool firstTime;
 };

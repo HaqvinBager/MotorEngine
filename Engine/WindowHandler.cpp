@@ -67,7 +67,7 @@ bool CWindowHandler::Init(CWindowHandler::SWindowData someWindowData)
 
     HICON customIcon = NULL;
     if (document.HasMember("Icon Path"))
-        customIcon = LoadIconA(GetModuleHandle(nullptr), document["Icon Path"].GetString());
+        customIcon = (HICON)LoadImageA(NULL, document["Icon Path"].GetString(), IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE);
 
     if (customIcon == NULL) 
         customIcon = (HICON)LoadImageA(NULL, "ironwrought.ico", IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE);
@@ -84,14 +84,20 @@ bool CWindowHandler::Init(CWindowHandler::SWindowData someWindowData)
     windowclass.lpszClassName = L"3DEngine";
     RegisterClassEx(&windowclass);
 
+    std::string gameName = "IronWrought";
+    if (document.HasMember("Game Name"))
+    {
+        gameName = document["Game Name"].GetString();
+    }
+
     // Start in bordered window
-    //myWindowHandle = CreateWindow(L"3DEngine", L"IronWrought",
+    //myWindowHandle = CreateWindowA("3DEngine", gameName.c_str(),
     //    WS_OVERLAPPEDWINDOW | WS_POPUP | WS_VISIBLE,
     //    myWindowData.myX, myWindowData.myY, myWindowData.myWidth, myWindowData.myHeight,
     //    nullptr, nullptr, nullptr, this);
 
     // Start in fullscreen
-    myWindowHandle = CreateWindow(L"3DEngine", L"IronWrought", 
+    myWindowHandle = CreateWindowA("3DEngine", gameName.c_str(), 
         WS_POPUP | WS_VISIBLE,
         0, 0, /*GetSystemMetrics(SM_CXSCREEN)*/1920, /*GetSystemMetrics(SM_CYSCREEN)*/1080,
         NULL, NULL, GetModuleHandle(nullptr), this);

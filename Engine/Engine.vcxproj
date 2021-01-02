@@ -336,6 +336,7 @@
     <ClInclude Include="CreditsState.h" />
     <ClInclude Include="DestructibleComponent.h" />
     <ClInclude Include="DialogueSystem.h" />
+    <ClInclude Include="EngineDefines.h" />
     <ClInclude Include="FMod.h" />
     <ClInclude Include="CircleColliderComponent.h" />
     <ClInclude Include="CollisionManager.h" />

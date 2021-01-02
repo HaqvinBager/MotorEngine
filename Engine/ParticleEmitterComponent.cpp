@@ -11,9 +11,11 @@
 namespace SM = DirectX::SimpleMath;
 #define ENGINE_SCALE 0.01f
 
+#include <AbilityBehaviorComponent.h>
 CParticleEmitterComponent::CParticleEmitterComponent(CGameObject& aParent) : CBehaviour(aParent)
 {
 	SetScale(1.0f);
+
 	myTransform.Translation(GameObject().myTransform->Position());
 }
 
@@ -168,6 +170,21 @@ void CParticleEmitterComponent::OnEnable()
 void CParticleEmitterComponent::OnDisable()
 {
 	Enabled(false);
+	for (unsigned int i = 0; i < myParticles.size(); ++i) {
+		size_t currentSize = myParticleVertices[i].size();
+		for (unsigned int j = 0; j < currentSize; ++j) {
+			myParticlePools[i].push(myParticleVertices[i].back());
+			myParticleVertices[i].pop_back();
+		}
+	}
+}
+
+void CParticleEmitterComponent::Reset()
+{
+	for (unsigned int i = 0; i < myParticles.size(); ++i) {
+		myEmitterDelays[i] = myParticles[i]->GetParticleData().myDelay;
+		myEmitterDurations[i] = myParticles[i]->GetParticleData().myDuration;
+	}
 	for (unsigned int i = 0; i < myParticles.size(); ++i) {
 		size_t currentSize = myParticleVertices[i].size();
 		for (unsigned int j = 0; j < currentSize; ++j) {

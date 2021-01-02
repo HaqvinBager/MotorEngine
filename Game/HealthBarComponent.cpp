@@ -9,6 +9,7 @@
 
 CHealthBarComponent::CHealthBarComponent(CGameObject& aParant, CScene& aScene)
 	: CBehaviour(aParant)
+	, isActive(false)
 {
 	myCanvas = new CCanvas();
 	myCanvas->Init("Json/UI_InGame_Enemy_HealthBarSmall.json", aScene, false);
@@ -16,7 +17,7 @@ CHealthBarComponent::CHealthBarComponent(CGameObject& aParant, CScene& aScene)
 	myCanvas2 = new CCanvas();
 	myCanvas2->Init("Json/UI_InGame_Enemy_HealthBar.json", aScene, false);
 
-	if (aParant.GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth >= 80.f) {
+	if (aParant.GetComponent<CStatsComponent>()->GetBaseStats().myBaseHealth >= 60.f) {
 		myCanvas2->GetTexts()[0]->SetText("Guard Captain Loghaine");
 	}
 }
@@ -73,6 +74,7 @@ void CHealthBarComponent::OnEnable()
 		for (auto text : myCanvas2->GetTexts()) {
 			text->SetShouldRender(true);
 		}
+		isActive = true;
 	}
 }
 
@@ -84,4 +86,5 @@ void CHealthBarComponent::OnDisable()
 	for (auto text : myCanvas2->GetTexts()) {
 		text->SetShouldRender(false);
 	}
+	isActive = false;
 }

@@ -18,10 +18,13 @@ public:
 	void OnEnable() override;
 	void OnDisable() override;
 
+	const bool& Active() const { return isActive; }
+
 	CCanvas* GetCanvas() { return myCanvas; }
 	CCanvas* GetCanvas2() { return myCanvas2; }
 private:
 	CCanvas* myCanvas;
 	CCanvas* myCanvas2;
+	bool isActive;
 };
 

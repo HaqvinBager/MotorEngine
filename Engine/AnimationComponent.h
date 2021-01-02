@@ -32,6 +32,8 @@ public:
 
 public:
 	const float GetCurrentAnimationPercent();
+	const float GetCurrentAnimationDuration();
+	const float GetCurrentAnimationTicksPerSecond();
 
 	std::array<SlimMatrix44, 64> GetBones() { return myBones; }
 	void GetAnimatedBlendTransforms(float dt, SlimMatrix44* transforms);
@@ -85,6 +87,7 @@ public:
 	CAnimation* GetMyAnimation() { return myAnimation; }
 	const float GetBlend() const { return myBlend.myBlendLerp; }
 	const int CurrentAnimationState() { return myCurrentAnimationID; }
+	const float ReturnToIdleTimer() { return myReturnToIdleTimer; }
 
 public:
 	//Intended use is in Model viewer. Careful using it anywhere else. Deletes the previous myAnimation, news and inits a new CAnimation.
@@ -100,7 +103,6 @@ private:
 	void SwitchBackToIdle();
 
 	void PlayAnimation(const int anAnimationID, bool anIsLooping = false, const float anAnimSpeed = 1.0f);
-
 private:
 	CAnimation* myAnimation;
 	std::array<SlimMatrix44, 64> myBones { };

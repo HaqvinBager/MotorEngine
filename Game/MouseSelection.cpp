@@ -48,7 +48,14 @@ CGameObject* CMouseSelection::FindSelectedEnemy()
 			continue;
 
 		if (enemy->GetComponent<CCircleColliderComponent>()->Collided(1.5f, pos) && enemy->GetComponent<CStatsComponent>()->GetStats().myHealth > 0.f) {
-				enemy->GetComponent<CHealthBarComponent>()->OnEnable();
+
+			enemy->GetComponent<CHealthBarComponent>()->OnEnable();
+			//this bad :( 
+			for (auto& enemy2 : CEngine::GetInstance()->GetActiveScene().GetEnemies()) {
+				if (enemy != enemy2 && enemy2->Active() == true) {
+					enemy2->GetComponent<CHealthBarComponent>()->OnDisable();
+				}
+			}
 			
 			return enemy;
 		}
